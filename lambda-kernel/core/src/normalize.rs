@@ -235,6 +235,122 @@ pub fn normalize(ir: &IR, arena: &mut Arena) -> IR {
             let referenced = arena.get(*idx);
             normalize(&referenced, arena)
         }
+        
+        // FOCUS operator
+        IR::Focus(focus) => {
+            use crate::focus::FocusMode;
+            
+            // Normalize components
+            let xs = arena.get(focus.xs);
+            let w = arena.get(focus.w);
+            let f = arena.get(focus.f);
+            let g = arena.get(focus.g);
+            
+            let xs_norm = normalize(&xs, arena);
+            let w_norm = normalize(&w, arena);
+            let f_norm = normalize(&f, arena);
+            let g_norm = normalize(&g, arena);
+            
+            // Check for constant weight optimization
+            match (focus.mode, &w_norm) {
+                (FocusMode::Hard, IR::Bool(true)) => {
+                    // All pass through - just map
+                    let f_idx = arena.alloc(f_norm);
+                    let xs_idx = arena.alloc(xs_norm);
+                    normalize(&IR::Map(f_idx, xs_idx), arena)
+                }
+                (FocusMode::Hard, IR::Bool(false)) => {
+                    // All filtered out
+                    IR::Nil
+                }
+                _ => {
+                    // General case - preserve focus
+                    let xs_idx = arena.alloc(xs_norm);
+                    let w_idx = arena.alloc(w_norm);
+                    let f_idx = arena.alloc(f_norm);
+                    let g_idx = arena.alloc(g_norm);
+                    
+                    IR::Focus(crate::focus::Focus {
+                        mode: focus.mode,
+                        xs: xs_idx,
+                        w: w_idx,
+                        f: f_idx,
+                        g: g_idx,
+                    })
+                }
+            }
+        }
+        
+        // Map operation
+        IR::Map(f_idx, xs_idx) => {
+            let f = arena.get(*f_idx);
+            let xs = arena.get(*xs_idx);
+            let f_norm = normalize(&f, arena);
+            let xs_norm = normalize(&xs, arena);
+            
+            match xs_norm {
+                IR::Nil => IR::Nil,
+                _ => {
+                    let f_idx = arena.alloc(f_norm);
+                    let xs_idx = arena.alloc(xs_norm);
+                    IR::Map(f_idx, xs_idx)
+                }
+            }
+        }
+        
+        // Filter operation
+        IR::Filter(p_idx, xs_idx) => {
+            let p = arena.get(*p_idx);
+            let xs = arena.get(*xs_idx);
+            let p_norm = normalize(&p, arena);
+            let xs_norm = normalize(&xs, arena);
+            
+            match (&p_norm, &xs_norm) {
+                (IR::Bool(true), _) => xs_norm,
+                (IR::Bool(false), _) => IR::Nil,
+                (_, IR::Nil) => IR::Nil,
+                _ => {
+                    // Check for filter+map fusion opportunity
+                    if let IR::Map(f_idx, inner_xs) = xs_norm {
+                        // FILTER(MAP(xs, f), p) → FOCUS
+                        let drop_idx = arena.alloc(IR::Drop);
+                        IR::Focus(crate::focus::Focus {
+                            mode: crate::focus::FocusMode::Hard,
+                            xs: inner_xs,
+                            w: *p_idx,
+                            f: f_idx,
+                            g: drop_idx,
+                        })
+                    } else {
+                        let p_idx = arena.alloc(p_norm);
+                        let xs_idx = arena.alloc(xs_norm);
+                        IR::Filter(p_idx, xs_idx)
+                    }
+                }
+            }
+        }
+        
+        // Function composition
+        IR::Compose(f_idx, g_idx) => {
+            let f = arena.get(*f_idx);
+            let g = arena.get(*g_idx);
+            let f_norm = normalize(&f, arena);
+            let g_norm = normalize(&g, arena);
+            
+            match (&f_norm, &g_norm) {
+                (IR::Identity, _) => g_norm,
+                (_, IR::Identity) => f_norm,
+                _ => {
+                    let f_idx = arena.alloc(f_norm);
+                    let g_idx = arena.alloc(g_norm);
+                    IR::Compose(f_idx, g_idx)
+                }
+            }
+        }
+        
+        // Special operators
+        IR::Drop => IR::Drop,
+        IR::Identity => IR::Identity,
     }
 }
 

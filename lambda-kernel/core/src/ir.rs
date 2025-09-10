@@ -42,6 +42,14 @@ pub enum IR {
     
     // Reference to arena slot
     Ref(u32),
+    
+    // FOCUS operator - laser for data/coordinate spaces
+    Focus(crate::focus::Focus),
+    Map(u32, u32),      // function, data
+    Filter(u32, u32),   // predicate, data  
+    Compose(u32, u32),  // f ∘ g
+    Drop,               // Remove element
+    Identity,           // Pass through
 }
 
 // Simple arena for IR nodes in no_std environment

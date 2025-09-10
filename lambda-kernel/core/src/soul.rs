@@ -73,6 +73,27 @@ fn hash_ir(ir: &IR) -> u64 {
         }
         IR::Not(x_idx) => hash_combine(25, *x_idx as u64),
         IR::Ref(idx) => hash_combine(26, *idx as u64),
+        IR::Focus(focus) => {
+            let h1 = hash_combine(27, focus.mode as u64);
+            let h2 = hash_combine(h1, focus.xs as u64);
+            let h3 = hash_combine(h2, focus.w as u64);
+            let h4 = hash_combine(h3, focus.f as u64);
+            hash_combine(h4, focus.g as u64)
+        }
+        IR::Map(f_idx, xs_idx) => {
+            let h1 = hash_combine(28, *f_idx as u64);
+            hash_combine(h1, *xs_idx as u64)
+        }
+        IR::Filter(p_idx, xs_idx) => {
+            let h1 = hash_combine(29, *p_idx as u64);
+            hash_combine(h1, *xs_idx as u64)
+        }
+        IR::Compose(f_idx, g_idx) => {
+            let h1 = hash_combine(30, *f_idx as u64);
+            hash_combine(h1, *g_idx as u64)
+        }
+        IR::Drop => 31,
+        IR::Identity => 32,
     }
 }
 
