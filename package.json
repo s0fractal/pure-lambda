@@ -1,0 +1,33 @@
+{
+  "name": "@s0fractal/pure-lambda-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pure Lambda - Cross-dimensional genetics",
+  "workspaces": [
+    "packages/*",
+    "organisms/*/dist/ts"
+  ],
+  "scripts": {
+    "build": "node organism-cli.js make core",
+    "test": "node organism-cli.js test core",
+    "verify": "node gene-cli.js verify map && node gene-cli.js verify filter",
+    "soulset": "node organism-cli.js soulset core"
+  },
+  "devDependencies": {
+    "@iarna/toml": "^2.2.5",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/s0fractal/pure-lambda.git"
+  },
+  "keywords": [
+    "lambda",
+    "functional",
+    "cross-language",
+    "genetics",
+    "soul"
+  ],
+  "author": "s0fractal",
+  "license": "MIT"
+}

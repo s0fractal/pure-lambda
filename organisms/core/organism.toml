@@ -1,0 +1,58 @@
+# Core Organism - Essential functional genetics
+# This is the minimal viable organism for functional programming
+
+[organism]
+name = "core"
+version = "0.1.0"
+description = "Essential functional programming genes"
+author = "s0fractal"
+license = "MIT"
+
+# Genes included in this organism
+[genes]
+included = [
+  "map",
+  "filter", 
+  "reduce",
+  "compose",
+  "pipe",
+  "chunk",
+  "uniq",
+  "groupBy"
+]
+
+# Future genes (not yet implemented)
+planned = [
+  "keyBy",
+  "flatten",
+  "zip",
+  "range",
+  "get",
+  "set"
+]
+
+# Build targets
+[targets]
+typescript = { enabled = true, output = "dist/ts" }
+python = { enabled = true, output = "dist/py" }
+rust = { enabled = true, output = "dist/rs" }
+wasm = { enabled = true, output = "dist/wasm" }
+
+# Verification policy
+[policy]
+strict = true                    # Only verified genes allowed
+soul_match = true               # All manifestations must have same soul
+cross_language_tests = true     # Must pass shared test vectors
+property_tests = true           # Must satisfy mathematical laws
+benchmark_budget = 1.1          # Max 10% slower than baseline
+
+# Evolution settings
+[evolution]
+allow_mutations = false         # Core is stable, no mutations
+membrane = "impermeable"        # No exotic code allowed
+
+# Metadata (auto-generated during build)
+[metadata]
+soulset = ""                   # Merkle root of all gene souls
+build_date = ""                # ISO timestamp
+attestation = ""               # Sigstore signature

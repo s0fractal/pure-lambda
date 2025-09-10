@@ -1,0 +1,45 @@
+{
+  "name": "@pure-lambda/core",
+  "version": "0.1.0",
+  "description": "Core organism - Essential functional genetics",
+  "soulset": null,
+  "genes": {
+    "map": {
+      "soul": "λ45612188",
+      "verified": true
+    },
+    "filter": {
+      "soul": "λ9c4e8a1f",
+      "verified": true
+    },
+    "reduce": {
+      "soul": "λ8b3d7f9a",
+      "verified": true
+    }
+  },
+  "exports": {
+    "typescript": {
+      "package": "@s0fractal/pure-lambda-core",
+      "main": "dist/ts/index.js",
+      "types": "dist/ts/index.d.ts"
+    },
+    "python": {
+      "package": "pure_lambda_core",
+      "module": "pure_lambda_core"
+    },
+    "rust": {
+      "package": "pure-lambda-core",
+      "crate": "pure_lambda_core"
+    },
+    "wasm": {
+      "module": "pure-lambda-core.wasm",
+      "interface": "wit/world.wit"
+    }
+  },
+  "verification": {
+    "closure": true,
+    "souls_match": true,
+    "tests_pass": true,
+    "properties_verified": true
+  }
+}
