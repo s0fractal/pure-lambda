@@ -1,0 +1,79 @@
+{
+  "description": "Cross-language test vectors for map gene",
+  "version": 1,
+  "vectors": [
+    {
+      "name": "basic_numbers",
+      "input": {
+        "xs": [1, 2, 3, 4, 5],
+        "f": "x => x * 2"
+      },
+      "output": [2, 4, 6, 8, 10]
+    },
+    {
+      "name": "empty_list",
+      "input": {
+        "xs": [],
+        "f": "x => x * 2"
+      },
+      "output": []
+    },
+    {
+      "name": "single_element",
+      "input": {
+        "xs": [42],
+        "f": "x => x + 1"
+      },
+      "output": [43]
+    },
+    {
+      "name": "string_transformation",
+      "input": {
+        "xs": ["hello", "world"],
+        "f": "s => s.toUpperCase()"
+      },
+      "output": ["HELLO", "WORLD"]
+    },
+    {
+      "name": "boolean_negation",
+      "input": {
+        "xs": [true, false, true],
+        "f": "b => !b"
+      },
+      "output": [false, true, false]
+    },
+    {
+      "name": "nested_structure",
+      "input": {
+        "xs": [[1, 2], [3, 4], [5, 6]],
+        "f": "arr => arr.length"
+      },
+      "output": [2, 2, 2]
+    },
+    {
+      "name": "identity_function",
+      "input": {
+        "xs": [1, "a", true, null],
+        "f": "x => x"
+      },
+      "output": [1, "a", true, null]
+    }
+  ],
+  "properties": [
+    {
+      "name": "length_preservation",
+      "description": "Output length equals input length",
+      "test": "output.length === input.xs.length"
+    },
+    {
+      "name": "order_preservation",
+      "description": "Element order is preserved",
+      "test": "indices match between input and output"
+    },
+    {
+      "name": "type_consistency",
+      "description": "All output elements have same type",
+      "test": "typeof output[i] is consistent"
+    }
+  ]
+}

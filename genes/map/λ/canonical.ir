@@ -1,0 +1,13 @@
+# Lambda IR - Canonical representation of map
+# This is the semantic core from which all manifestations derive
+
+# MAP :: (List<A>, (A -> B)) -> List<B>
+LAM xs
+  LAM f
+    CASE xs
+      NIL -> NIL
+      CONS h t -> 
+        CONS (APP f h) (APP (APP MAP t) f)
+        
+# Simplified/Normalized form for hashing:
+# λxs.λf.case(xs, nil:nil, cons(h,t):cons(f(h), map(t,f)))

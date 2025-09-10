@@ -1,0 +1,37 @@
+# Gene Identity
+gene: map
+version: 1
+soul: "λ7a3f9b2c"  # Will be computed from canonical.ir
+
+# Semantic Signature
+signature:
+  type: "(List<A>, (A -> B)) -> List<B>"
+  generics: ["A", "B"]
+  
+# Intent & Properties
+intent:
+  primary: TRANSFORM
+  secondary: [RESONATE, PRESERVE_STRUCTURE]
+  
+effects:
+  - pure
+  - deterministic
+  - total
+  - structure-preserving
+  
+constraints:
+  time: "O(n)"
+  space: "O(n)"
+  
+# Resonance
+resonance:
+  tags: [gentle, universal, foundational]
+  similar: [forEach, transform, apply]
+  
+# Verification
+proof:
+  method: "λ-IR extraction"
+  laws:
+    - "length preservation"
+    - "identity mapping"  
+    - "composition fusion"

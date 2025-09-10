@@ -1,0 +1,15 @@
+# Lambda IR - Canonical representation of filter
+# This is the semantic core from which all manifestations derive
+
+# FILTER :: (List<A>, (A -> Bool)) -> List<A>
+LAM xs
+  LAM pred
+    CASE xs
+      NIL -> NIL
+      CONS h t -> 
+        IF (APP pred h)
+          THEN CONS h (APP (APP FILTER t) pred)
+          ELSE APP (APP FILTER t) pred
+          
+# Simplified/Normalized form for hashing:
+# λxs.λpred.case(xs, nil:nil, cons(h,t):if(pred(h), cons(h,filter(t,pred)), filter(t,pred)))

@@ -1,0 +1,36 @@
+# Gene Identity
+gene: filter
+version: 1
+soul: "λ9c4e8a1f"  # Will be computed from canonical.ir
+
+# Semantic Signature
+signature:
+  type: "(List<A>, (A -> Bool)) -> List<A>"
+  generics: ["A"]
+  
+# Intent & Properties
+intent:
+  primary: SELECT
+  secondary: [PRESERVE_ORDER, SUBSET]
+  
+effects:
+  - pure
+  - deterministic
+  - partial  # May return empty list
+  
+constraints:
+  time: "O(n)"
+  space: "O(n)"  # Worst case all elements pass
+  
+# Resonance
+resonance:
+  tags: [selective, discriminating, preserving]
+  similar: [select, where, keep]
+  
+# Verification
+proof:
+  method: "λ-IR extraction"
+  laws:
+    - "subset property"
+    - "order preservation"  
+    - "predicate consistency"
