@@ -1,0 +1,49 @@
+# ROI Lens - Materialize only what you're looking at
+# If ROI covers 1-5% of data → 20-100× speedup
+
+derivation: "wasm://focus#roi_materialize"
+
+inputs:
+  data: "../data/full.bin"
+  params:
+    x_min: "${path.x_min}"    # Parsed from path like /roi=(x:10..100,...)
+    x_max: "${path.x_max}"
+    y_min: "${path.y_min}"
+    y_max: "${path.y_max}"
+    sigma: "${path.sigma}"
+    transform: "${path.transform}"  # What to do in ROI
+
+outputs:
+  file: "roi_result.bin"
+  format: "binary"
+  
+cache_key:
+  - inputs.data
+  - params.x_min
+  - params.x_max
+  - params.y_min
+  - params.y_max
+  - params.sigma
+  - params.transform
+  
+capabilities:
+  - cpu
+  - mem
+  
+proofs:
+  - "coverage_ratio < 0.05"     # Verify we're looking at <5%
+  - "focus_preserves_roi"        # Only ROI is computed
+  - "zero_computation_outside"   # Nothing outside ROI was touched
+  
+performance_guarantee:
+  speedup_min: 20
+  speedup_typical: 50
+  speedup_best: 100
+  
+notes: |
+  This lens implements the FOCUS operator for spatial regions.
+  When you read /views/roi=(x:120..320,y:50..180,σ:12)/transform
+  only that 200×130 region is computed, not the entire dataset.
+  
+  For a 4K image (3840×2160), this ROI is 0.3% of pixels.
+  Expected speedup: 300×

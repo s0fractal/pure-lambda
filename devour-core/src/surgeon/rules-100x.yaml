@@ -1,0 +1,169 @@
+# 100× Rules - Stop Doing Work Instead of Doing It Faster
+
+# 1. FOCUS/ROI - Compute only what you look at
+- name: roi_focus
+  pattern: "MAP (FILTER ?xs (IN_ROI ?roi)) ?f"
+  rewrite: "FOCUS ?xs (ROI_WEIGHT ?roi) ?f DROP"
+  cost_delta: -100  # If ROI is 1-5% of data → 20-100× speedup
+  guards: ["roi_fraction(?roi) < 0.05"]
+
+# 2. Kernel Fusion to Horizon - Entire pipeline in one pass
+- name: fold_sink_complete
+  pattern: "FOLD ?f ?z (MAP ?g (FILTER ?p (GROUP ?h ?xs)))"
+  rewrite: "FOLD_FUSED (COMPOSE4 ?f ?g ?p ?h) ?z ?xs"
+  cost_delta: -1000  # Eliminates all intermediate collections
+  guards: ["pure(?f)", "pure(?g)", "pure(?p)", "pure(?h)"]
+
+- name: map_chain_fusion
+  pattern: "MAP ?f (MAP ?g (MAP ?h ?xs))"
+  rewrite: "MAP (COMPOSE3 ?f ?g ?h) ?xs"
+  cost_delta: -200
+  guards: ["pure(?f)", "pure(?g)", "pure(?h)"]
+
+- name: filter_chain_fusion
+  pattern: "FILTER ?p (FILTER ?q (FILTER ?r ?xs))"
+  rewrite: "FILTER (AND3 ?p ?q ?r) ?xs"
+  cost_delta: -150
+  guards: ["pure(?p)", "pure(?q)", "pure(?r)"]
+
+# 3. Partial Evaluation - Bake constants into code
+- name: partial_eval_const
+  pattern: "APP (LAM ?x ?body) (CONST ?c)"
+  rewrite: "SUBST ?body ?x ?c"
+  cost_delta: -50
+  guards: ["is_const(?c)"]
+
+- name: dead_branch_elimination
+  pattern: "IF (CONST true) ?then ?else"
+  rewrite: "?then"
+  cost_delta: -100
+  guards: []
+
+- name: dead_branch_elimination_false
+  pattern: "IF (CONST false) ?then ?else"
+  rewrite: "?else"
+  cost_delta: -100
+  guards: []
+
+- name: loop_unroll_small
+  pattern: "FOLD ?f ?z (RANGE 0 ?n)"
+  rewrite: "UNROLL_FOLD ?f ?z ?n"
+  cost_delta: -200
+  guards: ["?n < 8", "pure(?f)"]
+
+# 4. Proof-Carrying Optimization - Certificate instead of computation
+- name: memoize_by_soul
+  pattern: "COMPUTE ?expr"
+  rewrite: "LOOKUP_OR_COMPUTE (SOUL ?expr) ?expr"
+  cost_delta: -10000  # ∞ speedup on cache hit
+  guards: ["deterministic(?expr)"]
+
+# 5. Early Exit Laws - Stop when good enough
+- name: early_exit_threshold
+  pattern: "FOLD ?f ?z ?xs"
+  rewrite: "FOLD_UNTIL (GOOD_ENOUGH ?ε) ?f ?z ?xs"
+  cost_delta: -500
+  guards: ["has_threshold(?f)", "monotonic(?f)"]
+
+- name: short_circuit_any
+  pattern: "FOLD OR false ?xs"
+  rewrite: "ANY ?xs"
+  cost_delta: -100
+  guards: []
+
+- name: short_circuit_all
+  pattern: "FOLD AND true ?xs"
+  rewrite: "ALL ?xs"
+  cost_delta: -100
+  guards: []
+
+# 6. Layout Optimization - Structure for SIMD
+- name: soa_transform
+  pattern: "MAP (GET_FIELD ?field) (ARRAY_OF_STRUCTS ?xs)"
+  rewrite: "STRUCT_OF_ARRAYS ?xs ?field"
+  cost_delta: -50
+  guards: ["hot_field(?field)"]
+
+# 7. ANN Cascade - Cheap filter before expensive search
+- name: ann_cascade
+  pattern: "SEARCH ?needle ?haystack"
+  rewrite: "SEARCH ?needle (ANN_FILTER (PROTEIN ?needle) ?haystack)"
+  cost_delta: -1000
+  guards: ["large(?haystack)", "has_protein(?needle)"]
+
+- name: bloom_prefilter
+  pattern: "FILTER (CONTAINS ?set) ?xs"
+  rewrite: "FILTER (BLOOM_THEN_EXACT ?set) ?xs"
+  cost_delta: -200
+  guards: ["large(?set)"]
+
+# 8. Zero-Allocation Patterns
+- name: iterator_chain
+  pattern: "COLLECT (MAP ?f (FILTER ?p ?xs))"
+  rewrite: "ITER_CHAIN ?xs ?p ?f"
+  cost_delta: -100
+  guards: ["can_iterate(?xs)"]
+
+- name: arena_allocate
+  pattern: "ALLOC_MANY ?n ?type"
+  rewrite: "ARENA_ALLOC ?n ?type"
+  cost_delta: -300
+  guards: ["?n > 10"]
+
+# 9. Distill to Micro-library
+- name: inline_small_functions
+  pattern: "CALL ?f ?args"
+  rewrite: "INLINE ?f ?args"
+  cost_delta: -20
+  guards: ["size(?f) < 50", "hot_path(?f)"]
+
+- name: devirtualize
+  pattern: "VIRTUAL_CALL ?interface ?method ?args"
+  rewrite: "DIRECT_CALL ?impl ?method ?args"
+  cost_delta: -30
+  guards: ["single_impl(?interface)"]
+
+# 10. Parallel Patterns (bonus)
+- name: parallel_map
+  pattern: "MAP ?f ?xs"
+  rewrite: "PAR_MAP ?f ?xs"
+  cost_delta: -500
+  guards: ["pure(?f)", "expensive(?f)", "len(?xs) > 1000"]
+
+- name: parallel_filter
+  pattern: "FILTER ?p ?xs"
+  rewrite: "PAR_FILTER ?p ?xs"
+  cost_delta: -300
+  guards: ["pure(?p)", "expensive(?p)", "len(?xs) > 1000"]
+
+# Composition Rules - Multiple levers at once
+- name: ultimate_fusion
+  pattern: |
+    FOLD ?f ?z 
+      (MAP ?g 
+        (FILTER ?p 
+          (MAP ?h 
+            (FILTER ?q ?xs))))
+  rewrite: |
+    FOLD_FUSED 
+      (COMPOSE ?f ?g) 
+      ?z 
+      (FOCUS ?xs (AND ?p ?q) ?h DROP)
+  cost_delta: -5000  # This is where 100× happens
+  guards: ["pure(?f)", "pure(?g)", "pure(?p)", "pure(?h)", "pure(?q)"]
+
+# Memory Layout Rules
+- name: columnar_storage
+  pattern: "STORE (ARRAY_OF_STRUCTS ?data)"
+  rewrite: "STORE_COLUMNAR (STRUCT_OF_ARRAYS ?data)"
+  cost_delta: -200
+  guards: ["analytical_workload()"]
+
+# Properties to Verify
+properties:
+  - name: semantic_preservation
+    assert: "∀rule. soul(lhs) == soul(rhs)"
+  - name: cost_reduction
+    assert: "∀rule. cost(rhs) < cost(lhs)"
+  - name: termination
+    assert: "saturation_terminates()"

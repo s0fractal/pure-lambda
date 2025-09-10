@@ -10,6 +10,9 @@ pub mod rules;
 pub mod cost;
 pub mod verifier;
 pub mod learner;
+pub mod patches;
+pub mod leverage;
+pub mod proof_cache;
 
 use egraph::{EGraph, EClassId, IR};
 use rules::{Rule, RuleSet};
