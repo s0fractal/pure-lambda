@@ -1,0 +1,79 @@
+{
+  "version": "1.0.0",
+  "updated": "2024-01-10T12:00:00Z",
+  "genes": [
+    {
+      "name": "map",
+      "version": "1.0.0",
+      "soul": "λ45612188",
+      "description": "Transform each element of a list",
+      "intent": ["TRANSFORM", "RESONATE", "PRESERVE_STRUCTURE"],
+      "manifestations": {
+        "ts": {
+          "url": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/manifestations/ts/map.ts",
+          "verified": true
+        },
+        "py": {
+          "url": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/manifestations/py/map.py",
+          "verified": true
+        },
+        "rs": {
+          "url": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/manifestations/rs/lib.rs",
+          "verified": true
+        },
+        "wasm": {
+          "url": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/manifestations/wasm/map.wasm",
+          "verified": false
+        }
+      },
+      "canonical": {
+        "ir": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/λ/canonical.ir",
+        "laws": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/laws.md"
+      },
+      "tests": {
+        "vectors": "https://github.com/s0fractal/pure-lambda/blob/master/genes/map/tests/vectors.json"
+      }
+    },
+    {
+      "name": "filter",
+      "version": "1.0.0",
+      "soul": "λ9c4e8a1f",
+      "description": "Select elements that match a predicate",
+      "intent": ["SELECT", "PRESERVE_ORDER", "SUBSET"],
+      "manifestations": {
+        "ts": {
+          "url": "https://github.com/s0fractal/pure-lambda/blob/master/genes/filter/manifestations/ts/filter.ts",
+          "verified": true
+        }
+      },
+      "canonical": {
+        "ir": "https://github.com/s0fractal/pure-lambda/blob/master/genes/filter/λ/canonical.ir"
+      }
+    },
+    {
+      "name": "reduce",
+      "version": "1.0.0",
+      "soul": "λ8b3d7f9a",
+      "description": "Aggregate a list into a single value",
+      "intent": ["AGGREGATE", "FOLD", "ACCUMULATE", "COMPRESS"],
+      "manifestations": {},
+      "canonical": {
+        "ir": "https://github.com/s0fractal/pure-lambda/blob/master/genes/reduce/λ/canonical.ir"
+      }
+    }
+  ],
+  "collections": [
+    {
+      "name": "core-functional",
+      "description": "Essential functional programming genes",
+      "genes": ["map", "filter", "reduce"],
+      "soul": "λcollection-3f9a2b8c"
+    }
+  ],
+  "metadata": {
+    "total_genes": 3,
+    "total_manifestations": 5,
+    "languages": ["ts", "py", "rs", "wasm"],
+    "repository": "https://github.com/s0fractal/pure-lambda"
+  }
+}

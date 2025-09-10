@@ -1,0 +1,14 @@
+# Lambda IR - Canonical representation of reduce/fold
+# This is the semantic core from which all manifestations derive
+
+# REDUCE :: (List<A>, (B, A) -> B, B) -> B
+LAM xs
+  LAM f
+    LAM init
+      CASE xs
+        NIL -> init
+        CONS h t -> 
+          APP (APP (APP REDUCE t) f) (APP (APP f init) h)
+          
+# Simplified/Normalized form for hashing:
+# λxs.λf.λinit.case(xs, nil:init, cons(h,t):reduce(t, f, f(init, h)))

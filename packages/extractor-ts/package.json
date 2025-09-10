@@ -1,0 +1,24 @@
+{
+  "name": "@pure-lambda/extractor-ts",
+  "version": "1.0.0",
+  "description": "Lambda-IR extractor for TypeScript",
+  "main": "index.js",
+  "bin": {
+    "extractor-ts": "./index.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "lambda",
+    "IR",
+    "extractor",
+    "typescript",
+    "soul"
+  ],
+  "author": "s0fractal",
+  "license": "MIT"
+}

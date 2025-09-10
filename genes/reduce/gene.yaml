@@ -1,0 +1,36 @@
+# Gene Identity
+gene: reduce
+version: 1
+soul: "λ8b3d7f9a"  # Will be computed from canonical.ir
+
+# Semantic Signature
+signature:
+  type: "(List<A>, (B, A) -> B, B) -> B"
+  generics: ["A", "B"]
+  
+# Intent & Properties
+intent:
+  primary: AGGREGATE
+  secondary: [FOLD, ACCUMULATE, COMPRESS]
+  
+effects:
+  - pure
+  - deterministic
+  - total
+  
+constraints:
+  time: "O(n)"
+  space: "O(1)"  # Constant additional space
+  
+# Resonance
+resonance:
+  tags: [fundamental, aggregating, compressing]
+  similar: [fold, aggregate, accumulate]
+  
+# Verification
+proof:
+  method: "λ-IR extraction"
+  laws:
+    - "associativity (for associative operations)"
+    - "identity element"  
+    - "left fold consistency"

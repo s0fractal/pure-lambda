@@ -1,0 +1,24 @@
+[package]
+name = "gene-map-wasm"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = "0.16"
+sha2 = "0.10"
+hex = "0.4"
+
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
+
+[profile.release]
+opt-level = "z"  # Optimize for size
+lto = true
+codegen-units = 1
+
+[package.metadata.component]
+package = "gene:map"

@@ -1,0 +1,30 @@
+// WASM Component Model interface for map gene
+// This defines the universal ABI for cross-language invocation
+
+package gene:map@1.0.0;
+
+// Core map interface
+interface map {
+  // The universal map function signature
+  // Takes a list and a transformation function
+  run: func(items: list<any>, transform: func(item: any) -> any) -> list<any>;
+}
+
+// World definition - what this component exports
+world map-world {
+  // Export the map interface
+  export map;
+  
+  // Import types for interop
+  import types: interface {
+    // Generic any type for maximum flexibility
+    type any = variant {
+      number(float64),
+      string(string),
+      boolean(bool),
+      null,
+      list(list<any>),
+      record(list<tuple<string, any>>),
+    };
+  };
+}
