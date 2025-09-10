@@ -50,6 +50,9 @@ pub enum IR {
     Compose(u32, u32),  // f ∘ g
     Drop,               // Remove element
     Identity,           // Pass through
+    
+    // OBSERVE operator - wave-file angle-dependent reading
+    Observe(crate::observe::Observe)
 }
 
 // Simple arena for IR nodes in no_std environment

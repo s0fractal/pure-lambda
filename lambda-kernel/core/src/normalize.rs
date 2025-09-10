@@ -351,6 +351,22 @@ pub fn normalize(ir: &IR, arena: &mut Arena) -> IR {
         // Special operators
         IR::Drop => IR::Drop,
         IR::Identity => IR::Identity,
+        
+        // OBSERVE operator
+        IR::Observe(observe) => {
+            // Normalize file reference
+            let file = arena.get(observe.file);
+            let file_norm = normalize(&file, arena);
+            let file_idx = arena.alloc(file_norm);
+            
+            // For now, preserve observe with normalized file
+            IR::Observe(crate::observe::Observe {
+                file: file_idx,
+                theta: observe.theta,
+                phase: observe.phase,
+                mapping: observe.mapping,
+            })
+        }
     }
 }
 

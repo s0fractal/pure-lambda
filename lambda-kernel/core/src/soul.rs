@@ -94,6 +94,12 @@ fn hash_ir(ir: &IR) -> u64 {
         }
         IR::Drop => 31,
         IR::Identity => 32,
+        IR::Observe(observe) => {
+            let h1 = hash_combine(33, observe.file as u64);
+            let h2 = hash_combine(h1, observe.theta as u64);
+            let h3 = hash_combine(h2, observe.phase as u64);
+            hash_combine(h3, observe.mapping as u64)
+        }
     }
 }
 
