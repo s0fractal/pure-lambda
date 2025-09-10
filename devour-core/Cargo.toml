@@ -44,6 +44,7 @@ dashmap = "6"    # Concurrent hashmap
 petgraph = "0.6" # DAG for task scheduling
 walkdir = "2"    # Directory traversal
 chrono = "0.4"   # Time handling
+fastrand = "2"   # Fast random number generation
 
 [dev-dependencies]
 tempfile = "3"
