@@ -2,7 +2,7 @@
   "name": "@pure-lambda/core",
   "version": "0.1.0",
   "description": "Core organism - Essential functional genetics",
-  "soulset": null,
+  "soulset": "S:0ca5ff4c",
   "genes": {
     "map": {
       "soul": "λ45612188",
@@ -41,5 +41,12 @@
     "souls_match": true,
     "tests_pass": true,
     "properties_verified": true
-  }
+  },
+  "buildDate": "2025-09-10T10:58:41.837Z",
+  "targets": [
+    "ts",
+    "py",
+    "rs",
+    "wasm"
+  ]
 }

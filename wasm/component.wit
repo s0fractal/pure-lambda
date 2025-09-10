@@ -1,0 +1,117 @@
+// WASI Component Model Interface for Pure Lambda Genes
+// Defines the interface for cross-language gene composition
+
+package pure-lambda:genes@0.1.0;
+
+// Core functional types
+interface types {
+    // List type for collections
+    type list = list<any>;
+    
+    // Function types
+    type unary-fn = func(any) -> any;
+    type binary-fn = func(any, any) -> any;
+    type predicate = func(any) -> bool;
+    type reducer = func(any, any) -> any;
+    
+    // Gene soul identifier
+    type soul = string;
+}
+
+// Core gene interface
+interface gene {
+    use types.{list, soul};
+    
+    // Gene metadata
+    soul: func() -> soul;
+    signature: func() -> string;
+    
+    // Gene execution
+    execute: func(args: list) -> any;
+}
+
+// Array manipulation genes
+interface array-genes {
+    use types.{list, unary-fn, predicate, reducer};
+    
+    // Map function
+    map: func(xs: list, f: unary-fn) -> list;
+    
+    // Filter function
+    filter: func(xs: list, pred: predicate) -> list;
+    
+    // Reduce function
+    reduce: func(xs: list, f: reducer, init: any) -> any;
+    
+    // Chunk function
+    chunk: func(xs: list, size: u32) -> list;
+    
+    // Unique function
+    uniq: func(xs: list) -> list;
+}
+
+// Composition genes
+interface composition-genes {
+    use types.{unary-fn};
+    
+    // Compose functions right-to-left
+    compose: func(funcs: list<unary-fn>) -> unary-fn;
+    
+    // Pipe functions left-to-right
+    pipe: func(funcs: list<unary-fn>) -> unary-fn;
+}
+
+// Object manipulation genes
+interface object-genes {
+    use types.{list};
+    
+    // Get nested property
+    get: func(obj: any, path: list<string>) -> any;
+    
+    // Set nested property
+    set: func(obj: any, path: list<string>, value: any) -> any;
+    
+    // Group by key
+    group-by: func(xs: list, key-fn: unary-fn) -> any;
+}
+
+// Core organism world
+world organism {
+    // Import types
+    import types;
+    
+    // Export gene collections
+    export array-genes;
+    export composition-genes;
+    export object-genes;
+    
+    // Organism metadata
+    export soulset: func() -> string;
+    export genes: func() -> list<string>;
+    export manifest: func() -> string;
+}
+
+// Individual gene world (for single-gene modules)
+world single-gene {
+    import types;
+    export gene;
+}
+
+// Devoured organism world (for mass-consumed code)
+world devoured-organism {
+    import types;
+    
+    // All consumed and distilled genes
+    export array-genes;
+    export composition-genes;
+    export object-genes;
+    
+    // Compatibility shims
+    export lodash-compat: func() -> any;
+    export ramda-compat: func() -> any;
+    export underscore-compat: func() -> any;
+    
+    // Attestation
+    export sources: func() -> list<string>;
+    export attestation: func() -> string;
+}

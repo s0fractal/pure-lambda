@@ -463,9 +463,85 @@ genes = ${JSON.stringify(config.genes.included)}
 }
 
 async function buildWASM(name, config) {
-  console.log('  ℹ️  WASM build requires wasm-pack');
-  // Simplified for now
-  return 'dist/wasm';
+  const outputDir = path.join('organisms', name, 'dist', 'wasm');
+  
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  
+  // Try to use the λ-to-WASM compiler
+  try {
+    const { compileGene } = require('./wasm/lambda-wasm');
+    
+    for (const geneName of config.genes.included) {
+      const genePath = path.join('genes', geneName, 'gene.yaml');
+      const outputPath = path.join(outputDir, `${geneName}.wat`);
+      
+      if (fs.existsSync(genePath)) {
+        await compileGene(genePath, outputPath);
+      } else {
+        console.log(`    Skipping ${geneName} (no gene.yaml)`);
+      }
+    }
+    
+    // Generate main module that exports all genes
+    const mainWat = generateMainWASM(name, config);
+    fs.writeFileSync(path.join(outputDir, `${name}.wat`), mainWat);
+    
+    // Generate component.wit interface
+    const witInterface = generateWIT(name, config);
+    fs.writeFileSync(path.join(outputDir, 'world.wit'), witInterface);
+    
+    console.log(`  ✓ WASM built at ${outputDir}`);
+  } catch (e) {
+    console.log('  ℹ️  WASM compiler not available, creating stub');
+    
+    // Create stub files
+    fs.writeFileSync(path.join(outputDir, `${name}.wat`), 
+      `;; WebAssembly Text Format for ${name}\n;; Generated stub - compile with wasm-tools`);
+    
+    fs.writeFileSync(path.join(outputDir, 'world.wit'),
+      `// Component Model interface for ${name}\nworld ${name} {}`);
+  }
+  
+  return outputDir;
+}
+
+function generateMainWASM(name, config) {
+  return `(module
+  ;; ${name} organism - ${config.organism.description || ''}
+  ;; Genes: ${config.genes.included.join(', ')}
+  
+  (memory 1)
+  (export "memory" (memory 0))
+  
+  ;; Import genes
+  ${config.genes.included.map(g => `(import "genes" "${g}" (func $${g} (param i32) (result i32)))`).join('\n  ')}
+  
+  ;; Re-export genes
+  ${config.genes.included.map(g => `(export "${g}" (func $${g}))`).join('\n  ')}
+  
+  ;; Organism metadata
+  (func $soulset (result i32)
+    i32.const 0 ;; Return pointer to soulset string
+  )
+  (export "soulset" (func $soulset))
+)`;
+}
+
+function generateWIT(name, config) {
+  return `// Component Model interface for ${name}
+package pure-lambda:${name}@${config.organism.version};
+
+interface ${name}-genes {
+  ${config.genes.included.map(g => `${g}: func(list<any>) -> any;`).join('\n  ')}
+}
+
+world ${name} {
+  export ${name}-genes;
+  export soulset: func() -> string;
+  export manifest: func() -> string;
+}`;
 }
 
 // ============================================
