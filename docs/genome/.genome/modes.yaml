@@ -1,0 +1,17 @@
+- name: HARD
+  description: "Boolean gate p(x)∈{0,1}"
+  formula: "FOCUS_h(xs,p,f,DROP) ≡ map(filter(xs,p),f)"
+  use_case: "Classic filter+map fusion"
+  cost: 2  # Boolean test + branch
+  
+- name: SOFT  
+  description: "Attention weight w(x)∈[0,1]"
+  formula: "FOCUS_s(xs,w,f,g) ≡ map(xs, x => blend(w(x),f(x),g(x)))"
+  use_case: "Gradual blending, attention mechanisms"
+  cost: 4  # Weight compute + blend
+  
+- name: SPATIAL
+  description: "ROI weight w(π(i),x)"
+  formula: "π(i)→(u,v,scale,depth), w focuses on region"
+  use_case: "Image processing, fractal navigation"
+  cost: 6  # Projection + weight + blend

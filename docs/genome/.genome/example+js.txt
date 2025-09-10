@@ -1,0 +1,5 @@
+// Before: two passes, intermediate array
+const primes = nums.filter(isPrime).map(square);
+
+// After: one pass, no intermediate
+const primes = focus(nums, isPrime, square, drop);

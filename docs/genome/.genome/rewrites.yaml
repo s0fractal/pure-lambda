@@ -1,0 +1,29 @@
+- name: filter_map_to_focus
+  pattern: "MAP (FILTER ?xs ?p) ?f"
+  rewrite: "FOCUS ?xs (to01 ∘ ?p) ?f DROP"
+  guards: ["pure(?p)", "pure(?f)"]
+  cost_delta: -10
+  
+- name: map_filter_to_focus  
+  pattern: "FILTER (MAP ?xs ?f) ?p"
+  rewrite: "FOCUS ?xs (to01 ∘ ?p ∘ ?f) ?f DROP"
+  guards: ["pure(?p)", "pure(?f)"]
+  cost_delta: -8
+
+- name: focus_chain_fusion
+  pattern: "FOCUS (FOCUS ?xs ?w1 ?f1 ?g1) ?w2 ?f2 ?g2"
+  rewrite: "FOCUS ?xs (AND ?w1 ?w2) (COMPOSE ?f2 ?f1) (FUSE_BG ?g1 ?g2 ?f1)"
+  guards: ["same_mode(?w1,?w2)"]
+  cost_delta: -15
+
+- name: const_weight_elimination
+  pattern: "FOCUS ?xs (CONST true) ?f ?g"
+  rewrite: "MAP ?xs ?f"
+  guards: []
+  cost_delta: -2
+  
+- name: zero_weight_elimination
+  pattern: "FOCUS ?xs (CONST false) ?f ?g"  
+  rewrite: "MAP ?xs ?g"
+  guards: []
+  cost_delta: -2

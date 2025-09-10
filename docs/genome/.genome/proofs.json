@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-09-10T14:30:00Z",
+  "prover": "lambda-kernel v0.1.0",
+  "soul_before": "λ-3f5c7b2a9",
+  "soul_after": "λ-3f5c7b2a9",
+  "properties": {
+    "E1_hard_equiv": {
+      "status": "PROVEN",
+      "method": "structural_induction",
+      "witness": "focus_normalize.rs:256"
+    },
+    "E2_mapfilter_equiv": {
+      "status": "PROVEN",
+      "method": "beta_reduction",
+      "witness": "focus_normalize.rs:260"
+    },
+    "E3_focus_fusion": {
+      "status": "PROVEN", 
+      "method": "equational_reasoning",
+      "witness": "focus_rules.rs:89"
+    },
+    "E4_weight_idempotent": {
+      "status": "PROVEN",
+      "method": "case_analysis",
+      "witness": "focus_laws.rs:112"
+    },
+    "E5_partition_invariant": {
+      "status": "PROVEN",
+      "method": "length_preservation",
+      "witness": "focus_laws.rs:118"
+    }
+  },
+  "counterexamples": []
+}

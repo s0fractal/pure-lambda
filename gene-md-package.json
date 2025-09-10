@@ -1,0 +1,38 @@
+{
+  "name": "gene-md",
+  "version": "0.1.0",
+  "description": "ProofMD - Proof-carrying Markdown for λ-genes",
+  "main": "gene-md.js",
+  "bin": {
+    "gene-md": "./gene-md.js"
+  },
+  "scripts": {
+    "test": "node gene-md.js attest docs/genome/FOCUS.md",
+    "extract": "node gene-md.js extract docs/genome/FOCUS.md",
+    "canonize": "node gene-md.js canonize docs/genome/.genome/*.json",
+    "soul": "node gene-md.js soul docs/genome/.genome/focus.canon.json"
+  },
+  "keywords": [
+    "proofmd",
+    "lambda",
+    "gene",
+    "proof",
+    "markdown",
+    "ipfs",
+    "content-addressing"
+  ],
+  "author": "s0fractal",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "js-yaml": "^4.1.0",
+    "glob": "^10.3.0"
+  },
+  "devDependencies": {
+    "ipfs-http-client": "^60.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/s0fractal/pure-lambda"
+  }
+}

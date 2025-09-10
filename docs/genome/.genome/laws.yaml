@@ -1,0 +1,32 @@
+- name: E1_hard_equiv
+  formula: "FOCUS_h(xs,p,f,DROP) ≡ MAP(FILTER(xs,p),f)"
+  assert: |
+    forall xs p f.
+    pure(p) ∧ pure(f) =>
+    FOCUS(xs, to01∘p, f, DROP) == MAP(FILTER(xs,p),f)
+  
+- name: E2_mapfilter_equiv  
+  formula: "FOCUS_h(xs,p,f,ID) ≡ MAPFILTER(xs,p,f)"
+  assert: |
+    forall xs p f.
+    FOCUS(xs, to01∘p, f, ID) == xs.filter(p).map(f)
+    
+- name: E3_focus_fusion
+  formula: "FOCUS∘FOCUS ≡ FOCUS"
+  assert: |
+    forall xs w1 f1 g1 w2 f2 g2.
+    FOCUS(FOCUS(xs,w1,f1,g1), w2,f2,g2) == 
+    FOCUS(xs, w1∧w2, f2∘f1, fuse_bg(g1,g2,f1))
+    
+- name: E4_weight_idempotent
+  formula: "w∈{0,1} → hard mode"
+  assert: |
+    forall xs w f g.
+    (∀x. w(x)∈{0,1}) => mode(FOCUS(xs,w,f,g)) == HARD
+    
+- name: E5_partition_invariant
+  formula: "soft/spatial preserve length"
+  assert: |
+    forall xs w f.
+    mode∈{SOFT,SPATIAL} => 
+    len(FOCUS(xs,w,f,ID)) == len(xs)

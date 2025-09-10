@@ -1,0 +1,5 @@
+-- Before: composition
+result = map transform . filter predicate $ xs
+
+-- After: focus primitive
+result = focus xs (to01 . predicate) transform drop

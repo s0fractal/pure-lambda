@@ -1,0 +1,176 @@
+name: ProofMD Attestation
+
+on:
+  push:
+    paths:
+      - 'docs/genome/**/*.md'
+      - 'lambda-kernel/**/*.rs'
+  pull_request:
+    paths:
+      - 'docs/genome/**/*.md'
+      - 'lambda-kernel/**/*.rs'
+
+jobs:
+  attest:
+    name: Verify Gene Proofs
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: |
+          npm install -g js-yaml commander glob
+          chmod +x gene-md.js
+          
+      - name: Extract gene blocks
+        run: |
+          for md in docs/genome/*.md; do
+            echo "📄 Processing $md"
+            ./gene-md.js extract "$md"
+          done
+          
+      - name: Canonicalize λ-IR
+        run: |
+          for genome_dir in docs/genome/.genome/; do
+            if [ -d "$genome_dir" ]; then
+              ./gene-md.js canonize "$genome_dir/*.json"
+            fi
+          done
+          
+      - name: Compute souls
+        run: |
+          for canon in docs/genome/.genome/*.canonical.json; do
+            if [ -f "$canon" ]; then
+              ./gene-md.js soul "$canon"
+            fi
+          done
+          
+      - name: Attest gene properties
+        run: |
+          for md in docs/genome/*.md; do
+            echo "🔬 Attesting $md"
+            ./gene-md.js attest "$md" --strict || true
+          done
+          
+      - name: Update CIDs
+        if: github.event_name == 'push'
+        run: |
+          for md in docs/genome/*.md; do
+            ./gene-md.js link "$md"
+          done
+          
+      - name: Commit CID updates
+        if: github.event_name == 'push'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "ProofMD Bot"
+          git add docs/genome/*.md
+          git diff --staged --quiet || git commit -m "🔗 Update CIDs in gene documentation"
+          
+      - name: Generate attestation report
+        run: |
+          echo "# ProofMD Attestation Report" > attestation-report.md
+          echo "" >> attestation-report.md
+          echo "Generated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> attestation-report.md
+          echo "" >> attestation-report.md
+          
+          for md in docs/genome/*.md; do
+            basename=$(basename "$md")
+            echo "## $basename" >> attestation-report.md
+            ./gene-md.js attest "$md" 2>&1 | tail -n +2 >> attestation-report.md
+            echo "" >> attestation-report.md
+          done
+          
+      - name: Upload attestation report
+        uses: actions/upload-artifact@v3
+        with:
+          name: attestation-report
+          path: attestation-report.md
+          
+      - name: IPFS publish (optional)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        continue-on-error: true
+        run: |
+          # Install IPFS CLI (kubo)
+          wget -q https://dist.ipfs.tech/kubo/v0.24.0/kubo_v0.24.0_linux-amd64.tar.gz
+          tar -xzf kubo_v0.24.0_linux-amd64.tar.gz
+          sudo mv kubo/ipfs /usr/local/bin/
+          
+          # Initialize IPFS
+          ipfs init --profile server
+          ipfs daemon &
+          sleep 5
+          
+          # Add gene documents
+          for md in docs/genome/*.md; do
+            cid=$(ipfs add -Q "$md")
+            echo "📦 Published $(basename "$md") to IPFS: $cid"
+          done
+          
+  verify-build:
+    name: Verify λKernel Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          
+      - name: Build λKernel core (no_std)
+        run: |
+          cd lambda-kernel/core
+          cargo build --no-default-features
+          
+      - name: Build λKernel with alloc
+        run: |
+          cd lambda-kernel/core
+          cargo build --features alloc
+          
+      - name: Run tests
+        run: |
+          cd lambda-kernel/core
+          cargo test --no-default-features
+          
+  gene-index:
+    name: Generate Gene Index
+    runs-on: ubuntu-latest
+    needs: [attest]
+    if: github.event_name == 'push'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Generate index
+        run: |
+          echo "# Gene Registry 🧬" > docs/genome/README.md
+          echo "" >> docs/genome/README.md
+          echo "| Gene | Soul | Intent | Laws | Status |" >> docs/genome/README.md
+          echo "|------|------|--------|------|--------|" >> docs/genome/README.md
+          
+          for md in docs/genome/*.md; do
+            if [ "$(basename "$md")" != "README.md" ]; then
+              name=$(grep "^name:" "$md" | cut -d: -f2 | xargs)
+              soul=$(grep "^soul:" "$md" | cut -d: -f2 | xargs)
+              intent=$(grep "^intent:" "$md" | cut -d: -f2 | xargs)
+              echo "| [$name]($(basename "$md")) | $soul | $intent | ✅ | Active |" >> docs/genome/README.md
+            fi
+          done
+          
+      - name: Commit index
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "ProofMD Bot"
+          git add docs/genome/README.md
+          git diff --staged --quiet || git commit -m "📚 Update gene registry index"

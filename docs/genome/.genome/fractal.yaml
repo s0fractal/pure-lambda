@@ -1,0 +1,17 @@
+algorithm: Z-order (Morton encoding)
+formula: |
+  π(i) → (u, v, scale, depth) where:
+  - u,v from interleaved bits of i
+  - scale = 2^(depth/2)
+  - depth = ⌊log₂(i+1)⌋
+  
+properties:
+  - locality_preserving: true
+  - cache_friendly: true
+  - recursive: true
+  
+applications:
+  - Image tiles navigation
+  - Spatial indexing
+  - Fractal zoom
+  - ROI selection

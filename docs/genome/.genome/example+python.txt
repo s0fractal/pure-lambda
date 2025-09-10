@@ -1,0 +1,8 @@
+# Apply gaussian blur only in circular ROI
+def blur_roi(image, center, radius):
+    return focus_spatial(
+        image,
+        lambda i: gaussian_weight(project(i), center, radius),
+        gaussian_blur,
+        identity
+    )

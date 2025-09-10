@@ -1,0 +1,8 @@
+// Before: iterator chain
+let result: Vec<_> = data.iter()
+    .filter(|x| x.score > 0.5)
+    .map(|x| transform(x))
+    .collect();
+
+// After: single focus operation
+let result = focus_hard(data, |x| x.score > 0.5, transform);

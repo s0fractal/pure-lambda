@@ -1,0 +1,7 @@
+graph TD
+    FILTER[FILTER<br/>select] --> FOCUS
+    MAP[MAP<br/>transform] --> FOCUS
+    FOCUS --> HARD[Hard Focus<br/>binary]
+    FOCUS --> SOFT[Soft Focus<br/>attention]
+    FOCUS --> SPATIAL[Spatial Focus<br/>ROI]
+    SPATIAL --> FRACTAL[Fractal Nav<br/>π projection]
