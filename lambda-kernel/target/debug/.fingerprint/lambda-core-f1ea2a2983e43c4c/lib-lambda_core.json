@@ -1,0 +1,1 @@
+{"rustc":12610991425282158916,"features":"[]","declared_features":"[\"alloc\", \"default\"]","target":11239416985517695036,"profile":6675295047989516842,"path":2995440285629810167,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/lambda-core-f1ea2a2983e43c4c/dep-lib-lambda_core","checksum":false}}],"rustflags":[],"config":2069994364910194474,"compile_kind":0}

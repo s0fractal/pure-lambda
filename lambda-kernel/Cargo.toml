@@ -1,0 +1,19 @@
+[workspace]
+members = [
+    "core",
+    "unikernel",
+    "xtask",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["s0fractal"]
+
+[profile.release]
+opt-level = "z"     # Optimize for size
+lto = true          # Link-time optimization
+codegen-units = 1   # Single codegen unit
+panic = "abort"     # No unwinding
+strip = true        # Strip symbols

@@ -1,0 +1,1 @@
+/Users/chaoshex/Projects/pure-lambda/lambda-kernel/target/debug/liblambda_core.rlib: /Users/chaoshex/Projects/pure-lambda/lambda-kernel/core/src/ir.rs /Users/chaoshex/Projects/pure-lambda/lambda-kernel/core/src/lib.rs /Users/chaoshex/Projects/pure-lambda/lambda-kernel/core/src/normalize.rs /Users/chaoshex/Projects/pure-lambda/lambda-kernel/core/src/soul.rs

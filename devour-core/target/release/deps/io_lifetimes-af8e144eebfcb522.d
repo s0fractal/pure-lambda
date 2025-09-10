@@ -1,0 +1,11 @@
+/Users/chaoshex/Projects/pure-lambda/devour-core/target/release/deps/io_lifetimes-af8e144eebfcb522.d: /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/lib.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/portability.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/traits.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/raw.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/views.rs
+
+/Users/chaoshex/Projects/pure-lambda/devour-core/target/release/deps/libio_lifetimes-af8e144eebfcb522.rlib: /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/lib.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/portability.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/traits.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/raw.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/views.rs
+
+/Users/chaoshex/Projects/pure-lambda/devour-core/target/release/deps/libio_lifetimes-af8e144eebfcb522.rmeta: /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/lib.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/portability.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/traits.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/raw.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/views.rs
+
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/lib.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/portability.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/traits.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/raw.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/io-lifetimes-2.0.4/src/views.rs:

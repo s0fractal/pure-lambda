@@ -9,8 +9,8 @@ echo "========================================="
 echo ""
 
 # Configuration
-PATIENT_DIR="../../Projects/med-bed"
-DEVOUR_CORE="../devour-core"
+PATIENT_DIR="/Users/chaoshex/Projects/med-bed"
+DEVOUR_CORE="/Users/chaoshex/Projects/pure-lambda/devour-core"
 OUTPUT_DIR=".genome/runs/medbed-op-001"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 

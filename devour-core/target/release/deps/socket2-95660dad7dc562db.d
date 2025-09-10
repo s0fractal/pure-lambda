@@ -1,0 +1,11 @@
+/Users/chaoshex/Projects/pure-lambda/devour-core/target/release/deps/socket2-95660dad7dc562db.d: /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/lib.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockaddr.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/socket.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockref.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sys/unix.rs
+
+/Users/chaoshex/Projects/pure-lambda/devour-core/target/release/deps/libsocket2-95660dad7dc562db.rlib: /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/lib.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockaddr.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/socket.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockref.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sys/unix.rs
+
+/Users/chaoshex/Projects/pure-lambda/devour-core/target/release/deps/libsocket2-95660dad7dc562db.rmeta: /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/lib.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockaddr.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/socket.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockref.rs /Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sys/unix.rs
+
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/lib.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockaddr.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/socket.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sockref.rs:
+/Users/chaoshex/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/socket2-0.6.0/src/sys/unix.rs:

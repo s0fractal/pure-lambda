@@ -50,6 +50,6 @@ fastrand = "2"   # Fast random number generation
 tempfile = "3"
 criterion = "0.5"
 
-[[bench]]
-name = "digest"
-harness = false
+# [[bench]]
+# name = "digest"
+# harness = false

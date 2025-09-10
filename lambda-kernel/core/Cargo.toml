@@ -1,0 +1,11 @@
+[package]
+name = "lambda-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# No dependencies - pure no_std
+
+[features]
+default = []
+alloc = []

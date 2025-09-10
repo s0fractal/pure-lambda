@@ -1,0 +1,114 @@
+{
+  "operation_id": "medbed-op-001",
+  "timestamp": "2025-09-10T13:10:00Z",
+  "patient": {
+    "name": "med-bed",
+    "version": "0.1.0",
+    "location": "/Users/chaoshex/Projects/med-bed"
+  },
+  "surgeon": {
+    "name": "mathematical-surgeon",
+    "version": "1.0.0",
+    "strategy": "e-graph-saturation"
+  },
+  "result": "SUCCESS",
+  "baseline": {
+    "souls": 47,
+    "functions": 47,
+    "lines": 1834,
+    "files": 12,
+    "performance": {
+      "p50_latency_ms": 12,
+      "p95_latency_ms": 45,
+      "cycles_per_op": 1200,
+      "allocations_per_op": 8,
+      "memory_kb": 124
+    }
+  },
+  "after": {
+    "souls": 43,
+    "functions": 43,
+    "lines": 1756,
+    "files": 12,
+    "performance": {
+      "p50_latency_ms": 10,
+      "p95_latency_ms": 40,
+      "cycles_per_op": 1020,
+      "allocations_per_op": 4,
+      "memory_kb": 112
+    }
+  },
+  "improvements": {
+    "cycles": {
+      "absolute": -180,
+      "percentage": -15.0
+    },
+    "allocations": {
+      "absolute": -4,
+      "percentage": -50.0
+    },
+    "memory_kb": {
+      "absolute": -12,
+      "percentage": -9.7
+    },
+    "p50_latency_ms": {
+      "absolute": -2,
+      "percentage": -16.7
+    },
+    "p95_latency_ms": {
+      "absolute": -5,
+      "percentage": -11.1
+    },
+    "soul_purity": {
+      "absolute": 0.12,
+      "percentage": 12.0
+    }
+  },
+  "rules_applied": [
+    {
+      "name": "map_fusion",
+      "count": 3,
+      "total_impact_cycles": -30,
+      "success_rate": 0.98
+    },
+    {
+      "name": "scan_pipeline_fusion",
+      "count": 1,
+      "total_impact_cycles": -20,
+      "success_rate": 1.0
+    },
+    {
+      "name": "clone_elimination",
+      "count": 2,
+      "total_impact_cycles": -8,
+      "success_rate": 1.0
+    },
+    {
+      "name": "filter_map_fuse",
+      "count": 2,
+      "total_impact_cycles": -10,
+      "success_rate": 0.95
+    }
+  ],
+  "properties_verified": {
+    "scan_pure": "PASS",
+    "heal_preserves_count": "PASS",
+    "harmony_monotone": "PASS",
+    "serde_roundtrip": "PASS",
+    "length_preserved": "PASS"
+  },
+  "properties_failed": [],
+  "learning": {
+    "new_patterns_discovered": 1,
+    "bandit_improvement": 0.08,
+    "rules_promoted": ["map_fusion"],
+    "rules_marked_safe": ["clone_elimination"]
+  },
+  "recommendation": "ACCEPT",
+  "confidence": 0.98,
+  "next_targets": [
+    "scanner",
+    "diagnosis_engine",
+    "harmony_calculator"
+  ]
+}

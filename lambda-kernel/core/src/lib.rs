@@ -1,0 +1,19 @@
+#![no_std]
+#![forbid(unsafe_code)]
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
+pub mod ir;
+pub mod normalize;
+pub mod soul;
+
+#[cfg(feature = "alloc")]
+pub mod rewriter;
+
+pub use ir::{IR, Symbol, Arena};
+pub use normalize::normalize;
+pub use soul::compute_soul;
+
+#[cfg(feature = "alloc")]
+pub use rewriter::{EGraph, Rule, Pattern};

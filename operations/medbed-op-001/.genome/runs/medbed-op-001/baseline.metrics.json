@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-09-10T13:08:45Z",
+  "patient": "med-bed",
+  "metrics": {
+    "total_functions": ,
+    "total_lines": 816,
+    "total_files":        2
+  }
+}
