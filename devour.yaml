@@ -1,0 +1,49 @@
+# Devour Recipe - Consume and distill entire ecosystems
+
+sources:
+  - type: npm
+    name: lodash
+    version: "^4.17.21"
+  
+  - type: github
+    repo: ramda/ramda
+    name: ramda
+    ref: master
+  
+  - type: npm
+    name: underscore
+    version: "^1.13.0"
+
+normalize:
+  languages: [typescript, javascript, python, rust]
+  extractors:
+    - extractors/typescript.wasm
+    - extractors/javascript.wasm
+    - extractors/python.wasm
+    - extractors/rust.wasm
+
+align:
+  rules: alignment-rules.yaml
+
+distill:
+  objectives:
+    speed: 0.4      # Performance weight
+    memory: 0.2     # Memory efficiency
+    size: 0.2       # Code size
+    purity: 0.2     # Functional purity
+  
+  constraints:
+    compat: "lodash-compat>=0.95"    # Must be 95% compatible
+    soul-similarity: ">=0.90"        # Souls must be 90% similar
+    min-purity: 0.8                  # Minimum purity score
+
+forge:
+  organism: ultimate-core
+  targets: [wasm, typescript, python, rust]
+  shim: lodash    # Generate lodash-compatible interface
+
+attest:
+  sign: sigstore
+  publish:
+    - "oci://registry.pure-lambda.org/ultimate-core"
+    - "npm:@pure-lambda/ultimate-core"
