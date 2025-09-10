@@ -1,0 +1,85 @@
+# First Surgical Operation - Med-bed Optimization
+# Pure mathematical transformation without models
+
+run_id: "medbed-op-001"
+patient: "med-bed"
+surgeon: "mathematical-surgeon-v1"
+timestamp: "2025-09-10T12:00:00Z"
+
+# Target outputs
+targets: ["rust", "wasm"]
+
+# Scope of operation
+scope:
+  include:
+    - "Projects/med-bed/src/**.rs"
+    - "Projects/med-bed/src/scanner/**.rs"
+    - "Projects/med-bed/src/healer/**.rs"
+  exclude:
+    - "**/cli/**"      # CLI is exotic
+    - "**/io/**"       # IO operations stay outside membrane
+    - "**/tests/**"    # Tests unchanged
+
+# Cost model weights
+cost_weights:
+  cycles: 1.0      # CPU cycles most important
+  bytes: 0.2       # Memory is cheaper
+  allocs: 0.6      # Allocations are expensive
+  io_risk: 0.0     # Pure functions only for now
+
+# Search limits (bounded to ensure termination)
+limits:
+  e_classes: 20000     # Max equivalence classes
+  iterations: 50       # Max saturation iterations  
+  time_seconds: 60     # Hard timeout
+  memory_mb: 1024      # Memory limit
+
+# Properties that must hold
+properties:
+  - id: "scan_pure"
+    description: "Scan operations don't modify data"
+    formula: "∀x. scan(x) = x"
+    
+  - id: "heal_preserves_count"
+    description: "Healing doesn't change gene count"
+    formula: "∀genes. |heal(genes)| = |genes|"
+    
+  - id: "harmony_monotone"
+    description: "Healing improves or maintains harmony"
+    formula: "∀x. harmony(heal(scan(x))) ≥ harmony(x)"
+    
+  - id: "serde_roundtrip"
+    description: "Serialization is invertible"
+    formula: "∀x. deserialize(serialize(x)) = x"
+    
+  - id: "length_preserved"
+    description: "Map preserves list length"
+    formula: "∀xs f. |map(xs, f)| = |xs|"
+
+# Acceptance criteria
+accept:
+  perf_regress_pct: 0      # No performance regression
+  size_regress_kb: 0       # No size increase
+  alloc_increase: 0        # No more allocations
+  property_failures: 0     # All properties must pass
+
+# Stop criteria (fail-closed)
+stop_if:
+  - "any_property_fails"
+  - "performance_regresses"
+  - "exotic_code_appears"
+  - "timeout_reached"
+
+# Output artifacts
+artifacts:
+  output_dir: ".genome/runs/medbed-op-001/"
+  generate:
+    - baseline.souls.json      # Pre-op souls
+    - baseline.benches.json    # Pre-op benchmarks
+    - after.souls.json         # Post-op souls
+    - after.benches.json       # Post-op benchmarks
+    - surgical.diff            # λ-IR transformations
+    - proofs.json              # Property verification
+    - scorecard.json           # Performance deltas
+    - rules_applied.json       # Which rules fired
+    - experience.json          # Learning data

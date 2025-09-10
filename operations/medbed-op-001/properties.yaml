@@ -1,0 +1,137 @@
+# Property Definitions for Med-bed Surgery
+# Mathematical laws that must hold during transformation
+
+properties:
+  # Core functional properties
+  - id: length_preserved
+    type: universal
+    formula: |
+      ∀xs: List<T>, f: T → U.
+      |map(xs, f)| = |xs|
+    test_strategy: random_lists
+    test_count: 100
+    
+  - id: fusion_law
+    type: equality
+    formula: |
+      ∀xs, f, g.
+      map(map(xs, f), g) = map(xs, compose(g, f))
+    guards: ["pure(f)", "pure(g)"]
+    
+  - id: filter_distributive
+    type: equality
+    formula: |
+      ∀xs, p, f.
+      filter(map(xs, f), p) = map(filter(xs, compose(p, f)), f)
+    guards: ["pure(f)", "pure(p)"]
+
+  # Med-bed domain properties
+  - id: scan_pure
+    type: purity
+    formula: |
+      ∀patient: Patient.
+      scan(patient) ≡ patient ∧ 
+      effects(scan) = ∅
+    description: "Scanning doesn't modify patient data"
+    
+  - id: heal_preserves_count
+    type: invariant
+    formula: |
+      ∀genes: List<Gene>.
+      |heal(genes)| = |genes|
+    description: "Healing preserves gene count"
+    
+  - id: heal_idempotent
+    type: idempotence
+    formula: |
+      ∀genes, treatment.
+      heal(heal(genes, treatment), treatment) = heal(genes, treatment)
+    description: "Double healing has no extra effect"
+    
+  - id: harmony_monotone
+    type: monotonic
+    formula: |
+      ∀patient.
+      harmony(heal(scan(patient))) ≥ harmony(patient)
+    description: "Healing never decreases harmony"
+    test_strategy: property_based
+    
+  - id: diagnosis_deterministic
+    type: determinism
+    formula: |
+      ∀symptoms, model.
+      diagnose(symptoms, model) = diagnose(symptoms, model)
+    description: "Same symptoms → same diagnosis"
+
+  # Serialization properties
+  - id: serde_roundtrip
+    type: involution
+    formula: |
+      ∀x: T.
+      deserialize(serialize(x)) = x
+    description: "Serialization is invertible"
+    
+  - id: soul_stability
+    type: invariant
+    formula: |
+      ∀gene.
+      soul(transform(gene)) = soul(gene) ⟺ semantic_equal(transform(gene), gene)
+    description: "Soul changes only when semantics change"
+
+  # Performance properties (soft constraints)
+  - id: no_regression
+    type: ordering
+    formula: |
+      ∀operation.
+      cost_after(operation) ≤ cost_before(operation)
+    description: "No performance regression"
+    
+  - id: allocation_reduction
+    type: ordering
+    formula: |
+      ∀operation.
+      allocs_after(operation) ≤ allocs_before(operation)
+    description: "Allocations don't increase"
+
+# Metamorphic relations
+metamorphic:
+  - id: scan_compose
+    relation: |
+      scan(f(patient)) ~ f(scan(patient))
+      where f preserves structure
+      
+  - id: heal_distribute
+    relation: |
+      heal(genes1 ++ genes2) ~ heal(genes1) ++ heal(genes2)
+      where ++ is concatenation
+      
+  - id: diagnosis_monotone
+    relation: |
+      symptoms1 ⊆ symptoms2 ⟹ 
+      severity(diagnose(symptoms1)) ≤ severity(diagnose(symptoms2))
+
+# Test generators
+generators:
+  - name: random_patient
+    strategy: |
+      Patient {
+        genes: list(1..100, random_gene()),
+        symptoms: subset(all_symptoms, 0..10),
+        harmony: random(0.0..1.0)
+      }
+      
+  - name: random_gene
+    strategy: |
+      Gene {
+        soul: random_hash(),
+        purity: random(0.0..1.0),
+        expression: random_expression()
+      }
+      
+  - name: pathological_cases
+    cases:
+      - empty_patient
+      - single_gene
+      - maximum_symptoms
+      - zero_harmony
+      - perfect_harmony

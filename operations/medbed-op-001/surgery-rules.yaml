@@ -1,0 +1,143 @@
+# Surgical Rules for Med-bed
+# Domain-specific transformations for healing/scanning operations
+
+rules:
+  # Core functional optimizations
+  - name: map_fusion
+    pattern: (MAP (MAP ?xs ?f) ?g)
+    rewrite: (MAP ?xs (COMPOSE ?g ?f))
+    guards: ["pure(?f)", "pure(?g)"]
+    cost_delta: { cycles: -10, allocs: -1 }
+    laws: ["length_preserved", "fusion"]
+    
+  - name: map_filter_fuse
+    pattern: (MAP (FILTER ?xs ?p) ?f)
+    rewrite: (MAPFILTER ?xs ?p ?f)
+    guards: ["pure(?p)", "pure(?f)"]
+    cost_delta: { cycles: -5, allocs: -1, passes: -1 }
+    
+  - name: filter_map_fuse
+    pattern: (FILTER (MAP ?xs ?f) ?p)
+    rewrite: (MAPFILTER ?xs (COMPOSE ?p ?f) ID)
+    guards: ["pure(?p)", "pure(?f)"]
+    cost_delta: { cycles: -5, allocs: -1 }
+    
+  - name: fold_map_sink
+    pattern: (FOLD (MAP ?xs ?f) ?z ?g)
+    rewrite: (FOLD ?xs ?z (LAM ?acc ?x (APP ?g ?acc (APP ?f ?x))))
+    guards: ["pure(?f)", "pure(?g)"]
+    cost_delta: { allocs: -1, passes: -1 }
+
+  # Medical domain patterns
+  - name: scan_pipeline_fusion
+    pattern: (SCAN (SCAN ?patient ?scanner1) ?scanner2)
+    rewrite: (SCAN ?patient (COMPOSE ?scanner2 ?scanner1))
+    guards: ["scanner(?scanner1)", "scanner(?scanner2)"]
+    cost_delta: { cycles: -20, allocs: -2 }
+    
+  - name: heal_idempotent
+    pattern: (HEAL (HEAL ?genes ?treatment) ?treatment)
+    rewrite: (HEAL ?genes ?treatment)
+    guards: ["idempotent(?treatment)"]
+    cost_delta: { cycles: -100, allocs: -10 }
+    
+  - name: diagnose_cache
+    pattern: (DIAGNOSE (DIAGNOSE ?symptoms ?model) ?model)
+    rewrite: (DIAGNOSE ?symptoms ?model)
+    guards: ["deterministic(?model)"]
+    cost_delta: { cycles: -50 }
+
+  # Memory optimizations
+  - name: clone_elimination
+    pattern: (MAP ?xs (LAM ?x (CLONE ?x)))
+    rewrite: (MAP ?xs ID)
+    guards: ["no_alias_required(?xs)"]
+    cost_delta: { allocs: -1, bytes: -8 }
+    
+  - name: collect_elimination
+    pattern: (ITER (COLLECT ?xs))
+    rewrite: (ITER ?xs)
+    guards: ["consumed_once(?xs)"]
+    cost_delta: { allocs: -1 }
+    
+  - name: vec_push_batch
+    pattern: (FOLD ?xs (VEC) (LAM ?acc ?x (PUSH ?acc ?x)))
+    rewrite: (COLLECT ?xs)
+    guards: []
+    cost_delta: { cycles: -5, allocs: -1 }
+
+  # Option/Result patterns
+  - name: option_map_or
+    pattern: (IF (IS_SOME ?o) (APP ?f (UNWRAP ?o)) ?default)
+    rewrite: (MAP_OR ?o ?f ?default)
+    guards: ["pure(?f)"]
+    cost_delta: { cycles: -2 }
+    
+  - name: result_and_then
+    pattern: (MATCH ?r (OK ?x) (APP ?f ?x) (ERR ?e) (ERR ?e))
+    rewrite: (AND_THEN ?r ?f)
+    guards: ["pure(?f)"]
+    cost_delta: { cycles: -3 }
+    
+  - name: option_flatten
+    pattern: (MATCH (MAP ?o ?f) (SOME (SOME ?x)) (SOME ?x) _ NONE)
+    rewrite: (AND_THEN ?o ?f)
+    guards: ["returns_option(?f)"]
+    cost_delta: { cycles: -2, allocs: -1 }
+
+  # Control flow simplification
+  - name: short_circuit_and
+    pattern: (IF ?a ?b FALSE)
+    rewrite: (AND ?a ?b)
+    guards: []
+    cost_delta: { cycles: -1 }
+    
+  - name: short_circuit_or
+    pattern: (IF ?a TRUE ?b)
+    rewrite: (OR ?a ?b)
+    guards: []
+    cost_delta: { cycles: -1 }
+    
+  - name: if_same_branches
+    pattern: (IF ?cond ?x ?x)
+    rewrite: ?x
+    guards: []
+    cost_delta: { cycles: -2 }
+
+  # Iterator optimizations
+  - name: filter_filter_merge
+    pattern: (FILTER (FILTER ?xs ?p1) ?p2)
+    rewrite: (FILTER ?xs (LAM ?x (AND (APP ?p1 ?x) (APP ?p2 ?x))))
+    guards: ["pure(?p1)", "pure(?p2)"]
+    cost_delta: { passes: -1 }
+    
+  - name: take_drop_slice
+    pattern: (TAKE (DROP ?xs ?n) ?m)
+    rewrite: (SLICE ?xs ?n (ADD ?n ?m))
+    guards: []
+    cost_delta: { cycles: -3 }
+    
+  - name: zip_unzip_identity
+    pattern: (UNZIP (ZIP ?xs ?ys))
+    rewrite: (TUPLE ?xs ?ys)
+    guards: ["same_length(?xs, ?ys)"]
+    cost_delta: { cycles: -10, allocs: -2 }
+
+  # Med-bed specific patterns
+  - name: gene_harmony_check
+    pattern: (FILTER ?genes (LAM ?g (GT (HARMONY ?g) ?threshold)))
+    rewrite: (FILTER_HARMONY ?genes ?threshold)
+    guards: []
+    cost_delta: { cycles: -5 }
+    
+  - name: healing_batch
+    pattern: (MAP ?genes (LAM ?g (HEAL ?g ?treatment)))
+    rewrite: (HEAL_BATCH ?genes ?treatment)
+    guards: ["parallelizable(?treatment)"]
+    cost_delta: { cycles: -20, allocs: -1 }
+    
+  - name: diagnosis_parallelization
+    pattern: (MAP ?symptoms (LAM ?s (DIAGNOSE ?s ?model)))
+    rewrite: (PAR_MAP ?symptoms (LAM ?s (DIAGNOSE ?s ?model)))
+    guards: ["thread_safe(?model)"]
+    cost_delta: { cycles: -50 }
