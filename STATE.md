@@ -21,6 +21,17 @@ Run benchmarks to generate deltas
 - **λFS**: Reactive file system (compute on read)
 - **ProofMD**: Living documentation with embedded proofs
 
+
+## Address→Value Distortion
+
+| Component | Value |
+|-----------|-------|
+| Unpredictability | 1.6% |
+| Instability | 0.0% |
+| Nonlocality | 24.6% |
+| Redundancy | 3.3% |
+| **Total** | **8.4%** |
+
 ## Open Threads
 
 [ ] integrate ROI lens in λFS

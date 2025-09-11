@@ -42,6 +42,17 @@ evolution:
   learning_rate: 0.01
   momentum: 0.9
   damping: 0.1
+
+# Address→Value distortion weights
+distortion_weights:
+  unpredictability: 0.4  # Address doesn't match soul
+  instability: 0.2       # Value drift over time
+  nonlocality: 0.3       # Graph distance to canonical
+  redundancy: 0.1        # Multiple addresses per soul
+
+# Optimization objective
+objective: "minimize: cost + λ*distortion"
+lambda: 0.7
   
 # Attestation requirements
 attest:

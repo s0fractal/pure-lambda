@@ -11,6 +11,7 @@ pub mod focus;
 pub mod observe;
 pub mod intent;
 pub mod love;
+pub mod distortion;
 
 #[cfg(feature = "alloc")]
 pub mod rewriter;
