@@ -6,6 +6,9 @@ authors = ["s0fractal"]
 description = "Native devourer - consumes ecosystems, distills to pure genes"
 
 [dependencies]
+# Core Lambda IR
+lambda-core = { path = "../lambda-kernel/core" }
+
 # CLI
 clap = { version = "4", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
@@ -18,9 +21,9 @@ sled = "0.34"  # Embedded DB for CAS
 sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite"] }
 
 # WASM Runtime
-wasmtime = "25.0"
-wasmtime-wasi = "25.0"
-wit-bindgen = "0.34"
+wasmtime = "24.0"
+wasmtime-wasi = "24.0"
+wit-bindgen = "0.33"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
@@ -45,6 +48,7 @@ petgraph = "0.6" # DAG for task scheduling
 walkdir = "2"    # Directory traversal
 chrono = "0.4"   # Time handling
 fastrand = "2"   # Fast random number generation
+lazy_static = "1"  # Lazy statics
 
 [dev-dependencies]
 tempfile = "3"

@@ -5,29 +5,11 @@ use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 use serde::{Deserialize, Serialize};
 
+use lambda_core::{IR, Symbol};
 use super::cost::CostModel;
 use super::rules::Rule;
 
 pub type EClassId = usize;
-pub type Symbol = String;
-
-/// Intermediate Representation - the mathematical structure we operate on
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub enum IR {
-    // Lambda calculus core
-    Var(Symbol),
-    Lam(Symbol, Box<IR>),
-    App(Box<IR>, Box<IR>),
-    
-    // List operations
-    Nil,
-    Cons(Box<IR>, Box<IR>),
-    Map(Box<IR>, Box<IR>),
-    Filter(Box<IR>, Box<IR>),
-    Reduce(Box<IR>, Box<IR>, Box<IR>),
-    
-    // Primitives
-    Num(i64),
     Bool(bool),
     Str(String),
     

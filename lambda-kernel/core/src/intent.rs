@@ -6,6 +6,8 @@
 use crate::ir::IR;
 use crate::soul::compute_soul;
 use alloc::vec::Vec;
+use alloc::vec;
+use alloc::boxed::Box;
 use alloc::string::String;
 use alloc::format;
 

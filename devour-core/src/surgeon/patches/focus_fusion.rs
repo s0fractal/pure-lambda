@@ -3,8 +3,8 @@
 ///
 /// This is the "laser through laser" property we discovered
 
-use crate::ir::IR;
-use crate::surgeon::egraph::Rewrite;
+use lambda_core::IR;
+use lambda_core::rewriter::Rule as Rewrite;
 
 /// FOCUS fusion law - proven in FOCUS.md
 pub fn focus_fusion() -> Rewrite {

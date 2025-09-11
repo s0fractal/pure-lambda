@@ -4,8 +4,9 @@
 /// Before: map → filter → group → fold = 4 passes, 3 allocations
 /// After: single fused fold = 1 pass, 0 allocations
 
-use crate::ir::IR;
-use crate::surgeon::egraph::{EGraph, Rewrite};
+use lambda_core::IR;
+use crate::surgeon::egraph::EGraph;
+use lambda_core::rewriter::Rule as Rewrite;
 
 /// The ultimate fold sink - fuses entire pipeline
 pub fn fold_sink_complete() -> Rewrite {

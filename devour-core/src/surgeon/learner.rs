@@ -21,7 +21,7 @@ impl RuleLearner {
     }
     
     /// Suggest which rule to try next
-    pub fn suggest_rule(&mut self, rules: &RuleSet) -> &Rule {
+    pub fn suggest_rule<'a>(&mut self, rules: &'a RuleSet) -> &'a Rule {
         // ε-greedy strategy
         let epsilon = 0.1;
         

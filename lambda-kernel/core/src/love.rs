@@ -8,6 +8,8 @@ use crate::ir::IR;
 use alloc::vec::Vec;
 use alloc::vec;
 use alloc::format;
+#[cfg(feature = "alloc")]
+use libm::F32Ext;
 
 /// Love kernel - measures alignment between intents
 pub struct LoveKernel {
@@ -51,8 +53,8 @@ impl LoveKernel {
                   w1.bytes * w2.bytes +
                   w1.allocs * w2.allocs;
         
-        let norm1 = (w1.cycles.powi(2) + w1.bytes.powi(2) + w1.allocs.powi(2)).sqrt();
-        let norm2 = (w2.cycles.powi(2) + w2.bytes.powi(2) + w2.allocs.powi(2)).sqrt();
+        let norm1 = (w1.cycles * w1.cycles + w1.bytes * w1.bytes + w1.allocs * w1.allocs).sqrt();
+        let norm2 = (w2.cycles * w2.cycles + w2.bytes * w2.bytes + w2.allocs * w2.allocs).sqrt();
         
         if norm1 * norm2 > 0.0 {
             dot / (norm1 * norm2)

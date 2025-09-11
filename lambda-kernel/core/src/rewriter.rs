@@ -1,7 +1,7 @@
 #![no_std]
 
 #[cfg(feature = "alloc")]
-use alloc::{vec::Vec, boxed::Box, collections::BTreeMap};
+use alloc::{vec::Vec, vec, boxed::Box, collections::BTreeMap};
 
 use crate::ir::{IR, Symbol};
 use crate::normalize::normalize;

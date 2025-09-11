@@ -14,7 +14,8 @@ pub mod patches;
 pub mod leverage;
 pub mod proof_cache;
 
-use egraph::{EGraph, EClassId, IR};
+use egraph::{EGraph, EClassId};
+use lambda_core::IR;
 use rules::{Rule, RuleSet};
 use cost::{Cost, CostModel};
 use verifier::Verifier;

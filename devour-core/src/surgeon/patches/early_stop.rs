@@ -3,8 +3,8 @@
 ///
 /// This is how nature works - "good enough" evolution
 
-use crate::ir::IR;
-use crate::surgeon::egraph::Rewrite;
+use lambda_core::IR;
+use lambda_core::rewriter::Rule as Rewrite;
 
 /// Generic early stop for any fold
 pub fn early_stop_fold() -> Rewrite {

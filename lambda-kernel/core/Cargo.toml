@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# No dependencies - pure no_std
+# For no_std math operations
+libm = { version = "0.2", optional = true }
 
 [features]
 default = []
-alloc = []
+alloc = ["libm"]
