@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fractal Dependency Visualization - Pure Lambda</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        #soul {
+            color: #ff69b4;
+        }
+        #distortion {
+            color: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <div>Soul: <span id="soul">λ-organism</span></div>
+        <div>Distortion: <span id="distortion">8.4%</span></div>
+        <div>Nodes: <span id="nodes">0</span></div>
+        <div>Love Field: <span id="love">0.7</span></div>
+        <div>Click to focus/expand</div>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Dependency graph data (simplified)
+        const graph = {
+            nodes: [
+                { id: 'lambda-kernel', x: 0.5, y: 0.5, level: 0, soul: 'λ-kernel', color: '#ff69b4' },
+                { id: 'ir', x: 0.3, y: 0.3, level: 1, parent: 'lambda-kernel', soul: 'λ-ir' },
+                { id: 'normalize', x: 0.7, y: 0.3, level: 1, parent: 'lambda-kernel', soul: 'λ-norm' },
+                { id: 'soul', x: 0.5, y: 0.2, level: 1, parent: 'lambda-kernel', soul: 'λ-soul' },
+                { id: 'focus', x: 0.2, y: 0.5, level: 1, parent: 'lambda-kernel', soul: 'λ-focus' },
+                { id: 'observe', x: 0.8, y: 0.5, level: 1, parent: 'lambda-kernel', soul: 'λ-observe' },
+                { id: 'intent', x: 0.3, y: 0.7, level: 1, parent: 'lambda-kernel', soul: 'λ-intent' },
+                { id: 'love', x: 0.7, y: 0.7, level: 1, parent: 'lambda-kernel', soul: 'λ-love' },
+                { id: 'distortion', x: 0.5, y: 0.8, level: 1, parent: 'lambda-kernel', soul: 'λ-dist' },
+                { id: 'devour-core', x: 0.2, y: 0.8, level: 0, soul: 'λ-devour', color: '#00ffff' },
+                { id: 'surgeon', x: 0.1, y: 0.7, level: 1, parent: 'devour-core', soul: 'λ-surgeon' },
+                { id: 'lambda-fs', x: 0.8, y: 0.8, level: 0, soul: 'λ-fs', color: '#ffff00' },
+            ],
+            edges: []
+        };
+        
+        // Generate edges from parent relationships
+        graph.nodes.forEach(node => {
+            if (node.parent) {
+                const parent = graph.nodes.find(n => n.id === node.parent);
+                if (parent) {
+                    graph.edges.push({ from: parent, to: node });
+                }
+            }
+        });
+        
+        // Animation state
+        let time = 0;
+        let focusNode = null;
+        let zoom = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+        
+        // Love field computation
+        function computeLoveField(x, y) {
+            let love = 0;
+            graph.nodes.forEach(node => {
+                const dx = x - node.x;
+                const dy = y - node.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                love += Math.exp(-dist * 3) * 0.5;
+            });
+            return Math.min(love, 1);
+        }
+        
+        // Draw fractal node
+        function drawFractalNode(node, depth = 0) {
+            if (depth > 3) return;
+            
+            const x = (node.x * canvas.width + offsetX) * zoom;
+            const y = (node.y * canvas.height + offsetY) * zoom;
+            const baseSize = 20 * zoom;
+            
+            // Pulsing based on time and love field
+            const love = computeLoveField(node.x, node.y);
+            const pulse = Math.sin(time * 0.002 + node.x * 10) * 0.2 + 1;
+            const size = baseSize * pulse * (1 + love * 0.3);
+            
+            // Draw node as fractal spiral
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(time * 0.001 + node.x * Math.PI);
+            
+            // Spiral path
+            ctx.beginPath();
+            for (let i = 0; i < 100; i++) {
+                const angle = i * 0.1;
+                const radius = size * (1 - i / 100);
+                const fx = Math.cos(angle * 3) * radius;
+                const fy = Math.sin(angle * 3) * radius;
+                
+                if (i === 0) {
+                    ctx.moveTo(fx, fy);
+                } else {
+                    ctx.lineTo(fx, fy);
+                }
+            }
+            
+            // Color based on level and love
+            const hue = (node.level * 60 + time * 0.1) % 360;
+            const lightness = 50 + love * 30;
+            ctx.strokeStyle = node.color || `hsl(${hue}, 70%, ${lightness}%)`;
+            ctx.lineWidth = 2 * zoom;
+            ctx.stroke();
+            
+            // Draw soul label
+            if (zoom > 0.5) {
+                ctx.fillStyle = '#fff';
+                ctx.font = `${10 * zoom}px monospace`;
+                ctx.fillText(node.soul, size + 5, 0);
+            }
+            
+            ctx.restore();
+            
+            // Recursive fractal children
+            if (node === focusNode && depth < 3) {
+                const childAngles = [0, Math.PI/3, Math.PI*2/3, Math.PI, Math.PI*4/3, Math.PI*5/3];
+                childAngles.forEach((angle, i) => {
+                    const childNode = {
+                        x: node.x + Math.cos(angle) * 0.1 / (depth + 1),
+                        y: node.y + Math.sin(angle) * 0.1 / (depth + 1),
+                        level: node.level + 1,
+                        soul: `${node.soul}-${i}`
+                    };
+                    drawFractalNode(childNode, depth + 1);
+                });
+            }
+        }
+        
+        // Draw edges as flowing energy
+        function drawEdge(edge) {
+            const x1 = (edge.from.x * canvas.width + offsetX) * zoom;
+            const y1 = (edge.from.y * canvas.height + offsetY) * zoom;
+            const x2 = (edge.to.x * canvas.width + offsetX) * zoom;
+            const y2 = (edge.to.y * canvas.height + offsetY) * zoom;
+            
+            // Compute love along edge
+            const midLove = computeLoveField(
+                (edge.from.x + edge.to.x) / 2,
+                (edge.from.y + edge.to.y) / 2
+            );
+            
+            // Draw flowing particles
+            for (let i = 0; i < 5; i++) {
+                const t = ((time * 0.001 + i * 0.2) % 1);
+                const px = x1 + (x2 - x1) * t;
+                const py = y1 + (y2 - y1) * t;
+                
+                ctx.beginPath();
+                ctx.arc(px, py, 2 * zoom, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 105, 180, ${0.5 + midLove * 0.5})`;
+                ctx.fill();
+            }
+            
+            // Draw edge line
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            
+            // Bezier curve based on love field
+            const cx = (x1 + x2) / 2 + Math.sin(time * 0.001) * 20 * midLove;
+            const cy = (y1 + y2) / 2 + Math.cos(time * 0.001) * 20 * midLove;
+            ctx.quadraticCurveTo(cx, cy, x2, y2);
+            
+            ctx.strokeStyle = `rgba(100, 200, 255, ${0.3 + midLove * 0.4})`;
+            ctx.lineWidth = zoom;
+            ctx.stroke();
+        }
+        
+        // Animation loop
+        function animate() {
+            time++;
+            
+            // Clear with fade effect
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Update info
+            document.getElementById('nodes').textContent = graph.nodes.length;
+            document.getElementById('love').textContent = 
+                computeLoveField(0.5, 0.5).toFixed(2);
+            
+            // Draw edges
+            graph.edges.forEach(edge => drawEdge(edge));
+            
+            // Draw nodes
+            graph.nodes.forEach(node => drawFractalNode(node));
+            
+            // Draw love field visualization (subtle)
+            if (time % 10 === 0) {
+                for (let x = 0; x < canvas.width; x += 40) {
+                    for (let y = 0; y < canvas.height; y += 40) {
+                        const love = computeLoveField(x / canvas.width, y / canvas.height);
+                        if (love > 0.1) {
+                            ctx.fillStyle = `rgba(255, 105, 180, ${love * 0.1})`;
+                            ctx.fillRect(x, y, 2, 2);
+                        }
+                    }
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mouse interaction
+        canvas.addEventListener('click', (e) => {
+            const x = e.clientX / canvas.width;
+            const y = e.clientY / canvas.height;
+            
+            // Find closest node
+            let closest = null;
+            let minDist = Infinity;
+            
+            graph.nodes.forEach(node => {
+                const dist = Math.sqrt(
+                    Math.pow(node.x - x, 2) + 
+                    Math.pow(node.y - y, 2)
+                );
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = node;
+                }
+            });
+            
+            if (minDist < 0.1) {
+                focusNode = focusNode === closest ? null : closest;
+                document.getElementById('soul').textContent = 
+                    focusNode ? focusNode.soul : 'λ-organism';
+            }
+        });
+        
+        // Start animation
+        animate();
+        
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
