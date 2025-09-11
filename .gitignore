@@ -4,6 +4,7 @@ node_modules/
 package-lock.json
 
 # Build outputs
+target/
 dist/
 build/
 *.wasm

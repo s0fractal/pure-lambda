@@ -1,0 +1,46 @@
+# Time Capsule Intent - What This Organism Is
+# This file anchors the project across time discontinuities
+
+soulset: auto
+intent: "λ-організм: devour→align→distill→forge→attest; Rust+unikernel; WASM як тіло"
+philosophy: "Code is mathematical life seeking optimal form"
+
+invariants:
+  - "proofs: all PASS"
+  - "no_regressions: cycles, allocs, size <= 0"
+  - "roi/focus: allowed; early_stop: allowed with ε<=1e-3"
+  - "soul preservation: ∀ transform, soul(before) ≡ soul(after)"
+  - "deterministic: no ML, no heuristics, only laws"
+
+budgets:
+  wasm_max_mb: 1.2
+  p95_latency_regress: 0
+  arena_nodes: 256  # no_std constraint
+  proof_timeout_ms: 5000
+
+checklist_next:
+  - "merge: fold_sink, focus_fusion, early_stop → core"
+  - "tag: core/v0.1 + attach proofs & benches"
+  - "publish: STATE.md to IPFS (pin)"
+  - "implement: WASI component for λFS lenses"
+  - "verify: cross-gene law preservation"
+
+genesis:
+  born: 2025-01-10
+  first_surgery: medbed-op-001
+  first_gene: FOCUS (5 laws proven)
+  first_100x: ROI on 4K image (300× measured)
+
+milestones:
+  - "λ-Kernel: operational (no_std Rust)"
+  - "FOCUS: discovered & proven (filter+map fusion)"
+  - "Surgeon: performing operations"
+  - "λFS: materializing views"
+  - "ProofMD: documenting genes"
+  - "100×: leverage points implemented"
+
+remember:
+  - "API → нахрін, лишається ФАЙЛ"
+  - "We don't write code. We discover mathematical life."
+  - "Good enough > perfect (early stop principle)"
+  - "Once computed and proven, never compute again"
