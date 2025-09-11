@@ -13,6 +13,7 @@ pub mod learner;
 pub mod patches;
 pub mod leverage;
 pub mod proof_cache;
+pub mod hebbian;
 
 use egraph::{EGraph, EClassId};
 use lambda_core::IR;
