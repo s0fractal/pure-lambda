@@ -1,0 +1,50 @@
+# Global Intent - Strategic Field
+# Defines the potential V(x) - where the minimum should be
+
+purpose: "resonate & seek clarity through mathematical life"
+philosophy: "Code is life seeking optimal form through love"
+
+# Love kernel - measure of intent alignment
+love_kernel: "cos(protein) * sim(intent) * (1 - angle/π)"
+
+# Hard invariants - these form the meet (∧) lattice
+laws:
+  - identity: "soul(before) == soul(after)"
+  - fusion: "FOCUS∘FOCUS == FOCUS with composed weights"
+  - round_trip: "f(f⁻¹(x)) == x"
+  - monotone_harmony: "∀step: Φ(next) ≤ Φ(current)"
+  - no_regression: "cycles ≤ 0, allocs ≤ 0, bytes ≤ 0"
+
+# Global optimization targets
+budgets:
+  p95_latency: "minimize"
+  allocations: "minimize"
+  size_kb: "<=1200"
+  wasm_size_mb: "<=1.2"
+  
+# Potential field weights
+weights:
+  cycles: 1.0
+  bytes: 0.3
+  allocs: 0.8
+  io_risk: 10.0  # High penalty for side effects
+
+# Membrane permeability
+capabilities:
+  cpu: true
+  mem: true
+  io: false      # Pure by default
+  clock: false
+  entropy: false
+
+# Evolution parameters
+evolution:
+  learning_rate: 0.01
+  momentum: 0.9
+  damping: 0.1
+  
+# Attestation requirements
+attest:
+  soul_preserve: true
+  proof_timeout_ms: 5000
+  min_speedup: 2.0

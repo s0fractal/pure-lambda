@@ -1,0 +1,83 @@
+# Local Intents - Tactical Fields
+# These are the u_i(x) vectors that guide evolution locally
+
+tactics:
+  - name: ROI_laser
+    operator: FOCUS
+    description: "Process only what matters (2% rule)"
+    config:
+      mode: spatial
+      sparsity: 0.98  # Process only 2%
+      region: "auto"   # Auto-detect hot regions
+    weight: 0.8
+    proven_speedup: "20-100×"
+    
+  - name: FusionHorizon
+    operator: fold_sink
+    description: "Push fold to event horizon"
+    config:
+      depth: unlimited
+      fusion_rules:
+        - map_chain
+        - filter_chain
+        - fold_complete
+    weight: 0.7
+    proven_speedup: "50-100×"
+    
+  - name: GoodEnough
+    operator: early_stop
+    description: "Stop when convergence reached"
+    config:
+      epsilon: 1e-3
+      check_interval: 10
+      min_iterations: 100
+    weight: 0.5
+    proven_speedup: "10-100×"
+    
+  - name: ProofCache
+    operator: memoize_by_soul
+    description: "Never compute the same thing twice"
+    config:
+      cache: "blake3_cas"
+      remote: "ipfs"
+      ttl: infinity
+    weight: 0.9
+    proven_speedup: "∞"
+    
+  - name: KernelFuse
+    operator: kernel_fusion
+    description: "Entire pipeline in single pass"
+    config:
+      max_ops: 10
+      inline_threshold: 50
+    weight: 0.6
+    proven_speedup: "2-10×"
+    
+  - name: PartialBake
+    operator: partial_eval
+    description: "Bake constants into code"
+    config:
+      unroll_limit: 8
+      const_prop: true
+      dead_code_elim: true
+    weight: 0.4
+    proven_speedup: "2-5×"
+
+# Composition rules
+composition:
+  # Tactics that synergize (love > 0.8)
+  synergies:
+    - [ROI_laser, FusionHorizon]  # Focus then fuse
+    - [FusionHorizon, KernelFuse] # Double fusion
+    - [GoodEnough, ROI_laser]      # Early stop in ROI
+    
+  # Tactics that conflict (angle > 70°)
+  conflicts:
+    - [ROI_laser, PartialBake]     # ROI vs full specialization
+    
+  # Priority when resources limited
+  priority:
+    1: ProofCache    # Always check cache first
+    2: ROI_laser     # Then focus attention
+    3: FusionHorizon # Then fuse operations
+    4: GoodEnough    # Stop when converged

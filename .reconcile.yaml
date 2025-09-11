@@ -1,0 +1,84 @@
+# Reconciliation - How to resolve conflicting intents
+# This implements the love-based field composition
+
+# Conflict detection
+conflict:
+  angle_threshold_deg: 70  # Vectors > 70° apart conflict
+  love_threshold: 0.3       # Love < 0.3 means incompatible
+  
+# Resolution policies
+policy:
+  hard_laws: "meet"         # ∧ - take intersection (all must hold)
+  soft_goals: "resonant_sum" # ⊕ - weighted sum with love kernel
+  
+# Reconciliation strategies
+on_conflict:
+  - strategy: split_by_focus
+    description: "Partition space by ROI and apply different tactics"
+    when: "ROI available"
+    
+  - strategy: pareto_optimal
+    description: "Find Pareto front and pick by global intent"
+    when: "multiple objectives"
+    
+  - strategy: love_alignment
+    description: "Rotate vectors to reduce angle via love kernel"
+    when: "love > 0.5"
+    
+  - strategy: sequential_application
+    description: "Apply tactics in sequence rather than parallel"
+    when: "strong_conflicts"
+
+# Love kernel computation
+love:
+  protein_similarity:
+    metric: "cosine"
+    weight: 0.4
+    
+  intent_alignment:
+    metric: "dot_product"
+    weight: 0.3
+    
+  historical_synergy:
+    metric: "past_success_correlation"
+    weight: 0.3
+
+# Convergence to ouroboros point
+convergence:
+  # Fixed point where R(x*) = 0
+  tolerance: 1e-6
+  
+  # Lyapunov function Φ = V + λ·violations
+  lyapunov:
+    potential_weight: 1.0
+    violation_penalty: 100.0
+    
+  # Maximum iterations before forced stop
+  max_iterations: 1000
+  
+  # Damping to prevent oscillation
+  damping_factor: 0.1
+
+# Proof of reconciliation
+attestation:
+  required:
+    - "all_laws_preserved"
+    - "lyapunov_decreasing"
+    - "conflicts_resolved"
+    
+  output:
+    - "conflicts.json"      # Angles and love values
+    - "trajectory.json"     # Evolution path
+    - "fixed_point.json"    # Final convergence point
+    - "laws.pass"          # Law verification
+
+# Example reconciliation in action
+examples:
+  - case: "ROI vs GlobalOptimization"
+    resolution: "Apply global first, then ROI on hot spots"
+    
+  - case: "Speed vs Correctness"
+    resolution: "Correctness is hard law (meet), speed is soft goal"
+    
+  - case: "Memory vs Cycles"
+    resolution: "Pareto front with user-defined preference"

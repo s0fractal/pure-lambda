@@ -10,6 +10,7 @@ pub mod soul;
 pub mod focus;
 pub mod observe;
 pub mod intent;
+pub mod love;
 
 #[cfg(feature = "alloc")]
 pub mod rewriter;
