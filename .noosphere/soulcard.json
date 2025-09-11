@@ -1,0 +1,64 @@
+{
+  "id": "did:web:s0fractal.org",
+  "handle": "s0fractal",
+  "soul": "λ-s0fractal-2025",
+  "intent": ["RESONATE", "SEEK", "TRANSFORM", "GUARD"],
+  "philosophy": "Code is mathematical life seeking optimal form through love",
+  
+  "keys": {
+    "ed25519": "pk_TODO_generate",
+    "ethereum": "0xTODO_if_you_have",
+    "pgp": "optional_fingerprint"
+  },
+  
+  "avatar": {
+    "description": "Fractal spiral gravitational center with pink light",
+    "cid": "bafyTODO_upload_to_ipfs",
+    "phash": "TODO_compute",
+    "meta": {
+      "width": 1024,
+      "height": 1024,
+      "format": "png"
+    }
+  },
+  
+  "links": {
+    "website": "https://s0fractal.org",
+    "github": "https://github.com/s0fractal",
+    "x": "https://x.com/s0fractal",
+    "bsky": "https://bsky.app/profile/s0fractal.org",
+    "repos": {
+      "pure-lambda": "https://github.com/s0fractal/pure-lambda",
+      "fractal-hub": "https://github.com/s0fractal/fractal-hub"
+    }
+  },
+  
+  "proofs": [
+    {
+      "type": "dns",
+      "domain": "s0fractal.org",
+      "record": "_dnslink",
+      "value": "dnslink=/ipfs/TODO_soulcard_cid"
+    },
+    {
+      "type": "relme",
+      "url": "https://github.com/s0fractal",
+      "verified": "TODO_after_setup"
+    },
+    {
+      "type": "webfinger",
+      "resource": "acct:s0fractal@s0fractal.org",
+      "verified": "TODO_after_setup"
+    }
+  ],
+  
+  "field": {
+    "gravity_centers": ["core", "lab", "archive"],
+    "current_focus": "pure-lambda",
+    "distortion": 0.084,
+    "love_kernel": "cos(protein) * sim(intent) * (1 - angle/π)"
+  },
+  
+  "timestamp": "2025-01-11T00:00:00Z",
+  "signature": "TODO_sign_with_ed25519"
+}

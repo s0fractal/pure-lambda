@@ -1,0 +1,41 @@
+{
+  "subject": "acct:s0fractal@s0fractal.org",
+  "aliases": [
+    "https://s0fractal.org",
+    "did:web:s0fractal.org",
+    "https://github.com/s0fractal"
+  ],
+  "links": [
+    {
+      "rel": "http://webfinger.net/rel/profile-page",
+      "type": "text/html",
+      "href": "https://s0fractal.org"
+    },
+    {
+      "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://s0fractal.org/.noosphere/soulcard.json"
+    },
+    {
+      "rel": "http://webfinger.net/rel/avatar",
+      "type": "image/png",
+      "href": "ipfs://TODO_avatar_cid"
+    },
+    {
+      "rel": "me",
+      "href": "https://github.com/s0fractal"
+    },
+    {
+      "rel": "me",
+      "href": "https://x.com/s0fractal"
+    },
+    {
+      "rel": "me",
+      "href": "https://bsky.app/profile/s0fractal.org"
+    }
+  ],
+  "properties": {
+    "https://schema.org/name": "s0fractal",
+    "https://schema.org/description": "Mathematical organisms seeking optimal form"
+  }
+}
