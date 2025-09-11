@@ -3,6 +3,7 @@
 
 use crate::soul::compute_soul;
 use crate::ir::IR;
+use alloc::string::String;
 
 /// Generate a living poem from the organism's current state
 pub fn generate_poem(

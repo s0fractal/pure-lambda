@@ -9,6 +9,8 @@ pub mod normalize;
 pub mod soul;
 pub mod focus;
 pub mod observe;
+
+#[cfg(feature = "alloc")]
 pub mod poetry;
 
 #[cfg(feature = "alloc")]
