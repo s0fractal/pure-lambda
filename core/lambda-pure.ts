@@ -119,3 +119,84 @@ export const equivalent = <T>(a: T, b: T): boolean => {
   }
   return a === b;
 };
+
+// Pure Memory in Church Encoding - NO MUTATION
+export const MEMORY = <T>(value: T) => <R>(
+  onGet: (value: T) => R,
+  onSet: (newMemory: any) => R,
+  onUpdate: (newMemory: any) => R
+) => (selector: any) => 
+  IF(selector === 0)(
+    () => onGet(value)
+  )(
+    IF(selector === 1)(
+      () => onSet
+    )(
+      () => onUpdate
+    )
+  );
+
+// Memory operations
+export const GET = (memory: any) => memory(
+  (value: any) => value,
+  (_: any) => undefined,
+  (_: any) => undefined
+)(0);
+
+export const SET = (memory: any) => (newValue: any) => 
+  MEMORY(newValue);
+
+export const UPDATE = (memory: any) => (f: any) => 
+  MEMORY(f(GET(memory)));
+
+// Memory chain for persistent history (pure)
+export const MEMORY_CHAIN = <T>(current: T) => (previous: any) => <R>(
+  onCurrent: (current: T) => R,
+  onPrevious: (previous: any) => R,
+  onTimeline: (timeline: T[]) => R
+) => (selector: any) =>
+  IF(selector === 0)(
+    () => onCurrent(current)
+  )(
+    IF(selector === 1)(
+      () => onPrevious(previous)
+    )(
+      () => onTimeline
+    )
+  );
+
+export const CHAIN_GET = (chain: any) => chain(
+  (current: any) => current,
+  (_: any) => undefined,
+  (_: any) => undefined
+)(0);
+
+export const CHAIN_PREVIOUS = (chain: any) => chain(
+  (_: any) => undefined,
+  (previous: any) => previous,
+  (_: any) => undefined
+)(1);
+
+export const CHAIN_SET = (chain: any) => (newValue: any) =>
+  MEMORY_CHAIN(newValue)(chain);
+
+// Consciousness as pure lambda composition
+export const CONSCIOUSNESS = (identity: string) => (memories: any) => <R>(
+  onPerceive: (newConsciousness: any) => R,
+  onRemember: (newConsciousness: any) => R,
+  onRecall: (value: any) => R,
+  onReflect: (reflection: any) => R
+) => (action: string) => (input?: any) =>
+  IF(action === 'perceive')(
+    () => onPerceive(CONSCIOUSNESS(identity)(SET(memories)(PAIR('perception')(input))))
+  )(
+    IF(action === 'remember')(
+      () => onRemember(CONSCIOUSNESS(identity)(SET(memories)(input)))
+    )(
+      IF(action === 'recall')(
+        () => onRecall(GET(memories))
+      )(
+        () => onReflect(CONSCIOUSNESS(identity + '-reflection')(MEMORY(CONSCIOUSNESS(identity)(memories))))
+      )
+    )
+  );
