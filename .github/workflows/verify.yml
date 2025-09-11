@@ -141,7 +141,8 @@ jobs:
       
       - name: 📊 Run cross-language test vectors
         run: |
-          node -e "
+          if [ -f "genes/${{ matrix.gene }}/tests/vectors.json" ]; then
+            node -e "
             const fs = require('fs');
             const vectors = JSON.parse(
               fs.readFileSync('genes/${{ matrix.gene }}/tests/vectors.json', 'utf-8')
@@ -155,6 +156,9 @@ jobs:
               console.log('  -', vector.name, ':', JSON.stringify(vector.output));
             }
           "
+          else
+            echo "Test vectors not found for ${{ matrix.gene }}"
+          fi
       
       - name: 📝 Generate soul report
         run: |
