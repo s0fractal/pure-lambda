@@ -1,0 +1,10 @@
+# NORTH_STAR.yaml - Сенс і фокус
+done_when:
+  - "one command runs: ./λ one <dir>"
+  - "proofs: PASS (5 laws)"
+  - "p95: non-regress vs baseline"
+  - "artifact: dist/organism.wasm <= 1.2MB"
+  
+no_new_nouns: true   # не додаємо нові "іменники" до v0.1
+
+core_truth: "вхід → λ-IR → докази → WASM, однією командою"

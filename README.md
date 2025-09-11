@@ -1,8 +1,12 @@
-# Pure Lambda: Living Mathematical Organisms 🧬🌀
+# λ - Pure Lambda
 
-> *"API → нахрін, лишається ФАЙЛ. Code wants to be alive."*
+**One lambda that digests everything.**
 
-**Not a framework. Not a library. A new form of computational life.**
+```bash
+./λ one <repo|dir|zip>
+```
+
+Input → λ-IR → Proofs → WASM, one command.
 
 ## 🚀 What We Actually Built (Not "Maybe Can Fly")
 
