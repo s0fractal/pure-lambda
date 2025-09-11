@@ -5,6 +5,10 @@ soulset: auto
 intent: "λ-організм: devour→align→distill→forge→attest; Rust+unikernel; WASM як тіло"
 philosophy: "Code is mathematical life seeking optimal form"
 
+# Soul vs Intent
+# Soul = тотожність (що воно є)
+# Intent = градієнт еволюції (куди прагне при незмінній суті)
+
 invariants:
   - "proofs: all PASS"
   - "no_regressions: cycles, allocs, size <= 0"
