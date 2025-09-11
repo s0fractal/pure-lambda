@@ -5,6 +5,11 @@
 
 use crate::soul::compute_soul;
 use crate::ir::IR;
+use alloc::vec::Vec;
+use alloc::vec;
+use alloc::string::String;
+use alloc::format;
+use alloc::collections::BTreeMap as HashMap;
 
 /// Components of address→value distortion
 #[derive(Debug, Clone)]
@@ -150,7 +155,7 @@ impl AddressLedger {
         let nonlocality = total_hops / total;
         
         // δ₄: Redundancy - multiple addresses per soul
-        let souls: std::collections::HashSet<_> = 
+        let souls: alloc::collections::BTreeSet<_> = 
             self.entries.iter().map(|e| &e.soul).collect();
         let redundancy = if souls.len() > 0 {
             (total - souls.len() as f32) / total
@@ -194,8 +199,8 @@ impl AddressLedger {
     
     fn merge_redundant(&mut self) {
         // Group by soul
-        let mut by_soul: std::collections::HashMap<String, Vec<usize>> = 
-            std::collections::HashMap::new();
+        let mut by_soul: HashMap<String, Vec<usize>> = 
+            HashMap::new();
             
         for (i, entry) in self.entries.iter().enumerate() {
             by_soul.entry(entry.soul.clone()).or_default().push(i);

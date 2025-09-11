@@ -5,6 +5,9 @@
 
 use crate::intent::{Intent, CostWeights};
 use crate::ir::IR;
+use alloc::vec::Vec;
+use alloc::vec;
+use alloc::format;
 
 /// Love kernel - measures alignment between intents
 pub struct LoveKernel {

@@ -1,6 +1,5 @@
 #![no_std]
 
-use core::mem;
 
 // For no_std, we use fixed-size arrays and stack allocation
 // When alloc is available, we use heap allocation

@@ -5,6 +5,9 @@
 
 use crate::ir::IR;
 use crate::soul::compute_soul;
+use alloc::vec::Vec;
+use alloc::string::String;
+use alloc::format;
 
 /// Cost weights determine optimization direction
 #[derive(Debug, Clone)]

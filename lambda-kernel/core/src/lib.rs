@@ -9,8 +9,12 @@ pub mod normalize;
 pub mod soul;
 pub mod focus;
 pub mod observe;
+
+#[cfg(feature = "alloc")]
 pub mod intent;
+#[cfg(feature = "alloc")]
 pub mod love;
+#[cfg(feature = "alloc")]
 pub mod distortion;
 
 #[cfg(feature = "alloc")]
