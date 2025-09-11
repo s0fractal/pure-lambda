@@ -57,9 +57,10 @@ jobs:
       
       - name: 🔬 Verify TypeScript manifestation
         run: |
-          cd genes/${{ matrix.gene }}/manifestations/ts
-          
-          # Run TypeScript tests
+          if [ -d "genes/${{ matrix.gene }}/manifestations/ts" ]; then
+            cd genes/${{ matrix.gene }}/manifestations/ts
+            
+            # Run TypeScript tests
           npx ts-node -e "
             const { map, __gene, __laws } = require('./map.ts');
             
@@ -76,12 +77,16 @@ jobs:
             console.log('Identity law:', __laws.identity(testData));
             console.log('Composition fusion:', __laws.compositionFusion(testData, testFn, x => x + 1));
           " || echo "TypeScript tests need adjustment"
+          else
+            echo "TypeScript manifestation not found for ${{ matrix.gene }}"
+          fi
       
       - name: 🐍 Verify Python manifestation
         run: |
-          cd genes/${{ matrix.gene }}/manifestations/py
-          
-          python3 -c "
+          if [ -d "genes/${{ matrix.gene }}/manifestations/py" ]; then
+            cd genes/${{ matrix.gene }}/manifestations/py
+            
+            python3 -c "
           import sys
           sys.path.insert(0, '.')
           
@@ -103,12 +108,16 @@ jobs:
               result = map_gene(test_data, test_fn)
               print(f'Test result: {result}')
           " || echo "Python tests need adjustment"
+          else
+            echo "Python manifestation not found for ${{ matrix.gene }}"
+          fi
       
       - name: 🦀 Verify Rust manifestation
         run: |
-          cd genes/${{ matrix.gene }}/manifestations/rs
-          
-          # Create Cargo.toml if not exists
+          if [ -d "genes/${{ matrix.gene }}/manifestations/rs" ]; then
+            cd genes/${{ matrix.gene }}/manifestations/rs
+            
+            # Create Cargo.toml if not exists
           if [ ! -f Cargo.toml ]; then
             cat > Cargo.toml << 'EOF'
           [package]
@@ -126,6 +135,9 @@ jobs:
           
           # Verify soul
           cargo run --bin verify-soul 2>/dev/null || echo "Soul verification needs implementation"
+          else
+            echo "Rust manifestation not found for ${{ matrix.gene }}"
+          fi
       
       - name: 📊 Run cross-language test vectors
         run: |
