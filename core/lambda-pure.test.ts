@@ -81,8 +81,8 @@ export function testPairLaws() {
   
   // FST (PAIR a b) = a
   const p1 = PAIR(ONE)(TWO);
-  assert(toNumber(FST(p1) as ChurchNum) === 1, 'FST (PAIR 1 2) = 1');
-  assert(toNumber(SND(p1) as ChurchNum) === 2, 'SND (PAIR 1 2) = 2');
+  assert(toNumber(FST(p1) as any) === 1, 'FST (PAIR 1 2) = 1');
+  assert(toNumber(SND(p1) as any) === 2, 'SND (PAIR 1 2) = 2');
   
   // Nested pairs
   const p2 = PAIR(TRUE)(PAIR(ONE)(FALSE));

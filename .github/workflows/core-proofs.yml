@@ -29,8 +29,7 @@ jobs:
       - name: 🧪 Test Church Encodings
         run: |
           echo "=== Testing Church Encodings ==="
-          cd core
-          npx ts-node lambda-pure.test.ts
+          node test-lambda-pure.js
       
       - name: 🛡️ Test Type Guards
         run: |
