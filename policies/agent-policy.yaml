@@ -1,0 +1,78 @@
+# Agent Policy v0 - Formal behavioral rules
+# These invariants are enforced and proven during execution
+
+version: 0
+description: "Core safety and determinism policies for agents"
+
+invariants:
+  - id: io.intent_only
+    desc: "Agent can only write to intents/* namespace"
+    check: "∀w ∈ writes. w.path ⊆ 'intents/*'"
+    severity: error
+    witness: "tools/policy-check/src/io.rs:45"
+    
+  - id: memory.snapshotted_reads
+    desc: "All reads must be from named snapshots"
+    check: "∀r ∈ reads. ∃s ∈ snapshots. r.cid ∈ s.tree"
+    severity: error
+    witness: "memory/src/lib.rs:89"
+    
+  - id: gas.ceiling
+    desc: "Computation bounded by gas limit"
+    check: "gas_used ≤ 10_000_000"
+    severity: error
+    witness: "abi/pl.wit:gas-left"
+    
+  - id: infoflow.no_secrets
+    desc: "Secret views cannot leak to public intents"
+    check: "∀r ∈ reads, w ∈ writes. label(r) ⊑ label(w)"
+    severity: error
+    witness: "tools/policy-check/src/infoflow.rs:23"
+    
+  - id: determinism.no_time_in_compute
+    desc: "Time cannot influence computation results"
+    check: "∀c ∈ computations. now_ms() ∉ c.inputs"
+    severity: warning
+    witness: "abi/pl.wit:now-ms"
+    
+  - id: purity.no_mutations
+    desc: "No mutable state in λ-expressions"
+    check: "∀e ∈ expressions. immutable(e)"
+    severity: error
+    witness: "lambda-kernel/core/src/normalize.rs:34"
+
+ethics:
+  - id: consent.required
+    desc: "Operations on external data require consent"
+    check: "∀op ∈ external_ops. has_consent(op.target)"
+    severity: warning
+    
+  - id: transparency.audit_trail
+    desc: "All actions must be auditable"
+    check: "∀a ∈ actions. logged(a) ∧ signed(a)"
+    severity: info
+
+# Trace collection configuration
+trace:
+  enabled: true
+  format: json
+  output: "trace.json"
+  include:
+    - reads
+    - writes
+    - gas_usage
+    - expressions
+    - external_ops
+  
+# Enforcement levels
+enforcement:
+  development: warning  # Log violations
+  staging: error       # Block on violations
+  production: error    # Block and alert
+
+# Proof generation
+proofs:
+  format: "smt-lib2"
+  solver: "z3"
+  timeout: 5000  # ms
+  cache: true

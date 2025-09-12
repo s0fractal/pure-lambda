@@ -1,0 +1,19 @@
+[package]
+name = "surgeon"
+version = "2.0.0"
+edition = "2021"
+
+[dependencies]
+egg = "0.9"
+blake3 = "1.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+[[bin]]
+name = "optimize"
+path = "optimize.rs"
+
+[profile.release]
+opt-level = 3
+lto = true

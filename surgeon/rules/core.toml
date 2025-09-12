@@ -1,0 +1,114 @@
+# Surgeon v2 - Core rewrite rules for e-graph optimization
+# Each rule must preserve semantic equivalence
+
+[[rule]]
+id = "map-map-fusion"
+desc = "Fuse consecutive map operations"
+lhs = "map(f, map(g, xs))"
+rhs = "map(compose(f, g), xs)"
+cost_delta = -1  # Saves one traversal
+witness = "docs/genome/FOCUS.md#fusion-law"
+proven = true
+
+[[rule]]
+id = "filter-map-to-focus"
+desc = "Convert filter+map to FOCUS operator"
+lhs = "map(f, filter(p, xs))"
+rhs = "FOCUS(xs, p, f, drop)"
+cost_delta = -2  # Saves allocation and traversal
+witness = "docs/genome/FOCUS.md#E2-mapfilter"
+proven = true
+
+[[rule]]
+id = "filter-filter-fusion"
+desc = "Fuse consecutive filter operations"
+lhs = "filter(p, filter(q, xs))"
+rhs = "filter(and(p, q), xs)"
+cost_delta = -1
+witness = "lambda-kernel/core/src/focus.rs:145"
+proven = true
+
+[[rule]]
+id = "identity-elimination"
+desc = "Remove identity function"
+lhs = "map(id, xs)"
+rhs = "xs"
+cost_delta = -2  # Eliminates entire operation
+witness = "mathematical-identity"
+proven = true
+
+[[rule]]
+id = "const-fold"
+desc = "Fold constant expressions"
+lhs = "add(const(a), const(b))"
+rhs = "const(a + b)"
+cost_delta = -1  # Compile-time evaluation
+witness = "arithmetic"
+proven = true
+
+[[rule]]
+id = "dead-code-elimination"
+desc = "Remove unused bindings"
+lhs = "let(x, e1, e2)"  # where x not in free_vars(e2)
+rhs = "e2"
+cost_delta = -1
+witness = "lambda-calculus"
+proven = true
+
+[[rule]]
+id = "tail-recursion-optimization"
+desc = "Convert recursion to tail recursion"
+lhs = "rec(f, base, cons(x, xs))"
+rhs = "rec_tail(f, fold(base, x), xs)"
+cost_delta = -1  # Stack-safe
+witness = "tail-call-optimization"
+proven = true
+
+[[rule]]
+id = "reduce-normalize"
+desc = "Apply REDUCE gene for normalization"
+lhs = "app(lam(x, body), arg)"
+rhs = "REDUCE(subst(body, x, arg))"
+cost_delta = 0  # Semantic preservation
+witness = "docs/genome/REDUCE.md#R3"
+proven = true
+
+[[rule]]
+id = "observe-idempotence"
+desc = "Repeated observation is idempotent"
+lhs = "OBSERVE(OBSERVE(w, o1), o2)"
+rhs = "OBSERVE(w, o1)"
+cost_delta = -1  # Removes redundant observation
+witness = "docs/genome/OBSERVE.md#O2"
+proven = true
+
+[[rule]]
+id = "focus-composition"
+desc = "Compose FOCUS operations"
+lhs = "FOCUS(FOCUS(xs, p1, f1, d1), p2, f2, d2)"
+rhs = "FOCUS(xs, and(p1, compose(p2, f1)), compose(f2, f1), or(d1, d2))"
+cost_delta = -1  # Single pass instead of two
+witness = "docs/genome/FOCUS.md#E3-fusion"
+proven = true
+
+# Cost model configuration
+[cost_model]
+# Base costs for operations
+map = 2
+filter = 2
+FOCUS = 3  # Slightly higher but does both
+compose = 1
+const = 0
+app = 1
+lam = 1
+let = 1
+rec = 3
+
+# Memory costs
+allocation = 5
+traversal = 2
+
+# Optimization targets
+target = "minimize_cost"
+max_iterations = 1000
+timeout_ms = 5000

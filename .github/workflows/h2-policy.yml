@@ -1,0 +1,60 @@
+name: H2 Policy Enforcement
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  policy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: Cache Cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-policy-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Build Policy Checker
+        run: |
+          cd tools/policy-check
+          cargo build --release
+      
+      - name: Check Agent Policies
+        run: |
+          ./tools/policy-check/target/release/policy-check \
+            --policy policies/agent-policy.yaml \
+            --agent lambda-kernel/wasm/
+      
+      - name: Check Build Policies
+        run: |
+          ./tools/policy-check/target/release/policy-check \
+            --policy policies/build-policy.yaml \
+            --build target/
+      
+      - name: Generate Policy Report
+        if: always()
+        run: |
+          mkdir -p artifacts
+          ./tools/policy-check/target/release/policy-check \
+            --policy policies/agent-policy.yaml \
+            --report artifacts/policy-report.json
+      
+      - name: Upload Policy Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: policy-report
+          path: artifacts/policy-report.json
