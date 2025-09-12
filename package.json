@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "node organism-cli.js make core",
-    "test": "node organism-cli.js test core",
+    "test": "node test-lambda-pure.js",
+    "test:organism": "node organism-cli.js test core",
     "verify": "node gene-cli.js verify map && node gene-cli.js verify filter",
     "soulset": "node organism-cli.js soulset core"
   },

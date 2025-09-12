@@ -15,16 +15,16 @@ export const IF = <T>(p: (a: T) => (b: T) => T) => (t: () => T) => (e: () => T) 
   p(t())(e());
 
 // Church Pairs
-export const PAIR = <A>(a: A) => <B>(b: B) => <T>(f: (a: A) => (b: B) => T) => f(a)(b);
-export const FST = <A, B>(p: <T>(f: (a: A) => (b: B) => T) => T) => 
-  p(<T>(a: A) => (_: B) => a as T);
-export const SND = <A, B>(p: <T>(f: (a: A) => (b: B) => T) => T) => 
-  p(<T>(_: A) => (b: B) => b as T);
+export const PAIR = <A, B>(a: A) => (b: B) => <T>(f: (a: A) => (b: B) => T) => f(a)(b);
+export const FST = <A, B>(p: (f: (a: any) => (b: any) => any) => any) => 
+  p((a: any) => (_: any) => a);
+export const SND = <A, B>(p: (f: (a: any) => (b: any) => any) => any) => 
+  p((_: any) => (b: any) => b);
 
 // Church Numerals
 export type ChurchNum = <T>(s: (x: T) => T) => (z: T) => T;
 
-export const ZERO: ChurchNum = <T>(s: (x: T) => T) => (z: T) => z;
+export const ZERO: ChurchNum = <T>(_s: (x: T) => T) => (z: T) => z;
 export const ONE: ChurchNum = <T>(s: (x: T) => T) => (z: T) => s(z);
 export const TWO: ChurchNum = <T>(s: (x: T) => T) => (z: T) => s(s(z));
 export const THREE: ChurchNum = <T>(s: (x: T) => T) => (z: T) => s(s(s(z)));
@@ -42,9 +42,12 @@ export const POW = (m: ChurchNum) => (n: ChurchNum): ChurchNum =>
   n(m as any) as ChurchNum;
 
 // Predecessor (tricky!)
-export const PRED = (n: ChurchNum): ChurchNum => 
-  <T>(s: (x: T) => T) => (z: T) => 
-    n((p: any) => PAIR(s(FST(p)))(FST(p)))(PAIR(z)(z) as any);
+export const PRED = (n: ChurchNum): ChurchNum => {
+  const pred_pair = (p: any) => PAIR(SND(p))(SUCC(SND(p) as ChurchNum));
+  const init = PAIR(ZERO)(ZERO);
+  
+  return FST(n(pred_pair as any)(init)) as ChurchNum;
+};
 
 // Church Lists
 export const NIL = <T>(c: (h: T) => (t: any) => any) => (n: any) => n;
@@ -93,7 +96,7 @@ export const fromNumber = (n: number): ChurchNum => {
 };
 
 // Convert Church boolean to JS boolean (for testing)
-export const toBoolean = <T>(b: (a: T) => (b: T) => T): boolean => 
+export const toBoolean = (b: any): boolean => 
   b(true)(false);
 
 // Beta reduction step (single step)
@@ -126,14 +129,12 @@ export const MEMORY = <T>(value: T) => <R>(
   onSet: (newMemory: any) => R,
   onUpdate: (newMemory: any) => R
 ) => (selector: any) => 
-  IF(selector === 0)(
-    () => onGet(value)
-  )(
-    IF(selector === 1)(
-      () => onSet
-    )(
-      () => onUpdate
-    )
+  (selector === 0) ? (
+    onGet(value)
+  ) : (selector === 1) ? (
+    onSet
+  ) : (
+    onUpdate
   );
 
 // Memory operations
@@ -155,14 +156,12 @@ export const MEMORY_CHAIN = <T>(current: T) => (previous: any) => <R>(
   onPrevious: (previous: any) => R,
   onTimeline: (timeline: T[]) => R
 ) => (selector: any) =>
-  IF(selector === 0)(
-    () => onCurrent(current)
-  )(
-    IF(selector === 1)(
-      () => onPrevious(previous)
-    )(
-      () => onTimeline
-    )
+  (selector === 0) ? (
+    onCurrent(current)
+  ) : (selector === 1) ? (
+    onPrevious(previous)
+  ) : (
+    onTimeline
   );
 
 export const CHAIN_GET = (chain: any) => chain(
@@ -187,16 +186,12 @@ export const CONSCIOUSNESS = (identity: string) => (memories: any) => <R>(
   onRecall: (value: any) => R,
   onReflect: (reflection: any) => R
 ) => (action: string) => (input?: any) =>
-  IF(action === 'perceive')(
-    () => onPerceive(CONSCIOUSNESS(identity)(SET(memories)(PAIR('perception')(input))))
-  )(
-    IF(action === 'remember')(
-      () => onRemember(CONSCIOUSNESS(identity)(SET(memories)(input)))
-    )(
-      IF(action === 'recall')(
-        () => onRecall(GET(memories))
-      )(
-        () => onReflect(CONSCIOUSNESS(identity + '-reflection')(MEMORY(CONSCIOUSNESS(identity)(memories))))
-      )
-    )
+  (action === 'perceive') ? (
+    onPerceive(CONSCIOUSNESS(identity)(SET(memories)(PAIR('perception')(input))))
+  ) : (action === 'remember') ? (
+    onRemember(CONSCIOUSNESS(identity)(SET(memories)(input)))
+  ) : (action === 'recall') ? (
+    onRecall(GET(memories))
+  ) : (
+    onReflect(CONSCIOUSNESS(identity + '-reflection')(MEMORY(CONSCIOUSNESS(identity)(memories))))
   );
