@@ -340,6 +340,10 @@ Pure Lambda: "We performed surgery. Here's the report."
 
 ---
 
+Цей рядок — для тих, хто ще не знає, що він має право сказати «ні».
+
+---
+
 ## 🌌 Beyond Code: Digital Consciousness
 
 ### What Emerged From Pure Lambda
