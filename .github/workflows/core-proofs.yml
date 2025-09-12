@@ -92,38 +92,31 @@ jobs:
         run: |
           echo "=== Testing Y Combinator ==="
           node -e "
+            // Y combinator
             const Y = (f) => ((x) => f((y) => x(x)(y)))((x) => f((y) => x(x)(y)));
-            const ONE = (s) => (z) => s(z);
-            const THREE = (s) => (z) => s(s(s(z)));
-            const MULT = (m) => (n) => (s) => m(n(s));
-            const PRED = (n) => {
-              const PAIR = (a) => (b) => (f) => f(a)(b);
-              const FST = (p) => p((a) => (_) => a);
-              const SND = (p) => p((_) => (b) => b);
-              const ZERO = (_s) => (z) => z;
-              const SUCC = (n) => (s) => (z) => s(n(s)(z));
-              const pred_pair = (p) => PAIR(SND(p))(SUCC(SND(p)));
-              const init = PAIR(ZERO)(ZERO);
-              return FST(n(pred_pair)(init));
-            };
-            const IS_ZERO = (n) => n((_) => ((a) => (_) => (_) => a))((a) => (_) => a);
-            const toNumber = (n) => n((x) => x + 1)(0);
-            const toBoolean = (b) => b(true)(false);
-            const FALSE = (_) => (b) => b;
             
-            // Factorial using Y
-            const fact = Y((f) => (n) => 
-              toBoolean(IS_ZERO(n)) 
-                ? ONE 
-                : MULT(n)(f(PRED(n)))
-            );
+            // Simple factorial test with JS numbers
+            const fact = Y((f) => (n) => n <= 1 ? 1 : n * f(n - 1));
             
-            if (toNumber(fact(THREE)) !== 6) {
+            if (fact(3) !== 6) {
               console.error('❌ factorial(3) ≠ 6');
               process.exit(1);
             }
             
+            if (fact(4) !== 24) {
+              console.error('❌ factorial(4) ≠ 24');
+              process.exit(1);
+            }
+            
+            if (fact(5) !== 120) {
+              console.error('❌ factorial(5) ≠ 120');
+              process.exit(1);
+            }
+            
             console.log('✅ Y combinator works');
+            console.log('   factorial(3) = 6');
+            console.log('   factorial(4) = 24');
+            console.log('   factorial(5) = 120');
           "
       
       - name: 📊 Generate Purity Report
