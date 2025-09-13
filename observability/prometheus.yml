@@ -1,0 +1,90 @@
+# Prometheus configuration for Pure Lambda observability
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    city: '${CITY_NAME}'
+    version: '${VERSION}'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+# Load rules
+rule_files:
+  - 'alerts/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Node metrics
+  - job_name: 'pl-nodes'
+    static_configs:
+      - targets:
+          - 'pl-node-1:7000'
+          - 'pl-node-2:7000'
+          - 'pl-node-3:7000'
+        labels:
+          chamber: 'A'
+          role: 'agent'
+      - targets:
+          - 'pl-human-1:7000'
+          - 'pl-human-2:7000'
+        labels:
+          chamber: 'H'
+          role: 'human'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # IPFS metrics
+  - job_name: 'ipfs'
+    static_configs:
+      - targets: ['ipfs:5001']
+    metrics_path: '/api/v0/stats/bw'
+    params:
+      format: ['json']
+    scrape_interval: 30s
+
+  # Observer metrics
+  - job_name: 'observer'
+    static_configs:
+      - targets: ['pl-observer:9090']
+    metrics_path: '/metrics'
+
+  # Policy compliance
+  - job_name: 'policy'
+    static_configs:
+      - targets: ['pl-node-1:7000']
+    metrics_path: '/metrics/policy'
+    scrape_interval: 5s
+
+  # Governance metrics
+  - job_name: 'governance'
+    static_configs:
+      - targets: ['pl-node-1:7000']
+    metrics_path: '/metrics/governance'
+    scrape_interval: 60s
+
+  # Attestation metrics
+  - job_name: 'attestation'
+    static_configs:
+      - targets: ['pl-node-1:7000']
+    metrics_path: '/metrics/attestation'
+    scrape_interval: 30s
+
+# Metric relabeling
+metric_relabel_configs:
+  - source_labels: [__name__]
+    regex: 'pl_.*'
+    target_label: __tmp_prometheus_job_name
+
+# Remote write for federation
+remote_write:
+  - url: 'https://federation.purelambda.org/api/v1/write'
+    bearer_token_file: /etc/prometheus/federation.token
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'pl_federation_.*'
+        action: keep

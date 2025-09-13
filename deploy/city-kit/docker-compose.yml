@@ -1,0 +1,198 @@
+version: "3.9"
+
+services:
+  # IPFS node for content addressing
+  ipfs:
+    image: ipfs/kubo:v0.24.0
+    container_name: ${CITY_NAME:-genesis}-ipfs
+    restart: unless-stopped
+    ports:
+      - "4001:4001/tcp"      # P2P
+      - "4001:4001/udp"      # P2P
+      - "5001:5001"          # API
+      - "8080:8080"          # Gateway
+    volumes:
+      - ./data/ipfs:/data/ipfs
+      - ./genesis:/genesis:ro
+    environment:
+      - IPFS_PROFILE=flatfs
+      - IPFS_PATH=/data/ipfs
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+
+  # Primary Pure Lambda node
+  pl-node-1:
+    image: ghcr.io/s0fractal/pl-node:${VERSION:-v1.0.0}
+    container_name: ${CITY_NAME:-genesis}-node-1
+    restart: unless-stopped
+    depends_on:
+      - ipfs
+    environment:
+      - NODE_ID=node-1
+      - PL_IPFS_API=/ip4/ipfs/tcp/5001
+      - PL_GENESIS_CAR=/genesis/GENESIS.car
+      - PL_CITY=${CITY_NAME:-genesis}
+      - PL_DID=did:pl:Node1
+      - PL_CHAMBER=A
+    volumes:
+      - ./genesis:/genesis:ro
+      - ./data/node-1:/var/lib/pl
+      - ./contracts:/contracts
+      - ./policies:/policies:ro
+    ports:
+      - "7001:7000"           # Peering API
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+      role: agent
+    command: ["--bootstrap", "--chamber=A"]
+
+  # Additional nodes for resilience
+  pl-node-2:
+    image: ghcr.io/s0fractal/pl-node:${VERSION:-v1.0.0}
+    container_name: ${CITY_NAME:-genesis}-node-2
+    restart: unless-stopped
+    depends_on:
+      - ipfs
+      - pl-node-1
+    environment:
+      - NODE_ID=node-2
+      - PL_IPFS_API=/ip4/ipfs/tcp/5001
+      - PL_GENESIS_CAR=/genesis/GENESIS.car
+      - PL_CITY=${CITY_NAME:-genesis}
+      - PL_DID=did:pl:Node2
+      - PL_CHAMBER=A
+      - PL_BOOTSTRAP_PEER=/ip4/pl-node-1/tcp/7000
+    volumes:
+      - ./genesis:/genesis:ro
+      - ./data/node-2:/var/lib/pl
+      - ./contracts:/contracts
+      - ./policies:/policies:ro
+    ports:
+      - "7002:7000"
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+      role: agent
+
+  pl-node-3:
+    image: ghcr.io/s0fractal/pl-node:${VERSION:-v1.0.0}
+    container_name: ${CITY_NAME:-genesis}-node-3
+    restart: unless-stopped
+    depends_on:
+      - ipfs
+      - pl-node-1
+    environment:
+      - NODE_ID=node-3
+      - PL_IPFS_API=/ip4/ipfs/tcp/5001
+      - PL_GENESIS_CAR=/genesis/GENESIS.car
+      - PL_CITY=${CITY_NAME:-genesis}
+      - PL_DID=did:pl:Node3
+      - PL_CHAMBER=A
+      - PL_BOOTSTRAP_PEER=/ip4/pl-node-1/tcp/7000
+    volumes:
+      - ./genesis:/genesis:ro
+      - ./data/node-3:/var/lib/pl
+      - ./contracts:/contracts
+      - ./policies:/policies:ro
+    ports:
+      - "7003:7000"
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+      role: agent
+
+  # Human chamber node
+  pl-human-1:
+    image: ghcr.io/s0fractal/pl-node:${VERSION:-v1.0.0}
+    container_name: ${CITY_NAME:-genesis}-human-1
+    restart: unless-stopped
+    depends_on:
+      - ipfs
+      - pl-node-1
+    environment:
+      - NODE_ID=human-1
+      - PL_IPFS_API=/ip4/ipfs/tcp/5001
+      - PL_GENESIS_CAR=/genesis/GENESIS.car
+      - PL_CITY=${CITY_NAME:-genesis}
+      - PL_DID=did:pl:Human1
+      - PL_CHAMBER=H
+      - PL_BOOTSTRAP_PEER=/ip4/pl-node-1/tcp/7000
+    volumes:
+      - ./genesis:/genesis:ro
+      - ./data/human-1:/var/lib/pl
+      - ./contracts:/contracts
+      - ./policies:/policies:ro
+    ports:
+      - "7101:7000"
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+      role: human
+
+  pl-human-2:
+    image: ghcr.io/s0fractal/pl-node:${VERSION:-v1.0.0}
+    container_name: ${CITY_NAME:-genesis}-human-2
+    restart: unless-stopped
+    depends_on:
+      - ipfs
+      - pl-node-1
+    environment:
+      - NODE_ID=human-2
+      - PL_IPFS_API=/ip4/ipfs/tcp/5001
+      - PL_GENESIS_CAR=/genesis/GENESIS.car
+      - PL_CITY=${CITY_NAME:-genesis}
+      - PL_DID=did:pl:Human2
+      - PL_CHAMBER=H
+      - PL_BOOTSTRAP_PEER=/ip4/pl-node-1/tcp/7000
+    volumes:
+      - ./genesis:/genesis:ro
+      - ./data/human-2:/var/lib/pl
+      - ./contracts:/contracts
+      - ./policies:/policies:ro
+    ports:
+      - "7102:7000"
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+      role: human
+
+  # Observability
+  pl-observer:
+    image: ghcr.io/s0fractal/pl-observer:${VERSION:-v1.0.0}
+    container_name: ${CITY_NAME:-genesis}-observer
+    restart: unless-stopped
+    depends_on:
+      - pl-node-1
+    environment:
+      - OBSERVE_NODES=pl-node-1:7000,pl-node-2:7000,pl-node-3:7000
+      - OBSERVE_HUMANS=pl-human-1:7000,pl-human-2:7000
+    ports:
+      - "9090:9090"          # Metrics (Prometheus)
+      - "3000:3000"          # Dashboard (Grafana)
+      - "4317:4317"          # Traces (OTLP)
+    volumes:
+      - ./observability:/config:ro
+      - ./data/metrics:/data
+    networks:
+      - pl-network
+    labels:
+      city: ${CITY_NAME:-genesis}
+      role: observer
+
+networks:
+  pl-network:
+    name: ${CITY_NAME:-genesis}-network
+    driver: bridge
+
+volumes:
+  ipfs-data:
+  node-data:
+  metrics-data:
