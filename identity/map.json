@@ -1,0 +1,16 @@
+{
+  "did": "did:pl:9CwFBmGJNpRB7VaT5xDkEP3qzhfKFxZLWKq8yqNcG2mH",
+  "souls": [
+    "λ-3f5c7b2a9",
+    "λ-7b2a9d8e7",
+    "λ-9d8e7f6g9"
+  ],
+  "since": 1736812345,
+  "signatures": [
+    {
+      "did": "did:pl:9CwFBmGJNpRB7VaT5xDkEP3qzhfKFxZLWKq8yqNcG2mH",
+      "sig": "XKMqZg0Fp6D6FHMqS4lO0UgHKJYCqzPOMuCvn4VRYXNm8ixVxQNQ8gv0FZKMpJKLgYW5Kdt8lfZ0EhdzCg==",
+      "timestamp": 1736812345
+    }
+  ]
+}

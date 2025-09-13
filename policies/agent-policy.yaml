@@ -40,6 +40,25 @@ invariants:
     check: "∀e ∈ expressions. immutable(e)"
     severity: error
     witness: "lambda-kernel/core/src/normalize.rs:34"
+    
+  # Contract-level policies (H3)
+  - id: contract.only_declared_io
+    desc: "Agent can only access paths declared in contract"
+    check: "∀io ∈ (reads ∪ writes). io.path ∈ contract.declared_paths"
+    severity: error
+    witness: "tools/policy-check/src/contract.rs:67"
+    
+  - id: contract.proofs_required
+    desc: "All promised proofs must be delivered"
+    check: "∀p ∈ contract.proofs. ∃w ∈ witnesses. w.proves(p)"
+    severity: error
+    witness: "tools/policy-check/src/contract.rs:89"
+    
+  - id: contract.sla_time
+    desc: "Execution time must meet SLA"
+    check: "execution_time ≤ contract.sla.max_ms"
+    severity: error
+    witness: "tools/policy-check/src/contract.rs:101"
 
 ethics:
   - id: consent.required

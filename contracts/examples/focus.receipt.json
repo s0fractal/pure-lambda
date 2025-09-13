@@ -1,0 +1,58 @@
+{
+  "contract_cid": "QmContractFocus789abc",
+  "agent": "did:pl:AgentFocus",
+  "started_at": 1736812345678,
+  "finished_at": 1736812345712,
+  "outputs": [
+    {
+      "intent": "intents/focused-protein.vec",
+      "cid": "QmFocusedProtein456def"
+    }
+  ],
+  "policy_report": {
+    "ok": true,
+    "violations": [],
+    "checks": [
+      {"policy": "io.intent_only", "passed": true},
+      {"policy": "memory.snapshotted_reads", "passed": true},
+      {"policy": "gas.ceiling", "passed": true, "gas_used": 9412},
+      {"policy": "contract.only_declared_io", "passed": true}
+    ]
+  },
+  "proofs": [
+    {
+      "name": "FOCUS.E1_identity",
+      "cid": "QmProofE1xyz",
+      "witnessed": true,
+      "location": "lambda-kernel/core/src/focus.rs:89"
+    },
+    {
+      "name": "FOCUS.E2_mapfilter",
+      "cid": "QmProofE2abc",
+      "witnessed": true,
+      "location": "lambda-kernel/core/src/focus.rs:101"
+    },
+    {
+      "name": "FOCUS.E3_fusion",
+      "cid": "QmProofE3def",
+      "witnessed": true,
+      "location": "lambda-kernel/core/src/focus.rs:113"
+    }
+  ],
+  "metrics": {
+    "p50_ms": 34,
+    "p99_ms": 42,
+    "gas_used": 9412,
+    "allocs": 4,
+    "input_dim": 512,
+    "output_dim": 287,
+    "compression_ratio": 1.78
+  },
+  "signatures": [
+    {
+      "did": "did:pl:AgentFocus",
+      "sig": "YKNsAh2Hr8F8HJOsU6nQ2WiJMLaEsbQROwExo6XTZZPo0kzXzSPS0ix2HbMOrLMNiaY7Mfv0nhB2GjfbFi==",
+      "timestamp": 1736812345712
+    }
+  ]
+}
