@@ -1,0 +1,9 @@
+# Ballot Storage
+
+This directory stores voting records in JSON Lines format.
+One file per RFC: `rfc-{id}.jsonl`
+
+Each line is a signed ballot:
+```json
+{"did":"did:pl:...","chamber":"H|A","vote":"yes|no|abstain","weight":0.0-1.0,"sig":"...","ts":unix_timestamp}
+```

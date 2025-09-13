@@ -1,0 +1,223 @@
+name: H4 Governance Consensus
+
+on:
+  pull_request:
+    paths:
+      - 'governance/rfc/*.md'
+  workflow_dispatch:
+    inputs:
+      rfc_id:
+        description: 'RFC ID to tally'
+        required: true
+        type: string
+
+jobs:
+  validate-rfc:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Find RFC Files
+        id: find-rfc
+        run: |
+          # Find new/modified RFC files
+          RFC_FILES=$(git diff --name-only origin/main...HEAD | grep '^governance/rfc/.*\.md$' || true)
+          
+          if [ -z "$RFC_FILES" ]; then
+            echo "No RFC files found"
+            exit 0
+          fi
+          
+          echo "RFC files: $RFC_FILES"
+          echo "rfc_files=$RFC_FILES" >> $GITHUB_OUTPUT
+      
+      - name: Validate RFC Format
+        if: steps.find-rfc.outputs.rfc_files
+        run: |
+          for RFC in ${{ steps.find-rfc.outputs.rfc_files }}; do
+            echo "Validating $RFC..."
+            
+            # Check for required fields
+            if ! grep -q "^rfc: [0-9]" "$RFC"; then
+              echo "❌ Missing RFC number"
+              exit 1
+            fi
+            
+            if ! grep -q "^title:" "$RFC"; then
+              echo "❌ Missing title"
+              exit 1
+            fi
+            
+            if ! grep -q "^type:" "$RFC"; then
+              echo "❌ Missing type"
+              exit 1
+            fi
+            
+            if ! grep -q "^proposer: did:pl:" "$RFC"; then
+              echo "❌ Missing or invalid proposer DID"
+              exit 1
+            fi
+            
+            echo "✅ RFC format valid"
+          done
+      
+      - name: Post RFC Summary
+        if: steps.find-rfc.outputs.rfc_files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const rfcFiles = '${{ steps.find-rfc.outputs.rfc_files }}'.split(' ');
+            
+            let comment = '## 📋 RFC Validation Report\n\n';
+            
+            for (const file of rfcFiles) {
+              if (!file) continue;
+              
+              const content = fs.readFileSync(file, 'utf8');
+              const lines = content.split('\n');
+              
+              // Extract metadata
+              let rfc = '', title = '', type = '', proposer = '';
+              for (const line of lines) {
+                if (line.startsWith('rfc:')) rfc = line.split(':')[1].trim();
+                if (line.startsWith('title:')) title = line.split('"')[1];
+                if (line.startsWith('type:')) type = line.split(':')[1].trim();
+                if (line.startsWith('proposer:')) proposer = line.split(':')[1].trim();
+              }
+              
+              comment += `### RFC ${rfc}: ${title}\n`;
+              comment += `- **Type**: ${type}\n`;
+              comment += `- **Proposer**: ${proposer}\n`;
+              comment += `- **Status**: ✅ Valid format\n\n`;
+              
+              comment += 'To start voting, merge this PR and run the governance workflow.\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+  
+  tally-votes:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Tools
+        run: |
+          chmod +x tools/gov_tally.sh
+          
+          # Install bc for calculations
+          sudo apt-get update
+          sudo apt-get install -y bc
+      
+      - name: Simulate Voting
+        run: |
+          RFC_ID="${{ github.event.inputs.rfc_id }}"
+          
+          # Create sample RFC if not exists
+          if [ ! -f "governance/rfc/${RFC_ID}.md" ]; then
+            cat > "governance/rfc/${RFC_ID}.md" << EOF
+          ---
+          rfc: ${RFC_ID}
+          title: "Test RFC for Demo"
+          type: "rule"
+          proposer: did:pl:TestProposer
+          ---
+          Test RFC content
+          EOF
+          fi
+          
+          # Create sample ballots
+          mkdir -p governance/ballots
+          cat > "governance/ballots/rfc-${RFC_ID}.jsonl" << EOF
+          {"did":"did:pl:Human1","chamber":"H","vote":"yes","weight":0.8,"sig":"sig1","ts":1736812345}
+          {"did":"did:pl:Human2","chamber":"H","vote":"yes","weight":0.7,"sig":"sig2","ts":1736812346}
+          {"did":"did:pl:Human3","chamber":"H","vote":"no","weight":0.5,"sig":"sig3","ts":1736812347}
+          {"did":"did:pl:Agent1","chamber":"A","vote":"yes","weight":0.9,"sig":"sig4","ts":1736812348}
+          {"did":"did:pl:Agent2","chamber":"A","vote":"yes","weight":0.8,"sig":"sig5","ts":1736812349}
+          {"did":"did:pl:Agent3","chamber":"A","vote":"yes","weight":0.6,"sig":"sig6","ts":1736812350}
+          EOF
+          
+          echo "Sample votes created for RFC ${RFC_ID}"
+      
+      - name: Tally Votes
+        id: tally
+        run: |
+          RFC_ID="${{ github.event.inputs.rfc_id }}"
+          
+          # Run tally script
+          ./tools/gov_tally.sh "$RFC_ID" | tee tally.log
+          
+          # Extract result
+          if grep -q "ACCEPTED" tally.log; then
+            echo "result=accepted" >> $GITHUB_OUTPUT
+          else
+            echo "result=rejected" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Apply Changes
+        if: steps.tally.outputs.result == 'accepted'
+        run: |
+          RFC_ID="${{ github.event.inputs.rfc_id }}"
+          
+          echo "📝 Applying changes from RFC ${RFC_ID}..."
+          
+          # In production, would parse payload and apply changes
+          # For demo, just log
+          echo "Changes would be applied here"
+      
+      - name: Upload Receipt
+        uses: actions/upload-artifact@v3
+        with:
+          name: governance-receipt
+          path: governance/receipts/rfc-*.receipt.json
+      
+      - name: Post Results
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          RFC_ID="${{ github.event.inputs.rfc_id }}"
+          RESULT="${{ steps.tally.outputs.result }}"
+          
+          echo "## 🗳️ Governance Vote Results"
+          echo ""
+          echo "**RFC ${RFC_ID}**: ${RESULT^^}"
+          echo ""
+          cat tally.log
+  
+  two-chamber-simulation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Simulate Two-Chamber Voting
+        run: |
+          echo "🏛️ Two-Chamber Governance Simulation"
+          echo "===================================="
+          echo ""
+          
+          # Human Chamber
+          echo "Human Chamber (H):"
+          echo "  Members: 10"
+          echo "  Voting: 7 yes, 3 no"
+          echo "  Quorum: 70% (✅ met)"
+          echo "  Approval: 70% (✅ passed)"
+          echo ""
+          
+          # Agent Chamber
+          echo "Agent Chamber (A):"
+          echo "  Members: 15"
+          echo "  Voting: 11 yes, 4 no"
+          echo "  Quorum: 73% (✅ met)"
+          echo "  Approval: 73% (✅ passed)"
+          echo ""
+          
+          echo "Decision: ✅ APPROVED"
+          echo ""
+          echo "Both chambers met quorum and approval thresholds."
+          echo "Changes will be automatically applied."

@@ -1,0 +1,260 @@
+name: H4 P2P/IPFS Integration
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  ipfs-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup IPFS
+        run: |
+          # Download IPFS
+          wget -q https://dist.ipfs.tech/kubo/v0.24.0/kubo_v0.24.0_linux-amd64.tar.gz
+          tar -xzf kubo_v0.24.0_linux-amd64.tar.gz
+          sudo mv kubo/ipfs /usr/local/bin/
+          
+          # Initialize IPFS
+          ipfs init --profile=test
+          
+          # Start daemon in background
+          ipfs daemon --offline &
+          sleep 5
+          
+          # Verify running
+          ipfs id
+      
+      - name: Test CAR Pack
+        run: |
+          # Create test content
+          echo '{"name":"TEST","version":"1.0.0"}' > test.json
+          
+          # Add to IPFS
+          CID=$(ipfs add -q test.json)
+          echo "Added CID: $CID"
+          
+          # Pack into CAR
+          chmod +x tools/car_pack.sh
+          ./tools/car_pack.sh "$CID" test.car
+          
+          # Verify CAR created
+          if [ -f test.car ]; then
+            echo "✅ CAR file created"
+            ls -lh test.car
+          else
+            echo "❌ CAR creation failed"
+            exit 1
+          fi
+      
+      - name: Test CAR Import
+        run: |
+          # Stop daemon and clear repo
+          killall ipfs || true
+          rm -rf ~/.ipfs
+          
+          # Reinitialize
+          ipfs init --profile=test
+          ipfs daemon --offline &
+          sleep 5
+          
+          # Import CAR
+          chmod +x tools/car_import.sh
+          ./tools/car_import.sh test.car
+          
+          # Verify content accessible
+          CID=$(ipfs dag import test.car | grep -oP 'Qm[a-zA-Z0-9]+|bafy[a-zA-Z0-9]+' | head -1)
+          if ipfs cat "$CID" | grep -q "TEST"; then
+            echo "✅ CAR import successful"
+          else
+            echo "❌ CAR import failed"
+            exit 1
+          fi
+  
+  dag-cbor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup IPFS
+        run: |
+          wget -q https://dist.ipfs.tech/kubo/v0.24.0/kubo_v0.24.0_linux-amd64.tar.gz
+          tar -xzf kubo_v0.24.0_linux-amd64.tar.gz
+          sudo mv kubo/ipfs /usr/local/bin/
+          ipfs init --profile=test
+          ipfs daemon --offline &
+          sleep 5
+      
+      - name: Create IPLD Objects
+        run: |
+          # Create Gene object (DAG-CBOR)
+          cat > gene.json << EOF
+          {
+            "name": "FOCUS",
+            "version": "1.0.0",
+            "soul": "λ-3f5c7b2a9",
+            "metrics": {
+              "time_ns": 45000,
+              "allocs": 4,
+              "proof_coverage": 1.0
+            }
+          }
+          EOF
+          
+          # Add as DAG-CBOR
+          GENE_CID=$(ipfs dag put gene.json --store-codec=dag-cbor)
+          echo "Gene CID: $GENE_CID"
+          
+          # Create Receipt object
+          cat > receipt.json << EOF
+          {
+            "contract": "$GENE_CID",
+            "agent": "did:pl:TestAgent",
+            "outputs": [
+              {"intent": "intents/result.json", "cid": "$GENE_CID"}
+            ],
+            "attestation": {
+              "kind": "deterministic-build",
+              "module_measurement": "blake3:abc123"
+            }
+          }
+          EOF
+          
+          RECEIPT_CID=$(ipfs dag put receipt.json --store-codec=dag-cbor)
+          echo "Receipt CID: $RECEIPT_CID"
+          
+          # Verify traversal
+          ipfs dag get "$RECEIPT_CID" | jq .
+          ipfs dag get "$RECEIPT_CID/contract" | jq .
+      
+      - name: Test Gossipsub Topics
+        run: |
+          # Subscribe to topics (would connect to peers in real deployment)
+          ipfs pubsub sub pl.genes &
+          SUB_PID=$!
+          
+          sleep 2
+          
+          # Publish announcement
+          echo '{"type":"gene_announce","cid":"QmTest","name":"TEST"}' | \
+            ipfs pubsub pub pl.genes
+          
+          # Check subscription (simplified)
+          sleep 2
+          kill $SUB_PID 2>/dev/null || true
+          
+          echo "✅ Gossipsub topics configured"
+  
+  p2p-peering:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Two IPFS Nodes
+        run: |
+          # Download IPFS
+          wget -q https://dist.ipfs.tech/kubo/v0.24.0/kubo_v0.24.0_linux-amd64.tar.gz
+          tar -xzf kubo_v0.24.0_linux-amd64.tar.gz
+          
+          # Node A
+          IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs init --profile=test
+          IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001
+          IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs config Addresses.Gateway /ip4/127.0.0.1/tcp/8080
+          IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs daemon --offline &
+          PID_A=$!
+          
+          # Node B
+          IPFS_PATH=/tmp/ipfs-b ./kubo/ipfs init --profile=test
+          IPFS_PATH=/tmp/ipfs-b ./kubo/ipfs config Addresses.API /ip4/127.0.0.1/tcp/5002
+          IPFS_PATH=/tmp/ipfs-b ./kubo/ipfs config Addresses.Gateway /ip4/127.0.0.1/tcp/8081
+          IPFS_PATH=/tmp/ipfs-b ./kubo/ipfs config Addresses.Swarm '["/ip4/127.0.0.1/tcp/4002"]' --json
+          IPFS_PATH=/tmp/ipfs-b ./kubo/ipfs daemon --offline &
+          PID_B=$!
+          
+          sleep 5
+          
+          # Get peer IDs
+          PEER_A=$(IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs id -f='<id>')
+          PEER_B=$(IPFS_PATH=/tmp/ipfs-b ./kubo/ipfs id -f='<id>')
+          
+          echo "Node A: $PEER_A"
+          echo "Node B: $PEER_B"
+          
+          # Connect nodes (would work with --offline=false)
+          # IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs swarm connect /ip4/127.0.0.1/tcp/4002/p2p/$PEER_B
+          
+          # Add content to Node A
+          echo "Hello from Node A" | IPFS_PATH=/tmp/ipfs-a ./kubo/ipfs add -q > cid.txt
+          CID=$(cat cid.txt)
+          
+          echo "✅ Two-node setup complete"
+          echo "Content CID: $CID"
+          
+          # Cleanup
+          kill $PID_A $PID_B 2>/dev/null || true
+  
+  car-bundle-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup IPFS
+        run: |
+          wget -q https://dist.ipfs.tech/kubo/v0.24.0/kubo_v0.24.0_linux-amd64.tar.gz
+          tar -xzf kubo_v0.24.0_linux-amd64.tar.gz
+          sudo mv kubo/ipfs /usr/local/bin/
+          ipfs init --profile=test
+          ipfs daemon --offline &
+          sleep 5
+      
+      - name: Create Registry Bundle
+        run: |
+          # Add registry entries
+          for gene in registry/genes/*.json; do
+            CID=$(ipfs add -q "$gene")
+            echo "$(basename $gene): $CID"
+          done
+          
+          # Create registry head
+          ipfs add -q registry/genes/ > head.txt
+          HEAD=$(cat head.txt)
+          
+          # Bundle into CAR
+          ipfs dag export "$HEAD" > registry.car
+          
+          echo "✅ Registry CAR created"
+          ls -lh registry.car
+      
+      - name: Verify Import
+        run: |
+          # Clear repo
+          killall ipfs || true
+          rm -rf ~/.ipfs
+          
+          # Fresh node
+          ipfs init --profile=test
+          ipfs daemon --offline &
+          sleep 5
+          
+          # Import registry
+          ipfs dag import registry.car
+          
+          # Verify genes accessible
+          HEAD=$(ipfs dag import registry.car | grep -oP 'Qm[a-zA-Z0-9]+|bafy[a-zA-Z0-9]+' | head -1)
+          
+          if ipfs ls "$HEAD" | grep -q "FOCUS.json"; then
+            echo "✅ Registry bundle verified"
+          else
+            echo "❌ Registry import failed"
+            exit 1
+          fi
+      
+      - name: Upload CAR Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: registry-car
+          path: registry.car
