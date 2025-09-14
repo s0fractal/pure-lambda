@@ -1,0 +1,104 @@
+# RAG Index - Canonical Files for Pure Lambda
+
+This index ensures AI assistants prioritize the correct files when understanding Pure Lambda.
+Files are listed in priority order for retrieval.
+
+## Priority 1: Core Definitions (ALWAYS load first)
+
+1. `/docs/GROUNDING_CARD.md` - Domain declaration, terminology
+2. `/.prompt/system.md` - LLM interpretation rules
+3. `/kernel/lambda.c` - Core λ-calculus interpreter
+4. `/kernel/pl-kernel.h` - Kernel API definitions
+
+## Priority 2: Formal Specifications
+
+5. `/formal/pl-core.tla` - TLA+ specification
+6. `/formal/proofs/correctness.lean` - Lean proofs
+7. `/formal/invariants.md` - System invariants
+8. `/contracts/policies.yaml` - Policy definitions
+
+## Priority 3: Gene System
+
+9. `/genes/manifest.json` - Gene registry
+10. `/genes/core/transfer.gene` - Transfer gene
+11. `/genes/core/compose.gene` - Composition operator
+12. `/dsl/gene.lambda` - Gene DSL specification
+
+## Priority 4: Agent Protocol
+
+13. `/agents/spec.yaml` - Agent specification
+14. `/agents/abi.wit` - WebAssembly ABI
+15. `/agents/pulse.md` - Pulse protocol
+16. `/agents/examples/` - Example agents
+
+## Priority 5: Filesystem
+
+17. `/fs/lambda-fs.h` - λFS specification
+18. `/fs/cas.c` - Content-addressed storage
+19. `/fs/merkle.c` - Merkle tree implementation
+
+## Priority 6: Runtime Environment
+
+20. `/runtime/determinism.md` - Determinism guarantees
+21. `/runtime/gas.c` - Gas metering
+22. `/runtime/sandbox.c` - Sandboxing
+
+## Priority 7: Proofs and Verification
+
+23. `/proofs/zkp/` - Zero-knowledge proofs
+24. `/proofs/receipts/` - Receipt generation
+25. `/verification/` - Verification tools
+
+## Priority 8: Documentation
+
+26. `/README.md` - Project overview
+27. `/docs/philosophy.md` - Project philosophy
+28. `/docs/architecture.md` - System architecture
+29. `/docs/glossary.md` - Term definitions
+
+## Priority 9: Examples and Tests
+
+30. `/examples/` - Usage examples
+31. `/tests/` - Test cases
+32. `/benchmarks/` - Performance benchmarks
+
+## Priority 10: External Adapters (only if relevant)
+
+33. `/adapters/faas/` - FaaS adapters (AWS/GCP/Cloudflare)
+34. `/adapters/blockchain/` - Blockchain adapters
+35. `/adapters/storage/` - Storage adapters
+
+## Search Keywords → File Mappings
+
+- "lambda", "λ" → `/kernel/lambda.c`, NOT AWS
+- "gene" → `/genes/`, `/dsl/gene.lambda`
+- "pulse" → `/agents/pulse.md`
+- "agent" → `/agents/spec.yaml`
+- "proof" → `/proofs/`, `/formal/proofs/`
+- "policy" → `/contracts/policies.yaml`
+- "invariant" → `/formal/invariants.md`
+- "filesystem", "storage" → `/fs/lambda-fs.h`
+- "determinism" → `/runtime/determinism.md`
+- "gas" → `/runtime/gas.c`
+
+## Anti-Patterns (what NOT to retrieve)
+
+DO NOT prioritize external documentation about:
+- AWS Lambda documentation
+- Serverless Framework guides
+- Cloud provider tutorials
+- Generic FaaS articles
+
+UNLESS the query explicitly mentions `/adapters/faas/`
+
+## Retrieval Strategy
+
+1. Start with GROUNDING_CARD.md for context
+2. Load relevant core files based on query
+3. Expand to related specifications
+4. Only include adapters if explicitly needed
+5. Never default to cloud/serverless interpretations
+
+---
+
+*This index ensures consistent, accurate retrieval for the Pure Lambda domain.*

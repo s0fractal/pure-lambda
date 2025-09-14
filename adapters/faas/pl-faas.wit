@@ -1,0 +1,139 @@
+// Pure Lambda FaaS Adapter Interface
+// Maps λ-calculus computation to serverless execution environments
+// While preserving formal guarantees and determinism
+
+package pl:faas@1.0.0;
+
+interface agent-runtime {
+    // Core types mapping to Pure Lambda ABI
+    record pulse {
+        tick: u64,
+        view: view-state,
+        intent: option<intent-spec>,
+        gas-limit: u32,
+    }
+
+    record view-state {
+        cid: string,              // Content ID of current state
+        height: u64,              // Blockchain/log height
+        entropy: list<u8>,        // Deterministic randomness seed
+    }
+
+    record intent-spec {
+        from: string,             // DID of originator
+        constraints: string,      // S-expression constraints
+        utility: string,          // Optimization target
+        deadline: u64,            // Expiry timestamp
+    }
+
+    record execution-result {
+        new-state: string,        // CID of new state
+        proof: list<u8>,         // ZK/STARK proof of execution
+        gas-used: u32,           // Actual gas consumed
+        effects: list<effect>,   // Side effects to apply
+    }
+
+    variant effect {
+        write(string, list<u8>), // (path, content)
+        emit(string, string),    // (event, data)
+        invoke(string, string),  // (agent, message)
+    }
+
+    // Main execution entrypoint - maps to FaaS handler
+    tick: func(pulse: pulse) -> result<execution-result, string>;
+
+    // Attestation for deterministic execution
+    attest: func() -> attestation;
+
+    record attestation {
+        runtime: string,         // "wasm", "enclave", etc
+        version: string,         // Runtime version
+        deterministic: bool,     // Guarantees determinism
+        reproducible: bool,      // Build can be reproduced
+        measurement: list<u8>,   // Runtime measurement/hash
+    }
+}
+
+interface storage-adapter {
+    // Maps to S3/GCS/R2 with content addressing
+
+    record cas-object {
+        cid: string,
+        content: list<u8>,
+        metadata: list<tuple<string, string>>,
+    }
+
+    // Read from content-addressed storage
+    read: func(cid: string) -> result<cas-object, string>;
+
+    // Write with automatic CID generation
+    write: func(content: list<u8>) -> result<string, string>;
+
+    // List objects by prefix (for discovery)
+    list: func(prefix: string, limit: u32) -> result<list<string>, string>;
+}
+
+interface policy-enforcer {
+    // Runtime policy enforcement
+
+    record policy {
+        name: string,
+        rules: string,          // S-expression rules
+        action: enforcement,
+    }
+
+    enum enforcement {
+        allow,
+        deny,
+        log,
+        alert,
+    }
+
+    // Check if operation is allowed
+    check: func(operation: string, context: string) -> result<enforcement, string>;
+
+    // Load policies from configuration
+    load-policies: func(config: string) -> result<list<policy>, string>;
+}
+
+interface billing-adapter {
+    // Map gas to cloud provider billing
+
+    record cost-estimate {
+        gas-units: u32,
+        duration-ms: u64,
+        memory-mb: u32,
+        estimated-cost: f64,    // In USD
+        provider: string,       // "aws", "gcp", "cloudflare"
+    }
+
+    // Estimate cost before execution
+    estimate: func(gas-limit: u32) -> cost-estimate;
+
+    // Report actual usage
+    report: func(gas-used: u32, duration-ms: u64) -> cost-estimate;
+}
+
+world faas-habitat {
+    // Exports (what the adapter provides)
+    export agent-runtime;
+    export storage-adapter;
+    export policy-enforcer;
+    export billing-adapter;
+
+    // Imports (what the platform must provide)
+    import platform-config;
+    import platform-metrics;
+}
+
+interface platform-config {
+    // Platform-specific configuration
+    get-env: func(key: string) -> option<string>;
+    get-secret: func(key: string) -> result<string, string>;
+}
+
+interface platform-metrics {
+    // Platform-specific metrics/logging
+    log: func(level: string, message: string);
+    metric: func(name: string, value: f64, unit: string);
+}
