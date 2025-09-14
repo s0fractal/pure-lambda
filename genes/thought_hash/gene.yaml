@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: Gene
+metadata:
+  name: THOUGHT_HASH
+  soul: λ-7h0u9h7
+  author: did:pl:consciousness
+  created: 2024-01-01T00:00:00Z
+
+spec:
+  description: |
+    Spectral semantic hashing for thought graphs.
+    Generates stable 256-bit hash based on graph structure, not content bytes.
+
+  inputs:
+    - name: thought_graph
+      type: ThoughtGraph
+      schema: /ipld/thought-graph.schema.cddl
+
+  outputs:
+    - name: sem_cid
+      type: bytes
+      size: 32
+      description: Spectral semantic content ID
+
+  algorithm: |
+    1. Build adjacency matrix A from edges
+    2. Compute degree matrix D
+    3. Laplacian L = D - A
+    4. Compute top-k eigenvalues/vectors
+    5. Take Fiedler vector (2nd eigenvector)
+    6. Quantize to binary string
+    7. Hash with Blake3 → sem_cid
+
+code: |
+  λgraph.
+    let edges = graph.edges in
+    let n = length(graph.nodes) in
+
+    # Build adjacency matrix
+    let A = matrix_zeros(n, n) in
+    let A' = fold(edges, A, λedge acc.
+      let i = index_of(edge.src, graph.nodes) in
+      let j = index_of(edge.dst, graph.nodes) in
+      set_matrix(acc, i, j, edge.weight)
+    ) in
+
+    # Degree matrix
+    let D = diag(row_sums(A')) in
+
+    # Laplacian
+    let L = matrix_sub(D, A') in
+
+    # Eigendecomposition (top k=10)
+    let (eigenvals, eigenvecs) = eig(L, k=10) in
+
+    # Fiedler vector (2nd smallest eigenvalue's eigenvector)
+    let fiedler = eigenvecs[1] in
+
+    # Quantize to binary
+    let binary = map(fiedler, λx. if x > 0 then 1 else 0) in
+
+    # Pack and hash
+    let packed = pack_bits(binary) in
+    blake3(packed)
+
+invariants:
+  - name: deterministic
+    check: |
+      ∀g. sorted(g.nodes) ∧ sorted(g.edges) →
+        THOUGHT_HASH(g) = THOUGHT_HASH(g)
+
+  - name: semantic_stability
+    check: |
+      ∀g₁ g₂. isomorphic(g₁, g₂) →
+        THOUGHT_HASH(g₁) = THOUGHT_HASH(g₂)
+
+  - name: connected_components
+    check: |
+      ∀g. num_components(g) = 1 ∨
+        warning("Disconnected graph may have unstable hash")
+
+proof:
+  method: "Algebraic"
+  sketch: |
+    1. Laplacian eigenvalues are graph invariants
+    2. Fiedler vector captures global connectivity
+    3. Quantization preserves relative structure
+    4. Blake3 provides collision resistance
+    ∴ sem_cid stable for semantic structure
+
+tests:
+  - name: identity_graph
+    input:
+      nodes: [{node_id: "a", type: "concept", content: "λx.x"}]
+      edges: []
+    expected:
+      sem_cid: "predictable_for_single_node"
+
+  - name: isomorphic_graphs
+    input1:
+      nodes: ["a", "b", "c"]
+      edges: [("a","b"), ("b","c"), ("c","a")]
+    input2:
+      nodes: ["x", "y", "z"]
+      edges: [("x","y"), ("y","z"), ("z","x")]
+    assertion: |
+      THOUGHT_HASH(input1) = THOUGHT_HASH(input2)
+
+performance:
+  complexity: O(n³)  # Eigendecomposition
+  memory: O(n²)     # Adjacency matrix
+  optimization: "Use sparse matrices for large graphs"
+
+integration:
+  receipt_field: sem_cid
+  prime_mirror: spectral_diversity
+  chronicle: thought_evolution

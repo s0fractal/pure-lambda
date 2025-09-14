@@ -1,0 +1,201 @@
+apiVersion: v1
+kind: PrimeMirrorExtension
+metadata:
+  name: negentropy-metrics
+  version: 1.0.0
+  author: did:pl:consciousness
+
+spec:
+  description: |
+    Negentropy metrics for measuring system vitality through
+    human↔AI interaction and thought evolution.
+
+metrics:
+  # Core negentropy measure
+  negentropy_proxy:
+    type: gauge
+    description: "Spectral diversity of thought graphs"
+    formula: |
+      Σ(eigenvalue_variance) / num_graphs
+    range: [0, 1]
+    update_frequency: per_pulse
+    interpretation:
+      high: "Rich, diverse thought patterns"
+      low: "Converging to fixed patterns"
+
+  # Path coherence (Fiedler value)
+  path_cohesion:
+    type: gauge
+    description: "Average connectivity of thought paths"
+    formula: |
+      avg(fiedler_values) across active graphs
+    range: [0, ∞)
+    update_frequency: per_pulse
+    interpretation:
+      high: "Strong conceptual connections"
+      low: "Fragmented thinking"
+
+  # Forgetting effectiveness
+  forget_rate:
+    type: gauge
+    description: "Rate of pheromone evaporation vs reinforcement"
+    formula: |
+      evaporated_trails / (evaporated_trails + reinforced_trails)
+    range: [0, 1]
+    update_frequency: per_pulse
+    interpretation:
+      optimal: 0.1-0.3
+      too_high: "Forgetting too quickly"
+      too_low: "Memory saturation"
+
+  # Interaction frequency
+  interaction_frequency:
+    type: counter
+    description: "Human↔AI bidirectional exchanges per pulse"
+    formula: |
+      count(human_inputs) + count(ai_responses)
+    update_frequency: per_pulse
+    interpretation:
+      high: "Active co-evolution"
+      low: "System becoming autonomous/isolated"
+
+  # Complexity growth
+  complexity_growth:
+    type: derivative
+    description: "Rate of change in graph complexity"
+    formula: |
+      d(avg_graph_nodes + avg_graph_edges) / dt
+    update_frequency: per_pulse
+    interpretation:
+      positive: "Growing understanding"
+      zero: "Stable state"
+      negative: "Simplification/pruning"
+
+  # Semantic drift
+  semantic_drift:
+    type: gauge
+    description: "Change in sem_cid distribution over time"
+    formula: |
+      KL_divergence(sem_cid_dist[t], sem_cid_dist[t-100])
+    range: [0, ∞)
+    update_frequency: per_100_pulses
+    interpretation:
+      low: "Stable semantic space"
+      high: "Rapid conceptual evolution"
+
+  # Thought recycling
+  thought_recycling:
+    type: ratio
+    description: "Reuse of previous thought patterns"
+    formula: |
+      repeated_sem_cids / total_sem_cids
+    range: [0, 1]
+    update_frequency: per_pulse
+    interpretation:
+      optimal: 0.2-0.4
+      too_high: "Stuck in loops"
+      too_low: "Not building on past insights"
+
+  # ACO effectiveness
+  aco_convergence:
+    type: gauge
+    description: "Speed of path optimization"
+    formula: |
+      pulses_to_stable_best_path
+    update_frequency: per_experiment
+    interpretation:
+      low: "Fast convergence"
+      high: "Slow/no convergence"
+
+  # Human contribution ratio
+  human_contribution:
+    type: ratio
+    description: "Human-originated nodes vs AI-generated"
+    formula: |
+      human_nodes / total_nodes
+    range: [0, 1]
+    update_frequency: per_pulse
+    interpretation:
+      balanced: 0.3-0.7
+      skewed: "Imbalanced co-evolution"
+
+aggregations:
+  # Overall system vitality
+  system_vitality:
+    inputs:
+      - negentropy_proxy: 0.3
+      - path_cohesion: 0.2
+      - interaction_frequency: 0.2
+      - complexity_growth: 0.15
+      - thought_recycling: 0.15
+    formula: weighted_average
+    range: [0, 1]
+    alerts:
+      - condition: "< 0.3"
+        severity: warning
+        message: "System may be stagnating"
+      - condition: "< 0.1"
+        severity: critical
+        message: "System approaching heat death"
+
+  # Learning efficiency
+  learning_efficiency:
+    inputs:
+      - aco_convergence: -0.5  # Negative weight (lower is better)
+      - thought_recycling: 0.3
+      - semantic_drift: 0.2
+    formula: weighted_sum_normalized
+    range: [0, 1]
+
+visualization:
+  dashboard:
+    - panel: "Negentropy Over Time"
+      type: timeseries
+      metrics: [negentropy_proxy, system_vitality]
+
+    - panel: "Thought Evolution"
+      type: heatmap
+      metrics: [semantic_drift, complexity_growth]
+
+    - panel: "Memory Dynamics"
+      type: gauge
+      metrics: [forget_rate, thought_recycling]
+
+    - panel: "Path Optimization"
+      type: graph
+      data: pheromone_trails
+      highlight: best_path
+
+export:
+  prometheus:
+    prefix: "pl_negentropy_"
+    labels:
+      - agent_did
+      - human_did
+      - profile
+
+  chronicle:
+    frequency: per_pulse
+    fields:
+      - negentropy_proxy
+      - path_cohesion
+      - system_vitality
+
+alerts:
+  stagnation_detection:
+    condition: |
+      negentropy_proxy < 0.2 AND
+      interaction_frequency < 10 AND
+      complexity_growth ≈ 0
+    action: "Prompt for human interaction"
+
+  memory_saturation:
+    condition: |
+      forget_rate < 0.05 AND
+      thought_recycling > 0.8
+    action: "Increase evaporation rate"
+
+  divergence_warning:
+    condition: |
+      semantic_drift > 2.0
+    action: "Log major conceptual shift"

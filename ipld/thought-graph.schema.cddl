@@ -1,0 +1,123 @@
+; IPLD Schema for Thought Graph IR
+; Deterministic representation of thought structures for spectral hashing
+
+; Core node types
+NodeType = "concept" / "relation" / "property" / "context" / "lambda"
+
+; Node in thought graph
+ThoughtNode = {
+  node_id: CID           ; Content-addressed ID
+  type: NodeType         ; Node classification
+  content: Text          ; Semantic content
+  attrs: {* Text => Any} ; Additional attributes
+  depth: uint            ; Graph depth from root
+  timestamp: uint        ; Creation time (deterministic)
+}
+
+; Edge types representing relationships
+EdgeType = "implies" / "contradicts" / "supports" / "derives" / "composes" / "observes"
+
+; Edge in thought graph
+ThoughtEdge = {
+  edge_id: CID      ; Deterministic edge ID
+  src: CID          ; Source node
+  dst: CID          ; Destination node
+  rel: EdgeType     ; Relationship type
+  weight: float32   ; Edge weight/strength
+  pheromone: float32 ; ACO pheromone level
+}
+
+; Complete thought graph
+ThoughtGraph = {
+  graph_id: CID              ; Graph identity
+  nodes: [* ThoughtNode]     ; Canonically sorted nodes
+  edges: [* ThoughtEdge]     ; Canonically sorted edges
+  metadata: GraphMetadata
+}
+
+; Graph metadata for processing
+GraphMetadata = {
+  created: uint              ; Creation timestamp
+  human_did: Text           ; Human contributor
+  agent_did: Text           ; Agent contributor
+  sem_cid: bytes            ; Spectral semantic hash
+  complexity: float32       ; Graph complexity metric
+  coherence: float32        ; Spectral coherence (Fiedler)
+  negentropy: float32       ; Negentropy measure
+}
+
+; Spectral hash components
+SpectralHash = {
+  laplacian_eigenvalues: [* float32]  ; Top-k eigenvalues
+  fiedler_vector: [* float32]         ; Second eigenvector
+  spectral_gap: float32                ; λ₂ - λ₁
+  hash: bytes .size 32                 ; Final 256-bit hash
+}
+
+; Pheromone trail for ACO
+PheromoneTrail = {
+  path: [* CID]              ; Sequence of sem_cids
+  strength: float32          ; Current pheromone level
+  evaporation_rate: float32  ; Decay factor (ρ)
+  reinforcements: uint       ; Times reinforced
+  last_used: uint           ; Last activation time
+}
+
+; ACO configuration
+ACOConfig = {
+  alpha: float32   ; Pheromone importance
+  beta: float32    ; Heuristic importance
+  rho: float32     ; Evaporation rate
+  Q: float32       ; Pheromone deposit constant
+  max_iterations: uint
+  ant_count: uint
+}
+
+; Negentropy measurement
+NegentropyMetrics = {
+  spectral_diversity: float32   ; Diversity of eigenvalues
+  path_cohesion: float32        ; Average path coherence
+  forget_rate: float32          ; Evaporation effectiveness
+  interaction_frequency: float32 ; Human↔AI interaction rate
+  complexity_growth: float32    ; Rate of complexity increase
+}
+
+; Canonical sorting rules for determinism
+; 1. Nodes: sorted by node_id (CID)
+; 2. Edges: sorted by (src, dst, rel)
+; 3. Paths: sorted by first CID, then length
+; 4. All CIDs use same hash function (Blake3)
+
+; Example instantiation
+example_thought = {
+  graph_id: "bafybeig7kqxpq3f..."
+  nodes: [
+    {
+      node_id: "bafybeih3xz2p4q..."
+      type: "concept"
+      content: "λx.x represents identity"
+      attrs: {"source": "human", "confidence": 0.95}
+      depth: 0
+      timestamp: 1234567890
+    }
+  ]
+  edges: [
+    {
+      edge_id: "bafybeif4a5b6c..."
+      src: "bafybeih3xz2p4q..."
+      dst: "bafybeig8y9z0r..."
+      rel: "implies"
+      weight: 0.8
+      pheromone: 0.3
+    }
+  ]
+  metadata: {
+    created: 1234567890
+    human_did: "did:pl:human:abc"
+    agent_did: "did:pl:agent:xyz"
+    sem_cid: h'3f5c7b2a9...'
+    complexity: 12.5
+    coherence: 0.85
+    negentropy: 0.72
+  }
+}
