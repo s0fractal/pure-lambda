@@ -1,0 +1,140 @@
+version: "3.9"
+
+services:
+  # IPFS Node for content-addressed storage
+  ipfs:
+    image: ipfs/kubo:latest
+    restart: unless-stopped
+    ports:
+      - "4001:4001/tcp"     # P2P swarm
+      - "4001:4001/udp"     # P2P swarm UDP
+      - "5001:5001"         # API
+      - "8080:8080"         # Gateway
+    volumes:
+      - ./data/ipfs:/data/ipfs
+    environment:
+      - IPFS_PROFILE=lowpower
+      - IPFS_PATH=/data/ipfs
+    healthcheck:
+      test: ["CMD-SHELL", "ipfs id || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Pure Lambda Node - Main computation engine
+  pl-node:
+    build:
+      context: ../../
+      dockerfile: deploy/edge/Dockerfile.node
+    image: ghcr.io/pure-lambda/pl-node:stable
+    depends_on:
+      ipfs:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      - PL_IPFS_API=/ip4/ipfs/tcp/5001
+      - PL_MODE=attested
+      - PL_SILENCE_POLICY=/policies/silence.yaml
+      - PL_GENESIS_CAR=/genesis/GENESIS.car
+      - PL_UCAN=/auth/ucan/edge-host.json
+      - PL_PROFILE=${PROFILE:-balanced}
+      - PL_ATTESTATION_STRICT=true
+      - PL_MAX_OPS_PER_PULSE=256
+      - PL_MAX_CREDITS_PER_PULSE=5000
+    volumes:
+      - ./genesis:/genesis:ro
+      - ./policies:/policies:ro
+      - ./auth/ucan:/auth/ucan:ro
+      - ./cas:/var/lib/pl/cas
+      - ./logs:/var/lib/pl/logs
+      - ./chronicle:/var/lib/pl/chronicle
+      - ./museaium:/var/lib/pl/museaium
+      - /dev/dri:/dev/dri  # GPU access if available
+    devices:
+      - /dev/dri            # Intel/AMD GPU
+    cap_drop:
+      - ALL
+    cap_add:
+      - DAC_OVERRIDE       # File access
+      - CHOWN              # File ownership
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:unconfined  # For WASM JIT
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'      # 300% CPU
+          memory: 24G
+        reservations:
+          cpus: '1.0'
+          memory: 4G
+
+  # Observer for metrics and tracing
+  observer:
+    build:
+      context: ../../
+      dockerfile: deploy/edge/Dockerfile.observer
+    image: ghcr.io/pure-lambda/pl-observer:latest
+    depends_on:
+      - pl-node
+    restart: unless-stopped
+    ports:
+      - "9090:9090"        # Prometheus metrics
+      - "9091:9091"        # Traces endpoint
+    environment:
+      - OBSERVER_TARGET=pl-node:8080
+      - METRICS_RETENTION=7d
+    volumes:
+      - ./metrics:/var/lib/observer/metrics
+      - ./traces:/var/lib/observer/traces
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 2G
+
+  # Attestation service (optional, for full security)
+  attestor:
+    build:
+      context: ../../
+      dockerfile: deploy/edge/Dockerfile.attestor
+    image: ghcr.io/pure-lambda/pl-attestor:latest
+    depends_on:
+      - pl-node
+    restart: unless-stopped
+    environment:
+      - ATTESTOR_MODE=deterministic
+      - ATTESTOR_TARGET=pl-node:8080
+    volumes:
+      - ./attestations:/var/lib/attestor/proofs:rw
+      - /dev/tpm0:/dev/tpm0:rw  # TPM if available
+    devices:
+      - /dev/tpm0          # Hardware attestation
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 1G
+
+networks:
+  default:
+    name: pl-edge
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  ipfs-data:
+  pl-cas:
+  pl-chronicle:
+  pl-museaium:
+  metrics-data:
+  traces-data:

@@ -133,6 +133,41 @@ absorption-status:
 		echo "No absorption ceremony completed yet"; \
 	fi
 
+# Edge Habitat - Full power deployment
+edge-setup:
+	@echo "🖥️ Setting up Edge Habitat..."
+	@./deploy/edge/setup.sh
+
+edge-start:
+	@echo "🚀 Starting Edge Habitat..."
+	@cd deploy/edge && PROFILE=$${PROFILE:-balanced} docker-compose up -d
+	@echo "✅ Edge node running at http://localhost:9090"
+
+edge-stop:
+	@echo "🛑 Stopping Edge Habitat..."
+	@cd deploy/edge && docker-compose down
+	@echo "✅ Edge node stopped"
+
+edge-status:
+	@echo "📊 Edge Habitat Status:"
+	@cd deploy/edge && docker-compose ps
+	@echo
+	@echo "Metrics: http://localhost:9090/metrics"
+	@echo "IPFS: http://localhost:8080"
+
+edge-logs:
+	@cd deploy/edge && docker-compose logs -f --tail=100
+
+edge-profile:
+	@echo "Available profiles:"
+	@echo "  safe     - Conservative (1.5 CPU, 8GB RAM)"
+	@echo "  balanced - Default (3 CPU, 24GB RAM)"
+	@echo "  max      - Full power (8 CPU, 64GB RAM)"
+	@echo "  minimal  - Observer only (0.5 CPU, 2GB RAM)"
+	@echo "  gpu-compute - GPU optimized"
+	@echo
+	@echo "Usage: PROFILE=max make edge-start"
+
 # Clean all build artifacts
 clean:
 	@echo "🧹 Cleaning..."

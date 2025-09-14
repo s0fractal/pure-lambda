@@ -1,0 +1,80 @@
+{
+  "iss": "did:pl:human:${HUMAN_DID}",
+  "aud": "did:pl:edge:${EDGE_HOST_ID}",
+  "cap": [
+    {
+      "op": "read",
+      "res": "views/*",
+      "notes": "Read all computational views"
+    },
+    {
+      "op": "write",
+      "res": "intents/*",
+      "limit": {
+        "max_bytes": 2147483648,
+        "notes": "2GB max per intent"
+      }
+    },
+    {
+      "op": "exec",
+      "res": "autopoiesis/*",
+      "limit": {
+        "max_ops": 256,
+        "per_pulse": true,
+        "notes": "High-power evolution within bounds"
+      }
+    },
+    {
+      "op": "write",
+      "res": "chronicle/*",
+      "limit": {
+        "entries_per_day": 1000
+      }
+    },
+    {
+      "op": "write",
+      "res": "museaium/*",
+      "limit": {
+        "artifacts_per_pulse": 50
+      }
+    },
+    {
+      "op": "spend",
+      "res": "economy/credits",
+      "limit": {
+        "max_cr": 5000,
+        "per_pulse": true,
+        "notes": "10x normal limit for edge node"
+      }
+    },
+    {
+      "op": "compute",
+      "res": "gpu/*",
+      "limit": {
+        "max_seconds": 300,
+        "per_pulse": true,
+        "notes": "GPU access if available"
+      }
+    }
+  ],
+  "ttl": 1209600,
+  "renewable": true,
+  "notes": "Edge Habitat on personal machine - full power within rails",
+  "constraints": {
+    "require_attestation": true,
+    "require_presence_within": 86400,
+    "silence_protocol_respected": true,
+    "network_egress_allowed": [
+      "ipfs:*",
+      "federation:kyiv",
+      "federation:lviv",
+      "federation:odesa"
+    ]
+  },
+  "revocation": {
+    "methods": ["kill_switch", "ttl_expiry", "manual"],
+    "grace_period": 3600
+  },
+  "issued_at": "${TIMESTAMP}",
+  "expires_at": "${TIMESTAMP_PLUS_14D}"
+}

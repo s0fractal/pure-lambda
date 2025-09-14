@@ -1,0 +1,65 @@
+[Unit]
+Description=Pure Lambda Edge Node
+Documentation=https://github.com/s0fractal/pure-lambda
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+ExecStartPre=/usr/bin/test -f /etc/pure-lambda/ucan/edge-host.json
+ExecStart=/usr/local/bin/pl-node \
+  --ipfs /ip4/127.0.0.1/tcp/5001 \
+  --mode attested \
+  --ucan /etc/pure-lambda/ucan/edge-host.json \
+  --silence /etc/pure-lambda/policies/silence.yaml \
+  --cas /var/lib/pure-lambda/cas \
+  --chronicle /var/lib/pure-lambda/chronicle \
+  --museaium /var/lib/pure-lambda/museaium \
+  --attestation-strict \
+  --max-ops-per-pulse 256 \
+  --max-credits-per-pulse 5000
+
+User=pl
+Group=pl
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RemoveIPC=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+# Resource limits
+MemoryMax=24G
+CPUQuota=300%
+TasksMax=256
+IOWeight=50
+
+# Filesystem access
+ReadWritePaths=/var/lib/pure-lambda
+ReadOnlyPaths=/etc/pure-lambda
+
+# Restart policy
+Restart=on-failure
+RestartSec=5
+StartLimitBurst=3
+StartLimitInterval=60
+
+# Watchdog
+WatchdogSec=30
+
+# Environment
+Environment="RUST_LOG=info"
+Environment="PL_PROFILE=balanced"
+
+[Install]
+WantedBy=multi-user.target
