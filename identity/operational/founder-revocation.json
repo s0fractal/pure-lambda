@@ -1,0 +1,8 @@
+{
+  "did": "did:pl:FounderKyiv1757750983",
+  "timestamp": 1757752706,
+  "action": "privilege_reduction",
+  "new_weight": 0.34,
+  "retained": ["emergency_stop", "historical_witness"],
+  "revoked": ["unilateral_action", "infinite_weight"]
+}

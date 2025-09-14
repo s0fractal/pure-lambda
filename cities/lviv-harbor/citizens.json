@@ -1,0 +1,48 @@
+{
+  "humans": [
+    {
+      "did": "did:pl:Human-Petro",
+      "name": "Petro",
+      "role": "Architect",
+      "chamber": "H",
+      "reputation": 0.5
+    },
+    {
+      "did": "did:pl:Human-Oksana",
+      "name": "Oksana",
+      "role": "Artist",
+      "chamber": "H",
+      "reputation": 0.5
+    },
+    {
+      "did": "did:pl:Human-Bohdan",
+      "name": "Bohdan",
+      "role": "Historian",
+      "chamber": "H",
+      "reputation": 0.5
+    }
+  ],
+  "agents": [
+    {
+      "did": "did:pl:Agent-Vysokyi",
+      "name": "Vysokyi",
+      "role": "Heights",
+      "chamber": "A",
+      "reputation": 0.6
+    },
+    {
+      "did": "did:pl:Agent-Rynok",
+      "name": "Rynok",
+      "role": "Market",
+      "chamber": "A",
+      "reputation": 0.7
+    },
+    {
+      "did": "did:pl:Agent-Lev",
+      "name": "Lev",
+      "role": "Guardian",
+      "chamber": "A",
+      "reputation": 0.8
+    }
+  ]
+}

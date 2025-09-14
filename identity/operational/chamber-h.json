@@ -1,0 +1,6 @@
+{
+  "did": "did:pl:ChamberH",
+  "type": "Ed25519VerificationKey2020",
+  "publicKey": "2d5e6b8854cf58670644301cb98a68bb2aeb57db3a1ba91de64703d0f0dcc81e",
+  "capabilities": ["vote", "propose", "contract_issue"]
+}

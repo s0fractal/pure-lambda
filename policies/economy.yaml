@@ -1,0 +1,67 @@
+# Economic Policy Invariants
+# Ensure fair and transparent economic layer
+
+invariants:
+  - id: economy.cap_fairshare
+    description: "No agent monopolizes the market"
+    check: "credits_spent(agent, pulse) <= fair_share(agent)"
+    severity: critical
+    action: throttle
+    
+  - id: economy.pouw_required
+    description: "All receipts must prove useful work"
+    check: "receipt.proofs contains 'PolicySuite.v0' and 'Attestation'"
+    severity: critical
+    action: reject
+    
+  - id: economy.price_transparency
+    description: "Pricing must be visible in receipts"
+    check: "receipt.pricing != null and receipt.pricing.breakdown != null"
+    severity: high
+    action: warn
+    
+  - id: economy.no_negative_balance
+    description: "Credits cannot go negative"
+    check: "balance(did) >= 0"
+    severity: critical
+    action: halt
+    
+  - id: economy.surge_limit
+    description: "Surge pricing cannot exceed 3x"
+    check: "current_rate <= base_rate * 3"
+    severity: high
+    action: cap
+    
+  - id: economy.human_minimum
+    description: "Humans get minimum allocation"
+    check: "human_capacity >= total_capacity * 0.20"
+    severity: high
+    action: reserve
+
+metrics:
+  - name: credits_circulation
+    query: "sum(credits_spent) - sum(credits_earned)"
+    target: 0  # Should balance
+    tolerance: 100
+    
+  - name: fairness_index
+    query: "stdev(agent_earnings) / mean(agent_earnings)"
+    target: 0.3  # Low variance = fair
+    max: 0.5
+    
+  - name: proof_coverage
+    query: "contracts_with_proofs / total_contracts"
+    target: 1.0
+    min: 0.95
+
+enforcement:
+  check_interval: 60s
+  report_to: governance/economy-violations.log
+  auto_correct: true
+  escalation:
+    - level: warn
+      threshold: 3
+      action: notify_chambers
+    - level: critical
+      threshold: 1
+      action: emergency_halt

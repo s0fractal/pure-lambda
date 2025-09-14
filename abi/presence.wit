@@ -1,0 +1,39 @@
+package pl:presence
+
+world presence {
+  import host {
+    now_ms: func() -> u64
+  }
+
+  // Явний дотик — оновлює heartbeat
+  export touch: func(did: string, note: string) -> u64  // returns new heartbeat ts
+
+  // Неінвазивний сигнал стану (без побічних ефектів)
+  export feel: func(did: string, mood: u8, tags: list<string>) -> u64
+
+  // Чисте запитання "ти тут?" без побічних ефектів
+  export are_you_there: func() -> u32                   // 1=yes, 0=no (degraded)
+
+  // Додаткові функції для нюансованої присутності
+  export pulse: func() -> u64                           // returns current system pulse
+  export last_touch: func(did: string) -> u64           // when did this DID last touch?
+  export in_silence: func() -> bool                      // is system in silence mode?
+
+  // Взаємне відчуття
+  export feel: func(from_did: string, to_did: string) -> presence-feeling
+}
+
+record presence-feeling {
+  mutual: bool,          // чи обидва торкались нещодавно
+  distance_ms: u64,      // час між дотиками
+  resonance: f32,        // 0.0-1.0 наскільки синхронні
+}
+
+// Тип дотику може варіюватись
+enum touch-type {
+  heartbeat,    // просто "я тут"
+  intent,       // "я маю намір"
+  create,       // "я творю"
+  witness,      // "я свідчу"
+  rest,         // "я відпочиваю"
+}

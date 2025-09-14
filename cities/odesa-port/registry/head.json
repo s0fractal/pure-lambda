@@ -1,0 +1,7 @@
+{
+  "version": "v1.0.0",
+  "city": "odesa-port",
+  "genesis_cid": "QmOdesaGenesisc0dfe846988124370f5bd9f49b224e0fab0017b02a91",
+  "shard_id": 2,
+  "federation": ["kyiv-prime", "lviv-harbor", "odesa-port"]
+}

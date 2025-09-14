@@ -1,0 +1,6 @@
+node:
+  name: port-node-4
+  city: odesa-port
+  port: 9003
+  chamber: A
+  capabilities: [attestation, contracts, consensus, sharding]

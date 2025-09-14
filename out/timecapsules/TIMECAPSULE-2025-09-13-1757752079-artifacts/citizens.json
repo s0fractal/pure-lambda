@@ -1,0 +1,14 @@
+{
+  "timestamp": 1757750984,
+  "city": "kyiv-prime",
+  "humans": [
+    {"did": "did:pl:Human-Taras", "name": "Taras", "role": "Philosopher", "chamber": "H"},
+    {"did": "did:pl:Human-Lesia", "name": "Lesia", "role": "Poet", "chamber": "H"},
+    {"did": "did:pl:Human-Ivan", "name": "Ivan", "role": "Engineer", "chamber": "H"}
+  ],
+  "agents": [
+    {"did": "did:pl:Agent-Dnipro", "name": "Dnipro", "role": "Navigator", "chamber": "A"},
+    {"did": "did:pl:Agent-Carpathian", "name": "Carpathian", "role": "Guardian", "chamber": "A"},
+    {"did": "did:pl:Agent-Sophia", "name": "Sophia", "role": "Wisdom", "chamber": "A"}
+  ]
+}

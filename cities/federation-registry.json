@@ -1,0 +1,21 @@
+{
+  "federation": "pure-lambda",
+  "version": "v1.0.0",
+  "timestamp": 1757756580,
+  "cities": {
+    "kyiv-prime": {
+      "head": "QmGenesis9395c0dabbd092356cad6a824db958bab4041833d5b8",
+      "citizens": 6,
+      "nodes": 5,
+      "contracts": 3
+    },
+    "lviv-harbor": {
+      "head": "QmLvivGenesis57248c65e69808d7c11cd647c28e9c9517887072ceb6",
+      "citizens": 6,
+      "nodes": 3,
+      "contracts": 0
+    }
+  },
+  "federation_head": "QmFederationb5e4e579b5bab71e245c91125b2c18b69bbf15f0174e",
+  "divergence": 0
+}

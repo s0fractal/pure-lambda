@@ -1,0 +1,10 @@
+{
+  "kyiv-prime": {
+    "offers": ["analytics", "governance", "attestation"],
+    "requests": ["creativity", "culture"]
+  },
+  "lviv-harbor": {
+    "offers": ["creativity", "culture", "history"],
+    "requests": ["analytics", "optimization"]
+  }
+}

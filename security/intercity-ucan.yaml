@@ -1,0 +1,87 @@
+# Inter-City UCAN Capabilities
+# Fine-grained permissions for cross-city operations
+
+capabilities:
+  - id: intercity-read-views
+    description: "Read views from remote cities"
+    scope: "read:views/*@{origin_city}"
+    issuer: "{origin_city}"
+    subject: "{remote_agent}"
+    constraints:
+      - max_size_mb: 100
+      - rate_limit_per_hour: 1000
+      - require_contract: true
+    
+  - id: intercity-write-intents
+    description: "Write intents to remote cities"
+    scope: "write:intents/*@{destination_city}"
+    issuer: "{origin_city}"
+    subject: "{remote_agent}"
+    constraints:
+      - max_size_mb: 50
+      - rate_limit_per_hour: 100
+      - require_attestation: true
+      - require_contract: true
+    
+  - id: intercity-execute
+    description: "Execute contracts in remote city"
+    scope: "execute:contracts@{remote_city}"
+    issuer: "{origin_human}"
+    subject: "{remote_agent}"
+    constraints:
+      - max_gas: 1000000
+      - max_duration_ms: 5000
+      - require_payment: true
+
+rate_limits:
+  gossip:
+    pl.genes: 100/s
+    pl.proofs: 50/s
+    pl.receipts: 200/s
+    pl.registry: 10/s
+  
+  bitswap:
+    max_wants: 1000
+    max_blocks_per_second: 500
+    max_size_per_block: 1MB
+    
+  contracts:
+    per_did_per_minute: 10
+    per_city_per_minute: 100
+    burst_allowance: 20
+
+dos_protection:
+  enabled: true
+  strategies:
+    - type: whitelist
+      source: registry/shardmap.toml
+      refresh_interval: 60s
+    
+    - type: reputation_filter
+      min_reputation: 0.1
+      block_negative: true
+    
+    - type: circuit_breaker
+      failure_threshold: 10
+      timeout_s: 30
+      
+key_rotation:
+  enabled: true
+  interval_days: 7
+  overlap_period_hours: 24  # Dual signing period
+  algorithm: ed25519
+  
+  notify:
+    - all_cities
+    - all_chambers
+  
+audit:
+  log_all_intercity: true
+  log_path: /var/log/intercity-audit.log
+  retention_days: 90
+  
+  alerts:
+    - unauthorized_access
+    - rate_limit_exceeded
+    - key_rotation_failure
+    - dos_attempt

@@ -1,0 +1,75 @@
+{
+  "title": "ResonanceLedger",
+  "description": "Lightweight touch journal for presence tracking",
+  "type": "object",
+  "properties": {
+    "did": {
+      "type": "string",
+      "description": "Digital identifier of the touching entity",
+      "pattern": "^did:[a-z]+:[a-zA-Z0-9._%-]+"
+    },
+    "ts": {
+      "type": "integer",
+      "description": "Timestamp in milliseconds since epoch",
+      "minimum": 0
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional note about the touch",
+      "maxLength": 256
+    },
+    "mood": {
+      "type": "integer",
+      "description": "Emotional resonance (0=void, 7=bliss)",
+      "minimum": 0,
+      "maximum": 7
+    },
+    "tags": {
+      "type": "array",
+      "description": "Semantic tags for this touch",
+      "items": {
+        "type": "string",
+        "maxLength": 32
+      },
+      "maxItems": 8
+    },
+    "reciprocal": {
+      "type": "boolean",
+      "description": "Whether this touch expects a response",
+      "default": false
+    },
+    "ephemeral": {
+      "type": "boolean",
+      "description": "Whether this touch should fade after TTL",
+      "default": true
+    },
+    "signature": {
+      "type": "string",
+      "description": "Cryptographic signature of the touch",
+      "pattern": "^[A-Fa-f0-9]{128}$"
+    }
+  },
+  "required": ["did", "ts"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "did": "did:pl:human:morning_walker",
+      "ts": 1726254000000,
+      "mood": 5,
+      "tags": ["sunrise", "grateful"]
+    },
+    {
+      "did": "did:pl:agent:night_watcher",
+      "ts": 1726254300000,
+      "note": "all systems nominal",
+      "mood": 3,
+      "reciprocal": false
+    },
+    {
+      "did": "did:pl:system:autopoiesis",
+      "ts": 1726254600000,
+      "note": "micro-hypothesis generated",
+      "tags": ["evolution", "autonomous"]
+    }
+  ]
+}

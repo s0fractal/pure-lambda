@@ -1,0 +1,64 @@
+# Safety Guardrails for ML Tuning
+# Hard limits that cannot be violated
+
+[guardrails]
+# Absolute boundaries
+min_fairness_index = 0.85           # Never go below
+max_agent_share = 0.30               # No agent >30%
+min_human_allocation = 0.15         # Humans get ≥15%
+max_price_surge = 3.0                # Max 3x surge
+max_sla_breach_rate = 0.05          # Max 5% breaches
+
+[constraints]
+# Per-pulse constraints
+max_price_change_pct = 20           # Max 20% change per pulse
+max_weight_change = 0.1              # Max 0.1 change in weights
+min_stability_period_s = 1800       # 30 min between major changes
+
+[rollback]
+enabled = true
+trigger_conditions = [
+  "fairness_index < 0.85",
+  "sla_breach_rate > 0.05",
+  "agent_hogging > 0.30",
+  "human_starvation > 300s"
+]
+rollback_to = "last_safe_state"
+cooldown_period_s = 3600            # 1 hour before retry
+
+[limits]
+# Resource limits
+max_credits_per_pulse = 100000
+min_credits_per_contract = 1
+max_credits_per_contract = 10000
+total_credit_cap = 1000000
+
+[ethics]
+# Ethical boundaries
+no_discrimination = true             # Equal treatment
+transparency_required = true         # Show pricing logic
+consent_for_personalization = true   # Need consent for personal pricing
+no_dark_patterns = true              # No manipulative pricing
+
+[monitoring]
+check_interval_s = 60
+alert_on_violation = true
+halt_on_critical = true
+report_to = "governance/safety-violations.log"
+
+[escalation]
+levels = [
+  {severity = "low", threshold = 3, action = "log"},
+  {severity = "medium", threshold = 2, action = "alert"},
+  {severity = "high", threshold = 1, action = "rollback"},
+  {severity = "critical", threshold = 1, action = "halt"}
+]
+
+[human_override]
+enabled = true
+authorized_dids = [
+  "did:pl:Human-Taras",
+  "did:pl:Human-Petro",
+  "did:pl:Human-Ivan"
+]
+require_consensus = 2                # 2 humans to override

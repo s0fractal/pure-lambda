@@ -1,0 +1,11 @@
+{
+  "ceremony": "Genesis of kyiv-prime",
+  "timestamp": 1757750991,
+  "founder": "did:pl:FounderKyiv1757750983",
+  "genesis_cid": "QmGenesis9395c0dabbd092356cad6a824db958bab4041833d5b8",
+  "citizens": 6,
+  "nodes": 5,
+  "contracts": 3,
+  "tests_passed": 5,
+  "status": "success"
+}

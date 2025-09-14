@@ -1,0 +1,32 @@
+# Economic Commons - Dynamic Pricing Model
+# Proof of Useful Work (PoUW) based credits
+
+[weights]            # Normalized 0..1
+speedup   = 0.40     # Benchmark coefficient - faster = more credits
+proof_cov = 0.20     # Proof coverage ratio - more proofs = more value
+latency   = 0.15     # Low latency bonus
+allocs    = 0.10     # Memory efficiency - fewer allocations = better
+reputation = 0.15    # Registry reputation multiplier
+
+[gas]
+cpu_ns_per_credit = 5_000      # 5 microseconds CPU = 1 credit
+io_b_per_credit = 1024          # 1KB I/O = 1 credit
+memory_mb_per_credit = 1        # 1MB memory = 1 credit
+network_kb_per_credit = 10      # 10KB network = 1 credit
+
+[pricing]
+base_rate = 10                  # Base credits per contract
+surge_multiplier = 2.0           # During high demand
+cross_city_fee = 5               # Additional for inter-city
+priority_multiplier = 1.5        # High priority contracts
+
+[fairness]
+max_agent_share = 0.25           # No agent takes >25% of work
+min_human_allocation = 0.20      # Humans get minimum 20% capacity
+cooldown_after_surge = 300       # 5 min cooldown after surge pricing
+
+[rewards]
+optimization_bonus = 5           # For proven optimizations
+consensus_participation = 2      # For voting
+attestation_provided = 3         # For valid attestations
+bug_bounty_multiplier = 10      # For finding vulnerabilities

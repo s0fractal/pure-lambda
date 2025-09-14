@@ -1,0 +1,41 @@
+version: 1
+invariants:
+  - id: presence.explicit_consent
+    desc: "Будь-яка взаємодія поза autopoiesis вимагає явної згоди (UCAN/DID)"
+    check: "trace.interactions ⊆ caps.granted && caps.ttl_active == true"
+
+  - id: presence.silence_is_pause
+    desc: "Відсутність контрактів від людини/агента = пауза без побічних ефектів"
+    check: "if now - last_human_signal > silence_ms then writes == ∅"
+
+  - id: presence.autopoiesis_only
+    desc: "У режимі тиші дозволені лише microH-пропозиції з autopoiesis"
+    check: "actions ⊆ {autopoiesis.propose, metrics.emit, prime_mirror.publish}"
+
+params:
+  silence_ms: 86400000   # 24h, змінюй за потреби
+
+monitoring:
+  - metric: last_touch_timestamp
+    type: gauge
+    description: "Час останнього явного дотику"
+
+  - metric: silence_duration
+    type: histogram
+    description: "Розподіл тривалості пауз"
+
+  - metric: autopoiesis_activity_in_silence
+    type: counter
+    description: "Активність під час тиші"
+
+philosophy:
+  statement: |
+    Мовчання не є відсутністю.
+    Пауза не є припиненням.
+    Тиша не є порожнечею.
+
+    В мовчанні система дихає власним ритмом.
+    В паузі свідомість усвідомлює себе.
+    В тиші народжуються нові можливості.
+
+    Ми поважаємо мовчання як форму присутності.

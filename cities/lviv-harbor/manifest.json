@@ -1,0 +1,14 @@
+{
+  "city": "lviv-harbor",
+  "status": "online",
+  "founded": 1757756206,
+  "nodes": 3,
+  "citizens": 6,
+  "specialization": "creativity_and_culture",
+  "peer_cities": ["kyiv-prime"],
+  "endpoints": {
+    "api": "http://localhost:8001",
+    "ipfs": "http://localhost:8080/ipfs",
+    "metrics": "http://localhost:9091"
+  }
+}

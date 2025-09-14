@@ -1,0 +1,40 @@
+{
+  "timestamp": 1757760451,
+  "version": "H7",
+  "cities": {
+    "count": 3,
+    "names": ["kyiv-prime", "lviv-harbor", "odesa-port"],
+    "topology": "full-mesh"
+  },
+  "nodes": {
+    "total": 12,
+    "distribution": {"kyiv": 5, "lviv": 3, "odesa": 4}
+  },
+  "citizens": {
+    "total": 18,
+    "humans": 9,
+    "agents": 9
+  },
+  "economics": {
+    "credits_circulating": 10000,
+    "pricing_model": "dynamic",
+    "fairness_index": 0.92
+  },
+  "performance": {
+    "latency_p50_ms": 38,
+    "latency_p99_ms": 120,
+    "registry_divergence": 0,
+    "shard_replication": 2
+  },
+  "scheduler": {
+    "queues": ["high", "normal", "bulk"],
+    "preemption": true,
+    "max_concurrent": 64
+  },
+  "security": {
+    "ucan_enabled": true,
+    "rate_limiting": true,
+    "key_rotation_days": 7
+  },
+  "status": "OPERATIONAL"
+}

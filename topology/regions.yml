@@ -1,0 +1,69 @@
+version: 1
+# Geographic sharding for planetary scale
+
+regions:
+  - name: ua-kyiv
+    cities: [kyiv-prime]
+    coordinates: [50.4501, 30.5234]
+    timezone: UTC+2
+    
+  - name: ua-lviv
+    cities: [lviv-harbor]
+    coordinates: [49.8397, 24.0297]
+    timezone: UTC+2
+    
+  - name: ua-odesa
+    cities: [odesa-port]
+    coordinates: [46.4825, 30.7233]
+    timezone: UTC+2
+    
+  - name: eu-central
+    cities: [wroclaw-gate, berlin-ring]
+    coordinates: [51.1079, 17.0385]
+    timezone: UTC+1
+    
+  - name: eu-west
+    cities: [paris-node, london-bridge]
+    coordinates: [48.8566, 2.3522]
+    timezone: UTC+0
+    
+  - name: us-east
+    cities: [ny-harbor, boston-commons]
+    coordinates: [40.7128, -74.0060]
+    timezone: UTC-5
+    
+  - name: us-west
+    cities: [sf-bay, seattle-port]
+    coordinates: [37.7749, -122.4194]
+    timezone: UTC-8
+    
+  - name: asia-east
+    cities: [tokyo-grid, seoul-matrix]
+    coordinates: [35.6762, 139.6503]
+    timezone: UTC+9
+
+peering:
+  intra_region: full_mesh           # Full connectivity within region
+  inter_region: min_spanning_mesh   # Minimize cross-region links
+  backup_paths: 2                   # Redundant paths between regions
+  
+replication:
+  rf_per_region: 2                  # Local replication factor
+  min_regions: 3                     # Minimum regions for data
+  geo_distance_km: 1000              # Prefer replicas >1000km apart
+  
+latency_targets:
+  intra_region_p50: 20              # ms
+  intra_region_p99: 50              
+  inter_region_p50: 120             
+  inter_region_p99: 300             
+
+failover:
+  detection_timeout_ms: 5000
+  promote_secondary: true
+  cross_region_promotion: true
+  
+monitoring:
+  divergence_alert: 0
+  partition_detection: true
+  latency_tracking: true
