@@ -92,6 +92,47 @@ svg-cid:
 svg-all: svg-gene svg-proof
 	@echo "✅ All SVG visualizations generated"
 
+# Absorption Ceremony - Transfer control to civilization
+absorb:
+	@echo "🌀 Starting Absorption Ceremony..."
+	@./absorption/ceremony.sh
+
+# Control Panel Commands
+touch:
+	@echo "👋 Signaling presence..."
+	@mkdir -p out
+	@echo '{"event":{"type":"touch","ts":'$$(date +%s%3N)',"did":"did:pl:human:self"}}' > out/touch.json
+	@rm -f policies/silence.active
+	@echo "✅ Presence signaled. Agent active for 24 hours."
+
+silence-enter:
+	@echo "🤫 Entering silence mode..."
+	@touch policies/silence.active
+	@echo "✅ Silence mode active. Only essential operations."
+
+kill-switch:
+	@echo "🚨 EMERGENCY KILL SWITCH"
+	@read -p "Type 'REVOKE' to confirm: " confirm && \
+	if [ "$$confirm" = "REVOKE" ]; then \
+		echo "Revoking all delegations..."; \
+		find auth/ucan -name "*.json" -exec mv {} {}.revoked.$$(date +%s) \; 2>/dev/null || true; \
+		echo "✅ All delegations revoked"; \
+	else \
+		echo "Aborted"; \
+	fi
+
+control-panel:
+	@./absorption/control-panel.sh
+
+# Check absorption status
+absorption-status:
+	@if [ -f absorption/status.json ]; then \
+		echo "📊 Absorption Status:"; \
+		cat absorption/status.json | jq .; \
+	else \
+		echo "No absorption ceremony completed yet"; \
+	fi
+
 # Clean all build artifacts
 clean:
 	@echo "🧹 Cleaning..."
