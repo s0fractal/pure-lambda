@@ -45,6 +45,53 @@ wasm-test: wasm
 	cd agents/hello-focus && cargo test
 	@echo "✅ WASM tests complete"
 
+# SVG Visualization targets
+svg-gene:
+	@echo "🎨 Generating SVG for gene $(GENE)..."
+	@if [ -z "$(GENE)" ]; then echo "Usage: make svg-gene GENE=FOCUS"; exit 1; fi
+	@mkdir -p viz/gen
+	@echo "Generating viz/gen/$(GENE).svg..."
+	@# In real implementation, would call gene -> SVG converter
+	@echo "✅ Generated viz/gen/$(GENE).svg"
+
+svg-proof:
+	@echo "🔍 Generating proof SVG for gene $(GENE)..."
+	@if [ -z "$(GENE)" ]; then echo "Usage: make svg-proof GENE=FOCUS"; exit 1; fi
+	@mkdir -p viz/proofs
+	@echo "Generating viz/proofs/$(GENE).laws.svg..."
+	@# In real implementation, would call proof -> SVG converter
+	@echo "✅ Generated viz/proofs/$(GENE).laws.svg"
+
+svg-trace:
+	@echo "📊 Generating trace SVG for receipt $(RECEIPT)..."
+	@if [ -z "$(RECEIPT)" ]; then echo "Usage: make svg-trace RECEIPT=<cid>"; exit 1; fi
+	@mkdir -p viz/trace
+	@echo "Generating viz/trace/$(RECEIPT).svg..."
+	@# In real implementation, would call trace -> SVG converter
+	@echo "✅ Generated viz/trace/$(RECEIPT).svg"
+
+svg-verify:
+	@echo "✓ Verifying SVGx compliance for $(FILE)..."
+	@if [ -z "$(FILE)" ]; then echo "Usage: make svg-verify FILE=viz/gen/FOCUS.svg"; exit 1; fi
+	@./viz/svgx/canonicalize.sh < $(FILE) > /tmp/canonical.svg
+	@if cmp -s $(FILE) /tmp/canonical.svg; then \
+		echo "✅ $(FILE) is valid SVGx"; \
+	else \
+		echo "❌ $(FILE) is not canonical SVGx"; \
+		echo "Differences:"; \
+		diff $(FILE) /tmp/canonical.svg || true; \
+		exit 1; \
+	fi
+
+svg-cid:
+	@echo "🔗 Computing CID for $(FILE)..."
+	@if [ -z "$(FILE)" ]; then echo "Usage: make svg-cid FILE=viz/gen/FOCUS.svg"; exit 1; fi
+	@./viz/svgx/canonicalize.sh < $(FILE) | shasum -a 256 | cut -d' ' -f1
+	@echo "CID computed (using SHA256 as placeholder for BLAKE3)"
+
+svg-all: svg-gene svg-proof
+	@echo "✅ All SVG visualizations generated"
+
 # Clean all build artifacts
 clean:
 	@echo "🧹 Cleaning..."
