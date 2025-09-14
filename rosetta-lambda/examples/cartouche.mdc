@@ -1,0 +1,13 @@
+# Cartouche examples - Royal names
+
+# "Pharaoh in the great house"
+[nsw-bity] m pr:{DET:BUILDING} aA:{DET:QUALITY}
+
+# "Son of Ra, living forever"
+[sA-ra] anx:{DET:QUALITY} Dt
+
+# "King of Upper and Lower Egypt upon the throne of Horus"
+[nsw-bity] Hr st:{DET:PLACE} Hr
+
+# "Beloved of Amun-Ra, given life"
+[mry-imn-ra] di-anx

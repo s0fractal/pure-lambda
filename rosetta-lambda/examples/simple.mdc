@@ -1,0 +1,13 @@
+# Simple MdC phrases for testing
+
+# "Good person in city"
+rmT:{DET:HUMAN} nfr:{DET:QUALITY} m niwt:{DET:PLACE}
+
+# "Great god upon throne"
+nTr:{DET:GOD} aA:{DET:QUALITY} Hr st:{DET:PLACE}
+
+# "King gives life"
+nsw di-anx
+
+# "See the sky"
+mAA pt:{DET:PLACE}

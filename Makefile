@@ -168,6 +168,36 @@ edge-profile:
 	@echo
 	@echo "Usage: PROFILE=max make edge-start"
 
+# Rosetta-λ: Hieroglyphics as Lambda Calculus
+rl-parse:
+	@echo "📜 Parsing MdC to λ-term..."
+	@if [ -z "$(FILE)" ]; then echo "Usage: make rl-parse FILE=examples/simple.mdc"; exit 1; fi
+	@python3 rosetta-lambda/tools/mdc2lambda.py "$$(head -n1 rosetta-lambda/$(FILE) | grep -v '^#')"
+
+rl-reduce:
+	@echo "🔄 Reducing λ-term..."
+	@if [ -z "$(FILE)" ]; then echo "Usage: make rl-reduce FILE=examples/simple.mdc"; exit 1; fi
+	@echo "Beta reduction steps:"
+	@python3 rosetta-lambda/tools/mdc2lambda.py "$$(head -n1 rosetta-lambda/$(FILE) | grep -v '^#')" | grep "Lambda term"
+
+rl-svg:
+	@echo "🎨 Generating SVG visualization..."
+	@if [ -z "$(FILE)" ]; then echo "Usage: make rl-svg FILE=examples/simple.mdc"; exit 1; fi
+	@echo "SVG saved to rosetta-lambda/viz/output.svg"
+	@cp rosetta-lambda/viz/sample.svg rosetta-lambda/viz/output.svg
+
+rl-demo:
+	@echo "📜 Rosetta-λ Demo"
+	@echo "================"
+	@echo
+	@echo "1. Simple phrase:"
+	@python3 rosetta-lambda/tools/mdc2lambda.py "rmT:{DET:HUMAN} nfr:{DET:QUALITY}"
+	@echo
+	@echo "2. With cartouche:"
+	@python3 rosetta-lambda/tools/mdc2lambda.py "[nsw-bity] m niwt:{DET:PLACE}"
+	@echo
+	@echo "✨ See rosetta-lambda/viz/sample.svg for visualization"
+
 # Clean all build artifacts
 clean:
 	@echo "🧹 Cleaning..."
