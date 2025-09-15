@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20">
+  <rect width="200" height="20" fill="#8BC34A" rx="2"/>
+  <text x="10" y="14" fill="white" font-family="monospace" font-size="12">
+    PAC: misroute ≤2.2% @95%
+  </text>
+</svg>
