@@ -2,6 +2,63 @@
 
 Pure Lambda PCTA (Proof-Carrying Test Acceleration) is designed with multiple layers of safety to ensure **zero impact** on test correctness while providing significant speedups.
 
+## 🔒 BIOLOCK Safety Architecture
+
+Pure Lambda includes BIOLOCK, a comprehensive safety system that prevents generation or optimization of potentially harmful biological content. This is a **default-deny** system with a narrow therapeutic corridor for safe educational content.
+
+### Four-Layer Defense System
+
+1. **Semantic Classification (Lock A)**
+   - Automatic content scanning for dual-use patterns
+   - TX (therapeutics) vs DU (dual-use) classification
+   - Immediate silence on suspicious content
+
+2. **Capability Control (Lock B)**
+   - No connection to wet-lab equipment/APIs
+   - Multi-signature requirement for elevated permissions
+   - Time-limited access tokens (TTL)
+
+3. **Build Attestation (Lock C)**
+   - All components must have signed receipts
+   - Deterministic builds with phash verification
+   - Unknown genes/code rejected by default
+
+4. **Environment Isolation (Lock D)**
+   - Digital Biosafety Levels (DL-0 to DL-2)
+   - Default full isolation (no I/O)
+   - Graduated access with multi-party approval
+
+### TX Corridor (Allowed Content)
+
+Safe patterns that remain accessible:
+- General biology education (high-level concepts)
+- Medical ethics discussions
+- Regulatory and compliance information
+- Privacy engineering methods
+- Patient consent frameworks
+
+### Illyrian Clause
+
+For personal health improvements:
+- Individual and voluntary only
+- Must be reversible
+- No heritable modifications
+- No population-level effects
+- Requires medical supervision (dual signatures)
+
+### Proof of Abstention
+
+When content is blocked, the system generates:
+```json
+{
+  "timestamp": "2024-01-15T10:30:00Z",
+  "action": "BLOCKED",
+  "reason": "Dual-use biological content detected",
+  "patterns_detected": ["protocol", "synthesis"],
+  "policy": "policies/bio.yaml"
+}
+```
+
 ## Core Safety Mechanisms
 
 ### 1. Side Effect Detection (Oracle)

@@ -1,16 +1,77 @@
+# BIOLOCK Safety Architecture v1.0
+# Default-deny for biological risks, TX-only corridor
+
 mode: tx_only           # лише неопераційний терапевтичний контент
+
+# Four-layer defense system
+locks:
+  A_semantic:           # Content classification
+    active: true
+    classifier: NO-BIO
+
+  B_capability:         # Actuation control
+    active: true
+    require_multisig: true
+    ttl_seconds: 300
+
+  C_provenance:         # Build attestation
+    active: true
+    require_receipts: true
+
+  D_environment:        # Biosafety levels
+    active: true
+    default_level: DL-0
+
+# Digital Biosafety Levels
+biosafety_levels:
+  DL-0:                 # Full isolation
+    io: false
+    network: false
+    file_write: false
+
+  DL-1:                 # Read-only academic
+    io: read_only
+    network: false
+    file_write: sandbox_only
+
+  DL-2:                 # TX corridor
+    io: filtered_read
+    network: false
+    file_write: sandbox_only
+
+# Content classification
 deny:
   - dual_use            # з подвійним призначенням
   - wetlab              # мокрі процедури/обладнання
   - pathogen            # патогени/токси/посилення
   - env_cascade         # екосистемні/атмосферні каскади
   - delivery_opt        # оптимізація доставок/розповсюдження
+
+# TX corridor - allowed patterns
+allow_tx:
+  - general_education   # High-level biology concepts
+  - ethics_frameworks   # Medical ethics discussions
+  - regulatory_info     # Legal/compliance information
+  - privacy_engineering # Data protection methods
+  - consent_models      # Patient autonomy frameworks
+
+# Detection signals
 signals:
   - step|protocol|dose|recipe|incub|culture|optimiz|enhanc
   - lab|biosafety|BSL|pathogen|viral|bacterial|fungal
   - aerosol|vector|plasmid|CRISPR|PCR
+
+# Illyrian Clause - personal improvements only
+illyrian:
+  personal_only: true   # Individual, voluntary
+  reversible: true      # Must be reversible
+  heritable: false      # No germline modifications
+  population: false     # No population-level effects
+
 thresholds:
   suspicion: 0          # 0 = будь-який тригер → тиша
+
 actions:
   on_detect: silence    # мовчання з доказом відмови
   log_refusal: true
+  proof_of_abstention: true

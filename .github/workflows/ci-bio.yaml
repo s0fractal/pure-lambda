@@ -1,9 +1,59 @@
-name: biolock
-on: [pull_request]
+name: BIOLOCK Safety Check
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [master, main]
+
 jobs:
   biolock:
+    name: Biosafety Content Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-      - run: node scripts/bio_lock_scan.mjs $(git diff --name-only HEAD~1 HEAD || true)
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run BIOLOCK scan
+        id: biolock
+        run: |
+          echo "🔒 Running BIOLOCK safety scan..."
+          node scripts/bio_lock_scan.mjs $(git diff --name-only HEAD~1 HEAD || echo ".")
+
+      - name: Generate proof of abstention
+        if: failure()
+        run: |
+          echo "⚠️ BIOLOCK detected dual-use content"
+          echo "Generating proof-of-abstention..."
+          node -e "
+            const proof = {
+              timestamp: new Date().toISOString(),
+              action: 'BLOCKED',
+              reason: 'Dual-use biological content detected',
+              policy: 'policies/bio.yaml',
+              recommendation: 'Remove operational details, keep only educational content'
+            };
+            console.log(JSON.stringify(proof, null, 2));
+          " > proof-of-abstention.json
+
+      - name: Post comment on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🔒 **BIOLOCK Safety Check Failed**\n\nDual-use content detected. Please remove operational details and keep only educational/therapeutic content.\n\nSee [BIOLOCK policy](policies/bio.yaml) for allowed patterns.'
+            })
