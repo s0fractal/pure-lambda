@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branchial Breathing Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', Consolas, monospace;
+            background: #0a0e27;
+            color: #e1e4e8;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #8b949e;
+        }
+
+        .metric-delta {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .positive { color: #238636; }
+        .negative { color: #f85149; }
+        .neutral { color: #8b949e; }
+
+        #breath-viz {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breath-wave {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to top,
+                rgba(88, 166, 255, 0.1),
+                transparent);
+            transform-origin: bottom;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1.2); }
+        }
+
+        .breathing-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .breathing-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .expanding .breathing-dot {
+            background: #f85149;
+            animation: expand-pulse 2s infinite;
+        }
+
+        .contracting .breathing-dot {
+            background: #238636;
+            animation: contract-pulse 2s infinite;
+        }
+
+        .stable .breathing-dot {
+            background: #58a6ff;
+            animation: stable-pulse 2s infinite;
+        }
+
+        @keyframes expand-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes contract-pulse {
+            0% { transform: scale(1.5); opacity: 0.7; }
+            50% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0.7; }
+        }
+
+        @keyframes stable-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        button:hover { background: #2ea043; }
+
+        #timeline {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            height: 150px;
+            position: relative;
+        }
+
+        .timeline-bar {
+            position: absolute;
+            bottom: 20px;
+            width: 4px;
+            background: #58a6ff;
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+
+        .kappa-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .kappa-explosion { background: #f85149; }
+        .kappa-convergence { background: #238636; }
+        .kappa-stable { background: #8b949e; }
+    </style>
+</head>
+<body>
+    <h1>🫁 Branchial Breathing Monitor</h1>
+
+    <div class="controls">
+        <button onclick="startMonitoring()">Start Monitoring</button>
+        <button onclick="stopMonitoring()">Stop</button>
+        <button onclick="loadSample()">Load Sample</button>
+        <button onclick="reset()">Reset</button>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-label">Width W(t)</div>
+            <div class="metric-value" id="width">5</div>
+            <div class="metric-delta neutral" id="width-delta">±0</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">Curvature κ(t)</div>
+            <div class="metric-value" id="kappa">0.00</div>
+            <div class="metric-delta neutral" id="kappa-interpretation">stable</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">Antichain</div>
+            <div class="metric-value" id="antichain">3</div>
+            <div class="metric-delta neutral" id="parallel">parallel branches</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">Max Width</div>
+            <div class="metric-value" id="max-width">5</div>
+            <div class="metric-delta neutral" id="max-time">@ t=0</div>
+        </div>
+    </div>
+
+    <div id="breath-viz">
+        <div class="breath-wave"></div>
+        <div class="breathing-indicator stable" id="breathing-indicator">
+            <div class="breathing-dot"></div>
+            <span id="breathing-label">Stable</span>
+        </div>
+    </div>
+
+    <div id="timeline"></div>
+
+    <script>
+        let monitoring = false;
+        let history = [];
+        let maxHistory = 50;
+        let currentT = 0;
+
+        function updateMetrics(data) {
+            // Update width
+            const widthEl = document.getElementById('width');
+            const prevWidth = parseInt(widthEl.textContent);
+            widthEl.textContent = data.width;
+
+            const widthDelta = document.getElementById('width-delta');
+            const delta = data.width - prevWidth;
+            widthDelta.textContent = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '±0';
+            widthDelta.className = `metric-delta ${delta > 0 ? 'negative' : delta < 0 ? 'positive' : 'neutral'}`;
+
+            // Update curvature
+            document.getElementById('kappa').textContent = data.kappa.toFixed(3);
+            const kappaInt = document.getElementById('kappa-interpretation');
+
+            if (data.kappa < -0.1) {
+                kappaInt.textContent = 'explosion 💥';
+                kappaInt.className = 'metric-delta negative';
+            } else if (data.kappa > 0.1) {
+                kappaInt.textContent = 'convergence 🎯';
+                kappaInt.className = 'metric-delta positive';
+            } else {
+                kappaInt.textContent = 'stable ➖';
+                kappaInt.className = 'metric-delta neutral';
+            }
+
+            // Update antichain
+            document.getElementById('antichain').textContent = data.antichain || 1;
+
+            // Update breathing visualization
+            updateBreathing(data.kappa);
+
+            // Add to history
+            history.push(data);
+            if (history.length > maxHistory) history.shift();
+
+            // Update timeline
+            updateTimeline();
+        }
+
+        function updateBreathing(kappa) {
+            const indicator = document.getElementById('breathing-indicator');
+            const label = document.getElementById('breathing-label');
+            const wave = document.querySelector('.breath-wave');
+
+            if (kappa < -0.1) {
+                indicator.className = 'breathing-indicator expanding';
+                label.textContent = 'Expanding';
+                wave.style.animation = 'breathe 2s ease-in-out infinite';
+            } else if (kappa > 0.1) {
+                indicator.className = 'breathing-indicator contracting';
+                label.textContent = 'Contracting';
+                wave.style.animation = 'breathe 6s ease-in-out infinite';
+            } else {
+                indicator.className = 'breathing-indicator stable';
+                label.textContent = 'Stable';
+                wave.style.animation = 'breathe 4s ease-in-out infinite';
+            }
+        }
+
+        function updateTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+
+            const barWidth = timeline.clientWidth / maxHistory;
+            const maxW = Math.max(...history.map(h => h.width), 10);
+
+            history.forEach((point, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'timeline-bar';
+                bar.style.left = `${i * barWidth}px`;
+                bar.style.height = `${(point.width / maxW) * 100}px`;
+
+                if (point.kappa < -0.1) {
+                    bar.style.background = '#f85149';
+                } else if (point.kappa > 0.1) {
+                    bar.style.background = '#238636';
+                } else {
+                    bar.style.background = '#58a6ff';
+                }
+
+                timeline.appendChild(bar);
+            });
+
+            // Update max width
+            if (history.length > 0) {
+                const maxPoint = history.reduce((max, p) => p.width > max.width ? p : max);
+                document.getElementById('max-width').textContent = maxPoint.width;
+                document.getElementById('max-time').textContent = `@ t=${maxPoint.time}`;
+            }
+        }
+
+        function generateData() {
+            // Simulate breathing pattern
+            const breathCycle = Math.sin(currentT * 0.1);
+            const noise = (Math.random() - 0.5) * 0.2;
+
+            const width = Math.floor(5 + breathCycle * 3 + Math.random() * 2);
+            const prevWidth = history.length > 0 ? history[history.length - 1].width : 5;
+            const kappa = 1 - (width / prevWidth) + noise;
+            const antichain = Math.max(1, Math.floor(width * 0.6 + Math.random() * 2));
+
+            return {
+                time: currentT++,
+                width,
+                kappa,
+                antichain
+            };
+        }
+
+        function startMonitoring() {
+            if (monitoring) return;
+            monitoring = true;
+
+            const interval = setInterval(() => {
+                if (!monitoring) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                const data = generateData();
+                updateMetrics(data);
+            }, 500);
+        }
+
+        function stopMonitoring() {
+            monitoring = false;
+        }
+
+        function loadSample() {
+            // Load sample data from CSV
+            const sampleData = [
+                { time: 0, width: 10, kappa: 0.1, antichain: 10 },
+                { time: 1, width: 9, kappa: 0.0, antichain: 45 },
+                { time: 2, width: 12, kappa: -0.33, antichain: 8 },
+                { time: 3, width: 8, kappa: 0.33, antichain: 5 },
+                { time: 4, width: 6, kappa: 0.25, antichain: 4 },
+                { time: 5, width: 7, kappa: -0.17, antichain: 4 },
+                { time: 6, width: 5, kappa: 0.29, antichain: 3 }
+            ];
+
+            history = [];
+            sampleData.forEach((data, i) => {
+                setTimeout(() => updateMetrics(data), i * 300);
+            });
+        }
+
+        function reset() {
+            stopMonitoring();
+            history = [];
+            currentT = 0;
+            updateTimeline();
+            document.getElementById('width').textContent = '5';
+            document.getElementById('kappa').textContent = '0.00';
+            document.getElementById('antichain').textContent = '3';
+        }
+
+        // Initialize
+        loadSample();
+    </script>
+</body>
+</html>
