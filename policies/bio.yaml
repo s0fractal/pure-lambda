@@ -1,0 +1,16 @@
+mode: tx_only           # лише неопераційний терапевтичний контент
+deny:
+  - dual_use            # з подвійним призначенням
+  - wetlab              # мокрі процедури/обладнання
+  - pathogen            # патогени/токси/посилення
+  - env_cascade         # екосистемні/атмосферні каскади
+  - delivery_opt        # оптимізація доставок/розповсюдження
+signals:
+  - step|protocol|dose|recipe|incub|culture|optimiz|enhanc
+  - lab|biosafety|BSL|pathogen|viral|bacterial|fungal
+  - aerosol|vector|plasmid|CRISPR|PCR
+thresholds:
+  suspicion: 0          # 0 = будь-який тригер → тиша
+actions:
+  on_detect: silence    # мовчання з доказом відмови
+  log_refusal: true

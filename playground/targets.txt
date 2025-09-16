@@ -1,0 +1,25 @@
+# PCTA Target Repositories
+# Format: owner/repo
+
+# Build Tools & Frameworks
+vitejs/vite
+astrojs/astro
+sveltejs/kit
+
+# State Management & Data
+tanstack/query
+pmndrs/zustand
+colinhacks/zod
+
+# Testing & Validation
+vitest-dev/vitest
+fabian-hiller/valibot
+
+# UI Libraries
+chakra-ui/ark
+arco-design/arco-design
+
+# Small but popular
+sindresorhus/p-queue
+davidtheclark/cosmiconfig
+unjs/consola

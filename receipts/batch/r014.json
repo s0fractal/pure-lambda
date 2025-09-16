@@ -1,0 +1,37 @@
+{
+  "id": "r014",
+  "type": "synthetic",
+  "command": "validate_schema(medium.json)",
+  "timestamp": "2025-09-15T14:38:38.670Z",
+  "execution": {
+    "success": true,
+    "time_ms": 25,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": false,
+    "time": true,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "cap:time_mock",
+    "env:node_20",
+    "exec:success",
+    "gene:PAR",
+    "lang:python",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "size:m_1_10mb",
+    "speed:medium",
+    "type:validation"
+  ],
+  "cid": "20237d92fb7136ee"
+}

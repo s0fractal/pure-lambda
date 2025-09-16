@@ -1,0 +1,36 @@
+{
+  "id": "r021",
+  "type": "synthetic",
+  "command": "parse_csv(100mb)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": false,
+    "time_ms": 150,
+    "exitCode": 1
+  },
+  "oracle": {
+    "env": false,
+    "fs": true,
+    "rand": true,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0.4
+  },
+  "attributes": [
+    "cache:medium",
+    "cap:random",
+    "env:node_20",
+    "exec:failure",
+    "gene:MEMO",
+    "lang:typescript",
+    "oracle:no_env",
+    "oracle:no_net",
+    "oracle:no_time",
+    "size:l_100mb_plus",
+    "speed:slow",
+    "type:io_bounded"
+  ],
+  "cid": "1b713381615172fa"
+}

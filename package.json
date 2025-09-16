@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "@iarna/toml": "^2.2.5",
-    "typescript": "^5.0.0"
+    "typescript": "^5.9.2"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/s0fractal/pure-lambda.git"
+    "url": "git+https://github.com/s0fractal/pure-lambda.git"
   },
   "keywords": [
     "lambda",
@@ -30,5 +30,24 @@
     "soul"
   ],
   "author": "s0fractal",
-  "license": "MIT"
+  "license": "MIT",
+  "main": "devour-cli.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/s0fractal/pure-lambda/issues"
+  },
+  "homepage": "https://github.com/s0fractal/pure-lambda#readme",
+  "dependencies": {
+    "@types/node": "^24.4.0",
+    "chokidar": "^4.0.3",
+    "commander": "^14.0.1",
+    "seedrandom": "^3.0.5",
+    "ts-node": "^10.9.2",
+    "ws": "^8.18.3"
+  }
 }

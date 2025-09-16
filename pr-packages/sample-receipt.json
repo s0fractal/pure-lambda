@@ -1,0 +1,32 @@
+{
+  "kind": "pcta-exec",
+  "name": "fibonacci",
+  "time_ms": 0.234,
+  "memo_hit": true,
+  "local_stats": {
+    "calls": 100,
+    "hits": 91
+  },
+  "global_stats": {
+    "calls": 350,
+    "hits": 320,
+    "misses": 30
+  },
+  "cache_rate": 0.914,
+  "seed": "auto",
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "ts": "2025-09-15T18:45:32.123Z",
+  "hash": "a7b9c2d4e5f6",
+  "proof": {
+    "equivalence": true,
+    "deterministic": true,
+    "side_effect_free": true,
+    "memoization_safe": true
+  }
+}

@@ -1,0 +1,14 @@
+# B2 Example: Stream Processing Pipeline
+# Demonstrates B2 discipline with ≤2 imports
+
+# External imports (exactly 2)
+import sensorA_phash
+import reducerB_phash
+
+# Build pipeline using core atoms + combinators
+FOCUS ▶ SCAN
+FOCUS ∆ DELAY
+SCAN ▶ MERGE
+
+# Composite pattern: debounce + distinct
+# (SCAN ▶ FOCUS) ∆ (DELAY ▶ FOCUS) ▶ MERGE

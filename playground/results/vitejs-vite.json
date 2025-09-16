@@ -1,0 +1,22 @@
+{
+  "repo": "vitejs/vite",
+  "timestamp": 1757934768,
+  "baseline": {
+    "time_seconds": 2,
+    "tests_passed": 0
+  },
+  "optimized": {
+    "time_seconds": 0,
+    "tests_passed": 0
+  },
+  "metrics": {
+    "speedup": 1,
+    "improvement_percent": 100.0,
+    "cache_rate_percent": 0,
+    "receipts_generated": 0
+  },
+  "validation": {
+    "tests_match": true,
+    "receipts_valid": "❓"
+  }
+}

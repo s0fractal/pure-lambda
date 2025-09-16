@@ -1,0 +1,93 @@
+# Lattice-Based Policy Profiles
+# Gene activation based on concept membership
+
+profiles:
+  # Top concept (r001) - Optimal configuration
+  apex:
+    concept_id: 3
+    attributes:
+      - exec:success
+      - oracle:no_fs
+      - oracle:no_net
+      - proof:deterministic
+      - speed:fast
+      - type:proof
+    genes:
+      MEMO: enabled       # Safe to memoize (deterministic)
+      PAR: enabled        # Safe to parallelize (no side effects)
+      SURGEON: disabled   # Keep full fidelity for proofs
+      FOCUS: enabled      # Optimize aggressively
+    priority: 100
+    description: "Optimal pattern - full acceleration"
+
+  # Proof branch
+  proof_branch:
+    concept_id: 1
+    attributes:
+      - type:proof
+    genes:
+      MEMO: conditional   # Check determinism first
+      PAR: disabled       # Proofs may have ordering deps
+      SURGEON: disabled   # Preserve proof structure
+      FOCUS: moderate     # Balance speed/correctness
+    priority: 50
+    description: "Proof generation - correctness first"
+
+  # Performance branch
+  performance_branch:
+    concept_id: 2
+    attributes:
+      - exec:success
+      - speed:fast
+    genes:
+      MEMO: enabled       # Optimize for speed
+      PAR: enabled        # Maximize throughput
+      SURGEON: enabled    # Simplify for performance
+      FOCUS: aggressive   # Speed is priority
+    priority: 60
+    description: "Performance path - speed first"
+
+  # Universal (bottom)
+  universal:
+    concept_id: 0
+    attributes: []
+    genes:
+      MEMO: disabled      # Unknown pattern
+      PAR: disabled       # Safety first
+      SURGEON: disabled   # No modifications
+      FOCUS: disabled     # Default behavior
+    priority: 1
+    description: "Unknown pattern - safe defaults"
+
+# Decision tree
+decision_flow:
+  - check: "Has proof:deterministic AND oracle:no_*"
+    apply: apex
+  - check: "Has type:proof"
+    apply: proof_branch
+  - check: "Has exec:success AND speed:fast"
+    apply: performance_branch
+  - default: universal
+
+# Conflict resolution
+conflicts:
+  strategy: highest_priority
+  fallback: universal
+
+# Monitoring
+metrics:
+  - name: profile_hits
+    description: "Count of receipts matching each profile"
+  - name: gene_activations
+    description: "Count of gene enablements per profile"
+  - name: speedup_by_profile
+    description: "Average speedup per profile"
+
+# Evolution triggers
+evolution:
+  - trigger: "New concept appears with >10 receipts"
+    action: "Generate new profile candidate"
+  - trigger: "Profile speedup drops below 1.2x"
+    action: "Review gene configuration"
+  - trigger: "Stability >0.8"
+    action: "Lock core profiles"

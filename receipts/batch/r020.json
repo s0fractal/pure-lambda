@@ -1,0 +1,36 @@
+{
+  "id": "r020",
+  "type": "synthetic",
+  "command": "parse_csv(1mb)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": true,
+    "time_ms": 50,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": true,
+    "rand": false,
+    "time": true,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "cap:time_mock",
+    "env:node_18",
+    "exec:success",
+    "gene:SURGEON",
+    "lang:typescript",
+    "oracle:no_env",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "size:m_1_10mb",
+    "speed:medium",
+    "type:io_bounded"
+  ],
+  "cid": "1fd5a8d2c421f66a"
+}

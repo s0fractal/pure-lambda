@@ -1,0 +1,40 @@
+{
+  "id": "r011",
+  "type": "synthetic",
+  "command": "fibonacci(30)",
+  "timestamp": "2025-09-15T14:38:38.670Z",
+  "execution": {
+    "success": true,
+    "time_ms": 25,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "env:node_20",
+    "exec:success",
+    "gene:PAR",
+    "inv:deterministic",
+    "lang:typescript",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "proof:deterministic",
+    "proof:memoization_safe",
+    "size:m_1_10mb",
+    "speed:medium",
+    "type:pure_function"
+  ],
+  "cid": "9c0745b0065f3cfb"
+}

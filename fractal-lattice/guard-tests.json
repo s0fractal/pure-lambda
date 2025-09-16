@@ -1,0 +1,52 @@
+[
+  {
+    "id": "guard-r0",
+    "description": "Counterexample for rule 0",
+    "attributes": [
+      "exec:success",
+      "proof:deterministic",
+      "not_oracle:no_fs",
+      "not_oracle:no_net"
+    ],
+    "expected_violation": true
+  },
+  {
+    "id": "guard-r1",
+    "description": "Counterexample for rule 1",
+    "attributes": [
+      "type:pure_function",
+      "exec:success",
+      "not_proof:memoization_safe"
+    ],
+    "expected_violation": true
+  },
+  {
+    "id": "guard-r2",
+    "description": "Counterexample for rule 2",
+    "attributes": [
+      "oracle:fs",
+      "not_exec:failure"
+    ],
+    "expected_violation": true
+  },
+  {
+    "id": "guard-r3",
+    "description": "Counterexample for rule 3",
+    "attributes": [
+      "gene:MEMO",
+      "cache:high",
+      "speed:slow"
+    ],
+    "expected_violation": true
+  },
+  {
+    "id": "guard-r4",
+    "description": "Counterexample for rule 4",
+    "attributes": [
+      "size:l_100mb_plus",
+      "speed:fast",
+      "speed:fast"
+    ],
+    "expected_violation": true
+  }
+]

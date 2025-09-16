@@ -1,186 +1,206 @@
-# SVGx Specification - Deterministic SVG for Pure Lambda
+# SVGx Specification v1.0
 
-## Purpose
+*Deterministic, canonical SVG for reproducible visualization*
 
-SVGx is a **minimal, deterministic subset of SVG** for visualizing genes, proofs, and traces.
-Not for execution - purely for auditable, CID-stable visualization.
+## Core Principles
 
-## Core Principle
+1. **Deterministic**: Same input → exact same output (bit-for-bit)
+2. **Minimal**: No redundancy, no decoration
+3. **Canonical**: One correct representation
 
-**Same input → Same SVG → Same CID** across all nodes, all times.
+## Structure Rules
 
-## Allowed Elements (Strict Subset)
-
+### Document
 ```xml
-<svg viewBox="..." width="..." height="...">
-  <g transform="...">
-    <rect x="..." y="..." width="..." height="..." />
-    <path d="..." />
-    <line x1="..." y1="..." x2="..." y2="..." />
-    <polyline points="..." />
-    <text x="..." y="...">content</text>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="800"
+     viewBox="0 0 1200 800">
+  <!-- Content -->
 </svg>
 ```
 
-## Determinism Rules
+- Fixed dimensions: 1200×800
+- No namespaces except base SVG
+- No DOCTYPE
+- No comments (except this spec)
 
-### 1. Attribute Order
-All attributes in **lexicographic order**:
+### Elements
+
+**Allowed**:
+- `<g>` - grouping
+- `<circle>`, `<rect>`, `<path>` - shapes
+- `<line>`, `<polyline>` - connections
+- `<text>` - labels
+
+**Forbidden**:
+- `<style>`, `<script>` - no dynamic content
+- `<defs>`, `<use>` - no references
+- `<animate>` - no animation
+- External resources
+
+### Attributes
+
+**Required precision**:
 ```xml
-<!-- ✅ Correct -->
-<rect fill="#000" height="10" width="20" x="0" y="0" />
+<!-- Numbers: 3 decimal places -->
+<circle cx="123.456" cy="789.012" r="45.678"/>
 
-<!-- ❌ Wrong -->
-<rect x="0" y="0" width="20" height="10" fill="#000" />
+<!-- Colors: 6-digit hex only -->
+<rect fill="#3178c6" stroke="#000000"/>
+
+<!-- No CSS classes, only inline -->
+<path d="..." stroke-width="2" fill="none"/>
 ```
 
-### 2. Number Format
-- Exactly **3 decimal places**
-- No scientific notation
-- No trailing zeros after decimal
+## Layout Algorithm
 
-```xml
-<!-- ✅ Correct -->
-<rect x="10.500" y="20.333" />
+### Deterministic Positioning
+```typescript
+function layout(lvg: LVG, seed: string): Positions {
+  // Use seed for reproducible randomness
+  const rng = seedrandom(seed)
 
-<!-- ❌ Wrong -->
-<rect x="10.5" y="20.33333333" />
-```
+  // Force-directed with fixed iterations
+  const positions = forceLayout(lvg, {
+    iterations: 100,
+    alpha: 0.1,
+    alphaDecay: 0.01,
+    random: rng
+  })
 
-### 3. Fixed ViewBox
-Always use standard viewBox for each type:
-- Genes: `viewBox="0 0 1024 768"`
-- Proofs: `viewBox="0 0 1280 960"`
-- Traces: `viewBox="0 0 1600 900"`
-
-### 4. No External Dependencies
-- ❌ No CSS (inline or external)
-- ❌ No fonts (use paths or fixed coordinates)
-- ❌ No images or external refs
-- ❌ No IDs, classes, or names
-- ❌ No animations or scripts
-
-### 5. Color Palette (Fixed)
-```yaml
-background: "#ffffff"
-node: "#000000"
-edge: "#666666"
-highlight: "#0066cc"
-error: "#cc0000"
-success: "#00cc00"
-```
-
-### 6. Text Handling
-Option A: Fixed monospace coordinates
-```xml
-<text font-family="monospace" font-size="12" x="100.000" y="50.000">λx.x</text>
-```
-
-Option B: Convert to paths (100% deterministic)
-```xml
-<path d="M 10.000 10.000 L 15.000 10.000 ..." />
-```
-
-### 7. Graph Layout
-- Nodes sorted by: depth-first traversal with lexicographic tiebreaking
-- Edges drawn in deterministic order
-- Fixed spacing: 100 units horizontal, 80 units vertical
-
-## File Structure
-
-```
-gene_svg := {
-  nodes: [
-    {id: "input", x: 100, y: 100, label: "Input"},
-    {id: "gene", x: 300, y: 100, label: "FOCUS"},
-    {id: "output", x: 500, y: 100, label: "Output"}
-  ],
-  edges: [
-    {from: "input", to: "gene"},
-    {from: "gene", to: "output"}
-  ]
+  // Snap to grid for stability
+  return snapToGrid(positions, 5)
 }
 ```
 
+### Node Mapping
+
+| LVG Kind | SVG Shape | Size Formula |
+|----------|-----------|--------------|
+| module | `<rect>` | `sqrt(size) * 10` |
+| fn | `<circle>` | `log(complexity + 1) * 20` |
+| type | `<rect>` dashed | `members * 15` |
+| resource | `<ellipse>` | `log(size) * 25` |
+| concept | `<polygon>` diamond | `30` fixed |
+
+### Edge Mapping
+
+| LVG Relation | SVG Style | Path Type |
+|--------------|-----------|-----------|
+| calls | solid black | straight |
+| imports | solid gray | straight |
+| refines | dashed blue | curve |
+| tests | dotted green | straight |
+| generates | solid purple | curve |
+| proves | double orange | straight |
+
 ## Canonicalization Process
 
-1. Parse SVG to AST
-2. Sort all attributes lexicographically
-3. Format all numbers to 3 decimals
-4. Sort child elements by type, then position
-5. Serialize with no whitespace variations
-6. Compute BLAKE3 hash → CID
+### 1. Sort Everything
+```typescript
+function canonicalize(svg: SVGDocument): SVGDocument {
+  // Sort nodes by ID
+  svg.nodes.sort((a, b) => a.id.localeCompare(b.id))
 
-## Validation Rules
+  // Sort edges by (src, dst, rel)
+  svg.edges.sort((a, b) => {
+    const srcCmp = a.src.localeCompare(b.src)
+    if (srcCmp !== 0) return srcCmp
+    const dstCmp = a.dst.localeCompare(b.dst)
+    if (dstCmp !== 0) return dstCmp
+    return a.rel.localeCompare(b.rel)
+  })
 
-An SVG is valid SVGx if:
-1. Contains only allowed elements
-2. All attributes are sorted
-3. All numbers have exactly 3 decimals
-4. No forbidden features (CSS, IDs, etc.)
-5. Matches expected viewBox for its type
-6. Canonicalization is idempotent
+  // Sort attributes alphabetically
+  for (const el of svg.elements) {
+    el.attrs = sortKeys(el.attrs)
+  }
 
-## Example: Minimal Gene SVG
+  return svg
+}
+```
+
+### 2. Normalize Numbers
+```typescript
+function normalizeNumber(n: number): string {
+  // Always 3 decimal places
+  return n.toFixed(3)
+    .replace(/\.?0+$/, '') // Remove trailing zeros
+    .replace(/^-0$/, '0')  // Normalize negative zero
+}
+```
+
+### 3. Stable Colors
+```typescript
+const COLOR_PALETTE = {
+  typescript: '#3178c6',
+  javascript: '#f0db4f',
+  function: '#61dafb',
+  type: '#692b7c',
+  test: '#10b981',
+  error: '#ef4444',
+  default: '#666666'
+}
+```
+
+## Path Geometry
+
+### Curves (Deterministic Bezier)
+```typescript
+function computeCurve(src: Point, dst: Point): string {
+  const dx = dst.x - src.x
+  const dy = dst.y - src.y
+  const dr = Math.sqrt(dx * dx + dy * dy)
+
+  // Fixed control point calculation
+  const cx = (src.x + dst.x) / 2
+  const cy = (src.y + dst.y) / 2 - dr * 0.15
+
+  return `M ${src.x},${src.y} Q ${cx},${cy} ${dst.x},${dst.y}`
+}
+```
+
+### Straight Lines
+```typescript
+function computeLine(src: Point, dst: Point): string {
+  return `M ${src.x},${src.y} L ${dst.x},${dst.y}`
+}
+```
+
+## Verification
+
+### Canonical Check
+```bash
+# Canonicalize twice - must be identical
+svgx-canon input.svg > out1.svg
+svgx-canon out1.svg > out2.svg
+diff out1.svg out2.svg  # Must be empty
+```
+
+### Checksum
+```typescript
+function checksum(svg: string): string {
+  // Remove all whitespace variations
+  const normalized = svg.replace(/\s+/g, ' ').trim()
+  return blake3(normalized)
+}
+```
+
+## Example Output
 
 ```xml
-<svg height="768" viewBox="0 0 1024 768" width="1024" xmlns="http://www.w3.org/2000/svg">
-  <g>
-    <rect fill="#ffffff" height="768.000" width="1024.000" x="0.000" y="0.000"/>
-    <rect fill="#000000" height="60.000" width="120.000" x="100.000" y="354.000"/>
-    <text font-family="monospace" font-size="12.000" x="130.000" y="384.000">FOCUS</text>
-    <line stroke="#666666" x1="220.000" x2="400.000" y1="384.000" y2="384.000"/>
-    <rect fill="#000000" height="60.000" width="120.000" x="400.000" y="354.000"/>
-    <text font-family="monospace" font-size="12.000" x="430.000" y="384.000">Output</text>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <!-- Nodes (sorted by ID) -->
+  <circle cx="100.000" cy="100.000" r="20.000" fill="#3178c6" stroke="#000000" stroke-width="1"/>
+  <rect x="200.000" y="150.000" width="80.000" height="60.000" fill="#f0db4f" stroke="#000000" stroke-width="1"/>
+
+  <!-- Edges (sorted by src,dst,rel) -->
+  <path d="M 100.000,100.000 L 200.000,150.000" stroke="#666666" stroke-width="2" fill="none"/>
 </svg>
 ```
 
-## CID Computation
-
-```bash
-cat gene.svg | ./canonicalize.sh | blake3sum
-# → bafy2bzaceXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-```
-
-## Use Cases
-
-### 1. Gene Visualization
-- DAG structure
-- Input/output types
-- Invariants as annotations
-- Champion path highlighting
-
-### 2. Proof Trees
-- Reduction steps
-- Witness paths
-- Law applications
-- Verification trace
-
-### 3. Execution Traces
-- State transitions
-- Gas consumption
-- Policy checks
-- Effects applied
-
-## Non-Goals
-
-SVGx is NOT for:
-- Execution or computation
-- Interactive graphics
-- Large datasets (>1000 nodes)
-- Artistic rendering
-- Machine IR
-
-## Benefits
-
-1. **Auditable**: Every change visible in diffs
-2. **Deterministic**: Same CID everywhere
-3. **Readable**: Human can understand at a glance
-4. **Portable**: Any SVG viewer works
-5. **Versionable**: Git-friendly text format
-
 ---
 
-*SVGx: Where mathematical truth becomes visible.*
+*SVGx: Your code's mirror form, always the same reflection.*

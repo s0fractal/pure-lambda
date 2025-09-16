@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "cid": "Qm62651d02daf691423881a9ebe266844d97254c149286",
+  "signature": "f7c7ff7d10bf061c7a9757f231f58fbd0b8a43131b380fe57d26a3feb3861acf6acf6aab0c3564c8d0541ea2b7297b2cfd5e8614f714ed18a64f9a4970fb0009",
+  "algorithm": "Ed25519-SHA256",
+  "timestamp": "2025-09-15T15:26:52.382Z",
+  "snapshot": "LATTICE@v1.json"
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-09-15T15:44:45.501Z",
+  "period": "week",
+  "cumulative": {
+    "period": "week",
+    "runs": 7842,
+    "saved_cpu_h": "0.08",
+    "saved_co2_kg": "0.039",
+    "median_speedup": "1.61",
+    "efficiency_gain": "61"
+  },
+  "current_metrics": {
+    "status": "STABLE",
+    "misroute_rate": "0.00",
+    "pac_bound": "27.72"
+  }
+}

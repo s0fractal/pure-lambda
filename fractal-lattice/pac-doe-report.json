@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-09-15T16:01:22.534Z",
+  "doe_matrix": 27,
+  "seeds": 5,
+  "total_tests": 135,
+  "misroutes": 0,
+  "error_rate": 0,
+  "pac_bound_95": 0.022222222222222223,
+  "method": "rule_of_three",
+  "target_5_percent": true,
+  "target_1_percent": false,
+  "edge_uncertainty": {
+    "apex->apex": 45,
+    "proof->proof": 75,
+    "performance->performance": 15
+  },
+  "results": []
+}

@@ -1,0 +1,37 @@
+{
+  "id": "r033",
+  "type": "synthetic",
+  "command": "file_hash(1gb)",
+  "timestamp": "2025-09-15T14:38:38.672Z",
+  "execution": {
+    "success": true,
+    "time_ms": 500,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": true,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "env:node_20",
+    "exec:success",
+    "gene:SURGEON",
+    "inv:deterministic",
+    "lang:python",
+    "oracle:no_env",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:l_100mb_plus",
+    "speed:slow",
+    "type:io_bounded"
+  ],
+  "cid": "c42591794f31e3e1"
+}

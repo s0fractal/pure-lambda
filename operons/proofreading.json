@@ -1,0 +1,38 @@
+{
+  "name": "proofreading_harness",
+  "phash": "op_3a2c5f8b9d1e4a7c6b3f2e9d8c7a5b4e3d2c1a9b8",
+  "structure": {
+    "pattern": "PROOFREADING",
+    "graph": "(FOCUS || MUTATE→FOCUS) ▶ COMPARE ▶ PAC",
+    "atoms_used": ["FOCUS", "SCAN", "MERGE", "THEN"]
+  },
+  "receipt": {
+    "hash": {
+      "algo": "phash-b2-operon",
+      "value": "op_3a2c5f8b9d1e4a7c6b3f2e9d8c7a5b4e3d2c1a9b8"
+    },
+    "gate": "G0",
+    "lattice_ref": "Qm62651d02...",
+    "pac_bound": "4.85%",
+    "confidence": "95%",
+    "proofs": [
+      "mutation_stability",
+      "error_bounded",
+      "deterministic_under_mutation"
+    ],
+    "profile": "b2-operon"
+  },
+  "dna_analogy": {
+    "polymerase_fidelity": "low mutation rate",
+    "exonuclease": "mismatch detection",
+    "mismatch_repair": "error correction",
+    "pac_bound": "mutation rate guarantee"
+  },
+  "test_results": {
+    "total_tests": 1000,
+    "mutation_rate": "2%",
+    "mismatches": 42,
+    "error_rate": "4.2%",
+    "pac_bound": "≤4.85% @95%"
+  }
+}

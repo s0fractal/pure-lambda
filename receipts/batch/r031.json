@@ -1,0 +1,37 @@
+{
+  "id": "r031",
+  "type": "synthetic",
+  "command": "file_hash(1kb)",
+  "timestamp": "2025-09-15T14:38:38.672Z",
+  "execution": {
+    "success": false,
+    "time_ms": 0,
+    "exitCode": 1
+  },
+  "oracle": {
+    "env": true,
+    "fs": true,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0.4
+  },
+  "attributes": [
+    "cache:medium",
+    "cap:env_mutation",
+    "env:node_20",
+    "exec:failure",
+    "gene:MEMO",
+    "gene:PAR",
+    "lang:python",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:xs_1_10kb",
+    "speed:fast",
+    "type:io_bounded"
+  ],
+  "cid": "dd7020412d004796"
+}

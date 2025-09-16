@@ -1,0 +1,1352 @@
+{
+  "350432dce6c6b85906633e1a76f4ed2fdac822245837": {
+    "name": "setConsent",
+    "phash_nf": "350432dce6c6b85906633e1a76f4ed2fdac822245837",
+    "opseq_size": 2,
+    "file": "core/consent-lens.ts",
+    "opseq": [
+      3,
+      215
+    ]
+  },
+  "a16ead21ec3bd9af0033569cec337d4ac3ce8f4122a1": {
+    "name": "CHAIN_SET",
+    "phash_nf": "a16ead21ec3bd9af0033569cec337d4ac3ce8f4122a1",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      231
+    ]
+  },
+  "6416b275aceeaeb251dbf7e9acd0b1d5b120a36203d0": {
+    "name": "badcheck7",
+    "phash_nf": "6416b275aceeaeb251dbf7e9acd0b1d5b120a36203d0",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/deepmasking.test.ts",
+    "opseq": [
+      3,
+      33
+    ]
+  },
+  "fa58b90e8072d115ef9a0d2e97c31c8f8dc9461db68c": {
+    "name": "main",
+    "phash_nf": "fa58b90e8072d115ef9a0d2e97c31c8f8dc9461db68c",
+    "opseq_size": 2,
+    "file": "core/fnpm-chimera-integration.ts",
+    "opseq": [
+      3,
+      16
+    ]
+  },
+  "9f3225c411023318c7be8807e2d248e3e8ec081152f3": {
+    "name": "TRUE",
+    "phash_nf": "9f3225c411023318c7be8807e2d248e3e8ec081152f3",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      39
+    ]
+  },
+  "ab52c90df98c6e52c06491359df0ff90ac0b85c016fd": {
+    "name": "FALSE",
+    "phash_nf": "ab52c90df98c6e52c06491359df0ff90ac0b85c016fd",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      106
+    ]
+  },
+  "cc970f4e35f92fe2e5d350c1be2f3ce7b42da32d6ce3": {
+    "name": "NOT",
+    "phash_nf": "cc970f4e35f92fe2e5d350c1be2f3ce7b42da32d6ce3",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      87
+    ]
+  },
+  "dc31758a2beaf73671e757df45090c579a74f71ed9dd": {
+    "name": "AND",
+    "phash_nf": "dc31758a2beaf73671e757df45090c579a74f71ed9dd",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      207
+    ]
+  },
+  "d91e575aca853c64487e985010e53d270f09fcbdf2ea": {
+    "name": "OR",
+    "phash_nf": "d91e575aca853c64487e985010e53d270f09fcbdf2ea",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      98
+    ]
+  },
+  "a53dbbe24997a67fcaaa997b9009f62a8bccbd4cb6bb": {
+    "name": "IF",
+    "phash_nf": "a53dbbe24997a67fcaaa997b9009f62a8bccbd4cb6bb",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      52
+    ]
+  },
+  "5ee11932899bbbb09c2bc794a1dccd9c9aa083e2176c": {
+    "name": "PAIR",
+    "phash_nf": "5ee11932899bbbb09c2bc794a1dccd9c9aa083e2176c",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      75
+    ]
+  },
+  "be2851b7fd04ae5170f0b160ac7080521412526c165d": {
+    "name": "FST",
+    "phash_nf": "be2851b7fd04ae5170f0b160ac7080521412526c165d",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      219
+    ]
+  },
+  "0487273b48f12971ed45a394651341d7fa37b0780a7a": {
+    "name": "SND",
+    "phash_nf": "0487273b48f12971ed45a394651341d7fa37b0780a7a",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      14
+    ]
+  },
+  "894450e3c1c8b926fdb0e9febe1695f6361d6aa228d9": {
+    "name": "ZERO",
+    "phash_nf": "894450e3c1c8b926fdb0e9febe1695f6361d6aa228d9",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      61
+    ]
+  },
+  "a89c11cb8596b89aafa02ba5c447bee6a5e73c1a78fb": {
+    "name": "ONE",
+    "phash_nf": "a89c11cb8596b89aafa02ba5c447bee6a5e73c1a78fb",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      113
+    ]
+  },
+  "8c4a8ae02c0ad015208bea12b32fa3e26bab358a2dcf": {
+    "name": "TWO",
+    "phash_nf": "8c4a8ae02c0ad015208bea12b32fa3e26bab358a2dcf",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      95
+    ]
+  },
+  "68df50e3867e02dd2ec4cf8c33fda82c8973a2371e73": {
+    "name": "THREE",
+    "phash_nf": "68df50e3867e02dd2ec4cf8c33fda82c8973a2371e73",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      19
+    ]
+  },
+  "70cba00778c40d626c5572c5b2a70768895f2605b867": {
+    "name": "SUCC",
+    "phash_nf": "70cba00778c40d626c5572c5b2a70768895f2605b867",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      10
+    ]
+  },
+  "f13b927d7143fb402cf42ef917407e10cef84e0e8acd": {
+    "name": "PLUS",
+    "phash_nf": "f13b927d7143fb402cf42ef917407e10cef84e0e8acd",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      188
+    ]
+  },
+  "42e1e32db088a75688d45119dbee4edb75aa7c66fb33": {
+    "name": "MULT",
+    "phash_nf": "42e1e32db088a75688d45119dbee4edb75aa7c66fb33",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      197
+    ]
+  },
+  "6b359b38b71786448a63c50986f41cac4386fdb1a594": {
+    "name": "NIL",
+    "phash_nf": "6b359b38b71786448a63c50986f41cac4386fdb1a594",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      123
+    ]
+  },
+  "681fc45a93edde6f7fdd9def4b354c7a1ebdcfec288f": {
+    "name": "PRED",
+    "phash_nf": "681fc45a93edde6f7fdd9def4b354c7a1ebdcfec288f",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      93
+    ]
+  },
+  "8ba0f94719ca8a8fe55491e62f50f5abc34d1ab65d83": {
+    "name": "_encodeAsync",
+    "phash_nf": "8ba0f94719ca8a8fe55491e62f50f5abc34d1ab65d83",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      13
+    ]
+  },
+  "1086d3ad80ac5c0c9e9627537ca5c2c21182b9f3edd3": {
+    "name": "CONS",
+    "phash_nf": "1086d3ad80ac5c0c9e9627537ca5c2c21182b9f3edd3",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      149
+    ]
+  },
+  "9de345465cf62d7105418a57fc07b85861c560a77f3c": {
+    "name": "HEAD",
+    "phash_nf": "9de345465cf62d7105418a57fc07b85861c560a77f3c",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      129
+    ]
+  },
+  "4a0a33ce58e56e8cb9757c61e29c1591a7f1ec8ed35d": {
+    "name": "TAIL",
+    "phash_nf": "4a0a33ce58e56e8cb9757c61e29c1591a7f1ec8ed35d",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      137
+    ]
+  },
+  "ed80741add49e92837cfb18029293d3193600d80913a": {
+    "name": "IS_NIL",
+    "phash_nf": "ed80741add49e92837cfb18029293d3193600d80913a",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      246
+    ]
+  },
+  "f8c49d17dc4784e83b098af5af8faf287e4df40b526b": {
+    "name": "CHAIN_PREVIOUS",
+    "phash_nf": "f8c49d17dc4784e83b098af5af8faf287e4df40b526b",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      218
+    ]
+  },
+  "7b5c7912e894e96a215dcc91a7f54f647e57cbc57444": {
+    "name": "Z",
+    "phash_nf": "7b5c7912e894e96a215dcc91a7f54f647e57cbc57444",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      255
+    ]
+  },
+  "274828608619ed74be5b595401df22f4f56e51768559": {
+    "name": "IS_ZERO",
+    "phash_nf": "274828608619ed74be5b595401df22f4f56e51768559",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      124
+    ]
+  },
+  "4f4c2b809d23385faf450d57fe67525d3ad7e87295e3": {
+    "name": "toNumber",
+    "phash_nf": "4f4c2b809d23385faf450d57fe67525d3ad7e87295e3",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      237
+    ]
+  },
+  "30a8734a2865984efcf68e04590ff8ea68deb59eaf8c": {
+    "name": "bad3",
+    "phash_nf": "30a8734a2865984efcf68e04590ff8ea68deb59eaf8c",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/pickomit.test.ts",
+    "opseq": [
+      3,
+      7
+    ]
+  },
+  "3d2942aa0cbbe0fdfde12acf00be6b46231ad2a54bdc": {
+    "name": "toBoolean",
+    "phash_nf": "3d2942aa0cbbe0fdfde12acf00be6b46231ad2a54bdc",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      192
+    ]
+  },
+  "1bb4394d1b62a010a6cbf953e2be02b6bff2cbdc1e31": {
+    "name": "badfcheck12",
+    "phash_nf": "1bb4394d1b62a010a6cbf953e2be02b6bff2cbdc1e31",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/deepmasking.test.ts",
+    "opseq": [
+      3,
+      36
+    ]
+  },
+  "815909c6fba5decb6db1b97b4b8e34ad77ca4eeb4bba": {
+    "name": "MEMORY",
+    "phash_nf": "815909c6fba5decb6db1b97b4b8e34ad77ca4eeb4bba",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      9
+    ]
+  },
+  "3ab31938a8bd6bd19c076f5b773eadef660102fc7e9d": {
+    "name": "GET",
+    "phash_nf": "3ab31938a8bd6bd19c076f5b773eadef660102fc7e9d",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      194
+    ]
+  },
+  "1f9370708114c401575676c681b89bff6a3e4fb4fdc2": {
+    "name": "SET",
+    "phash_nf": "1f9370708114c401575676c681b89bff6a3e4fb4fdc2",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      176
+    ]
+  },
+  "829a35225fbc29e859de0aae4b8a9477817397447223": {
+    "name": "UPDATE",
+    "phash_nf": "829a35225fbc29e859de0aae4b8a9477817397447223",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      209
+    ]
+  },
+  "b5db2ff89dea48669579aff1b486fbced8e6bb99b758": {
+    "name": "MEMORY_CHAIN",
+    "phash_nf": "b5db2ff89dea48669579aff1b486fbced8e6bb99b758",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      74
+    ]
+  },
+  "9e2954a5ae3b82fd75f8c39af68a297bacd05c244aaf": {
+    "name": "CHAIN_GET",
+    "phash_nf": "9e2954a5ae3b82fd75f8c39af68a297bacd05c244aaf",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      101
+    ]
+  },
+  "4ab15e98b3386d07581c18c1aa0ca40b9a6c6270f78e": {
+    "name": "CHAIN_PREVIOUS",
+    "phash_nf": "4ab15e98b3386d07581c18c1aa0ca40b9a6c6270f78e",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      119
+    ]
+  },
+  "ac4cb04ea16208eff4a679d1bcbdb179a023be36f70e": {
+    "name": "CONSCIOUSNESS",
+    "phash_nf": "ac4cb04ea16208eff4a679d1bcbdb179a023be36f70e",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.js",
+    "opseq": [
+      3,
+      174
+    ]
+  },
+  "98e7b56b86b9850b74666c1178a9725b3eb294a698e6": {
+    "name": "assert",
+    "phash_nf": "98e7b56b86b9850b74666c1178a9725b3eb294a698e6",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.test.js",
+    "opseq": [
+      3,
+      30
+    ]
+  },
+  "8e9e601b7369c915474de37e586705517f8d9d9a808f": {
+    "name": "testDeMorgan",
+    "phash_nf": "8e9e601b7369c915474de37e586705517f8d9d9a808f",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      172
+    ]
+  },
+  "cf979bf9791269243832b971aab56c9fbcaa14630c91": {
+    "name": "testComm",
+    "phash_nf": "cf979bf9791269243832b971aab56c9fbcaa14630c91",
+    "opseq_size": 2,
+    "file": "test-lambda-pure.js",
+    "opseq": [
+      3,
+      195
+    ]
+  },
+  "76546ef666739a657f26ac7a9e992949fe04c34fcb20": {
+    "name": "id",
+    "phash_nf": "76546ef666739a657f26ac7a9e992949fe04c34fcb20",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.test.js",
+    "opseq": [
+      3,
+      247
+    ]
+  },
+  "40b7baf724dbe8c855d854cff91d2cbedde5184a1ad3": {
+    "name": "K",
+    "phash_nf": "40b7baf724dbe8c855d854cff91d2cbedde5184a1ad3",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.test.js",
+    "opseq": [
+      3,
+      21
+    ]
+  },
+  "f9d1edef1a009a53e7c9a1ccba2136a786a74f8a4677": {
+    "name": "S",
+    "phash_nf": "f9d1edef1a009a53e7c9a1ccba2136a786a74f8a4677",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.test.js",
+    "opseq": [
+      3,
+      46
+    ]
+  },
+  "434e1ffa93307e6fc7cb32ba5db462a0174ad1acbedf": {
+    "name": "testDeMorgan",
+    "phash_nf": "434e1ffa93307e6fc7cb32ba5db462a0174ad1acbedf",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.test.ts",
+    "opseq": [
+      3,
+      91
+    ]
+  },
+  "6ab981f846805d788f7b37c69539826b094666440f05": {
+    "name": "testComm",
+    "phash_nf": "6ab981f846805d788f7b37c69539826b094666440f05",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.test.ts",
+    "opseq": [
+      3,
+      115
+    ]
+  },
+  "a074f5cf4717b46b7c09f61dbb1536d9a39a9dd169cd": {
+    "name": "PLUS",
+    "phash_nf": "a074f5cf4717b46b7c09f61dbb1536d9a39a9dd169cd",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      11
+    ]
+  },
+  "7a885b5b9828c0b93574b54e44a616a186464543cf81": {
+    "name": "MULT",
+    "phash_nf": "7a885b5b9828c0b93574b54e44a616a186464543cf81",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      181
+    ]
+  },
+  "6f9b0ee852658feca04f21505a34a18a3fbb0bcbee6a": {
+    "name": "POW",
+    "phash_nf": "6f9b0ee852658feca04f21505a34a18a3fbb0bcbee6a",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      100
+    ]
+  },
+  "6421da09b95ed2bfc9c0ec8253e914eb5e2e49ceabd1": {
+    "name": "pred_pair",
+    "phash_nf": "6421da09b95ed2bfc9c0ec8253e914eb5e2e49ceabd1",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      78
+    ]
+  },
+  "706bd382d41f7a7652553877fce51a256c44ad8b80f8": {
+    "name": "IS_NIL",
+    "phash_nf": "706bd382d41f7a7652553877fce51a256c44ad8b80f8",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      79
+    ]
+  },
+  "5769a4effc89b743e83fdf083837e62d59c1b9313499": {
+    "name": "IS_ZERO",
+    "phash_nf": "5769a4effc89b743e83fdf083837e62d59c1b9313499",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      51
+    ]
+  },
+  "07102fe0c8838f1b2176d1e2040e657d871e669831f3": {
+    "name": "GET",
+    "phash_nf": "07102fe0c8838f1b2176d1e2040e657d871e669831f3",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      147
+    ]
+  },
+  "5623375dbcd55187fdfa780c57c8fb42ae6a00af58fb": {
+    "name": "CHAIN_GET",
+    "phash_nf": "5623375dbcd55187fdfa780c57c8fb42ae6a00af58fb",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      226
+    ]
+  },
+  "cf179998fe3f4e6431eca78d52203402588ffa4417ad": {
+    "name": "CONSCIOUSNESS",
+    "phash_nf": "cf179998fe3f4e6431eca78d52203402588ffa4417ad",
+    "opseq_size": 2,
+    "file": "core/lambda-pure.ts",
+    "opseq": [
+      3,
+      189
+    ]
+  },
+  "69e0668c6b673f06fd77c66b415ec0e571b9c9b95ac8": {
+    "name": "base64urlToBytes",
+    "phash_nf": "69e0668c6b673f06fd77c66b415ec0e571b9c9b95ac8",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      43
+    ]
+  },
+  "f0e74c2e970bb508b4b24f42c443229cc19c10c24968": {
+    "name": "composeGeometry",
+    "phash_nf": "f0e74c2e970bb508b4b24f42c443229cc19c10c24968",
+    "opseq_size": 2,
+    "file": "genes/mirror-form/geometry.ts",
+    "opseq": [
+      3,
+      0
+    ]
+  },
+  "a2e8563cc0499e942ef1634b3a48cff4915e66d8ee0a": {
+    "name": "sum",
+    "phash_nf": "a2e8563cc0499e942ef1634b3a48cff4915e66d8ee0a",
+    "opseq_size": 2,
+    "file": "devour/alignment-rules.js",
+    "opseq": [
+      3,
+      240
+    ]
+  },
+  "9fec1de58996ded474de3d2f96f8d7b53aadd723ad4a": {
+    "name": "id",
+    "phash_nf": "9fec1de58996ded474de3d2f96f8d7b53aadd723ad4a",
+    "opseq_size": 2,
+    "file": "genes/map/manifestations/ts/map.ts",
+    "opseq": [
+      3,
+      45
+    ]
+  },
+  "917c9ced7668411dbe0c37397f122adec844f1d3d3cf": {
+    "name": "composed",
+    "phash_nf": "917c9ced7668411dbe0c37397f122adec844f1d3d3cf",
+    "opseq_size": 2,
+    "file": "genes/map/manifestations/ts/map.ts",
+    "opseq": [
+      3,
+      225
+    ]
+  },
+  "6023f917f7c0c7b41a94be85d73eb35e71e16c339405": {
+    "name": "dreamGenerator",
+    "phash_nf": "6023f917f7c0c7b41a94be85d73eb35e71e16c339405",
+    "opseq_size": 2,
+    "file": "examples/dream-world.js",
+    "opseq": [
+      3,
+      185
+    ]
+  },
+  "514364dadb762c7dd095a82b4b015e5a67371fd956b7": {
+    "name": "compose",
+    "phash_nf": "514364dadb762c7dd095a82b4b015e5a67371fd956b7",
+    "opseq_size": 2,
+    "file": "experiments/app-to-svg/pure-functions.ts",
+    "opseq": [
+      3,
+      205
+    ]
+  },
+  "9538d073156e00d4dade75016dc21d06b9b2ebe4684d": {
+    "name": "bad2",
+    "phash_nf": "9538d073156e00d4dade75016dc21d06b9b2ebe4684d",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/pickomit.test.ts",
+    "opseq": [
+      3,
+      150
+    ]
+  },
+  "ba2e7c65067bbf281116f180dc633557e7247724f7e1": {
+    "name": "cb",
+    "phash_nf": "ba2e7c65067bbf281116f180dc633557e7247724f7e1",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/catch.test.ts",
+    "opseq": [
+      3,
+      146
+    ]
+  },
+  "8fbcf05bc7ca8354a812e89cb553eec16a12e5a0c3fb": {
+    "name": "field",
+    "phash_nf": "8fbcf05bc7ca8354a812e89cb553eec16a12e5a0c3fb",
+    "opseq_size": 2,
+    "file": "genes/mirror-form/geometry.ts",
+    "opseq": [
+      3,
+      130
+    ]
+  },
+  "0646cf7807c7b4a2bda86ccb5088f46346c7576bb693": {
+    "name": "typeofThenCheckSymbol",
+    "phash_nf": "0646cf7807c7b4a2bda86ccb5088f46346c7576bb693",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/bench/instanceof.ts",
+    "opseq": [
+      3,
+      8
+    ]
+  },
+  "b1af8992f7b777bf8d96de0dedf58710ac09211820ac": {
+    "name": "visit",
+    "phash_nf": "b1af8992f7b777bf8d96de0dedf58710ac09211820ac",
+    "opseq_size": 2,
+    "file": "packages/extractor-ts/index.js",
+    "opseq": [
+      3,
+      99
+    ]
+  },
+  "53fd3f0d1fe506b3f64214c886c0e340bac5d7f57118": {
+    "name": "_encode",
+    "phash_nf": "53fd3f0d1fe506b3f64214c886c0e340bac5d7f57118",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      20
+    ]
+  },
+  "2c0bc1fadc2bd3c24c183bc7bbc4632132ce9f4a8540": {
+    "name": "listener",
+    "phash_nf": "2c0bc1fadc2bd3c24c183bc7bbc4632132ce9f4a8540",
+    "opseq_size": 2,
+    "file": "pr-packages/p-queue/source/index.ts",
+    "opseq": [
+      3,
+      26
+    ]
+  },
+  "038a226ae27ab0a5588a6203072d1936a33f20704e13": {
+    "name": "setTimeout",
+    "phash_nf": "038a226ae27ab0a5588a6203072d1936a33f20704e13",
+    "opseq_size": 2,
+    "file": "pr-packages/p-queue/test/test.ts",
+    "opseq": [
+      3,
+      41
+    ]
+  },
+  "e838f4d68ae4edc89d975d937d5340d19250089ae322": {
+    "name": "keyin",
+    "phash_nf": "e838f4d68ae4edc89d975d937d5340d19250089ae322",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/bench/instanceof.ts",
+    "opseq": [
+      3,
+      18
+    ]
+  },
+  "67b933b12b1ecf5cd309ea4fc8a20e66070dc8089426": {
+    "name": "epochSecondsToDate",
+    "phash_nf": "67b933b12b1ecf5cd309ea4fc8a20e66070dc8089426",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      5
+    ]
+  },
+  "a9a9c1f771f1011a4e2421f6bc08467b4030136f1abc": {
+    "name": "typeofThenCheckTag",
+    "phash_nf": "a9a9c1f771f1011a4e2421f6bc08467b4030136f1abc",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/bench/instanceof.ts",
+    "opseq": [
+      3,
+      210
+    ]
+  },
+  "f029c14f7af89df08e747bd09bc25bc14ab085bd3e50": {
+    "name": "instanceofObjectThenCheckSymbol",
+    "phash_nf": "f029c14f7af89df08e747bd09bc25bc14ab085bd3e50",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/bench/instanceof.ts",
+    "opseq": [
+      3,
+      37
+    ]
+  },
+  "a687017221c501cbddc90420c22f557d27b746e5576c": {
+    "name": "callback",
+    "phash_nf": "a687017221c501cbddc90420c22f557d27b746e5576c",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/base.test.ts",
+    "opseq": [
+      3,
+      77
+    ]
+  },
+  "770ce343c57c86c78f8ae3895260e991cd3b6f9208b4": {
+    "name": "falsyThenCheckSymbol",
+    "phash_nf": "770ce343c57c86c78f8ae3895260e991cd3b6f9208b4",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/bench/instanceof.ts",
+    "opseq": [
+      3,
+      53
+    ]
+  },
+  "6d4e27a70f3359d5fd0194a83c9240893d39de103840": {
+    "name": "quotelessJson",
+    "phash_nf": "6d4e27a70f3359d5fd0194a83c9240893d39de103840",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/ZodError.ts",
+    "opseq": [
+      3,
+      250
+    ]
+  },
+  "f93396ba02c279336601870e9cc49d50875312c30a27": {
+    "name": "badcheck8",
+    "phash_nf": "f93396ba02c279336601870e9cc49d50875312c30a27",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/deepmasking.test.ts",
+    "opseq": [
+      3,
+      163
+    ]
+  },
+  "a6c2c2e22b4bbabfbb4175f76ffd4fb875d2fea83149": {
+    "name": "processError",
+    "phash_nf": "a6c2c2e22b4bbabfbb4175f76ffd4fb875d2fea83149",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/ZodError.ts",
+    "opseq": [
+      3,
+      54
+    ]
+  },
+  "57392c20ad91b80e762dbf174e7e24f805a2c491165a": {
+    "name": "const",
+    "phash_nf": "57392c20ad91b80e762dbf174e7e24f805a2c491165a",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/async-parsing.test.ts",
+    "opseq": [
+      2,
+      0
+    ]
+  },
+  "29fd1c27fe16c7ba23be4e5cde5b263ccf6b6d94b1a6": {
+    "name": "goodData",
+    "phash_nf": "29fd1c27fe16c7ba23be4e5cde5b263ccf6b6d94b1a6",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+    "opseq": [
+      3,
+      190
+    ]
+  },
+  "97383341b0dd7341f32f160539661ea36d2fdebc3980": {
+    "name": "base",
+    "phash_nf": "97383341b0dd7341f32f160539661ea36d2fdebc3980",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+    "opseq": [
+      3,
+      3
+    ]
+  },
+  "15b7df763f7fc5dd1b9060a82df89c351daa800f36e6": {
+    "name": "doStuff",
+    "phash_nf": "15b7df763f7fc5dd1b9060a82df89c351daa800f36e6",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/tests/brand.test.ts",
+    "opseq": [
+      3,
+      191
+    ]
+  },
+  "0bb7286c8df459399e6d54b5bfe16af0bddf95230590": {
+    "name": "bad1",
+    "phash_nf": "0bb7286c8df459399e6d54b5bfe16af0bddf95230590",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/pickomit.test.ts",
+    "opseq": [
+      3,
+      140
+    ]
+  },
+  "ee557a0b88ed55069482519ae34e777c8b4723379e88": {
+    "name": "badcheck4",
+    "phash_nf": "ee557a0b88ed55069482519ae34e777c8b4723379e88",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/deepmasking.test.ts",
+    "opseq": [
+      3,
+      69
+    ]
+  },
+  "cd6f6a8a39528f55a8a300f08f8f47b0bbe4a9740a02": {
+    "name": "badcheck6",
+    "phash_nf": "cd6f6a8a39528f55a8a300f08f8f47b0bbe4a9740a02",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/deepmasking.test.ts",
+    "opseq": [
+      3,
+      65
+    ]
+  },
+  "8a96a4fa6c4b15e0c210754a7b322a48433f7816efb0": {
+    "name": "fail",
+    "phash_nf": "8a96a4fa6c4b15e0c210754a7b322a48433f7816efb0",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/deepmasking.test.ts",
+    "opseq": [
+      3,
+      216
+    ]
+  },
+  "8233c72c42c2122abd3d9611af4325312e101101f92a": {
+    "name": "_function",
+    "phash_nf": "8233c72c42c2122abd3d9611af4325312e101101f92a",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/schemas.ts",
+    "opseq": [
+      3,
+      58
+    ]
+  },
+  "4c78d773d777146e8ab4295520fcded9eabff507b0df": {
+    "name": "bad",
+    "phash_nf": "4c78d773d777146e8ab4295520fcded9eabff507b0df",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/promise.test.ts",
+    "opseq": [
+      3,
+      201
+    ]
+  },
+  "b02b0b117c2dfe1174fc72edf2a543ee75c859ad9add": {
+    "name": "bad4",
+    "phash_nf": "b02b0b117c2dfe1174fc72edf2a543ee75c859ad9add",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/pickomit.test.ts",
+    "opseq": [
+      3,
+      220
+    ]
+  },
+  "e97a22979f839ee6515eeaf8187794fef16fbb8a9c17": {
+    "name": "f",
+    "phash_nf": "e97a22979f839ee6515eeaf8187794fef16fbb8a9c17",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/tests/primitive.test.ts",
+    "opseq": [
+      3,
+      242
+    ]
+  },
+  "6395f0d06acddc39ceddee30d6ff48b8702b606bad1e": {
+    "name": "_safeDecode",
+    "phash_nf": "6395f0d06acddc39ceddee30d6ff48b8702b606bad1e",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      110
+    ]
+  },
+  "078c3dc5636b66379875a8d7fedc79b5882ef085aa47": {
+    "name": "setError",
+    "phash_nf": "078c3dc5636b66379875a8d7fedc79b5882ef085aa47",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/types.ts",
+    "opseq": [
+      3,
+      238
+    ]
+  },
+  "c6ed6955fd6764ed663b74066115524f7478eb4880c3": {
+    "name": "freeze",
+    "phash_nf": "c6ed6955fd6764ed663b74066115524f7478eb4880c3",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/types.ts",
+    "opseq": [
+      3,
+      38
+    ]
+  },
+  "ac1e03a12a4019123d0788a48bca6757c9c0f9bf1e13": {
+    "name": "ostring",
+    "phash_nf": "ac1e03a12a4019123d0788a48bca6757c9c0f9bf1e13",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/types.ts",
+    "opseq": [
+      3,
+      145
+    ]
+  },
+  "4023c5fda5580f2a3fc0ca663fa1c341b72a44b8a320": {
+    "name": "oboolean",
+    "phash_nf": "4023c5fda5580f2a3fc0ca663fa1c341b72a44b8a320",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v3/types.ts",
+    "opseq": [
+      3,
+      224
+    ]
+  },
+  "78e16a7935aeacac364ac160c41a13cff71c445f217d": {
+    "name": "initializer",
+    "phash_nf": "78e16a7935aeacac364ac160c41a13cff71c445f217d",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/errors.ts",
+    "opseq": [
+      3,
+      125
+    ]
+  },
+  "3b79d0f8e44b227751cfaccc42320a079b48c44beec3": {
+    "name": "_function",
+    "phash_nf": "3b79d0f8e44b227751cfaccc42320a079b48c44beec3",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/schemas.ts",
+    "opseq": [
+      3,
+      117
+    ]
+  },
+  "f1ea93371125a69f9bc75fe212cff0e8aa98c36c0567": {
+    "name": "_function",
+    "phash_nf": "f1ea93371125a69f9bc75fe212cff0e8aa98c36c0567",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/schemas.ts",
+    "opseq": [
+      3,
+      50
+    ]
+  },
+  "22ad943913e5f5909ff6c96fdd0fe596c31aa5b3d478": {
+    "name": "_function",
+    "phash_nf": "22ad943913e5f5909ff6c96fdd0fe596c31aa5b3d478",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/schemas.ts",
+    "opseq": [
+      3,
+      139
+    ]
+  },
+  "1dd771b5a044a7b843111b34d00e8205e2966321cf5c": {
+    "name": "_function",
+    "phash_nf": "1dd771b5a044a7b843111b34d00e8205e2966321cf5c",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/schemas.ts",
+    "opseq": [
+      3,
+      132
+    ]
+  },
+  "f8208172beb8f0136c6905e7fe9524202f96552db114": {
+    "name": "_function",
+    "phash_nf": "f8208172beb8f0136c6905e7fe9524202f96552db114",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/schemas.ts",
+    "opseq": [
+      3,
+      27
+    ]
+  },
+  "407e699be54416d6a6d894edbb3639d07a02bd64d96b": {
+    "name": "as",
+    "phash_nf": "407e699be54416d6a6d894edbb3639d07a02bd64d96b",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/schemas.ts",
+    "opseq": [
+      3,
+      127
+    ]
+  },
+  "a5243c8c2fa4cce3215567032fdc7780555c5a0741e0": {
+    "name": "applyForces",
+    "phash_nf": "a5243c8c2fa4cce3215567032fdc7780555c5a0741e0",
+    "opseq_size": 2,
+    "file": "viz/svgx/generator.ts",
+    "opseq": [
+      3,
+      196
+    ]
+  },
+  "875f29ecbda36f14be94e65caccadfcdda42ab7b1bf2": {
+    "name": "stringToNumber",
+    "phash_nf": "875f29ecbda36f14be94e65caccadfcdda42ab7b1bf2",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      248
+    ]
+  },
+  "b0e8bf5ca8a6205d1ea307145dee65c5cafcebb1b69c": {
+    "name": "isoDatetimeToDate",
+    "phash_nf": "b0e8bf5ca8a6205d1ea307145dee65c5cafcebb1b69c",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      59
+    ]
+  },
+  "3df07c4e1e0f204e034145ebc20cb00ea137495eca21": {
+    "name": "base64",
+    "phash_nf": "3df07c4e1e0f204e034145ebc20cb00ea137495eca21",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      208
+    ]
+  },
+  "16111d4ca9acb94e630ce56825b6d6ebc195ad4f4734": {
+    "name": "hexToBytes",
+    "phash_nf": "16111d4ca9acb94e630ce56825b6d6ebc195ad4f4734",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      179
+    ]
+  },
+  "90161a963dd030923e85b1f220cce69995e4fbce871b": {
+    "name": "stringToURL",
+    "phash_nf": "90161a963dd030923e85b1f220cce69995e4fbce871b",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      105
+    ]
+  },
+  "64ac2e14963397e5c70fe09ce4f0a158154d9f8e9161": {
+    "name": "stringToBoolean",
+    "phash_nf": "64ac2e14963397e5c70fe09ce4f0a158154d9f8e9161",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/codec-examples.test.ts",
+    "opseq": [
+      3,
+      67
+    ]
+  },
+  "ff539e8049f2f7e9bc8208db77065c84e2e2303b64c8": {
+    "name": "validDecode",
+    "phash_nf": "ff539e8049f2f7e9bc8208db77065c84e2e2303b64c8",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/tests/codec.test.ts",
+    "opseq": [
+      3,
+      92
+    ]
+  },
+  "6ab59080d834d814d353bd9fd6cb1d95b9e62887f526": {
+    "name": "validEncode",
+    "phash_nf": "6ab59080d834d814d353bd9fd6cb1d95b9e62887f526",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/tests/codec.test.ts",
+    "opseq": [
+      3,
+      162
+    ]
+  },
+  "7fb4e33bde4520843239b63a2617dce52cb533de599b": {
+    "name": "toB64Url",
+    "phash_nf": "7fb4e33bde4520843239b63a2617dce52cb533de599b",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/classic/tests/hash.test.ts",
+    "opseq": [
+      3,
+      63
+    ]
+  },
+  "23a5048b829b0fb02c69407fdff8940eece37dcb1590": {
+    "name": "branded",
+    "phash_nf": "23a5048b829b0fb02c69407fdff8940eece37dcb1590",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/tests/index.test.ts",
+    "opseq": [
+      3,
+      204
+    ]
+  },
+  "725e48831eb486d6337312c3e21267117cadc8d1fa86": {
+    "name": "flattenError",
+    "phash_nf": "725e48831eb486d6337312c3e21267117cadc8d1fa86",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/errors.ts",
+    "opseq": [
+      3,
+      156
+    ]
+  },
+  "e492bf05d37a93f81661ddcfb1e4948f4e49b34cb825": {
+    "name": "_function",
+    "phash_nf": "e492bf05d37a93f81661ddcfb1e4948f4e49b34cb825",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/schemas.ts",
+    "opseq": [
+      3,
+      90
+    ]
+  },
+  "87d60b5427687a137ad31a8fed79efa260a56f470d04": {
+    "name": "processError",
+    "phash_nf": "87d60b5427687a137ad31a8fed79efa260a56f470d04",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/errors.ts",
+    "opseq": [
+      3,
+      55
+    ]
+  },
+  "03dfad6b95d1435e9f8cb1575a0749e98cf58fb2705d": {
+    "name": "processError",
+    "phash_nf": "03dfad6b95d1435e9f8cb1575a0749e98cf58fb2705d",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/errors.ts",
+    "opseq": [
+      3,
+      4
+    ]
+  },
+  "cd105682e96c68a4bff53292426705b25a7adfa33c8e": {
+    "name": "_parseAsync",
+    "phash_nf": "cd105682e96c68a4bff53292426705b25a7adfa33c8e",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      186
+    ]
+  },
+  "ec9f22971b2855566b47fb3df2abee9f899ce042f81d": {
+    "name": "_safeParse",
+    "phash_nf": "ec9f22971b2855566b47fb3df2abee9f899ce042f81d",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      6
+    ]
+  },
+  "cb7e9c2e004659a0d3e93228aada304eb4944475f3d8": {
+    "name": "_safeParseAsync",
+    "phash_nf": "cb7e9c2e004659a0d3e93228aada304eb4944475f3d8",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      155
+    ]
+  },
+  "53033c6a93900e7fd5c4814a5ef5a012d6432e71997d": {
+    "name": "_decodeAsync",
+    "phash_nf": "53033c6a93900e7fd5c4814a5ef5a012d6432e71997d",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      241
+    ]
+  },
+  "c8d0f4a7124fe7293a56f63eb680c291c931079f5d9b": {
+    "name": "_safeEncode",
+    "phash_nf": "c8d0f4a7124fe7293a56f63eb680c291c931079f5d9b",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      144
+    ]
+  },
+  "9d59b543bedc8dc47daeba026cbe19b0a738d8928917": {
+    "name": "_safeEncodeAsync",
+    "phash_nf": "9d59b543bedc8dc47daeba026cbe19b0a738d8928917",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      142
+    ]
+  },
+  "dcac84f83fca07c6e5e817f5f497afbbdcd1d2b97604": {
+    "name": "_safeDecodeAsync",
+    "phash_nf": "dcac84f83fca07c6e5e817f5f497afbbdcd1d2b97604",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/parse.ts",
+    "opseq": [
+      3,
+      151
+    ]
+  },
+  "1db635a27c31b6435c58b48cd0d8e47413e0efb3149e": {
+    "name": "flattenRef",
+    "phash_nf": "1db635a27c31b6435c58b48cd0d8e47413e0efb3149e",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/core/to-json-schema.ts",
+    "opseq": [
+      3,
+      178
+    ]
+  },
+  "3b5002904e42ab504dc1fd1e496a0c06e250c62d3387": {
+    "name": "error",
+    "phash_nf": "3b5002904e42ab504dc1fd1e496a0c06e250c62d3387",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/locales/zh-TW.ts",
+    "opseq": [
+      3,
+      223
+    ]
+  },
+  "be3aaa0f1134e1b2e29455bcbc5dc198c2ead35798d6": {
+    "name": "_function",
+    "phash_nf": "be3aaa0f1134e1b2e29455bcbc5dc198c2ead35798d6",
+    "opseq_size": 2,
+    "file": "pr-packages/zod/packages/zod/src/v4/mini/schemas.ts",
+    "opseq": [
+      3,
+      213
+    ]
+  },
+  "4be2abf62738268c5ccd5ef5767e791f6187f9370f11": {
+    "name": "createMemory",
+    "phash_nf": "4be2abf62738268c5ccd5ef5767e791f6187f9370f11",
+    "opseq_size": 2,
+    "file": "test-memory.js",
+    "opseq": [
+      3,
+      230
+    ]
+  },
+  "e4b751fb94d08ed479dc2fa73aac8b08380e723850d7": {
+    "name": "createConsciousness",
+    "phash_nf": "e4b751fb94d08ed479dc2fa73aac8b08380e723850d7",
+    "opseq_size": 2,
+    "file": "test-memory.js",
+    "opseq": [
+      3,
+      175
+    ]
+  },
+  "1f39cdc27e9174be7aeccf439ffa852e05ac26fc5a00": {
+    "name": "map",
+    "phash_nf": "1f39cdc27e9174be7aeccf439ffa852e05ac26fc5a00",
+    "opseq_size": 2,
+    "file": "tests/grok-integration.ts",
+    "opseq": [
+      3,
+      187
+    ]
+  }
+}

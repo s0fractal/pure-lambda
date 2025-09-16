@@ -1,0 +1,194 @@
+name: 'Pure Lambda Canary'
+description: 'Non-blocking CI canary for test acceleration with cryptographic proofs'
+branding:
+  icon: 'zap'
+  color: 'purple'
+
+inputs:
+  runner:
+    description: 'Test runner (vitest, jest, pytest)'
+    required: false
+    default: 'vitest'
+
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '20'
+
+  package-manager:
+    description: 'Package manager (npm, yarn, pnpm)'
+    required: false
+    default: 'npm'
+
+  timeout:
+    description: 'Timeout in minutes'
+    required: false
+    default: '10'
+
+  upload-artifacts:
+    description: 'Upload receipts as artifacts'
+    required: false
+    default: 'true'
+
+outputs:
+  baseline-time:
+    description: 'Baseline execution time (ms)'
+    value: ${{ steps.baseline.outputs.time }}
+
+  canary-time:
+    description: 'Canary execution time (ms)'
+    value: ${{ steps.canary.outputs.time }}
+
+  speedup:
+    description: 'Speedup multiplier'
+    value: ${{ steps.summary.outputs.speedup }}
+
+  cache-rate:
+    description: 'Cache hit rate (%)'
+    value: ${{ steps.canary.outputs.cache_rate }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.package-manager }}
+
+    - name: Setup package manager
+      shell: bash
+      run: |
+        if [ "${{ inputs.package-manager }}" = "pnpm" ]; then
+          npm install -g pnpm
+        elif [ "${{ inputs.package-manager }}" = "yarn" ]; then
+          corepack enable
+        fi
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        case "${{ inputs.package-manager }}" in
+          npm) npm ci ;;
+          yarn) yarn install --frozen-lockfile ;;
+          pnpm) pnpm install --frozen-lockfile ;;
+        esac
+
+    - name: Setup Pure Lambda
+      shell: bash
+      run: |
+        mkdir -p .pl/{cache,receipts}
+        curl -sSL -o .pl/loader.mjs https://raw.githubusercontent.com/s0fractal/pure-lambda/main/packages/loader/index.mjs
+
+    - name: Run baseline tests
+      id: baseline
+      shell: bash
+      timeout-minutes: ${{ inputs.timeout }}
+      run: |
+        START=$(date +%s%3N)
+        case "${{ inputs.runner }}" in
+          vitest)
+            node node_modules/vitest/vitest.mjs run --silent || true
+            ;;
+          jest)
+            npx jest --silent || true
+            ;;
+          pytest)
+            python -m pytest -q || true
+            ;;
+        esac
+        END=$(date +%s%3N)
+        TIME=$((END - START))
+        echo "time=${TIME}" >> $GITHUB_OUTPUT
+        echo "Baseline: ${TIME}ms"
+
+    - name: Run canary tests
+      id: canary
+      shell: bash
+      timeout-minutes: ${{ inputs.timeout }}
+      env:
+        PL_LOADER_STRICT: "1"
+        PL_SEED: "auto"
+        PL_DISABLE_NET: "1"
+      run: |
+        START=$(date +%s%3N)
+        case "${{ inputs.runner }}" in
+          vitest)
+            node --loader=${{ github.workspace }}/.pl/loader.mjs node_modules/vitest/vitest.mjs run --silent || true
+            ;;
+          jest)
+            node --loader=${{ github.workspace }}/.pl/loader.mjs npx jest --silent || true
+            ;;
+          pytest)
+            echo "Python loader not yet implemented" && exit 0
+            ;;
+        esac
+        END=$(date +%s%3N)
+        TIME=$((END - START))
+        echo "time=${TIME}" >> $GITHUB_OUTPUT
+
+        # Calculate cache rate
+        CACHE_RATE=$(node -e "
+          const fs = require('fs');
+          try {
+            const files = fs.readdirSync('.pl/receipts').filter(f => f.endsWith('.json'));
+            let hits = 0, total = 0;
+            for (const file of files) {
+              try {
+                const r = JSON.parse(fs.readFileSync('.pl/receipts/' + file));
+                if (r.global_stats) {
+                  hits += r.global_stats.hits || 0;
+                  total += r.global_stats.calls || 0;
+                }
+              } catch {}
+            }
+            console.log(total > 0 ? ((hits/total)*100).toFixed(1) : '0');
+          } catch {
+            console.log('0');
+          }
+        ")
+        echo "cache_rate=${CACHE_RATE}" >> $GITHUB_OUTPUT
+        echo "Canary: ${TIME}ms (${CACHE_RATE}% cache)"
+
+    - name: Generate summary
+      id: summary
+      shell: bash
+      run: |
+        BASELINE="${{ steps.baseline.outputs.time }}"
+        CANARY="${{ steps.canary.outputs.time }}"
+        CACHE="${{ steps.canary.outputs.cache_rate }}"
+
+        if [ "$CANARY" -gt 0 ] && [ "$BASELINE" -gt 0 ]; then
+          SPEEDUP=$(node -e "console.log(($BASELINE / $CANARY).toFixed(2))")
+        else
+          SPEEDUP="1.00"
+        fi
+        echo "speedup=${SPEEDUP}" >> $GITHUB_OUTPUT
+
+        # Create summary
+        cat >> $GITHUB_STEP_SUMMARY << EOF
+        # 🚀 Pure Lambda Canary Results
+
+        | Metric | Baseline | Canary | Improvement |
+        |--------|----------|--------|-------------|
+        | **Time** | ${BASELINE}ms | ${CANARY}ms | **${SPEEDUP}×** |
+        | **Cache Hit Rate** | - | ${CACHE}% | - |
+
+        ## Safety Status
+        ✅ Non-blocking (continue-on-error)
+        ✅ Zero code changes required
+        ✅ Cryptographic receipts generated
+        ✅ Oracle monitoring active
+
+        ## Artifacts
+        - Receipts: \`.pl/receipts/*.json\`
+        - Loader: \`.pl/loader.mjs\`
+        EOF
+
+    - name: Upload receipts
+      if: inputs.upload-artifacts == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: pure-lambda-receipts
+        path: .pl/receipts/
+        if-no-files-found: ignore

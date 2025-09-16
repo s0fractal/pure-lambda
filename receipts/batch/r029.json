@@ -1,0 +1,37 @@
+{
+  "id": "r029",
+  "type": "synthetic",
+  "command": "dijkstra(100)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": true,
+    "time_ms": 15,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": false,
+    "time": true,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0.4
+  },
+  "attributes": [
+    "cache:medium",
+    "cap:time_mock",
+    "env:node_20",
+    "exec:success",
+    "gene:MEMO",
+    "lang:typescript",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "size:m_1_10mb",
+    "speed:medium",
+    "type:graph_algo"
+  ],
+  "cid": "1da169d9af36e200"
+}

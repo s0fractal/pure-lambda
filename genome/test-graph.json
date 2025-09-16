@@ -1,0 +1,13 @@
+{
+  "op": "THEN",
+  "left": {
+    "op": "SPLIT",
+    "left": { "op": "ATOM", "name": "FOCUS" },
+    "right": {
+      "op": "THEN",
+      "left": { "op": "ATOM", "name": "DELAY" },
+      "right": { "op": "ATOM", "name": "SCAN" }
+    }
+  },
+  "right": { "op": "ATOM", "name": "MERGE" }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "r025",
+  "type": "synthetic",
+  "command": "json_validate(tiny)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": false,
+    "time_ms": 1,
+    "exitCode": 1
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": true,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0.4
+  },
+  "attributes": [
+    "cache:medium",
+    "cap:random",
+    "env:node_20",
+    "exec:failure",
+    "gene:MEMO",
+    "lang:rust",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_time",
+    "size:xs_1_10kb",
+    "speed:fast",
+    "type:validation"
+  ],
+  "cid": "7e3965e70e0f13f8"
+}

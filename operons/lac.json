@@ -1,0 +1,42 @@
+{
+  "name": "lac_operon",
+  "phash": "op_c58751d8b15f2b2d3bfe1968cb4f43953ebf759b8499",
+  "structure": {
+    "pattern": "OPERON",
+    "graph": "PROMOTER ▶ [lacZ→DELAY→lacY→DELAY→lacA] ▶ REGULATOR ▶ MERGE",
+    "atoms_used": ["FOCUS", "SCAN", "DELAY", "MERGE", "THEN"],
+    "genes": ["lacZ", "lacY", "lacA"]
+  },
+  "receipt": {
+    "hash": {
+      "algo": "phash-b2-operon",
+      "value": "op_c58751d8b15f2b2d3bfe1968cb4f43953ebf759b8499"
+    },
+    "gate": "G0",
+    "lattice_ref": "Qm62651d02...",
+    "pac_bound": "0.0%",
+    "confidence": "100%",
+    "proofs": [
+      "sequential_causality",
+      "promoter_control",
+      "state_preservation"
+    ],
+    "profile": "b2-operon"
+  },
+  "dna_analogy": {
+    "promoter": "FOCUS (lactose sensor)",
+    "lacZ": "β-galactosidase",
+    "lacY": "permease",
+    "lacA": "transacetylase",
+    "regulator": "CAP-cAMP",
+    "delays": "transcriptional pauses"
+  },
+  "test_results": {
+    "conditions_tested": 5,
+    "expressed": 4,
+    "repressed": 1,
+    "max_enzyme": 4.0,
+    "max_boost": "1.5x",
+    "causality_preserved": true
+  }
+}

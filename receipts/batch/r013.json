@@ -1,0 +1,38 @@
+{
+  "id": "r013",
+  "type": "synthetic",
+  "command": "validate_schema(small.json)",
+  "timestamp": "2025-09-15T14:38:38.670Z",
+  "execution": {
+    "success": true,
+    "time_ms": 1,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0.4
+  },
+  "attributes": [
+    "cache:medium",
+    "env:node_20",
+    "exec:success",
+    "gene:MEMO",
+    "inv:deterministic",
+    "lang:python",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:xs_1_10kb",
+    "speed:fast",
+    "type:validation"
+  ],
+  "cid": "d3a684afb30120c5"
+}

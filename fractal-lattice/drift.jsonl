@@ -1,0 +1,1 @@
+{"timestamp":"2025-09-15T15:12:50.718Z","lattice_cid":"Qm61e8c1efcd17820cf5b20964333acf335c57795da622","metrics":{"apex_support":"50.0","proof_support":"41.7","perf_support":"0.0","universal_support":"8.3","misroute_rate":"0.00","ood_rate":"0.00","rules_coverage":"60","entropy":"4.59","total_receipts":120},"triggers":[],"status":"STABLE","recommended_action":"continue"}
