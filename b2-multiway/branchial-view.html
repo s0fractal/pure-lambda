@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2 Branchial View - Multiway Evolution</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', Consolas, monospace;
+            background: #0a0e27;
+            color: #e1e4e8;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            background: #161b22;
+            padding: 20px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        h1 {
+            color: #58a6ff;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            margin-top: 5px;
+        }
+
+        .panel {
+            padding: 20px;
+            overflow: auto;
+            position: relative;
+        }
+
+        #multiway-panel {
+            background: #0d1117;
+            border-right: 1px solid #30363d;
+        }
+
+        #branchial-panel {
+            background: #161b22;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-family: inherit;
+        }
+
+        button:hover { background: #2ea043; }
+
+        svg {
+            width: 100%;
+            height: 500px;
+        }
+
+        .node {
+            fill: #1f6feb;
+            stroke: #58a6ff;
+            stroke-width: 2;
+        }
+
+        .node.split {
+            fill: #f85149;
+        }
+
+        .node.merge {
+            fill: #238636;
+        }
+
+        .edge {
+            stroke: #8b949e;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.6;
+        }
+
+        .edge.causal {
+            stroke: #58a6ff;
+            stroke-dasharray: 5,5;
+        }
+
+        .edge.branch {
+            stroke: #f85149;
+        }
+
+        .edge.converge {
+            stroke: #238636;
+        }
+
+        .label {
+            fill: #e1e4e8;
+            font-size: 10px;
+            text-anchor: middle;
+        }
+
+        #stats {
+            grid-column: 1 / -1;
+            background: #010409;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #30363d;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            color: #58a6ff;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #8b949e;
+            margin-top: 5px;
+        }
+
+        .phash {
+            font-family: monospace;
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌌 B2 Multiway Evolution</h1>
+        <div class="subtitle">Wolfram-style branchial space visualization</div>
+    </header>
+
+    <div id="multiway-panel" class="panel">
+        <div class="controls">
+            <button onclick="loadScenario('simple')">Simple Chain</button>
+            <button onclick="loadScenario('split')">Split/Merge</button>
+            <button onclick="loadScenario('confluent')">Confluent</button>
+            <button onclick="animateEvolution()">Animate</button>
+        </div>
+        <svg id="multiway-svg">
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10"
+                        refX="10" refY="5" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b949e"/>
+                </marker>
+            </defs>
+            <g id="multiway-edges"></g>
+            <g id="multiway-nodes"></g>
+        </svg>
+    </div>
+
+    <div id="branchial-panel" class="panel">
+        <div class="controls">
+            <button onclick="toggleView()">Toggle View</button>
+            <button onclick="highlightConvergence()">Show Merges</button>
+        </div>
+        <svg id="branchial-svg">
+            <g id="branchial-layers"></g>
+            <g id="branchial-merges"></g>
+        </svg>
+    </div>
+
+    <div id="stats">
+        <div class="stat">
+            <div class="stat-value" id="total-events">0</div>
+            <div class="stat-label">Events</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="branch-count">0</div>
+            <div class="stat-label">Branches</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="max-width">0</div>
+            <div class="stat-label">Max Width</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="confluence">0%</div>
+            <div class="stat-label">Confluence</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="causal-depth">0</div>
+            <div class="stat-label">Causal Depth</div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Sample multiway evolution data
+        const scenarios = {
+            simple: {
+                nodes: [
+                    { id: 0, label: 'input', time: 0, x: 50, y: 50 },
+                    { id: 1, label: 'FOCUS', time: 1, x: 150, y: 50 },
+                    { id: 2, label: 'SCAN', time: 2, x: 250, y: 50 },
+                    { id: 3, label: 'output', time: 3, x: 350, y: 50 }
+                ],
+                edges: [
+                    { from: 0, to: 1, rule: 'FOCUS' },
+                    { from: 1, to: 2, rule: 'SCAN' },
+                    { from: 2, to: 3, rule: 'id' }
+                ],
+                branches: [],
+                stats: { events: 3, branches: 1, width: 1, confluence: 100, depth: 3 }
+            },
+
+            split: {
+                nodes: [
+                    { id: 0, label: 'input', time: 0, x: 50, y: 150 },
+                    { id: 1, label: 'SPLIT', time: 1, x: 150, y: 150 },
+                    { id: 2, label: 'branch1', time: 2, x: 250, y: 100 },
+                    { id: 3, label: 'branch2', time: 2, x: 250, y: 200 },
+                    { id: 4, label: 'MERGE', time: 3, x: 350, y: 150 },
+                    { id: 5, label: 'output', time: 4, x: 450, y: 150 }
+                ],
+                edges: [
+                    { from: 0, to: 1, rule: 'SPLIT' },
+                    { from: 1, to: 2, rule: 'FOCUS', type: 'branch' },
+                    { from: 1, to: 3, rule: 'SCAN', type: 'branch' },
+                    { from: 2, to: 4, rule: 'MERGE', type: 'converge' },
+                    { from: 3, to: 4, rule: 'MERGE', type: 'converge' },
+                    { from: 4, to: 5, rule: 'id' }
+                ],
+                branches: [
+                    { time: 2, width: 2, branches: ['branch1', 'branch2'] }
+                ],
+                stats: { events: 6, branches: 2, width: 2, confluence: 50, depth: 4 }
+            },
+
+            confluent: {
+                nodes: [
+                    { id: 0, label: 'A', time: 0, x: 50, y: 100 },
+                    { id: 1, label: 'B', time: 0, x: 50, y: 200 },
+                    { id: 2, label: 'f(A)', time: 1, x: 150, y: 100 },
+                    { id: 3, label: 'g(B)', time: 1, x: 150, y: 200 },
+                    { id: 4, label: 'h(A)', time: 2, x: 250, y: 100 },
+                    { id: 5, label: 'h(B)', time: 2, x: 250, y: 200 },
+                    { id: 6, label: 'same', time: 3, x: 350, y: 150 }
+                ],
+                edges: [
+                    { from: 0, to: 2, rule: 'f' },
+                    { from: 1, to: 3, rule: 'g' },
+                    { from: 2, to: 4, rule: 'h' },
+                    { from: 3, to: 5, rule: 'h' },
+                    { from: 4, to: 6, rule: 'normalize', type: 'converge' },
+                    { from: 5, to: 6, rule: 'normalize', type: 'converge' }
+                ],
+                branches: [
+                    { time: 0, width: 2, branches: ['A', 'B'] },
+                    { time: 3, width: 1, branches: ['converged'] }
+                ],
+                stats: { events: 6, branches: 2, width: 2, confluence: 100, depth: 3 }
+            }
+        };
+
+        let currentScenario = 'split';
+
+        function drawMultiway(scenario) {
+            const svg = document.getElementById('multiway-svg');
+            const edges = document.getElementById('multiway-edges');
+            const nodes = document.getElementById('multiway-nodes');
+
+            // Clear
+            edges.innerHTML = '';
+            nodes.innerHTML = '';
+
+            // Draw edges
+            scenario.edges.forEach(edge => {
+                const from = scenario.nodes.find(n => n.id === edge.from);
+                const to = scenario.nodes.find(n => n.id === edge.to);
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', from.x);
+                line.setAttribute('y1', from.y);
+                line.setAttribute('x2', to.x);
+                line.setAttribute('y2', to.y);
+                line.setAttribute('class', `edge ${edge.type || ''}`);
+                line.setAttribute('marker-end', 'url(#arrow)');
+                edges.appendChild(line);
+
+                // Add rule label
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', (from.x + to.x) / 2);
+                text.setAttribute('y', (from.y + to.y) / 2 - 5);
+                text.setAttribute('class', 'label');
+                text.textContent = edge.rule;
+                edges.appendChild(text);
+            });
+
+            // Draw nodes
+            scenario.nodes.forEach(node => {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', node.x);
+                circle.setAttribute('cy', node.y);
+                circle.setAttribute('r', 15);
+                circle.setAttribute('class', `node ${node.label.includes('SPLIT') ? 'split' : ''} ${node.label.includes('MERGE') ? 'merge' : ''}`);
+                nodes.appendChild(circle);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', node.x);
+                text.setAttribute('y', node.y + 4);
+                text.setAttribute('class', 'label');
+                text.textContent = node.label;
+                nodes.appendChild(text);
+            });
+        }
+
+        function drawBranchial(scenario) {
+            const svg = document.getElementById('branchial-svg');
+            const layers = document.getElementById('branchial-layers');
+
+            layers.innerHTML = '';
+
+            // Draw time layers
+            const maxTime = Math.max(...scenario.nodes.map(n => n.time));
+            const layerHeight = 400 / (maxTime + 1);
+
+            for (let t = 0; t <= maxTime; t++) {
+                const y = 50 + t * layerHeight;
+
+                // Layer line
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', 20);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', 480);
+                line.setAttribute('y2', y);
+                line.setAttribute('stroke', '#30363d');
+                line.setAttribute('stroke-dasharray', '5,5');
+                layers.appendChild(line);
+
+                // Time label
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', 10);
+                text.setAttribute('y', y + 5);
+                text.setAttribute('class', 'label');
+                text.textContent = `t=${t}`;
+                layers.appendChild(text);
+
+                // Draw nodes at this time
+                const nodesAtTime = scenario.nodes.filter(n => n.time === t);
+                const nodeWidth = 400 / (nodesAtTime.length + 1);
+
+                nodesAtTime.forEach((node, i) => {
+                    const x = 50 + (i + 1) * nodeWidth;
+
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', x);
+                    circle.setAttribute('cy', y);
+                    circle.setAttribute('r', 10);
+                    circle.setAttribute('class', 'node');
+                    layers.appendChild(circle);
+                });
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('total-events').textContent = stats.events;
+            document.getElementById('branch-count').textContent = stats.branches;
+            document.getElementById('max-width').textContent = stats.width;
+            document.getElementById('confluence').textContent = stats.confluence + '%';
+            document.getElementById('causal-depth').textContent = stats.depth;
+        }
+
+        function loadScenario(name) {
+            currentScenario = name;
+            const scenario = scenarios[name];
+            drawMultiway(scenario);
+            drawBranchial(scenario);
+            updateStats(scenario.stats);
+        }
+
+        function animateEvolution() {
+            const scenario = scenarios[currentScenario];
+            const nodes = document.querySelectorAll('.node');
+            const edges = document.querySelectorAll('.edge');
+
+            // Animate nodes appearing
+            nodes.forEach((node, i) => {
+                node.style.opacity = '0';
+                setTimeout(() => {
+                    node.style.transition = 'opacity 0.5s';
+                    node.style.opacity = '1';
+                }, i * 200);
+            });
+
+            // Animate edges
+            edges.forEach((edge, i) => {
+                edge.style.strokeDasharray = '1000';
+                edge.style.strokeDashoffset = '1000';
+                setTimeout(() => {
+                    edge.style.transition = 'stroke-dashoffset 0.5s';
+                    edge.style.strokeDashoffset = '0';
+                }, i * 200 + 100);
+            });
+        }
+
+        function highlightConvergence() {
+            const convergeEdges = document.querySelectorAll('.edge.converge');
+            convergeEdges.forEach(edge => {
+                edge.style.strokeWidth = '4';
+                edge.style.stroke = '#238636';
+                setTimeout(() => {
+                    edge.style.strokeWidth = '2';
+                }, 1000);
+            });
+        }
+
+        function toggleView() {
+            const multiway = document.getElementById('multiway-panel');
+            const branchial = document.getElementById('branchial-panel');
+
+            if (multiway.style.display === 'none') {
+                multiway.style.display = 'block';
+                branchial.style.display = 'block';
+            } else {
+                multiway.style.display = multiway.style.display === 'block' ? 'none' : 'block';
+                branchial.style.display = branchial.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
+        // Load initial scenario
+        loadScenario('split');
+    </script>
+</body>
+</html>
