@@ -1,0 +1,138 @@
+# Breathing SLO Contract
+# Service Level Objectives for branchial space control
+
+version: "1.0"
+name: "Breathing System SLOs"
+window_size: 128  # Rolling window in ticks
+
+# Core SLOs
+slos:
+  width:
+    metric: "W(t)"
+    range: [8, 24]
+    target: 95  # % of time in range
+    severity: "critical"
+
+  curvature:
+    metric: "κ(t)"
+    range: [-0.15, 0.20]
+    target: 90  # % of time in range
+    severity: "critical"
+
+  regret:
+    metrics:
+      average:
+        threshold: 3.0  # %
+        target: 99  # % of time below
+      p95:
+        threshold: 7.0  # %
+        target: 95  # % of time below
+    severity: "warning"
+
+  quarantine_duty:
+    metric: "quarantine_active_ratio"
+    threshold: 0.20  # Max 20% of time
+    target: 95  # % compliance
+    severity: "warning"
+
+  irreducible_stability:
+    metric: "ΔL/L"  # Week-over-week cost variance
+    threshold: 0.03  # Max 3% variance
+    target: 90  # % of zones stable
+    severity: "info"
+
+# Lyapunov-like potential function
+potential:
+  formula: "Φ = L(route) + α·max(0, W - Wmax) + β·max(0, κ - κmax) + γ·max(0, κmin - κ)"
+
+  coefficients:
+    α: 10.0   # Width penalty
+    β: 50.0   # Upper curvature penalty
+    γ: 50.0   # Lower curvature penalty
+
+  stability_criterion:
+    condition: "ΔΦ ≤ 0"
+    target: 95  # % of ticks with non-increasing potential
+    window: 32  # Check over 32 ticks
+
+# Recovery policies
+recovery:
+  quarantine_thaw:
+    strategy: "staggered"
+    rate: 0.10  # Thaw 10% branches per tick
+    order: "best_score_first"
+    rollback_on_regret: true
+
+  slo_violation:
+    consecutive_violations: 3
+    action: "PL_POLICY=universal"
+    duration: 1  # tick
+    report: true
+
+  asthma_recurrence:
+    consecutive_events: 2
+    action: "recalibrate"
+    freeze_nf: true  # Freeze normal form rewrites
+    duration: 1  # cycle
+
+# Optimization zones
+optimization:
+  priority_zones:
+    - name: "high_width_convergent"
+      condition: "W > 16 AND κ > 0"
+      strategy: "aggressive_nf_rewrites"
+      expected_gain: 0.25
+
+    - name: "natural_merge_points"
+      condition: "κ > 0.1"
+      strategy: "cache_and_rewrite"
+      expected_gain: 0.20
+
+  blacklist_zones:
+    - name: "pac_irreducible"
+      condition: "pac_bound >= θ AND local_gain < 0.01"
+      strategy: "cache_only"
+      marker: "BLACK_ZONE"
+
+# Stop conditions
+stop_conditions:
+  slo_breach:
+    trigger: "any_slo_violated_3x_consecutive"
+    action:
+      - "PL_POLICY=universal"
+      - "generate_incident_report"
+      - "alert_oncall"
+
+  potential_divergence:
+    trigger: "Φ_increase > 10% over 32 ticks"
+    action:
+      - "silence_enter"
+      - "snapshot_to_chronicle"
+      - "manual_review_required"
+
+  repeated_pathology:
+    trigger: "same_alert_5x_in_100_ticks"
+    action:
+      - "emergency_recalibration"
+      - "reduce_all_gains_by_20%"
+
+# Reporting
+reporting:
+  weekly_digest:
+    metrics:
+      - "slo_compliance_percentage"
+      - "avg_width"
+      - "avg_curvature"
+      - "avg_regret"
+      - "quarantine_duty_cycle"
+      - "top_3_nf_patches"
+      - "irreducible_zones_count"
+
+  alerts:
+    channels:
+      - "observability/alerts.log"
+      - "dashboard"
+
+  export:
+    format: "markdown"
+    destination: "reports/breath-weekly.md"
