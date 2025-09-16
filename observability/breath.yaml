@@ -1,0 +1,238 @@
+# Breathing Governor Configuration
+# Controls expansion/contraction of branchial space
+
+version: "1.0"
+name: "Branchial Breathing Control"
+
+# Target ranges for healthy breathing
+targets:
+  width:
+    min: 8
+    max: 24
+    optimal: 12
+  kappa:
+    min: -0.15  # Max expansion rate
+    max: 0.20   # Max contraction rate
+    optimal: 0.02  # Slight contraction preferred
+
+# Profile weights for different modes
+gains:
+  explore: 0.7   # Discovery mode
+  exploit: 0.9   # Optimization mode
+  balance: 0.8   # Default
+
+# Breathing control actions
+actions:
+  expand:
+    trigger: "kappa < -0.15"
+    conditions:
+      - "W(t) < targets.width.max"
+      - "antichain/W < 0.7"
+    do:
+      - "profile = explore"
+      - "prefer SPLIT near low-cost tiles"
+      - "reduce MERGE priority by 20%"
+      - "enable parallel DOE scenarios"
+
+  squeeze:
+    trigger: "kappa > 0.20"
+    conditions:
+      - "W(t) > targets.width.min"
+      - "regret < 5%"
+    do:
+      - "profile = exploit"
+      - "raise MERGE priority by 30%"
+      - "enable NF-rewrites"
+      - "cache phash results aggressively"
+
+  steady:
+    trigger: "-0.15 <= kappa <= 0.20"
+    conditions:
+      - "targets.width.min <= W(t) <= targets.width.max"
+    do:
+      - "profile = balance"
+      - "maintain current routing"
+      - "standard PAC bounds"
+
+# Branch quarantine for explosion control
+quarantine:
+  triggers:
+    rapid_expansion:
+      condition: "W(t) > 2 * W(t-1)"
+      secondary: "antichain/W > 0.8"
+
+    excessive_width:
+      condition: "dW/dt > targets.width.max"
+      secondary: "ood_rate > 0.02"
+
+    cost_explosion:
+      condition: "avg_tile_cost > 2 * baseline"
+      secondary: "W(t) > targets.width.max"
+
+  actions:
+    freeze:
+      - "identify lowest-score 30% branches"
+      - "route frozen via UNIVERSAL profile for 1 tick"
+      - "re-evaluate with NF-rewrites"
+
+    prune:
+      - "mark branches with confluence < 0.1"
+      - "redirect to nearest merge point"
+      - "update antichain count"
+
+# Physiological alerts
+alerts:
+  ballooning:
+    condition: "kappa < -0.3 for 3+ ticks"
+    severity: "warning"
+    message: "Exploration overheating - too many branches"
+    action: "enable squeeze mode"
+
+  collapse:
+    condition: "kappa > 0.4 for 3+ ticks"
+    severity: "warning"
+    message: "Premature convergence risk"
+    action: "inject controlled SPLIT at low-cost nodes"
+
+  asthma:
+    condition: "|ΔW| oscillates >30% with period 2-3"
+    severity: "critical"
+    message: "Unstable thresholds detected"
+    action: "recalibrate explore/exploit gains"
+
+  apnea:
+    condition: "W=0 or antichain=0 with live input"
+    severity: "critical"
+    message: "Sensor failure or over-filtering"
+    action: "restart with UNIVERSAL profile"
+
+  embolism:
+    condition: "antichain/W → 1 at high-cost tiles"
+    severity: "warning"
+    message: "Expensive parallel branches"
+    action: "force squeeze mode"
+
+# Regret-based control loop
+control:
+  metric: "regret = L(selected) - L(optimal)"
+
+  bounds:
+    average: 3.0  # 3% average regret
+    p95: 7.0      # 7% at 95th percentile
+    max: 10.0     # Hard ceiling
+
+  adjustments:
+    high_regret:
+      condition: "regret > bounds.p95"
+      actions:
+        - "perf_weight += 0.1"
+        - "proof_weight += 0.1"
+        - "explore_weight -= 0.1"
+        - "log adjustment to receipts"
+
+    zero_regret:
+      condition: "regret ≈ 0 and kappa > 0.2"
+      actions:
+        - "enable aggressive NF-rewrites"
+        - "increase cache TTL"
+        - "mark as optimal route"
+
+# Local optimization priorities
+optimization:
+  priority_zones:
+    max_width:
+      description: "Zones with highest W(t)"
+      strategy: "aggressive branch reduction"
+      target_reduction: 0.3  # Reduce by 30%
+
+    natural_merge:
+      description: "Zones where kappa > 0"
+      strategy: "NF-rewrites + cache"
+      expected_gain: 0.2  # 20% speedup
+
+    irreducible:
+      description: "PAC >= threshold with ~0 gain"
+      strategy: "cache-only, no optimization"
+      marker: "BLACK_ZONE"
+
+# Normal form rewrites (safe transformations)
+normal_forms:
+  rules:
+    - pattern: "THEN(id, f)"
+      rewrite: "f"
+      safety: "proven"
+
+    - pattern: "SPLIT ▶ MERGE(id, id)"
+      rewrite: "id"
+      safety: "proven"
+
+    - pattern: "FOCUS ▶ FOCUS"
+      rewrite: "FOCUS'"
+      safety: "proven"
+
+    - pattern: "SCAN ▶ id"
+      rewrite: "SCAN"
+      safety: "proven"
+
+  application:
+    mode: "conservative"  # Only apply when safe
+    verification: "phash_invariant"  # Must preserve phash
+    rollback: true  # Can undo if needed
+
+# Stop conditions for safety
+stop_conditions:
+  regret_exceeded:
+    trigger: "regret > bounds.p95 for 3+ ticks"
+    action: "PL_POLICY=universal for 1 tick"
+    recovery: "recalibrate after cooldown"
+
+  repeated_asthma:
+    trigger: "asthma alert 2x consecutive"
+    action: "reset thresholds from baseline"
+    recovery: "gradual re-engagement"
+
+  width_runaway:
+    trigger: "W(t) > 2 * targets.width.max"
+    action: "emergency quarantine all branches"
+    recovery: "restart with conservative profile"
+
+# Dashboard controls
+ui_controls:
+  auto_breath:
+    type: "toggle"
+    default: true
+    indicator: "green when in target ranges"
+
+  quarantine_now:
+    type: "button"
+    action: "manual branch freeze"
+    shows: "reason badges"
+
+  show_nf_patches:
+    type: "overlay"
+    highlights: "NF rewrite locations"
+    color: "#238636"
+
+  regret_gauge:
+    type: "meter"
+    range: "0-10%"
+    zones:
+      green: "0-3%"
+      yellow: "3-7%"
+      red: "7-10%"
+
+# Metrics export
+export:
+  format: "CSV"
+  fields:
+    - "timestamp"
+    - "width"
+    - "kappa"
+    - "antichain"
+    - "regret"
+    - "profile"
+    - "quarantine_active"
+    - "nf_rewrites_count"
+
+  destination: "observability/breath-metrics.csv"
+  interval: 100  # Every 100 ticks
