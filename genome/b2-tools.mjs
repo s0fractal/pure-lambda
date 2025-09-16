@@ -66,6 +66,56 @@ function expand(phash) {
   return stored;
 }
 
+// === PNF Normalization ===
+function toPNF(graph) {
+  function normalize(node) {
+    if (!node) return null;
+
+    // Rule 1: Identity elimination
+    if (node.op === 'THEN') {
+      const left = normalize(node.left || node.l);
+      const right = normalize(node.right || node.r);
+
+      // THEN(id, f) → f
+      if (left && (left.op === 'id' || left.name === 'id')) {
+        return right;
+      }
+      // THEN(f, id) → f
+      if (right && (right.op === 'id' || right.name === 'id')) {
+        return left;
+      }
+
+      return { op: 'THEN', left, right };
+    }
+
+    // Rule 2: Split-Merge simplification
+    if (node.op === 'SPLIT') {
+      const left = normalize(node.left || node.l);
+      const right = normalize(node.right || node.r);
+
+      // Check if this leads to MERGE(id, id)
+      if (left && right &&
+          ((left.op === 'id' || left.name === 'id') &&
+           (right.op === 'id' || right.name === 'id'))) {
+        return { op: 'ATOM', name: 'id' };
+      }
+
+      return { op: 'SPLIT', left, right };
+    }
+
+    // Rule 3: Focus composition (mark for optimization)
+    if (node.op === 'THEN' &&
+        node.left && node.left.name === 'FOCUS' &&
+        node.right && node.right.name === 'FOCUS') {
+      return { op: 'ATOM', name: 'FOCUS_COMPOSED' };
+    }
+
+    return node;
+  }
+
+  return normalize(graph);
+}
+
 // === b2-verify: Check B2 laws ===
 function verify(graph) {
   const errors = [];
@@ -116,10 +166,41 @@ function verify(graph) {
 
   checkNode(graph);
 
+  // Check PNF compliance
+  function checkPNF(node) {
+    if (!node) return;
+
+    // Check for identity elimination opportunities
+    if (node.op === 'THEN') {
+      if (node.left && (node.left.op === 'id' || node.left.name === 'id')) {
+        warnings.push(`THEN(id, ${node.right?.name || node.right?.op}) can be simplified to ${node.right?.name || node.right?.op}`);
+      }
+      if (node.right && (node.right.op === 'id' || node.right.name === 'id')) {
+        warnings.push(`THEN(${node.left?.name || node.left?.op}, id) can be simplified`);
+      }
+    }
+
+    // Check for focus composition
+    if (node.op === 'THEN' &&
+        node.left && node.left.name === 'FOCUS' &&
+        node.right && node.right.name === 'FOCUS') {
+      warnings.push('FOCUS ▶ FOCUS can be optimized to FOCUS_COMPOSED');
+    }
+
+    // Recurse
+    if (node.left) checkPNF(node.left);
+    if (node.right) checkPNF(node.right);
+    if (node.l) checkPNF(node.l);
+    if (node.r) checkPNF(node.r);
+  }
+
+  checkPNF(graph);
+
   return {
     valid: errors.length === 0,
     errors,
-    warnings
+    warnings,
+    pnf_ready: warnings.length === 0
   };
 }
 
@@ -249,6 +330,30 @@ if (command === 'fold') {
     console.log(`  phash2: ${result.structural_diff.phash2}`);
   }
 
+} else if (command === 'pnf') {
+  const graph = JSON.parse(readFileSync(arg1, 'utf8'));
+  const original = fold(graph);
+  const normalized = toPNF(graph);
+  const result = fold(normalized);
+
+  console.log('🔧 Pair-Normal Form Transformation');
+  console.log(`Input: ${arg1}`);
+  console.log(`Original phash: ${original.phash}`);
+  console.log(`PNF phash: ${result.phash}`);
+  console.log(`Invariant preserved: ${original.phash === result.phash ? '✅' : '❌'}`);
+
+  // Check verification
+  const verification = verify(normalized);
+  console.log(`PNF compliance: ${verification.pnf_ready ? '✅' : '⚠️'}`);
+
+  if (verification.warnings.length > 0) {
+    console.log('Optimization opportunities:');
+    verification.warnings.forEach(w => console.log(`  • ${w}`));
+  }
+
+  // Save normalized form
+  writeFileSync(`genome/pnf-${arg1.split('/').pop()}`, JSON.stringify(normalized, null, 2));
+
 } else if (command === 'doe') {
   const scenarios = doe();
 
@@ -267,8 +372,9 @@ if (command === 'fold') {
   console.log('  b2-fold <graph.json>     - Fold graph to phash');
   console.log('  b2-expand <phash>        - Expand phash to graph');
   console.log('  b2-verify <graph.json>   - Verify B2 compliance');
+  console.log('  b2-pnf <graph.json>      - Convert to Pair-Normal Form');
   console.log('  b2-diff <g1> <g2>        - Compare two graphs');
   console.log('  b2-doe                   - Generate test scenarios');
 }
 
-export { fold, expand, verify, diff, doe };
+export { fold, expand, verify, diff, doe, toPNF };
