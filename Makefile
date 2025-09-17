@@ -370,6 +370,18 @@ loa3-check:
 	@echo "🎯 Checking LoA3 readiness..."
 	@node scripts/autonomy/promote.mjs
 
+# Safe EXPAND/CONTRACT controls (±10% limits)
+.PHONY: expand-lite contract-lite
+expand-lite:
+	@echo "🚀 Safe EXPAND (+3% epsilon)"
+	@echo '{"bandit":{"epsDelta":0.03}}' | node scripts/oracle/plan.mjs --stdin
+	@node scripts/oracle/apply.mjs
+
+contract-lite:
+	@echo "🛡️ Safe CONTRACT (-3% epsilon)"
+	@echo '{"bandit":{"epsDelta":-0.03}}' | node scripts/oracle/plan.mjs --stdin
+	@node scripts/oracle/apply.mjs
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:

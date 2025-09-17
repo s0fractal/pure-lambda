@@ -1,86 +1,12 @@
 {
-  "seeds": [
-    {
-      "name": "select",
-      "path": "seeds/garden/select.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "scan-focus",
-      "path": "seeds/garden/scan-focus.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "route-merge",
-      "path": "seeds/garden/route-merge.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "partition-merge",
-      "path": "seeds/garden/partition-merge.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "loop-lite",
-      "path": "seeds/garden/loop-lite.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "hello-city",
-      "path": "seeds/garden/hello-city.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "focus-delay",
-      "path": "seeds/garden/focus-delay.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "branch-stress",
-      "path": "seeds/garden/branch-stress.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
-    {
-      "name": "bounded-delay",
-      "path": "seeds/garden/bounded-delay.json",
-      "metrics": {
-        "trust": 98.5,
-        "conformance": 96.2,
-        "novelty": 0.42
-      }
-    },
+  "timestamp": "2025-09-17T18:50:50.723Z",
+  "criteria": {
+    "trust": 98,
+    "conf": 95,
+    "novelty": 0.4,
+    "window": "72h"
+  },
+  "graduates": [
     {
       "name": "select-tee-conditional",
       "path": "seeds/garden/select-tee-conditional.json",
@@ -226,5 +152,6 @@
       }
     }
   ],
-  "updated": "2025-09-17T18:50:50.721Z"
+  "total_core_seeds": 25,
+  "hash": "5ec90d0560fc700e"
 }
