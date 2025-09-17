@@ -1,0 +1,66 @@
+name: expand-lite
+on:
+  schedule:
+    # Run 4 times daily after autopilot runs
+    - cron: "15 7,11,16,20 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (check only, no apply)'
+        type: boolean
+        default: false
+
+jobs:
+  expand-check:
+    runs-on: ubuntu-latest
+    outputs:
+      gate_status: ${{ steps.gate.outputs.status }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install minimal deps
+        run: npm ci --omit=dev || true
+
+      - name: Check gate status
+        id: gate
+        run: |
+          node -e 'let d=require("./reports/dashboard/latest.json");
+          let cov=(d.coverage?.patternsCovered??Object.keys(d.coverage||{}).length)===12;
+          let ok=( (d.metrics?.trust??d.trust)>=96 && (d.metrics?.dsse??d.dsse)===100 &&
+                   (d.quality?.dedupeBlocks24h??d.dedupeBlocks24h)<=1 &&
+                   (d.metrics?.burn??d.burn)<2 && (d.autonomy?.level??d.loa)===2 && cov);
+          console.log(ok?"GO":"HOLD");
+          process.exit(ok?0:1)' || echo "status=hold" >> $GITHUB_OUTPUT
+          echo "status=go" >> $GITHUB_OUTPUT
+
+  expand-apply:
+    needs: expand-check
+    if: needs.expand-check.outputs.gate_status == 'go' && github.event.inputs.dry_run != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Apply safe EXPAND
+        run: node scripts/oracle/green-gate.mjs
+        env:
+          PL_ED25519_SECRET: ${{ secrets.PL_ED25519_SECRET }}
+
+      - name: Commit state update
+        if: success()
+        run: |
+          git config --global user.name "expand-lite[bot]"
+          git config --global user.email "expand-lite[bot]@users.noreply.github.com"
+          git add state/eps-applied.json receipts/ops/
+          git commit -m "🤖 Auto-EXPAND: +3% epsilon (green gate passed)" || true
+          git push || true

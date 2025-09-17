@@ -371,7 +371,11 @@ loa3-check:
 	@node scripts/autonomy/promote.mjs
 
 # Safe EXPAND/CONTRACT controls (±10% limits)
-.PHONY: expand-lite contract-lite
+.PHONY: expand-lite contract-lite expand-lite-auto
+expand-lite-auto:
+	@echo "🤖 Auto-EXPAND with green gate check"
+	@node scripts/oracle/green-gate.mjs
+
 expand-lite:
 	@echo "🚀 Safe EXPAND (+3% epsilon)"
 	@echo '{"bandit":{"epsDelta":0.03}}' | node scripts/oracle/plan.mjs --stdin
