@@ -640,3 +640,24 @@ snapshot-offline:
 	cp docs/status/daily.md dist/offline/ 2>/dev/null || echo "⚠️ No daily digest found"
 	@echo "✅ Offline package ready in dist/offline/"
 	@ls -la dist/offline/
+
+# Quality monitoring targets
+dedupe-quality:
+	@echo "🔍 Analyzing dedupe quality..."
+	node scripts/monitor/dedupe-quality.mjs report
+
+coverage-badge:
+	@echo "📊 Generating coverage badge..."
+	node scripts/monitor/coverage-badge.mjs
+
+red-lane:
+	@echo "🔴 Running red lane simulator..."
+	node scripts/monitor/red-lane-simulator.mjs
+
+expand-check:
+	@echo "🚀 EXPAND mode readiness check..."
+	@node scripts/fed/trust.mjs --print | grep "Trust Score" | head -1
+	@node scripts/monitor/dedupe-quality.mjs report | grep "Quality Scores" -A2
+	@node scripts/monitor/coverage-badge.mjs | grep "Coverage Summary" -A1
+	@echo ""
+	@echo "✅ Ready for EXPAND if all metrics green"
