@@ -368,7 +368,15 @@ shadow-monitor:
 
 loa3-check:
 	@echo "🎯 Checking LoA3 readiness..."
-	@node scripts/autonomy/promote.mjs
+	@node scripts/autonomy/promote-loa3.mjs --check
+
+loa3-promote:
+	@echo "🚀 Promoting to LoA3..."
+	@node scripts/autonomy/promote-loa3.mjs --apply
+
+loa3-demote:
+	@echo "⬇️ Demoting from LoA3..."
+	@node scripts/autonomy/promote-loa3.mjs --demote
 
 # Safe EXPAND/CONTRACT controls (±10% limits)
 .PHONY: expand-lite contract-lite expand-lite-auto

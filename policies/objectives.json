@@ -1,0 +1,58 @@
+{
+  "targets": {
+    "novelty.median": {
+      "min": 0.38,
+      "weight": 0.3,
+      "description": "Maintain high novelty for diversity"
+    },
+    "coverage.full": {
+      "value": true,
+      "weight": 0.2,
+      "description": "Keep 12/12 pattern coverage"
+    },
+    "burn.breath_1h": {
+      "max": 1.5,
+      "weight": 0.2,
+      "description": "Stay under 1.5x burn rate"
+    },
+    "trust.score": {
+      "min": 96.2,
+      "weight": 0.3,
+      "description": "Maintain trust above hysteresis ON threshold"
+    }
+  },
+  "constraints": {
+    "dedupe.blocks24h": {
+      "max": 1,
+      "critical": true
+    },
+    "ttq": {
+      "max": 30,
+      "critical": true
+    },
+    "regret.avg": {
+      "max": 3,
+      "critical": false
+    },
+    "regret.p95": {
+      "max": 7,
+      "critical": false
+    }
+  },
+  "escalation": {
+    "trust_drop": {
+      "threshold": 95.5,
+      "action": "contract"
+    },
+    "burn_spike": {
+      "threshold": 2.0,
+      "action": "hold"
+    },
+    "bio_incident": {
+      "threshold": 1,
+      "action": "freeze"
+    }
+  },
+  "version": "1.0.0",
+  "updated": "2025-09-17T20:16:00Z"
+}

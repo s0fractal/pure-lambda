@@ -1,6 +1,6 @@
 {
   "day": "D2",
-  "timestamp": "2025-09-17T18:50:19.307Z",
+  "timestamp": "2025-09-17T20:14:25.858Z",
   "seeds": {
     "valid": 0,
     "total": 0,
@@ -37,8 +37,8 @@
     "status": "✅"
   },
   "coverage": {
-    "patterns": "11/12",
-    "percentage": 91.7,
+    "patterns": "12/12",
+    "percentage": 100,
     "status": "✅",
     "matrix": [
       {
@@ -103,9 +103,9 @@
       },
       {
         "pattern": "merge-proof",
-        "count": 0,
-        "status": "🔴",
-        "boost": true
+        "count": 1,
+        "status": "✅",
+        "boost": false
       },
       {
         "pattern": "branch-stress",
@@ -134,7 +134,7 @@
     "trust_1h": 0.8,
     "dsse_1h": 0.5,
     "breath_1h": 1.2,
-    "timestamp": "2025-09-17T18:50:19.306Z",
+    "timestamp": "2025-09-17T20:14:25.856Z",
     "window": "1h",
     "samples": {
       "trust": 100,

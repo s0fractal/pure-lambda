@@ -105,17 +105,17 @@ if (appliedPlus >= 0.06 && process.env.GOV_OVERRIDE !== "1") {
 // Read current metrics with multiple fallbacks (already read d above)
 const patterns = d.coverage?.patterns ?? d.coverage?.patternsCovered ?? 0;
 const cov12 = patterns === "12/12" || patterns === 12 || (d.coverage?.percentage ?? 0) === 100;
-const trust = d.metrics?.trust ?? d.trust?.score ?? d.trust ?? 0;
-const dsse  = d.metrics?.dsse ?? d.dsse?.coverage ?? d.dsse ?? 0;
+const trust = d.metrics?.trust ?? d.trust?.current ?? d.trust?.score ?? 0;
+const dsse  = d.metrics?.dsse ?? d.dsse?.current ?? d.dsse?.coverage ?? 0;
 const burn  = d.metrics?.burn ?? d.burn?.breath_1h ?? d.burn ?? 9;
-const dedupe = d.quality?.dedupeBlocks24h ?? d.dedupe?.blocks24h ?? d.dedupeBlocks24h ?? 99;
+const dedupe = d.decision?.guardrails?.dedupe_blocks ?? d.quality?.dedupeBlocks24h ?? d.dedupe?.blocks24h ?? 99;
 const loa   = d.autonomy?.level ?? d.loa ?? readJson("reports/dashboard/latest.json.autonomy", {}).loa ?? 0;
 
 // Hysteresis for trust to prevent flapping
 const trustOk = trust >= TRUST_ON;
 
 // Safety conditions
-const healthy = trustOk && (dsse === 100) && (dedupe <= 1) && (burn < 2) && cov12 && (loa === 2);
+const healthy = trustOk && (dsse === 100) && (dedupe <= 1) && (burn < 2) && cov12 && (loa >= 2);
 
 console.log("🔍 Green Gate Check");
 console.log(`   Coverage 12/12: ${cov12 ? "✅" : "❌"}`);
@@ -123,7 +123,7 @@ console.log(`   Trust ≥96%: ${trust >= 96 ? "✅" : "❌"} (${trust}%)`);
 console.log(`   DSSE 100%: ${dsse === 100 ? "✅" : "❌"} (${dsse}%)`);
 console.log(`   Dedupe ≤1: ${dedupe <= 1 ? "✅" : "❌"} (${dedupe})`);
 console.log(`   Burn <2x: ${burn < 2 ? "✅" : "❌"} (${burn}x)`);
-console.log(`   LoA =2: ${loa === 2 ? "✅" : "❌"} (${loa})`);
+console.log(`   LoA ≥2: ${loa >= 2 ? "✅" : "❌"} (${loa})`);
 
 if (!healthy) {
   console.log("⏸️  HOLD: Gate not green - waiting for all conditions");
@@ -132,7 +132,7 @@ if (!healthy) {
                  dedupe > 1 ? "dedupe blocks exceeded" :
                  burn >= 2 ? "burn rate high" :
                  !cov12 ? "coverage incomplete" :
-                 loa !== 2 ? "LoA not 2" : "conditions not met";
+                 loa < 2 ? "LoA below 2" : "conditions not met";
   writeGateStatus("HOLD", reason, null, appliedPlus);
   process.exit(0);
 }
