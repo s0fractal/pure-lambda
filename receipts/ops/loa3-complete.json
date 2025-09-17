@@ -1,0 +1,49 @@
+{
+  "kind": "loa3/complete",
+  "ts": "2025-09-17T20:27:34Z",
+  "summary": "LoA3 promotion complete with all safety systems operational",
+  "achievements": {
+    "promotion": "LoA2 → LoA3",
+    "coverage": "11/12 → 12/12",
+    "gate": "6/6 conditions GREEN",
+    "canary": "2-stage expansion validated",
+    "safety": "all guardrails active"
+  },
+  "metrics": {
+    "trust": 96.3,
+    "dsse": 100,
+    "burn": 1.2,
+    "ttq": 0,
+    "dedupe": 0,
+    "regret_avg": 2.1,
+    "regret_p95": 5.2,
+    "shadow_hit_rate": 90,
+    "canary_success": 100
+  },
+  "configuration": {
+    "level": 3,
+    "apply": true,
+    "mode": "guarded",
+    "hysteresis": "96.2/95.5",
+    "limits": "±10% total, +6%/24h",
+    "cooldown": "6h"
+  },
+  "artifacts": [
+    "policies/autonomy.toml",
+    "policies/objectives.json",
+    "docs/announce-loa3.md",
+    "ops/loa3-checklist.md",
+    "reports/loa3-status.md"
+  ],
+  "next_actions": [
+    "Execute canary +1% when ready",
+    "Monitor 30min stability",
+    "Post-verify and proceed to +2% if PASS",
+    "Daily rituals for continuous monitoring"
+  ],
+  "evidence": {
+    "policy_hash": "20ce88a87d8d449ed9eed5d816f6eab1b1e7dec51c09a19027b488b6b5196ebe",
+    "dashboard_hash": "55c2a6701e6be07296577cfa45214500bdc7fe6cd55dc50248780d792fd3336e",
+    "objectives_hash": "127a40c03daa2b91f62b4a391c34dbb493810131442dd0a9d21ad842b90aaf52"
+  }
+}

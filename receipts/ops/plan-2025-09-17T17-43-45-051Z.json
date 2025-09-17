@@ -1,0 +1,35 @@
+{
+  "kind": "oracle-plan",
+  "version": 1,
+  "plan": {
+    "mode": "STABLE",
+    "eps": 0.07,
+    "actions": [
+      {
+        "type": "governor.set",
+        "mode": "STABLE",
+        "eps": 0.07
+      }
+    ],
+    "reason": {
+      "trust": 96.3,
+      "dsse": 100,
+      "nov": 0.35,
+      "breath": 1.2,
+      "burn": 1.2,
+      "dedupe": 0,
+      "loa": 2
+    }
+  },
+  "expected": {
+    "deltaL": -0.001,
+    "risk": "low"
+  },
+  "guards": [
+    "BIOLOCK",
+    "SLO",
+    "REDLANE"
+  ],
+  "ts": "2025-09-17T17:43:45.051Z",
+  "subjectHash": "7988ded5b1e00e6c3303bbc6f564e9563c4ebb8107a3fe2efde03161f486730f"
+}

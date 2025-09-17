@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hall of Seeds - Pure Lambda</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter {
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter:hover, .filter.active {
+      background: #667eea;
+      color: white;
+    }
+    .patterns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .pattern-group {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .pattern-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+    .seed {
+      background: #f7f7f7;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .seed-name {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .metrics {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .btn {
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .btn-verify { background: #48bb78; color: white; }
+    .btn-bench { background: #4299e1; color: white; }
+    .btn-contribute { background: #ed8936; color: white; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .stats {
+      text-align: center;
+      color: white;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏛️ Hall of Seeds</h1>
+
+    <div class="filters">
+      <div class="filter active" data-filter="all">All Patterns</div>
+      <div class="filter" data-filter="trust">High Trust (≥98%)</div>
+      <div class="filter" data-filter="novelty">High Novelty (≥0.4)</div>
+    </div>
+
+    <div class="patterns">
+      
+          <div class="pattern-group">
+            <div class="pattern-title">select-focus</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">scan-metrics</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+        <div class="pattern-group" data-pattern="bounded-delay">
+          <div class="pattern-title">bounded-delay</div>
+          
+            <div class="seed" data-trust="98.79990568818098" data-novelty="0.3078377187546662">
+              <div class="seed-name">bounded-delay</div>
+              <div class="metrics">
+                <span>Trust: 98.8%</span>
+                <span>Novelty: 0.31</span>
+              </div>
+              <div class="metrics">
+                <span>Nodes: 0</span>
+                <span>Edges: 0</span>
+              </div>
+              <div class="buttons">
+                <button class="btn btn-verify" onclick="verify('bounded-delay.json')">Verify</button>
+                <button class="btn btn-bench" onclick="bench('bounded-delay.json')">Bench</button>
+                <button class="btn btn-contribute" onclick="contribute('bounded-delay')">Contribute</button>
+              </div>
+            </div>
+          
+        </div>
+          <div class="pattern-group">
+            <div class="pattern-title">partition-rr</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">route-audit</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">split-metric-select</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">delay-scan-smoother</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">select-tee</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">bounded-partition</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">merge-proof-lite</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+          <div class="pattern-group">
+            <div class="pattern-title">merge-proof</div>
+            <div class="seed">
+              <div style="color: #999; text-align: center; padding: 2rem;">
+                No canonical seeds yet
+              </div>
+            </div>
+          </div>
+        <div class="pattern-group" data-pattern="branch-stress">
+          <div class="pattern-title">branch-stress</div>
+          
+            <div class="seed" data-trust="96.1197091924383" data-novelty="0.32867434988217215">
+              <div class="seed-name">branch-stress</div>
+              <div class="metrics">
+                <span>Trust: 96.1%</span>
+                <span>Novelty: 0.33</span>
+              </div>
+              <div class="metrics">
+                <span>Nodes: 0</span>
+                <span>Edges: 0</span>
+              </div>
+              <div class="buttons">
+                <button class="btn btn-verify" onclick="verify('branch-stress.json')">Verify</button>
+                <button class="btn btn-bench" onclick="bench('branch-stress.json')">Bench</button>
+                <button class="btn btn-contribute" onclick="contribute('branch-stress')">Contribute</button>
+              </div>
+            </div>
+          
+        </div>
+    </div>
+
+    <div class="stats">
+      <p>Total Seeds: 2 | Patterns: 2/12</p>
+      <p>Generated: 2025-09-17T16:55:29.848Z</p>
+    </div>
+  </div>
+
+  <script>
+    function verify(file) {
+      window.open('/docs/verify/index.html?seed=' + file, '_blank');
+    }
+
+    function bench(file) {
+      alert('Benchmarking ' + file + '\n\nRun: make bench SEED=' + file);
+    }
+
+    function contribute(pattern) {
+      window.open('https://github.com/anthropics/pure-lambda/issues/new?title=Seed+for+' + pattern, '_blank');
+    }
+
+    // Filter functionality
+    document.querySelectorAll('.filter').forEach(filter => {
+      filter.addEventListener('click', () => {
+        document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+        filter.classList.add('active');
+
+        const filterType = filter.dataset.filter;
+        document.querySelectorAll('.seed').forEach(seed => {
+          if (filterType === 'all') {
+            seed.style.display = 'block';
+          } else if (filterType === 'trust') {
+            seed.style.display = parseFloat(seed.dataset.trust) >= 98 ? 'block' : 'none';
+          } else if (filterType === 'novelty') {
+            seed.style.display = parseFloat(seed.dataset.novelty) >= 0.4 ? 'block' : 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

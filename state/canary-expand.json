@@ -1,0 +1,15 @@
+{
+  "step": 0,
+  "startedAt": 1758136792998,
+  "lastApply": null,
+  "baselineMetrics": {
+    "trust": 0,
+    "dsse": 0,
+    "burn": 1.2,
+    "ttq": 0,
+    "dedupe": 0,
+    "regret": 100,
+    "timestamp": "2025-09-17T18:50:19.307Z"
+  },
+  "appliedDeltas": []
+}

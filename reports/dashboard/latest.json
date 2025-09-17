@@ -1,0 +1,186 @@
+{
+  "day": "D2",
+  "timestamp": "2025-09-17T20:14:25.858Z",
+  "seeds": {
+    "valid": 0,
+    "total": 0,
+    "target": 100,
+    "dailyTarget": 15,
+    "progress": 0,
+    "progressVsTarget": 0
+  },
+  "trust": {
+    "current": 96.3,
+    "target": 95,
+    "status": "✅"
+  },
+  "dsse": {
+    "current": 100,
+    "target": 98,
+    "status": "✅"
+  },
+  "sla": {
+    "p95Response": 12,
+    "target": 24,
+    "status": "✅"
+  },
+  "novelty": {
+    "median": 0.35,
+    "target": 0.3,
+    "status": "✅"
+  },
+  "dedupe": {
+    "precision": "100.0",
+    "recall": "100.0",
+    "flagged": 0,
+    "confirmed": 0,
+    "status": "✅"
+  },
+  "coverage": {
+    "patterns": "12/12",
+    "percentage": 100,
+    "status": "✅",
+    "matrix": [
+      {
+        "pattern": "select-focus",
+        "count": 6,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "scan-metrics",
+        "count": 2,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "bounded-delay",
+        "count": 17,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "partition-rr",
+        "count": 6,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "route-audit",
+        "count": 2,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "split-metric-select",
+        "count": 9,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "delay-scan-smoother",
+        "count": 3,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "select-tee",
+        "count": 2,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "bounded-partition",
+        "count": 2,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "merge-proof-lite",
+        "count": 2,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "merge-proof",
+        "count": 1,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "branch-stress",
+        "count": 11,
+        "status": "✅",
+        "boost": false
+      }
+    ],
+    "thinPatterns": [
+      "merge-proof"
+    ],
+    "boost": [
+      "merge-proof"
+    ]
+  },
+  "defense": {
+    "redLaneSuccess": 100,
+    "ttq": 0,
+    "status": "✅"
+  },
+  "field": {
+    "receipts": 5,
+    "runs": 11
+  },
+  "burn": {
+    "trust_1h": 0.8,
+    "dsse_1h": 0.5,
+    "breath_1h": 1.2,
+    "timestamp": "2025-09-17T20:14:25.856Z",
+    "window": "1h",
+    "samples": {
+      "trust": 100,
+      "dsse": 100,
+      "breath": 50
+    }
+  },
+  "anomalies": {
+    "novelty": {
+      "current": 0.35,
+      "ewma": 0.35,
+      "zscore": 0.1,
+      "anomaly": false
+    },
+    "precision": {
+      "current": 1,
+      "ewma": 1,
+      "zscore": 0.2,
+      "anomaly": false
+    },
+    "recall": {
+      "current": 1,
+      "ewma": 1,
+      "zscore": 0.1,
+      "anomaly": false
+    },
+    "alert": false
+  },
+  "heartbeat": {
+    "prevEnvelopeHash": null,
+    "carCID": null
+  },
+  "risks": [
+    "📉 Seed velocity below 50% target"
+  ],
+  "decision": {
+    "mode": "STABLE",
+    "reasons": [
+      "metrics in transition zone"
+    ],
+    "guardrails": {
+      "trust": 96.3,
+      "dsse": 100,
+      "novelty": 0.35,
+      "breath_burn": 1.2,
+      "dedupe_blocks": 0
+    }
+  }
+}

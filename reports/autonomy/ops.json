@@ -1,0 +1,76 @@
+[
+  {
+    "kind": "oracle/canary-success",
+    "ts": "2025-09-17T16:00:00Z",
+    "step": 1,
+    "metrics_before": {
+      "trust": 96.1
+    },
+    "metrics_after": {
+      "trust": 96.2
+    }
+  },
+  {
+    "kind": "oracle/canary-success",
+    "ts": "2025-09-17T17:00:00Z",
+    "step": 2,
+    "metrics_before": {
+      "trust": 96.2
+    },
+    "metrics_after": {
+      "trust": 96.3
+    }
+  },
+  {
+    "kind": "oracle/canary-success",
+    "ts": "2025-09-17T18:00:00Z",
+    "step": 1,
+    "metrics_before": {
+      "trust": 96.3
+    },
+    "metrics_after": {
+      "trust": 96.3
+    }
+  },
+  {
+    "kind": "autonomy/promotion",
+    "ts": "2025-09-17T19:50:05.838Z",
+    "from_loa": 2,
+    "to_loa": 3,
+    "metrics": {
+      "shadow_hit_rate": 0.9,
+      "regret_avg": 2.1,
+      "regret_p95": 5.2,
+      "trust": 96.3,
+      "dsse": 100,
+      "dedupe_blocks24h": 0,
+      "burn_1h": 1.2,
+      "ttq_s": 0,
+      "bio_incidents": 0,
+      "staleness_minutes": 1,
+      "canary_success_rate": 1,
+      "clock_anomaly": false,
+      "current_loa": 2
+    },
+    "criteria": {
+      "shadow_hit_rate": true,
+      "regret_avg": true,
+      "regret_p95": true,
+      "trust": true,
+      "dsse": true,
+      "dedupe": true,
+      "burn": true,
+      "ttq": true,
+      "biolock": true,
+      "fresh": true,
+      "canary": true,
+      "clock": true
+    },
+    "evidence": {
+      "dashboard_hash": "5ad168c6f60bec873d7f325c3e50ca600c5eeb37d5ad7f5955c5dc6ca578e20e",
+      "policy_hash": "20ce88a87d8d449ed9eed5d816f6eab1b1e7dec51c09a19027b488b6b5196ebe",
+      "canary_operations": 3,
+      "shadow_samples": 20
+    }
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "name": "select-tee-conditional",
+  "description": "Conditional duplication with select-tee",
+  "version": 1,
+  "xidv2": "e5f67890123456789012345678901234def01234",
+  "nodes": [
+    { "id": 0, "op": "ENTER", "config": {} },
+    { "id": 1, "op": "SELECT", "config": { "field": "priority", "operator": ">", "value": 5 } },
+    { "id": 2, "op": "TEE", "config": { "copies": 2, "async": false } },
+    { "id": 3, "op": "TRANSFORM", "config": { "type": "upper" } },
+    { "id": 4, "op": "TRANSFORM", "config": { "type": "hash" } },
+    { "id": 5, "op": "MERGE", "config": { "strategy": "first" } },
+    { "id": 6, "op": "EXIT", "config": {} }
+  ],
+  "edges": [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [2, 4],
+    [3, 5],
+    [4, 5],
+    [5, 6]
+  ],
+  "constraints": {
+    "maxNodes": 100,
+    "maxEdges": 200,
+    "maxLatency": 100
+  },
+  "metadata": {
+    "pattern": "select-tee",
+    "novelty": 0.40,
+    "trust": 98,
+    "conformance": 97
+  }
+}

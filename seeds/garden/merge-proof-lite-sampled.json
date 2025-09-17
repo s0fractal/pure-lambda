@@ -1,0 +1,29 @@
+{
+  "name": "merge-proof-lite@sampled",
+  "pattern": "merge-proof-lite",
+  "version": 1,
+  "xidv2": "cdef0123456789012345678901234567890123456",
+  "params": {
+    "proof_type": "sampled",
+    "sample_rate": 0.1,
+    "deep_verify": true,
+    "fast_path": true
+  },
+  "nodes": [
+    { "id": 0, "op": "ENTER" },
+    { "id": 1, "op": "SAMPLE", "config": { "rate": 0.1 } },
+    { "id": 2, "op": "BRANCH", "config": { "condition": "sampled" } },
+    { "id": 3, "op": "PROOF_DEEP", "config": { "full": true } },
+    { "id": 4, "op": "PROOF_LITE", "config": { "fast": true } },
+    { "id": 5, "op": "MERGE", "config": { "mode": "first" } },
+    { "id": 6, "op": "ATTEST", "config": { "level": "lite" } },
+    { "id": 7, "op": "EXIT" }
+  ],
+  "edges": [[0,1], [1,2], [2,3], [2,4], [3,5], [4,5], [5,6], [6,7]],
+  "attestation": {},
+  "metadata": {
+    "novelty": 0.46,
+    "trust": 98,
+    "conformance": 96
+  }
+}

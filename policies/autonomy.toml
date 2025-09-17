@@ -1,0 +1,42 @@
+# Autonomy Policy - Controls LoA levels and promotion/demotion criteria
+
+[current]
+level = 3              # Current LoA level (will update to 3 after promotion)
+apply = true          # LoA2: plan but don't auto-apply
+mode = "guarded"        # shadow | guarded | autonomous
+
+[target]
+level = 3
+apply_mode = "guarded"    # Only through planner with limits
+max_epsilon = 0.12        # Upper bound for ε-explore
+cooldown_hours = 6
+canary = true            # Use canary expansion
+
+[promote.thresholds]
+shadow_hit_rate = 0.85    # Oracle shadow mode accuracy
+regret_avg_max = 0.03     # Max 3% average regret
+regret_p95_max = 0.07     # Max 7% p95 regret
+trust_min = 0.962         # Min trust score (hysteresis ON)
+dsse_coverage = 1.0       # Full DSSE coverage required
+dedupe_blocks24h_max = 1  # Max dedupe blocks per 24h
+burn_1h_max = 1.5        # Max burn rate
+ttq_s_max = 30           # Max time to quarantine (seconds)
+bio_incidents = 0        # Zero BIOLOCK incidents
+staleness_minutes_max = 30 # Max metrics age
+canary_success_rate = 0.9 # Min canary success rate
+
+[demote.triggers]
+trust_below = 0.955      # Hysteresis OFF threshold
+dsse_below = 1.0         # Any DSSE loss
+burn_over = 2.0          # 2x burn rate
+ttq_over_s = 60          # TTQ >60s
+regret_over = 0.05       # Regret >5%
+incidents_over = 0       # Any BIOLOCK incident
+clock_anomaly = true     # Time issues detected
+
+[history]
+last_promotion = ""      # ISO timestamp of last promotion
+last_demotion = ""       # ISO timestamp of last demotion
+promotion_count = 0      # Total successful promotions
+demotion_count = 0       # Total demotions
+current_since = ""       # When current level was set

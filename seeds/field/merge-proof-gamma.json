@@ -1,0 +1,56 @@
+{
+  "name": "merge-proof-gamma",
+  "pattern": "merge-proof",
+  "version": "1.0.0",
+  "xid": "xid-v2-merge-proof-gamma-2025-09-17",
+  "timestamp": "2025-09-17T20:01:00Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": ["merge", "proof", "coverage"],
+    "priority": 98,
+    "novelty": 0.41,
+    "entropy": 0.12
+  },
+  "tiles": [
+    {"id": "t1", "type": "merge", "weight": 0.3},
+    {"id": "t2", "type": "proof", "weight": 0.4},
+    {"id": "t3", "type": "validate", "weight": 0.3}
+  ],
+  "nodes": [
+    {"id": "n1", "tile": "t1", "params": {"threshold": 0.88}},
+    {"id": "n2", "tile": "t2", "params": {"depth": 5}},
+    {"id": "n3", "tile": "t3", "params": {"strict": true}}
+  ],
+  "edges": [
+    {"from": "n1", "to": "n2", "weight": 0.8},
+    {"from": "n2", "to": "n3", "weight": 0.9}
+  ],
+  "configuration": {
+    "merge_strategy": "proof-of-work",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "merkle_tree": true,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.88,
+    "window": 600,
+    "epsilon": 0.11,
+    "tau": 1.5,
+    "gamma": 0.95,
+    "beta": 0.25
+  },
+  "constraints": {
+    "max_latency_ms": 200,
+    "min_accuracy": 0.96,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "TWVyZ2UtcHJvb2YgZ2FtbWEgY292ZXJhZ2Ugc2VlZCB3aXRoIGhpZ2ggbm92ZWx0eQ==",
+    "checksum": "sha256:9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "simulation": "canary-expansion",
+  "ts": "2025-09-17T20:15:00Z",
+  "stage1": {
+    "delta": "+1.0%",
+    "status": "would_apply",
+    "gate": "GREEN",
+    "conditions": {
+      "coverage": "12/12",
+      "trust": "96.3%",
+      "dsse": "100%",
+      "dedupe": "0/24h",
+      "burn": "1.2x",
+      "loa": "3"
+    }
+  },
+  "observation": "30min",
+  "stage2": {
+    "delta": "+2.0%",
+    "status": "pending_stability_check"
+  },
+  "safety": {
+    "auto_rollback": "enabled",
+    "hysteresis": "96.2/95.5",
+    "cooldown": "6h",
+    "limits": "±10% total, +6%/24h"
+  }
+}

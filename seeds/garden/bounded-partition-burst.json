@@ -1,0 +1,27 @@
+{
+  "name": "bounded-partition@burst-guard",
+  "pattern": "bounded-partition",
+  "version": 1,
+  "xidv2": "89abcdef012345678901234567890123456789012",
+  "params": {
+    "burst_window": 100,
+    "epsilon": 0.1,
+    "hard_cap": 5000,
+    "recovery_time": 500
+  },
+  "nodes": [
+    { "id": 0, "op": "ENTER" },
+    { "id": 1, "op": "BOUNDED", "config": { "size": 5000, "burst": true, "epsilon": 0.1 } },
+    { "id": 2, "op": "PARTITION", "config": { "mode": "dynamic", "rebalance": true } },
+    { "id": 3, "op": "GUARD", "config": { "type": "burst", "window": 100 } },
+    { "id": 4, "op": "RECOVER", "config": { "time": 500 } },
+    { "id": 5, "op": "EXIT" }
+  ],
+  "edges": [[0,1], [1,2], [2,3], [3,4], [4,5]],
+  "attestation": {},
+  "metadata": {
+    "novelty": 0.44,
+    "trust": 98,
+    "conformance": 95
+  }
+}

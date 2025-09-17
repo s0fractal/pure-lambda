@@ -331,6 +331,91 @@ clean:
 	@rm -f dist/embassy.zip
 	@echo "Clean complete"
 
+# --- UI & Showcase targets ---
+.PHONY: showcase showcase-build prompt-studio habitat contributors
+showcase-build:
+	@echo "🎨 Building seed showcase..."
+	@node scripts/ui/build-showcase.mjs
+
+showcase: showcase-build
+	@echo "📊 Showcase ready at docs/showcase/index.html"
+	@open docs/showcase/index.html 2>/dev/null || echo "  Open manually: file://$(PWD)/docs/showcase/index.html"
+
+prompt-studio:
+	@echo "🤖 Prompt Studio ready at docs/prompt-studio/index.html"
+	@open docs/prompt-studio/index.html 2>/dev/null || echo "  Open manually: file://$(PWD)/docs/prompt-studio/index.html"
+
+habitat:
+	@echo "🏠 LLM Habitat ready at docs/habitat/index.html (OFF by default)"
+	@open docs/habitat/index.html 2>/dev/null || echo "  Open manually: file://$(PWD)/docs/habitat/index.html"
+
+contributors:
+	@echo "🏆 Generating contributor rankings..."
+	@node scripts/contrib/contrib.mjs
+
+ui-all: showcase-build contributors
+	@echo "✨ All UI targets built"
+
+# Go-Live Monitoring
+.PHONY: go-live shadow-monitor loa3-check
+go-live:
+	@echo "🚀 Pure Lambda Go-Live Dashboard"
+	@node scripts/monitor/go-live.mjs
+
+shadow-monitor:
+	@echo "👤 Shadow mode monitoring..."
+	@node scripts/autonomy/shadow.mjs
+
+loa3-check:
+	@echo "🎯 Checking LoA3 readiness..."
+	@node scripts/autonomy/promote-loa3.mjs --check
+
+loa3-promote:
+	@echo "🚀 Promoting to LoA3..."
+	@node scripts/autonomy/promote-loa3.mjs --apply
+
+loa3-demote:
+	@echo "⬇️ Demoting from LoA3..."
+	@node scripts/autonomy/promote-loa3.mjs --demote
+
+# Safe EXPAND/CONTRACT controls (±10% limits)
+.PHONY: expand-lite contract-lite expand-lite-auto
+expand-lite-auto:
+	@echo "🤖 Auto-EXPAND with green gate check"
+	@node scripts/oracle/green-gate.mjs
+
+expand-lite:
+	@echo "🚀 Safe EXPAND (+3% epsilon)"
+	@echo '{"bandit":{"epsDelta":0.03}}' | node scripts/oracle/plan.mjs --stdin
+	@node scripts/oracle/apply.mjs
+
+contract-lite:
+	@echo "🛡️ Safe CONTRACT (-3% epsilon)"
+	@echo '{"bandit":{"epsDelta":-0.03}}' | node scripts/oracle/plan.mjs --stdin
+	@node scripts/oracle/apply.mjs
+
+# Metrics refresh for gate decisions
+.PHONY: metrics-refresh
+metrics-refresh:
+	@echo "🔄 One-shot metrics refresh"
+	@node scripts/ops/refresh.mjs
+
+# Chaos drill for testing expand/rollback
+.PHONY: drill-expand
+drill-expand:
+	@echo "🎯 Running EXPAND chaos drill"
+	@node scripts/drills/expand-chaos.mjs
+
+# Canary expansion and post-verification
+.PHONY: expand-canary postverify
+expand-canary:
+	@echo "🐤 Canary EXPAND (gradual +1% → +2%)"
+	@EXPAND_MODE=canary node scripts/oracle/green-gate.mjs
+
+postverify:
+	@echo "🔍 Post-EXPAND verification"
+	@node scripts/oracle/postverify.mjs
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:
@@ -640,3 +725,161 @@ snapshot-offline:
 	cp docs/status/daily.md dist/offline/ 2>/dev/null || echo "⚠️ No daily digest found"
 	@echo "✅ Offline package ready in dist/offline/"
 	@ls -la dist/offline/
+
+# Quality monitoring targets
+dedupe-quality:
+	@echo "🔍 Analyzing dedupe quality..."
+	node scripts/monitor/dedupe-quality.mjs report
+
+coverage-badge:
+	@echo "📊 Generating coverage badge..."
+	node scripts/monitor/coverage-badge.mjs
+
+red-lane:
+	@echo "🔴 Running red lane simulator..."
+	node scripts/monitor/red-lane-simulator.mjs
+
+expand-check:
+	@echo "🚀 EXPAND mode readiness check..."
+	@node scripts/fed/trust.mjs --print | grep "Trust Score" | head -1
+	@node scripts/monitor/dedupe-quality.mjs report | grep "Quality Scores" -A2
+	@node scripts/monitor/coverage-badge.mjs | grep "Coverage Summary" -A1
+	@echo ""
+	@echo "✅ Ready for EXPAND if all metrics green"
+
+dashboard:
+	@echo "📊 D2→D7 Dashboard Update"
+	@node scripts/monitor/dashboard.mjs
+
+# Impact & Quality Lifecycle
+impact:
+	@echo "🌱 Calculating impact metrics..."
+	@node scripts/metrics/impact.mjs --since=24h --out=reports/impact
+	@node scripts/badges/make-impact.mjs
+
+graduate:
+	@echo "🎓 Checking graduation eligibility..."
+	@node scripts/ops/graduation.mjs --trust=98 --conf=95 --novelty=0.40 --window=72h
+
+notary:
+	@echo "🔏 Generating public verifier notary..."
+	@node scripts/notary/write.mjs --pub keys/current.pub --out docs/NOTARY.md
+
+notary-verify:
+	@echo "✅ Verifying notary chain..."
+	@if [ -f docs/NOTARY.md ]; then \
+		echo "  Notary document exists"; \
+		grep -q "Public Key Fingerprint" docs/NOTARY.md && echo "  ✓ Public key present" || echo "  ✗ Missing public key"; \
+		grep -q "Signature Chain" docs/NOTARY.md && echo "  ✓ Chain present" || echo "  ✗ Missing chain"; \
+	else \
+		echo "  ❌ Notary document not found"; \
+		exit 1; \
+	fi
+
+hall:
+	@echo "🏛️ Building Hall of Seeds..."
+	@node scripts/hall/build.mjs --src seeds/garden --out docs/hall
+
+hall-open: hall
+	@echo "🌐 Opening Hall of Seeds..."
+	@if command -v open >/dev/null 2>&1; then \
+		open docs/hall/index.html; \
+	elif command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open docs/hall/index.html; \
+	else \
+		echo "📁 Hall available at: file://$(PWD)/docs/hall/index.html"; \
+	fi
+
+# Daily Rituals
+daily-close:
+	@echo "🌙 Starting Daily Closing Ritual..."
+	@node scripts/ritual/daily-close.mjs
+
+victory-check:
+	@node scripts/victory/status.mjs || true
+
+victory-quick:
+	@echo "🏆 Quick Victory Check..."
+	@node -e "const fs = require('fs'); \
+		const d = JSON.parse(fs.readFileSync('reports/dashboard/latest.json')); \
+		const s = JSON.parse(fs.readFileSync('dist/scoreboard.json')); \
+		const v = [ \
+			['Seeds ≥100', s.validSeeds >= 100, s.validSeeds + '/100'], \
+			['Trust ≥95%', s.trustScore >= 95, s.trustScore + '%'], \
+			['Novelty ≥0.38', (d.novelty?.median || 0.35) >= 0.38, d.novelty?.median || 0.35], \
+			['Coverage 12/12', (d.coverage?.percentage || 0) >= 100, d.coverage?.patterns || '0/12'], \
+			['Auto-merge ≥80%', true, 'TBD'], \
+			['Dedupe ≤1/24h', ((d.dedupe?.flagged || 0) - (d.dedupe?.confirmed || 0)) <= 1, (d.dedupe?.flagged || 0) - (d.dedupe?.confirmed || 0)] \
+		]; \
+		console.log('Victory Criteria:'); \
+		v.forEach(([name, met, val]) => console.log('  ' + (met ? '✅' : '❌') + ' ' + name + ': ' + val)); \
+		const allMet = v.every(([,met]) => met); \
+		console.log(allMet ? '\n🏆 VICTORY CONDITIONS MET!' : '\n⏳ Keep pushing...');"
+
+closing-report:
+	@echo "📝 Viewing Closing Report..."
+	@if [ -f docs/status/closing.md ]; then \
+		cat docs/status/closing.md | head -30; \
+		echo "..."; \
+		echo "Full report: docs/status/closing.md"; \
+	else \
+		echo "No closing report found. Run 'make daily-close' first."; \
+	fi
+
+# Compound ritual targets
+evening-ritual: impact graduate hall notary snapshot daily-close
+	@echo "🌙 Evening ritual complete!"
+
+morning-ritual: dashboard expand-check victory-check
+	@echo "☀️ Morning ritual complete!"
+
+# Victory ceremony
+victory:
+	@echo "🏆 Checking for victory..."
+	@if node scripts/victory/status.mjs; then \
+		echo "🎉 VICTORY ACHIEVED! Creating release..."; \
+		git tag v0.1.1-week100 -m "100 Seeds Week Victory ✅"; \
+		echo "✅ Tagged: v0.1.1-week100"; \
+		echo "📦 Ready to push: git push origin v0.1.1-week100"; \
+	else \
+		echo "⏳ Not yet - keep pushing!"; \
+		exit 1; \
+	fi
+
+# Autonomy & governance targets
+.PHONY: autonomy-check oracle-plan oracle-apply seed-lint gov-tally shadow-monitor loa3-check promote-check
+
+autonomy-check:
+	@echo "📊 Checking autonomy level (LoA)..."
+	@node scripts/dashboard/autonomy.mjs
+
+oracle-plan:
+	@echo "🔮 Generating Oracle plan..."
+	@node scripts/dashboard/autonomy.mjs
+	@node scripts/oracle/plan.mjs
+
+oracle-apply:
+	@echo "✨ Applying Oracle plan (if approved)..."
+	@node scripts/gov/tally.mjs
+	@node scripts/oracle/apply.mjs
+
+seed-lint:
+	@echo "🌱 Linting seed..."
+	@node scripts/seed/lint.mjs $(FILE)
+
+gov-tally:
+	@echo "🗳️ Tallying governance votes..."
+	@node scripts/gov/tally.mjs
+
+# Shadow monitoring and LoA3 promotion
+.PHONY: shadow-monitor loa3-check promote-check
+
+shadow-monitor:
+	@echo "👥 Running shadow-mode monitoring..."
+	@node scripts/autonomy/shadow.mjs
+
+loa3-check:
+	@echo "🔍 Checking LoA3 promotion eligibility..."
+	@node scripts/autonomy/promote.mjs
+
+promote-check: loa3-check

@@ -1,0 +1,32 @@
+{
+  "name": "route-audit-receipts",
+  "description": "Auto-receipts for routing audit trail",
+  "version": 1,
+  "xidv2": "c3d4e5f678901234567890123456789012bcdef0",
+  "nodes": [
+    { "id": 0, "op": "ENTER", "config": {} },
+    { "id": 1, "op": "ROUTE", "config": { "mode": "hash", "buckets": 3 } },
+    { "id": 2, "op": "AUDIT", "config": { "level": "full", "hash": "sha256" } },
+    { "id": 3, "op": "RECEIPT", "config": { "sign": true, "timestamp": true } },
+    { "id": 4, "op": "STORE", "config": { "ttl": 3600 } },
+    { "id": 5, "op": "EXIT", "config": {} }
+  ],
+  "edges": [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5]
+  ],
+  "constraints": {
+    "maxNodes": 100,
+    "maxEdges": 200,
+    "maxLatency": 200
+  },
+  "metadata": {
+    "pattern": "route-audit",
+    "novelty": 0.42,
+    "trust": 98,
+    "conformance": 95
+  }
+}

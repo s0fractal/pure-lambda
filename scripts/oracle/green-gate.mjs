@@ -1,0 +1,243 @@
+#!/usr/bin/env node
+// Smart gate for safe EXPAND - auto-applies only when all conditions are green
+import fs from "fs";
+import path from "path";
+import { spawnSync } from "child_process";
+
+const dashPath = "reports/dashboard/latest.json";
+const statePath = "state/eps-applied.json";
+const patch = { bandit: { epsDelta: +0.03 } };   // +3% per click
+const MAX_ABS = 0.10;                             // ±10% total limit
+const COOLDOWN_H = 6;                             // Min interval between EXPANDs (hours)
+const TRUST_ON = 96.2, TRUST_OFF = 95.5;          // Hysteresis thresholds
+const DRY = process.env.DRY_RUN === "1";
+
+function readJson(p, def = null) {
+  try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { return def; }
+}
+
+// Check cooldown
+const now = Date.now();
+const st = readJson(statePath, { epsApplied: 0, lastApply: 0 });
+const lastApply = Date.parse(st.lastApply || 0) || 0;
+
+// Clock anomaly detection - prevent EXPAND on time issues
+const prevEnvelopePath = "receipts/ops/latest-envelope.json";
+if (fs.existsSync(prevEnvelopePath)) {
+  const prevEnvelope = readJson(prevEnvelopePath, {});
+  const prevTs = Date.parse(prevEnvelope.ts || prevEnvelope.timestamp || 0);
+
+  if (prevTs && prevTs > 0) {
+    const timeDiff = now - prevTs;
+    const MAX_TIME_JUMP = 48 * 3600 * 1000; // 48h max
+
+    if (timeDiff < 0) {
+      console.log(`⏸️  HOLD: Clock anomaly detected (time went backwards by ${Math.abs(timeDiff / 1000)}s)`);
+      writeGateStatus("HOLD", "clock anomaly - time backwards");
+      process.exit(0);
+    }
+
+    if (timeDiff > MAX_TIME_JUMP) {
+      console.log(`⏸️  HOLD: Clock anomaly detected (time jump >${MAX_TIME_JUMP / 3600000}h)`);
+      writeGateStatus("HOLD", "clock anomaly - excessive jump");
+      process.exit(0);
+    }
+  }
+}
+
+// Helper function to write gate status
+function writeGateStatus(status, reason, nextEligible = null, applied24h = 0) {
+  const gatePath = "reports/dashboard/gate.json";
+  fs.mkdirSync(path.dirname(gatePath), { recursive: true });
+  fs.writeFileSync(gatePath, JSON.stringify({
+    status,
+    reason,
+    ts: new Date().toISOString(),
+    nextEligibleAt: nextEligible ? new Date(nextEligible).toISOString() : null,
+    currentEpsilon: st.epsApplied,
+    applied24h: applied24h
+  }, null, 2));
+}
+
+if (now - lastApply < COOLDOWN_H * 3600 * 1000) {
+  console.log(`⏸️  HOLD: Cooldown active (${Math.round((COOLDOWN_H * 3600 * 1000 - (now - lastApply)) / 60000)}min remaining)`);
+  writeGateStatus("HOLD", "cooldown", now + (COOLDOWN_H * 3600 * 1000 - (now - lastApply)));
+  process.exit(0);
+}
+
+// Read dashboard first for staleness check
+const d = readJson(dashPath, {});
+
+// Staleness guard - don't expand on stale metrics
+const MAX_AGE_MIN = 30;
+const fresh = ts => (now - Date.parse(ts || 0)) < MAX_AGE_MIN * 60 * 1000;
+
+// Check timestamps from dashboard
+const ts = {
+  trust:  d.trust?.ts  || d.metrics?.trustTs || d.timestamp,
+  dsse:   d.dsse?.ts   || d.metrics?.dsseTs || d.timestamp,
+  dedupe: d.quality?.ts|| d.dedupe?.ts || d.timestamp,
+  cover:  d.coverage?.ts || d.timestamp,
+  board:  d.timestamp
+};
+
+if (!(fresh(ts.board))) {
+  console.log(`⏸️  HOLD: Dashboard metrics stale (>${MAX_AGE_MIN}min old)`);
+  writeGateStatus("HOLD", "metrics stale");
+  process.exit(0);
+}
+
+// 24h quorum escalation - no more than +6% per 24h without governance
+const window24h = now - 24 * 3600 * 1000;
+const opsHistory = readJson("reports/autonomy/ops.json", [])
+  .filter(x => Date.parse(x.ts) > window24h);
+const appliedPlus = opsHistory
+  .filter(x => x.kind === "oracle/expand-lite" && x.applied === true)
+  .reduce((s, x) => s + (x.delta || 0), 0);
+
+if (appliedPlus >= 0.06 && process.env.GOV_OVERRIDE !== "1") {
+  console.log(`⏸️  HOLD: Quorum required (already +${(appliedPlus * 100).toFixed(1)}% in 24h, max 6%)`);
+  console.log("   Use GOV_OVERRIDE=1 with 2-of-3 DID approval for larger changes");
+  writeGateStatus("HOLD", "quorum required", null, appliedPlus);
+  process.exit(0);
+}
+
+// Read current metrics with multiple fallbacks (already read d above)
+const patterns = d.coverage?.patterns ?? d.coverage?.patternsCovered ?? 0;
+const cov12 = patterns === "12/12" || patterns === 12 || (d.coverage?.percentage ?? 0) === 100;
+const trust = d.metrics?.trust ?? d.trust?.current ?? d.trust?.score ?? 0;
+const dsse  = d.metrics?.dsse ?? d.dsse?.current ?? d.dsse?.coverage ?? 0;
+const burn  = d.metrics?.burn ?? d.burn?.breath_1h ?? d.burn ?? 9;
+const dedupe = d.decision?.guardrails?.dedupe_blocks ?? d.quality?.dedupeBlocks24h ?? d.dedupe?.blocks24h ?? 99;
+const loa   = d.autonomy?.level ?? d.loa ?? readJson("reports/dashboard/latest.json.autonomy", {}).loa ?? 0;
+
+// Hysteresis for trust to prevent flapping
+const trustOk = trust >= TRUST_ON;
+
+// Safety conditions
+const healthy = trustOk && (dsse === 100) && (dedupe <= 1) && (burn < 2) && cov12 && (loa >= 2);
+
+console.log("🔍 Green Gate Check");
+console.log(`   Coverage 12/12: ${cov12 ? "✅" : "❌"}`);
+console.log(`   Trust ≥96%: ${trust >= 96 ? "✅" : "❌"} (${trust}%)`);
+console.log(`   DSSE 100%: ${dsse === 100 ? "✅" : "❌"} (${dsse}%)`);
+console.log(`   Dedupe ≤1: ${dedupe <= 1 ? "✅" : "❌"} (${dedupe})`);
+console.log(`   Burn <2x: ${burn < 2 ? "✅" : "❌"} (${burn}x)`);
+console.log(`   LoA ≥2: ${loa >= 2 ? "✅" : "❌"} (${loa})`);
+
+if (!healthy) {
+  console.log("⏸️  HOLD: Gate not green - waiting for all conditions");
+  const reason = !trustOk ? "trust below threshold" :
+                 dsse !== 100 ? "DSSE not 100%" :
+                 dedupe > 1 ? "dedupe blocks exceeded" :
+                 burn >= 2 ? "burn rate high" :
+                 !cov12 ? "coverage incomplete" :
+                 loa < 2 ? "LoA below 2" : "conditions not met";
+  writeGateStatus("HOLD", reason, null, appliedPlus);
+  process.exit(0);
+}
+
+// Check cumulative limit (±10%)
+const next = st.epsApplied + patch.bandit.epsDelta;
+
+console.log(`\n📊 Epsilon tracking:`);
+console.log(`   Current total: ${(st.epsApplied * 100).toFixed(1)}%`);
+console.log(`   After apply: ${(next * 100).toFixed(1)}%`);
+console.log(`   Limit: ±10%`);
+
+if (Math.abs(next) > MAX_ABS) {
+  console.log("⏸️  HOLD: Epsilon limit reached (±10% max)");
+  process.exit(0);
+}
+
+// Support dry-run mode
+if (DRY) {
+  console.log("\n🔬 DRY RUN MODE");
+  console.log("   Would APPLY: +3% epsilon");
+  console.log("   New total would be: " + (next * 100).toFixed(1) + "%");
+  process.exit(0);
+}
+
+// Check for canary mode
+if (process.env.EXPAND_MODE === "canary") {
+  console.log("\n🐤 Switching to canary expansion...");
+  const canaryCmd = spawnSync("node", ["scripts/oracle/canary-expand.mjs"], {
+    env: { ...process.env },
+    stdio: "inherit"
+  });
+  process.exit(canaryCmd.status);
+}
+
+// Generate plan
+console.log("\n🔮 Generating Oracle plan...");
+const planCmd = spawnSync("node", ["scripts/oracle/plan.mjs"], {
+  input: JSON.stringify(patch),
+  encoding: "utf8"
+});
+
+if (planCmd.status !== 0) {
+  console.error("❌ Plan generation failed:", planCmd.stderr);
+  process.exit(planCmd.status);
+}
+
+// Apply plan (with governance check)
+console.log("✅ Applying plan with governance check...");
+const applyCmd = spawnSync("node", ["scripts/oracle/apply.mjs"], {
+  encoding: "utf8"
+});
+
+if (applyCmd.status !== 0) {
+  console.error("❌ Apply failed:", applyCmd.stderr);
+  process.exit(applyCmd.status);
+}
+
+// Create decision receipt for audit trail
+const receipt = {
+  kind: "oracle/expand-lite",
+  ts: new Date().toISOString(),
+  applied: true,
+  delta: patch.bandit.epsDelta,
+  prev: { eps: st.epsApplied, mode: "STABLE" },
+  next: { eps: next, mode: "EXPAND" },
+  inputs: {
+    trust, dsse, dedupe, burn, cov12, loa,
+    hysteresis: { on: TRUST_ON, off: TRUST_OFF },
+    cooldown_h: COOLDOWN_H,
+    metrics_age_min: Math.round((now - Date.parse(ts.board)) / 60000)
+  },
+  evidence: {
+    dashboardPath: dashPath,
+    dashboardTs: d.timestamp,
+    planCmd: "oracle/plan.mjs"
+  }
+};
+
+// Log to ops history
+const opsPath = "reports/autonomy/ops.json";
+const ops = readJson(opsPath, []);
+ops.push(receipt);
+fs.mkdirSync(path.dirname(opsPath), { recursive: true });
+fs.writeFileSync(opsPath, JSON.stringify(ops, null, 2));
+
+// Update state counter
+fs.mkdirSync(path.dirname(statePath), { recursive: true });
+fs.writeFileSync(statePath, JSON.stringify({
+  epsApplied: next,
+  lastApply: new Date().toISOString(),
+  appliedCount: (st.appliedCount || 0) + 1
+}, null, 2));
+
+// Update dashboard gate status
+const gatePath = "reports/dashboard/gate.json";
+fs.writeFileSync(gatePath, JSON.stringify({
+  status: "GO",
+  reason: "Applied +3% epsilon",
+  lastApply: receipt.ts,
+  nextEligibleAt: new Date(now + COOLDOWN_H * 3600 * 1000).toISOString(),
+  currentEpsilon: next,
+  applied24h: appliedPlus + patch.bandit.epsDelta
+}, null, 2));
+
+console.log("\n✅ EXPAND-LITE APPLIED: +3% epsilon (guarded)");
+console.log(`   Total epsilon: ${(next * 100).toFixed(1)}%`);
+console.log(`   Remaining capacity: ${((MAX_ABS - Math.abs(next)) * 100).toFixed(1)}%`);

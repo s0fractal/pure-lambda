@@ -1,0 +1,190 @@
+{
+  "generatedAt": "2025-09-17T18:42:48.682Z",
+  "total": 23,
+  "items": [
+    {
+      "name": "merge-proof-lite@sampled",
+      "pattern": "merge-proof-lite",
+      "xidv2": "cdef0123456789012345678901234567890123456",
+      "novelty": 0.46,
+      "size": 698,
+      "author": "anonymous"
+    },
+    {
+      "name": "merge-proof-lite@checksum",
+      "pattern": "merge-proof-lite",
+      "xidv2": "bcdef012345678901234567890123456789012345",
+      "novelty": 0.45,
+      "size": 700,
+      "author": "anonymous"
+    },
+    {
+      "name": "select-tee-bounded",
+      "pattern": "unknown",
+      "xidv2": "f678901234567890123456789012345ef0123456",
+      "novelty": 0.45,
+      "size": 820,
+      "author": "anonymous"
+    },
+    {
+      "name": "bounded-partition@burst-guard",
+      "pattern": "bounded-partition",
+      "xidv2": "89abcdef012345678901234567890123456789012",
+      "novelty": 0.44,
+      "size": 632,
+      "author": "anonymous"
+    },
+    {
+      "name": "route-audit-checkpoint",
+      "pattern": "unknown",
+      "xidv2": "d4e5f6789012345678901234567890123cdef012",
+      "novelty": 0.44,
+      "size": 718,
+      "author": "anonymous"
+    },
+    {
+      "name": "antihyst@slow-recover",
+      "pattern": "delay-scan-antihysteresis",
+      "xidv2": "abcdef01234567890123456789012345678901234",
+      "novelty": 0.43,
+      "size": 662,
+      "author": "anonymous"
+    },
+    {
+      "name": "scan-metrics-ewma",
+      "pattern": "unknown",
+      "xidv2": "b2c3d4e5f67890123456789012345678901abcde",
+      "novelty": 0.43,
+      "size": 630,
+      "author": "anonymous"
+    },
+    {
+      "name": "bounded-partition@quota-70-30",
+      "pattern": "bounded-partition",
+      "xidv2": "789abcdef01234567890123456789012345678901",
+      "novelty": 0.42,
+      "size": 642,
+      "author": "anonymous"
+    },
+    {
+      "name": "metric-select@error-rate",
+      "pattern": "split-metric-select",
+      "xidv2": "ef012345678901234567890123456789012345678",
+      "novelty": 0.42,
+      "size": 746,
+      "author": "anonymous"
+    },
+    {
+      "name": "route-audit-receipts",
+      "pattern": "unknown",
+      "xidv2": "c3d4e5f678901234567890123456789012bcdef0",
+      "novelty": 0.42,
+      "size": 639,
+      "author": "anonymous"
+    },
+    {
+      "name": "antihyst@fast-recover",
+      "pattern": "delay-scan-antihysteresis",
+      "xidv2": "9abcdef0123456789012345678901234567890123",
+      "novelty": 0.41,
+      "size": 589,
+      "author": "anonymous"
+    },
+    {
+      "name": "scan-metrics-threshold",
+      "pattern": "unknown",
+      "xidv2": "a1b2c3d4e5f6789012345678901234567890abcd",
+      "novelty": 0.41,
+      "size": 615,
+      "author": "anonymous"
+    },
+    {
+      "name": "metric-select@latency",
+      "pattern": "split-metric-select",
+      "xidv2": "def01234567890123456789012345678901234567",
+      "novelty": 0.4,
+      "size": 684,
+      "author": "anonymous"
+    },
+    {
+      "name": "select-tee-conditional",
+      "pattern": "unknown",
+      "xidv2": "e5f67890123456789012345678901234def01234",
+      "novelty": 0.4,
+      "size": 711,
+      "author": "anonymous"
+    },
+    {
+      "name": "bounded-delay",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 1860,
+      "author": "anonymous"
+    },
+    {
+      "name": "branch-stress",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 4675,
+      "author": "anonymous"
+    },
+    {
+      "name": "focus-delay",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 1711,
+      "author": "anonymous"
+    },
+    {
+      "name": "hello-city",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 4230,
+      "author": "anonymous"
+    },
+    {
+      "name": "loop-lite",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 2018,
+      "author": "anonymous"
+    },
+    {
+      "name": "partition-merge",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 3443,
+      "author": "anonymous"
+    },
+    {
+      "name": "route-merge",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 4204,
+      "author": "anonymous"
+    },
+    {
+      "name": "scan-focus",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 1847,
+      "author": "anonymous"
+    },
+    {
+      "name": "select",
+      "pattern": "unknown",
+      "xidv2": null,
+      "novelty": null,
+      "size": 1950,
+      "author": "anonymous"
+    }
+  ]
+}

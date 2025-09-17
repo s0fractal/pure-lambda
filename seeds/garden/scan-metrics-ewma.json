@@ -1,0 +1,32 @@
+{
+  "name": "scan-metrics-ewma",
+  "description": "EWMA smoothing for metric scanning",
+  "version": 1,
+  "xidv2": "b2c3d4e5f67890123456789012345678901abcde",
+  "nodes": [
+    { "id": 0, "op": "ENTER", "config": {} },
+    { "id": 1, "op": "SCAN", "config": { "window": 20, "step": 1 } },
+    { "id": 2, "op": "METRIC", "config": { "type": "mean", "alpha": 0.3 } },
+    { "id": 3, "op": "EWMA", "config": { "alpha": 0.3, "init": "first" } },
+    { "id": 4, "op": "NORMALIZE", "config": { "method": "zscore" } },
+    { "id": 5, "op": "EXIT", "config": {} }
+  ],
+  "edges": [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5]
+  ],
+  "constraints": {
+    "maxNodes": 100,
+    "maxEdges": 200,
+    "maxLatency": 150
+  },
+  "metadata": {
+    "pattern": "scan-metrics",
+    "novelty": 0.43,
+    "trust": 98,
+    "conformance": 97
+  }
+}

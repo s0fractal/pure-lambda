@@ -1,28 +1,31 @@
 {
   "seed": {
-    "name": "bounded-delay-16-eco",
-    "path": "out/sweep/bounded-delay-16-eco-1758113998434.json",
-    "sizeKB": 0.9765625,
-    "canonicalHash": "e84bb84b5382f28ef508eed1a4f445fc258cf21e6920c28e4044fd69ba4698ed",
-    "xidV2": "ccb206b2c80d3ecc691fb4456073d159e024d730f7fc067357893d3f0125c284"
+    "path": "out/coverage/merge-proof-final.json",
+    "sizeKB": 0.994140625,
+    "canonicalHash": "cc863345a936c9f0dc8b1f7494c8d1ebf349dee15e5669b0696f37a3fa69d824",
+    "xidV2": "b8e51ede9e6c2892630b8a5107de5913aeea4e2fe697db6c8471e9ae118351a8"
   },
   "conformance": {
-    "score": 100,
-    "issues": []
+    "score": 65,
+    "issues": [
+      "Missing seed name",
+      "Missing or invalid tiles/nodes structure",
+      "Missing version"
+    ]
   },
   "dsse": {
     "valid": false,
     "reason": "No envelope provided"
   },
   "trust": {
-    "trustScore": 0.6,
+    "trustScore": 0.46,
     "components": {
       "dsse": {
         "score": 0,
         "weight": 0.4
       },
       "conformance": {
-        "score": 100,
+        "score": 65,
         "weight": 0.4
       },
       "freshness": {
@@ -31,6 +34,6 @@
       }
     }
   },
-  "timestamp": "2025-09-17T13:01:34.141Z",
+  "timestamp": "2025-09-17T20:10:50.044Z",
   "ready": false
 }

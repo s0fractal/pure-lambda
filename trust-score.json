@@ -1,13 +1,13 @@
 {
   "trustScore": 0.9626666666666668,
-  "timestamp": "2025-09-17T14:38:11.454Z",
+  "timestamp": "2025-09-17T20:14:25.731Z",
   "components": {
     "dsse": {
       "weight": 0.4,
       "ratio": 1,
       "contribution": 0.4,
       "stats": {
-        "present": 11,
+        "present": 27,
         "valid": 11,
         "total": 11
       }
@@ -26,12 +26,12 @@
       "score": 1,
       "contribution": 0.2,
       "stats": {
-        "ageMedianDays": 0.012051354166666667,
+        "ageMedianDays": 0.12767113425925927,
         "ageRangeDays": [
-          0.012051157407407408,
-          0.012051608796296296
+          0.06290346064814815,
+          0.24555018518518518
         ],
-        "details": "9 seeds, median age 0.0 days"
+        "details": "25 seeds, median age 0.1 days"
       }
     }
   },

@@ -1,0 +1,27 @@
+{
+  "name": "bounded-partition@quota-70-30",
+  "pattern": "bounded-partition",
+  "version": 1,
+  "xidv2": "789abcdef01234567890123456789012345678901",
+  "params": {
+    "quota_primary": 0.7,
+    "quota_secondary": 0.3,
+    "backpressure": true,
+    "strategy": "round-robin"
+  },
+  "nodes": [
+    { "id": 0, "op": "ENTER" },
+    { "id": 1, "op": "BOUNDED", "config": { "size": 1000, "overflow": "backpressure" } },
+    { "id": 2, "op": "PARTITION", "config": { "buckets": 2, "weights": [0.7, 0.3] } },
+    { "id": 3, "op": "PROCESS", "config": { "parallel": true } },
+    { "id": 4, "op": "MERGE", "config": { "strategy": "fair" } },
+    { "id": 5, "op": "EXIT" }
+  ],
+  "edges": [[0,1], [1,2], [2,3], [3,4], [4,5]],
+  "attestation": {},
+  "metadata": {
+    "novelty": 0.42,
+    "trust": 98,
+    "conformance": 96
+  }
+}

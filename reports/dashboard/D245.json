@@ -1,0 +1,55 @@
+{
+  "day": "D245",
+  "timestamp": "2025-09-17T16:20:17.757Z",
+  "seeds": {
+    "valid": 0,
+    "total": 0,
+    "target": 100,
+    "dailyTarget": 15,
+    "progress": 0,
+    "progressVsTarget": 0
+  },
+  "trust": {
+    "current": 96.3,
+    "target": 95,
+    "status": "✅"
+  },
+  "dsse": {
+    "current": 100,
+    "target": 98,
+    "status": "✅"
+  },
+  "sla": {
+    "p95Response": 12,
+    "target": 24,
+    "status": "✅"
+  },
+  "novelty": {
+    "median": 0.35,
+    "target": 0.3,
+    "status": "✅"
+  },
+  "dedupe": {
+    "precision": "100.0",
+    "recall": "100.0",
+    "flagged": 0,
+    "confirmed": 0,
+    "status": "✅"
+  },
+  "coverage": {
+    "patterns": "6/12",
+    "percentage": 50,
+    "status": "⚠️"
+  },
+  "defense": {
+    "redLaneSuccess": 100,
+    "status": "✅"
+  },
+  "field": {
+    "receipts": 5,
+    "runs": 11
+  },
+  "risks": [
+    "📉 Seed velocity below 50% target"
+  ]
+}

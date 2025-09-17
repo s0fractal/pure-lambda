@@ -1,0 +1,157 @@
+{
+  "timestamp": "2025-09-17T18:50:50.723Z",
+  "criteria": {
+    "trust": 98,
+    "conf": 95,
+    "novelty": 0.4,
+    "window": "72h"
+  },
+  "graduates": [
+    {
+      "name": "select-tee-conditional",
+      "path": "seeds/garden/select-tee-conditional.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "select-tee-bounded",
+      "path": "seeds/garden/select-tee-bounded.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "scan-metrics-threshold",
+      "path": "seeds/garden/scan-metrics-threshold.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "scan-metrics-ewma",
+      "path": "seeds/garden/scan-metrics-ewma.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "route-audit-receipts",
+      "path": "seeds/garden/route-audit-receipts.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "route-audit-checkpoint",
+      "path": "seeds/garden/route-audit-checkpoint.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "metric-select@latency",
+      "path": "seeds/garden/metric-select-latency.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "metric-select@error-rate",
+      "path": "seeds/garden/metric-select-errorrate.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "merge-proof-lite@sampled",
+      "path": "seeds/garden/merge-proof-lite-sampled.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "merge-proof-lite@checksum",
+      "path": "seeds/garden/merge-proof-lite-checksum.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "merge-proof-beta",
+      "path": "seeds/garden/merge-proof-beta.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "merge-proof-alpha",
+      "path": "seeds/garden/merge-proof-alpha.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "bounded-partition@quota-70-30",
+      "path": "seeds/garden/bounded-partition-quota.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "bounded-partition@burst-guard",
+      "path": "seeds/garden/bounded-partition-burst.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "antihyst@slow-recover",
+      "path": "seeds/garden/antihyst-slow-recover.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    },
+    {
+      "name": "antihyst@fast-recover",
+      "path": "seeds/garden/antihyst-fast-recover.json",
+      "metrics": {
+        "trust": 98.5,
+        "conformance": 96.2,
+        "novelty": 0.42
+      }
+    }
+  ],
+  "total_core_seeds": 25,
+  "hash": "5ec90d0560fc700e"
+}

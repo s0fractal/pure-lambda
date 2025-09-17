@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pure Lambda — Seed Showcase</title>
+<style>
+  body{font:14px system-ui, sans-serif;margin:0;background:#0b0c10;color:#eaf0f1}
+  header{padding:14px 16px;border-bottom:1px solid #1f2227}
+  .wrap{padding:12px 16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .card{background:#11141a;border:1px solid #23262d;border-radius:12px;padding:12px}
+  .muted{opacity:.8}
+  .pill{display:inline-block;padding:2px 8px;border:1px solid #2c3138;border-radius:999px;margin-right:6px}
+  .bar{height:6px;background:#1f2227;border-radius:6px;overflow:hidden;margin-top:6px}
+  .bar>i{display:block;height:100%;background:#5eea9a;width:0%}
+  footer{padding:16px 16px 28px;color:#9aa4ad}
+  button{background:#1b1f27;border:1px solid #2b313a;color:#eaf0f1;border-radius:8px;padding:6px 10px;cursor:pointer}
+</style>
+<header>
+  <b>Pure Lambda — Seed Showcase</b>
+  <span class="muted"> · offline</span>
+  <span style="float:right">
+    <button onclick="load()">Reload</button>
+  </span>
+</header>
+<div class="wrap">
+  <div id="stats" class="muted">Loading… (tip: run <code>make showcase-build</code>)</div>
+  <div class="grid" id="grid"></div>
+</div>
+<footer class="wrap">
+  Data file: <code>docs/showcase/data.json</code>. Generate via <code>make showcase-build</code>.
+</footer>
+<script>
+async function load(){
+  try{
+    const r = await fetch("./data.json"); if(!r.ok) throw 0;
+    const data = await r.json();
+    document.getElementById("stats").textContent = `Seeds: ${data.total} · generated ${new Date(data.generatedAt).toLocaleString()}`;
+    const grid = document.getElementById("grid"); grid.innerHTML="";
+    data.items.forEach(x=>{
+      const d=document.createElement("div"); d.className="card";
+      d.innerHTML = `
+        <div style="display:flex;justify-content:space-between;gap:6px;align-items:baseline;">
+           <div><b>${x.name}</b></div>
+           <span class="pill">${x.pattern}</span>
+        </div>
+        <div class="muted" style="margin-top:6px">author: ${x.author} · size: ${(x.size/1024).toFixed(1)}KB</div>
+        <div class="muted">xidv2: <code>${x.xidv2??"—"}</code></div>
+        <div class="muted">novelty: ${x.novelty??"—"}</div>
+        <div class="bar"><i style="width:${Math.min(100,Math.round((x.novelty??0)*100))}%"></i></div>
+      `;
+      grid.appendChild(d);
+    });
+  }catch(e){
+    document.getElementById("stats").innerHTML = `No data yet. Run <code>make showcase-build</code> (scans seeds/garden)`;
+  }
+}
+load();
+</script>
+</html>
