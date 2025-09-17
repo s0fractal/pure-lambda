@@ -1,0 +1,25 @@
+{
+  "name": "@pl/loader",
+  "version": "1.0.0",
+  "description": "Zero-LOC ESM Loader for Pure Lambda - Automatic memoization and receipt generation",
+  "type": "module",
+  "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "bin": {
+    "pl-run": "./cli.mjs"
+  },
+  "keywords": [
+    "pure-lambda",
+    "loader",
+    "memoization",
+    "esm",
+    "instrumentation"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/s0fractal/pure-lambda"
+  }
+}

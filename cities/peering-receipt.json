@@ -1,0 +1,10 @@
+{
+  "event": "peering_established",
+  "timestamp": 1757756581,
+  "cities": ["kyiv-prime", "lviv-harbor"],
+  "connection": "bidirectional",
+  "registry_sync": "complete",
+  "divergence": 0,
+  "latency_ms": 42,
+  "status": "healthy"
+}

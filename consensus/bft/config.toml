@@ -1,0 +1,70 @@
+# BFT Consensus Configuration
+# For critical facts requiring total order
+
+[committee]
+size = 13                           # Odd number for avoiding ties
+min_size = 9                        # Minimum for operation
+rotation_period_days = 7            # Weekly rotation
+selection = "reputation_weighted"   # Top reputation holders
+
+[members]
+# Initial committee (will rotate based on reputation)
+members = [
+  "did:pl:Human-Taras",
+  "did:pl:Human-Petro", 
+  "did:pl:Human-Mykola",
+  "did:pl:Human-Lesia",
+  "did:pl:Agent-Sophia",
+  "did:pl:Agent-Vysokyi",
+  "did:pl:Agent-Neptune",
+  "did:pl:Agent-Dnipro",
+  "did:pl:Agent-Potemkin",
+  "did:pl:Human-Ivan",
+  "did:pl:Human-Oksana",
+  "did:pl:Agent-Lev",
+  "did:pl:Agent-Pearl"
+]
+
+[consensus]
+algorithm = "PBFT"                  # Practical Byzantine Fault Tolerance
+threshold = 0.67                    # 2/3 + 1 signatures required
+timeout_ms = 3000                   # Round timeout
+max_rounds = 5                      # Before view change
+batch_size = 100                    # Batch multiple items
+
+[topics]
+# What requires BFT consensus
+require_consensus = [
+  "governance/receipts/*",          # Voting outcomes
+  "registry/head",                  # Canonical head
+  "registry/shardmap.*",            # Sharding changes
+  "economy/pricing.*",              # Economic parameter updates
+  "security/key_rotation.*"         # Key rotation events
+]
+
+[signing]
+algorithm = "Ed25519"
+aggregate_signatures = true         # BLS-style aggregation
+include_timestamp = true
+include_sequence = true
+
+[storage]
+receipts_path = "consensus/bft/receipts/"
+checkpoint_interval = 1000          # Checkpoint every 1000 items
+retention_days = 365
+
+[network]
+gossip_topic = "pl.bft.consensus"
+broadcast_redundancy = 3            # Send to 3 peers
+max_message_size = 1MB
+
+[recovery]
+enable_catchup = true
+snapshot_interval = 10000           # Full snapshot every 10k items
+sync_timeout_ms = 30000
+
+[monitoring]
+export_metrics = true
+alert_on_split = true
+alert_on_timeout = true
+alert_on_byzantine = true

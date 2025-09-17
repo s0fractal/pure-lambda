@@ -1,0 +1,18 @@
+{
+  "contract": "QmContract9b8c4277e285a33cb656",
+  "receipt": "QmReceiptab8cea0bad4270b55607",
+  "status": "completed",
+  "execution": {
+    "issuer_city": "kyiv-prime",
+    "executor_city": "lviv-harbor",
+    "latency_ms": 85,
+    "gas_used": 45000
+  },
+  "policies": {
+    "io_intent_only": "passed",
+    "memory_snapshotted": "passed",
+    "gas_ceiling": "passed",
+    "consent_valid": "passed"
+  },
+  "attestation": "valid"
+}

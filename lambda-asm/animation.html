@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>λ-ASM v0 Animation</title>
+  <style>
+    body { margin: 0; padding: 20px; background: #0a0e27; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    svg { background: #161b22; border: 1px solid #30363d; border-radius: 8px; }
+    .info { position: absolute; top: 20px; left: 20px; color: #8b949e; font-family: monospace; }
+    #circle { fill: #58a6ff; opacity: 0.8; }
+    #orbit { fill: #f85149; }
+  </style>
+</head>
+<body>
+  <div class="info">
+    <div>λ-ASM v0</div>
+    <div>t: <span id="time">0.00</span></div>
+    <div>fps: <span id="fps">0</span></div>
+  </div>
+
+  <svg viewBox="0 0 300 300" width="500" height="500" id="scene">
+    <circle id="circle" cx="150" cy="150" r="30" />
+    <circle id="orbit" cx="150" cy="150" r="8" />
+  </svg>
+
+  <script type="module">
+    const instructions = [{"op":1,"reg":0,"inputIdx":0},{"op":1,"reg":18,"inputIdx":1},{"op":4,"regA":0,"regB":1},{"op":3,"regA":1,"regB":18,"regC":2},{"op":2,"regA":2,"value":150,"regC":3,"immediate":true},{"op":0,"reg":4,"value":150},{"op":2,"regA":1,"value":1,"regC":5,"immediate":true},{"op":3,"regA":5,"value":10,"regC":6,"immediate":true},{"op":2,"regA":6,"value":20,"regC":7,"immediate":true},{"op":5,"reg":3,"target":"circle.cx"},{"op":5,"reg":4,"target":"circle.cy"},{"op":5,"reg":7,"target":"circle.r"},{"op":3,"regA":0,"value":2,"regC":8,"immediate":true},{"op":4,"regA":8,"regB":9},{"op":3,"regA":9,"value":80,"regC":10,"immediate":true},{"op":2,"regA":10,"value":150,"regC":11,"immediate":true},{"op":0,"reg":12,"value":0.7853},{"op":2,"regA":8,"regB":12,"regC":13},{"op":4,"regA":13,"regB":14},{"op":3,"regA":14,"value":80,"regC":15,"immediate":true},{"op":2,"regA":15,"value":150,"regC":16,"immediate":true},{"op":0,"reg":17,"value":8},{"op":5,"reg":11,"target":"orbit.cx"},{"op":5,"reg":16,"target":"orbit.cy"},{"op":5,"reg":17,"target":"orbit.r"}];
+    const registers = new Float64Array(32);
+
+    function execute(inputs) {
+      const outputs = {};
+
+      for (const inst of instructions) {
+        switch (inst.op) {
+          case 0:
+            registers[inst.reg] = inst.value;
+            break;
+          case 1:
+            registers[inst.reg] = inputs[inst.inputIdx] || 0;
+            break;
+          case 2:
+            if (inst.immediate) {
+              registers[inst.regC] = registers[inst.regA] + inst.value;
+            } else {
+              registers[inst.regC] = registers[inst.regA] + registers[inst.regB];
+            }
+            break;
+          case 3:
+            if (inst.immediate) {
+              registers[inst.regC] = registers[inst.regA] * inst.value;
+            } else {
+              registers[inst.regC] = registers[inst.regA] * registers[inst.regB];
+            }
+            break;
+          case 4:
+            registers[inst.regB] = Math.sin(registers[inst.regA]);
+            break;
+          case 5:
+            outputs[inst.target] = registers[inst.reg];
+            break;
+        }
+      }
+
+      return outputs;
+    }
+
+    let t = 0;
+    let lastTime = 0;
+    let frameCount = 0;
+
+    function animate(timestamp) {
+      // Calculate FPS
+      frameCount++;
+      if (timestamp - lastTime > 1000) {
+        document.getElementById('fps').textContent = frameCount;
+        frameCount = 0;
+        lastTime = timestamp;
+      }
+
+      // Execute program
+      const outputs = execute([t, 30]); // inputs: [time, scale]
+
+      // Apply outputs to SVG
+      for (const [target, value] of Object.entries(outputs)) {
+        const [elementId, attr] = target.split('.');
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.setAttribute(attr, value);
+        }
+      }
+
+      // Update time display
+      document.getElementById('time').textContent = t.toFixed(2);
+
+      // Advance time
+      t += 0.05;
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

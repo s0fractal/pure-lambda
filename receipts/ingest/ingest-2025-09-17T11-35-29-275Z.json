@@ -1,0 +1,39 @@
+{
+  "schema": "PL-INGEST-RECEIPT-01",
+  "timestamp": "2025-09-17T11:35:29.275Z",
+  "operator": {
+    "did": "did:plc:operator-local",
+    "action": "ingest"
+  },
+  "seeds_added": [
+    {
+      "gid": "unknown",
+      "xidv2": "unknown",
+      "name": "bounded-delay",
+      "size": 2256
+    },
+    {
+      "gid": "unknown",
+      "xidv2": "unknown",
+      "name": "branch-stress",
+      "size": 5667
+    },
+    {
+      "gid": "unknown",
+      "xidv2": "unknown",
+      "name": "focus-delay",
+      "size": 2107
+    }
+  ],
+  "stats": {
+    "trust": 0,
+    "dsse": 0,
+    "conformance": 0,
+    "total": 0
+  },
+  "gitRev": "873a585bafdafa41413675f8ae9b4a30884ffa36",
+  "environment": {
+    "node": "v20.18.3",
+    "platform": "darwin"
+  }
+}

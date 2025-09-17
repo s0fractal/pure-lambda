@@ -1,0 +1,50 @@
+# Gene Reputation Scoring Configuration
+# Transparent formula for ranking genes
+
+[weights]
+# Performance (40%)
+speedup = 0.2          # Relative speedup vs baseline
+efficiency = 0.2       # 1 - (allocs / max_allocs)
+
+# Quality (40%)
+proof_coverage = 0.25  # Percentage of laws proven
+determinism = 0.15    # Consistent behavior score
+
+# Adoption (20%)
+usage = 0.1           # Number of dependents
+votes = 0.1           # Community votes
+
+[normalization]
+# Max values for normalization
+max_speedup = 5.0     # 5x speedup is maximum
+max_allocs = 100     # 100 allocations is worst
+max_usage = 100      # 100 dependents is excellent
+max_votes = 50       # 50 votes is high engagement
+
+[formula]
+# score = Σ(weight_i * normalized_metric_i)
+# Where normalized = min(1.0, metric / max_metric)
+description = """
+Score calculation:
+1. Normalize each metric to [0, 1]
+2. Apply weights
+3. Sum to get final score [0, 1]
+"""
+
+[thresholds]
+champion = 0.8        # Score >= 0.8 is champion
+candidate = 0.6       # Score >= 0.6 is candidate
+deprecated = 0.3      # Score < 0.3 is deprecated
+
+[penalties]
+# Reduce score for issues
+no_provenance = -0.1  # Missing source attribution
+no_signature = -0.05  # Unsigned gene
+failed_test = -0.2    # Failed integration test
+semantic_change = -0.5 # Changed semantic hash
+
+[bonuses]
+# Increase score for achievements
+all_laws_proven = 0.1  # 100% proof coverage
+zero_allocs = 0.05     # No allocations
+pioneer = 0.05         # First of its kind

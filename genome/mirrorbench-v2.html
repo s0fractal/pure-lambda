@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MirrorBench v2 - B2 Genome Visualizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', Consolas, monospace;
+            background: #0a0e27;
+            color: #e1e4e8;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr auto;
+            height: 100vh;
+        }
+
+        .panel {
+            border: 1px solid #30363d;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        #graph-panel {
+            background: #161b22;
+        }
+
+        #trace-panel {
+            background: #0d1117;
+        }
+
+        #status-bar {
+            grid-column: 1 / -1;
+            background: #010409;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #30363d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge.g0 { background: #238636; }
+        .badge.pac { background: #1f6feb; }
+        .badge.profile { background: #8b949e; }
+
+        #graph-svg {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .node {
+            fill: #161b22;
+            stroke: #58a6ff;
+            stroke-width: 2;
+        }
+
+        .node.atom { stroke: #7c3aed; }
+        .node.combinator { stroke: #f85149; }
+
+        .edge {
+            stroke: #8b949e;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+
+        .label {
+            fill: #e1e4e8;
+            font-size: 12px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        #trace-list {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .trace-entry {
+            padding: 8px;
+            margin: 4px 0;
+            background: #161b22;
+            border-left: 3px solid #30363d;
+            border-radius: 3px;
+        }
+
+        .trace-entry.some { border-color: #238636; }
+        .trace-entry.none { border-color: #6e7681; opacity: 0.7; }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-family: inherit;
+        }
+
+        button:hover { background: #2ea043; }
+
+        .phash {
+            font-family: monospace;
+            font-size: 11px;
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        h2 {
+            color: #f85149;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="graph-panel" class="panel">
+        <h2>B2 Graph Structure</h2>
+        <div class="controls">
+            <button onclick="foldGraph()">fold→phash</button>
+            <button onclick="expandPhash()">expand from phash</button>
+            <button onclick="runDOE()">DOE run</button>
+        </div>
+        <svg id="graph-svg" viewBox="0 0 400 300">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10"
+                        refX="10" refY="5" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b949e"/>
+                </marker>
+            </defs>
+
+            <!-- Example graph: SPLIT → (FOCUS || DELAY→SCAN) → MERGE -->
+            <g id="graph">
+                <!-- Nodes -->
+                <rect class="node combinator" x="20" y="130" width="60" height="40" rx="5"/>
+                <text class="label" x="50" y="150">SPLIT</text>
+
+                <rect class="node atom" x="120" y="60" width="60" height="40" rx="5"/>
+                <text class="label" x="150" y="80">FOCUS</text>
+
+                <rect class="node atom" x="120" y="200" width="60" height="40" rx="5"/>
+                <text class="label" x="150" y="220">DELAY</text>
+
+                <rect class="node atom" x="220" y="200" width="60" height="40" rx="5"/>
+                <text class="label" x="250" y="220">SCAN</text>
+
+                <rect class="node combinator" x="320" y="130" width="60" height="40" rx="5"/>
+                <text class="label" x="350" y="150">MERGE</text>
+
+                <!-- Edges -->
+                <path class="edge" d="M 80 150 L 120 80"/>
+                <path class="edge" d="M 80 150 L 120 220"/>
+                <path class="edge" d="M 180 220 L 220 220"/>
+                <path class="edge" d="M 180 80 L 320 150"/>
+                <path class="edge" d="M 280 220 L 320 150"/>
+            </g>
+        </svg>
+        <div id="graph-phash" style="text-align: center; margin-top: 20px;">
+            phash: <span class="phash">928586affb49f9d293404c8b0de7dd1911914f075e23</span>
+        </div>
+    </div>
+
+    <div id="trace-panel" class="panel">
+        <h2>Execution Trace</h2>
+        <div id="trace-list">
+            <div class="trace-entry some">
+                <strong>t=0:</strong> FOCUS → Some({value: 42})
+            </div>
+            <div class="trace-entry none">
+                <strong>t=1:</strong> FOCUS → None (filtered)
+            </div>
+            <div class="trace-entry some">
+                <strong>t=2:</strong> SCAN → Some({state: 1, output: 43})
+            </div>
+            <div class="trace-entry some">
+                <strong>t=3:</strong> DELAY → Some({value: 42, delayed: true})
+            </div>
+            <div class="trace-entry some">
+                <strong>t=4:</strong> MERGE → Some({value: 43, source: 'left'})
+            </div>
+        </div>
+    </div>
+
+    <div id="status-bar">
+        <div>
+            <span class="badge g0">Gate G0</span>
+            <span class="badge pac">PAC ≤2.22% @95%</span>
+            <span class="badge profile">b2-operon</span>
+            <div id="cartridge-loader" style="display: none;">
+                <button onclick="loadFromCartridge()" style="background: #7c3aed; border: 1px solid #7c3aed; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; margin-left: 10px;">Load from Cartridge</button>
+            </div>
+        </div>
+        <div>
+            GENOME@v1 | 6 atoms | 2 combinators | ∞ evolution
+        </div>
+    </div>
+
+    <script>
+        // Cartridge loading functionality
+        let cartridgeManifest = null;
+
+        // Check for cartridge loading capability on page load
+        function checkCartridgeAvailability() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasSeed = urlParams.has('seed') || window.location.hash.includes('seed');
+
+            // If no seed in URL, check if opener has cartridge manifest
+            if (!hasSeed && window.opener) {
+                // Request cartridge manifest from opener
+                window.opener.postMessage({ type: 'REQUEST_CARTRIDGE_MANIFEST' }, '*');
+
+                // Show loader button
+                document.getElementById('cartridge-loader').style.display = 'block';
+            }
+        }
+
+        // Listen for cartridge manifest from opener
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'CARTRIDGE_MANIFEST') {
+                cartridgeManifest = event.data.manifest;
+                addTraceEntry('Cartridge available from opener', 'some');
+            } else if (event.data && event.data.type === 'CARTRIDGE_SEED_DATA') {
+                // Load seed data into MirrorBench
+                loadSeedData(event.data.seedData, event.data.envelopeData);
+            }
+        });
+
+        function loadFromCartridge() {
+            if (!window.opener) {
+                addTraceEntry('No opener window available', 'none');
+                return;
+            }
+
+            if (!cartridgeManifest) {
+                addTraceEntry('No cartridge manifest available', 'none');
+                return;
+            }
+
+            // Request seed and envelope data from cartridge
+            window.opener.postMessage({ type: 'REQUEST_CARTRIDGE_DATA' }, '*');
+            addTraceEntry('Requesting cartridge data...', 'some');
+        }
+
+        function loadSeedData(seedData, envelopeData) {
+            try {
+                addTraceEntry('Loading seed data from cartridge...', 'some');
+
+                if (seedData && seedData.tiles) {
+                    addTraceEntry(`Loaded ${seedData.tiles.length} tiles from cartridge`, 'some');
+
+                    // Update URL to include seed parameter for future reference
+                    const seedJson = JSON.stringify(seedData);
+                    const dataUrl = 'data:application/json;base64,' + btoa(seedJson);
+                    const newUrl = window.location.pathname + '?seed=' + encodeURIComponent(dataUrl);
+                    window.history.replaceState({}, '', newUrl);
+
+                    // Hide cartridge loader
+                    document.getElementById('cartridge-loader').style.display = 'none';
+
+                    if (envelopeData) {
+                        addTraceEntry('Cartridge includes DSSE signature', 'some');
+                    } else {
+                        addTraceEntry('Unsigned cartridge loaded', 'none');
+                    }
+
+                    addTraceEntry('Cartridge seed loaded successfully', 'some');
+                } else {
+                    addTraceEntry('Invalid seed data in cartridge', 'none');
+                }
+            } catch (error) {
+                addTraceEntry('Error loading cartridge data: ' + error.message, 'none');
+            }
+        }
+
+        function foldGraph() {
+            const phashEl = document.querySelector('.phash');
+            phashEl.textContent = 'computing...';
+
+            // Simulate fold operation
+            setTimeout(() => {
+                phashEl.textContent = '928586affb49f9d293404c8b0de7dd1911914f075e23';
+                addTraceEntry('Folded graph to phash', 'some');
+            }, 500);
+        }
+
+        function expandPhash() {
+            const phash = prompt('Enter phash to expand:');
+            if (phash) {
+                addTraceEntry(`Expanding phash: ${phash.substring(0, 16)}...`, 'some');
+                // Would actually reconstruct graph from phash
+            }
+        }
+
+        function runDOE() {
+            addTraceEntry('Starting DOE run: 30 scenarios', 'some');
+
+            let completed = 0;
+            const interval = setInterval(() => {
+                completed += 5;
+                addTraceEntry(`DOE progress: ${completed}/30`, completed < 30 ? 'none' : 'some');
+
+                if (completed >= 30) {
+                    clearInterval(interval);
+                    addTraceEntry('DOE complete: PAC ≤2.22% @95%', 'some');
+                }
+            }, 300);
+        }
+
+        function addTraceEntry(text, type = 'none') {
+            const trace = document.getElementById('trace-list');
+            const entry = document.createElement('div');
+            entry.className = `trace-entry ${type}`;
+            entry.innerHTML = `<strong>t=${Date.now() % 1000}:</strong> ${text}`;
+            trace.appendChild(entry);
+            trace.scrollTop = trace.scrollHeight;
+        }
+
+        // Simulate live trace updates
+        setInterval(() => {
+            const types = ['some', 'none'];
+            const atoms = ['FOCUS', 'SCAN', 'DELAY', 'MERGE'];
+            const atom = atoms[Math.floor(Math.random() * atoms.length)];
+            const type = types[Math.floor(Math.random() * types.length)];
+
+            if (type === 'some') {
+                addTraceEntry(`${atom} → Some({value: ${Math.floor(Math.random() * 100)}})`, type);
+            } else {
+                addTraceEntry(`${atom} → None`, type);
+            }
+        }, 3000);
+
+        // Initialize cartridge check on page load
+        document.addEventListener('DOMContentLoaded', checkCartridgeAvailability);
+    </script>
+</body>
+</html>

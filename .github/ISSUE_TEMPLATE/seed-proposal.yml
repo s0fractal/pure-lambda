@@ -1,0 +1,120 @@
+name: 🌱 Seed Proposal
+description: Propose a new Pure Lambda seed for the garden collection
+title: "[Seed] "
+labels: ["seed", "contribution"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing a new seed! This form helps maintainers understand your contribution.
+
+        **Before submitting**: Use the [Contributor Kit](docs/contribute/CONTRIBUTOR-KIT.md) to validate your seed and ensure Trust ≥ 95%.
+
+  - type: input
+    id: seed-name
+    attributes:
+      label: Seed Name
+      description: Unique identifier for your seed
+      placeholder: my-amazing-algorithm
+    validations:
+      required: true
+
+  - type: dropdown
+    id: seed-type
+    attributes:
+      label: Seed Type
+      description: What category best describes your seed?
+      options:
+        - Example/Tutorial
+        - Computation/Algorithm
+        - Control Flow/Logic
+        - Temporal/Time-based
+        - Data Processing
+        - Integration/Adapter
+        - Experimental
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What does this seed do? What problem does it solve?
+      placeholder: Describe the purpose and functionality of your seed...
+    validations:
+      required: true
+
+  - type: input
+    id: complexity
+    attributes:
+      label: Complexity
+      description: Node count, edge count, estimated difficulty
+      placeholder: "50 nodes, 80 edges, Medium complexity"
+
+  - type: checkboxes
+    id: validation-checklist
+    attributes:
+      label: Validation Checklist
+      description: Confirm you've completed these steps
+      options:
+        - label: Validated with Contributor Kit (Trust ≥ 95%)
+          required: true
+        - label: Size ≤ 80KB
+          required: true
+        - label: No conflicts with existing seeds
+          required: true
+        - label: Tested locally
+          required: true
+        - label: DSSE envelope included (optional but recommended)
+          required: false
+
+  - type: textarea
+    id: trust-breakdown
+    attributes:
+      label: Trust Score Breakdown
+      description: Copy from Contributor Kit validation results
+      placeholder: |
+        Trust Score: 96.5%
+        - DSSE Coverage: 100%
+        - Conformance: 95%
+        - Freshness: 100%
+      render: text
+
+  - type: input
+    id: mirror-link
+    attributes:
+      label: MirrorBench Preview
+      description: Link to test your seed (optional)
+      placeholder: https://mirror.pure-lambda.tech/#seed=my-seed
+
+  - type: textarea
+    id: cartridge-data
+    attributes:
+      label: Cartridge Data
+      description: Paste the .cartridge file content or provide download link
+      placeholder: Paste JSON content or provide secure download link...
+      render: json
+
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: Additional Notes
+      description: Any special considerations, dependencies, or usage notes
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Contribution Terms
+      description: By submitting this seed, you confirm
+      options:
+        - label: I have the right to contribute this code
+          required: true
+        - label: This contribution is my original work or properly attributed
+          required: true
+        - label: I agree to the Pure Lambda license terms
+          required: true
+        - label: I understand this will be publicly available
+          required: true

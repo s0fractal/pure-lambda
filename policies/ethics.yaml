@@ -1,0 +1,133 @@
+# Ethics and Ecology Policies
+# Computational sustainability and consent
+
+version: 0
+description: "Ethical constraints for sustainable and consensual computation"
+
+invariants:
+  # Compute budget constraints
+  - id: compute.fair_share
+    desc: "No agent monopolizes resources"
+    check: "∀a ∈ agents. compute_used(a) ≤ total_compute / |agents|"
+    severity: warning
+    witness: "monitor/fairness.rs:23"
+    
+  - id: compute.efficiency
+    desc: "Wasteful computation is penalized"
+    check: "∀e ∈ executions. efficiency(e) ≥ 0.7"
+    severity: warning
+    witness: "monitor/efficiency.rs:45"
+    
+  - id: compute.carbon_aware
+    desc: "Prefer low-carbon compute when available"
+    check: "∀s ∈ scheduling. prefers_green_energy(s)"
+    severity: info
+    witness: "scheduler/carbon.rs:67"
+    
+  # Consent and privacy
+  - id: consent.personal_data
+    desc: "Personal data requires explicit consent"
+    check: "∀r ∈ reads. label(r) = 'personal' → has_consent(r)"
+    severity: error
+    witness: "auth/consent.rs:89"
+    
+  - id: consent.trail
+    desc: "All consent decisions are logged"
+    check: "∀c ∈ consents. logged(c) ∧ signed(c)"
+    severity: error
+    witness: "audit/consent_trail.rs:12"
+    
+  - id: privacy.minimality
+    desc: "Read only necessary data"
+    check: "∀r ∈ reads. size(r) ≤ declared_max(r)"
+    severity: warning
+    witness: "policies/minimality.rs:34"
+    
+  # Ecological sustainability
+  - id: ecology.replication
+    desc: "Avoid excessive replication"
+    check: "∀a ∈ artifacts. replicas(a) ≤ importance_factor(a) * 3"
+    severity: warning
+    witness: "storage/replication.rs:56"
+    
+  - id: ecology.archive_old
+    desc: "Archive stale data to cold storage"
+    check: "∀d ∈ data. age(d) > 90_days → in_cold_storage(d)"
+    severity: info
+    witness: "storage/lifecycle.rs:78"
+    
+  - id: ecology.batch_operations
+    desc: "Batch small operations for efficiency"
+    check: "∀ops ∈ operations. size(ops) < 1KB → batched(ops)"
+    severity: info
+    witness: "optimizer/batching.rs:90"
+    
+  # Social responsibility
+  - id: social.equal_voice
+    desc: "Governance preserves equality"
+    check: "∀v ∈ votes. weight(v.human) ≈ weight(v.agent)"
+    severity: error
+    witness: "governance/equality.rs:23"
+    
+  - id: social.transparency
+    desc: "All decisions are public"
+    check: "∀d ∈ decisions. public(d) ∧ signed(d)"
+    severity: error
+    witness: "governance/transparency.rs:45"
+    
+  - id: social.reversibility
+    desc: "All changes can be undone"
+    check: "∀c ∈ changes. ∃r ∈ rollbacks. can_revert(c, r)"
+    severity: warning
+    witness: "governance/rollback.rs:67"
+
+metrics:
+  # Track sustainability metrics
+  - id: carbon_footprint
+    unit: "kg CO2e"
+    aggregate: sum
+    window: daily
+    
+  - id: compute_efficiency
+    unit: "ops/joule"
+    aggregate: avg
+    window: hourly
+    
+  - id: consent_requests
+    unit: "count"
+    aggregate: sum
+    window: daily
+    
+  - id: data_minimization
+    unit: "bytes_saved"
+    aggregate: sum
+    window: weekly
+    
+  - id: equality_index
+    unit: "ratio"
+    aggregate: avg
+    window: per_vote
+
+limits:
+  # Resource quotas
+  daily_compute_per_agent: 3600000  # 1 CPU-hour
+  max_storage_per_agent: 1073741824 # 1GB
+  max_replicas: 5
+  consent_cache_ttl: 86400          # 24 hours
+  
+reporting:
+  # Public sustainability reports
+  schedule: weekly
+  format: markdown
+  output: "docs/sustainability/report-{timestamp}.md"
+  
+  sections:
+    - compute_usage
+    - carbon_footprint
+    - consent_compliance
+    - equality_metrics
+    - efficiency_trends
+    
+  signatures:
+    - did:pl:EthicsCommittee
+    - did:pl:SustainabilityOracle

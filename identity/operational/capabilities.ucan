@@ -1,0 +1,27 @@
+{
+  "iss": "did:pl:FounderKyiv1757750983",
+  "sub": "did:pl:KyivPrime",
+  "aud": "kyiv-prime",
+  "exp": 1760344706,
+  "nbf": 1757752706,
+  "cap": {
+    "governance": {
+      "vote": true,
+      "propose": true,
+      "veto": false
+    },
+    "contracts": {
+      "issue": true,
+      "accept": true,
+      "revoke": false
+    },
+    "attestation": {
+      "sign": true,
+      "verify": true
+    },
+    "admin": {
+      "key_rotate": false,
+      "emergency_stop": false
+    }
+  }
+}

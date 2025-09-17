@@ -1,0 +1,45 @@
+# Pure Lambda Node - Edge Habitat
+FROM rust:1.75-slim AS builder
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    cmake \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy source
+WORKDIR /build
+COPY . .
+
+# Build with optimizations
+RUN cargo build --release --features edge
+
+# Runtime image
+FROM debian:bookworm-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    libssl3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create user
+RUN useradd -m -u 1000 -s /bin/bash pl
+
+# Copy binary
+COPY --from=builder /build/target/release/pl-node /usr/local/bin/
+
+# Create directories
+RUN mkdir -p /var/lib/pl/{cas,chronicle,museaium,logs} && \
+    chown -R pl:pl /var/lib/pl
+
+USER pl
+WORKDIR /var/lib/pl
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD pl-node health || exit 1
+
+ENTRYPOINT ["/usr/local/bin/pl-node"]

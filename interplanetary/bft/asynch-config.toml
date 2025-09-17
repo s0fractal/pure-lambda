@@ -1,0 +1,177 @@
+# Asynchronous BFT Configuration for Interplanetary Consensus
+
+[consensus]
+protocol = "HoneyBadgerBFT"  # Asynchronous Byzantine Fault Tolerance
+mode = "asynchronous"        # No timing assumptions
+threshold_crypto = true       # Use threshold signatures
+
+[timing]
+# No global timeouts - each node progresses independently
+local_view_timeout = "1s"
+max_message_delay = "unbounded"  # No upper bound on delays
+heartbeat_interval = "10s"
+checkpoint_interval = "1000"     # blocks
+
+[network]
+# Adaptive to link conditions
+max_message_size = 65536         # 64KB bundles
+batch_size = 100                 # transactions per block
+compression = "zstd"             # High compression for deep space
+
+[nodes]
+# Earth cluster (low latency)
+[[nodes.earth]]
+id = "earth-1"
+endpoint = "dtn://sol/earth/na/validator1"
+weight = 1
+latency_ms = 50
+
+[[nodes.earth]]
+id = "earth-2"
+endpoint = "dtn://sol/earth/eu/validator2"
+weight = 1
+latency_ms = 100
+
+[[nodes.earth]]
+id = "earth-3"
+endpoint = "dtn://sol/earth/asia/validator3"
+weight = 1
+latency_ms = 150
+
+# Moon cluster (medium latency)
+[[nodes.moon]]
+id = "moon-1"
+endpoint = "dtn://sol/moon/nearside/validator1"
+weight = 1
+latency_ms = 1300
+
+[[nodes.moon]]
+id = "moon-2"
+endpoint = "dtn://sol/moon/farside/validator2"
+weight = 1
+latency_ms = 1300
+
+# Mars cluster (high latency)
+[[nodes.mars]]
+id = "mars-1"
+endpoint = "dtn://sol/mars/olympus/validator1"
+weight = 1
+latency_minutes = 14  # Average Earth-Mars delay
+
+[[nodes.mars]]
+id = "mars-2"
+endpoint = "dtn://sol/mars/valles/validator2"
+weight = 1
+latency_minutes = 14
+
+# Belt stations (extreme latency)
+[[nodes.belt]]
+id = "ceres-1"
+endpoint = "dtn://sol/belt/ceres/station1"
+weight = 0.5  # Lower weight due to intermittent connectivity
+latency_minutes = 23
+
+[quorum]
+# Flexible quorum policies
+earth_quorum = 2          # 2 of 3 Earth nodes
+moon_quorum = 1           # 1 of 2 Moon nodes
+mars_quorum = 1           # 1 of 2 Mars nodes
+global_threshold = 0.67   # 2/3 of all weighted votes
+
+# Allow progress with partial connectivity
+minimum_live_nodes = 5
+allow_partition_recovery = true
+
+[store_forward]
+enabled = true
+buffer_size_mb = 1024
+retention_hours = 72
+priority_queue = true
+
+# Custody transfer for reliability
+[custody]
+enabled = true
+acknowledgment_required = true
+retransmit_interval = "5m"
+max_retransmits = 10
+
+[async_bft]
+# HoneyBadgerBFT specific settings
+N = 9                    # Total nodes
+f = 3                    # Byzantine fault tolerance
+B = 100                  # Batch size
+
+# Threshold signature parameters
+threshold_signature_shares = 6  # 2f + 1
+reliable_broadcast = true
+common_coin = "threshold_sig"  # Use threshold signatures for randomness
+
+# Erasure coding for efficiency
+[erasure_coding]
+enabled = true
+data_shards = 5
+parity_shards = 4
+min_shards_required = 5
+
+[divergence_control]
+max_height_difference = 100
+force_sync_threshold = 50
+checkpoint_agreement_required = true
+
+# View change for liveness
+[view_change]
+enabled = true
+trigger = "timeout_or_f_plus_1_complaints"
+max_view = 10
+view_change_timeout_multiplier = 2
+
+[optimizations]
+# Reduce message complexity
+use_threshold_signatures = true
+use_erasure_coding = true
+batch_proposals = true
+pipeline_consensus = true
+
+# Adaptive parameters based on network conditions
+[adaptive]
+enable_adaptive_batch = true
+min_batch_size = 10
+max_batch_size = 1000
+target_block_time = "10s"
+
+# Adjust for detected latency
+latency_measurement_interval = "1m"
+auto_adjust_timeouts = true
+
+[persistence]
+# Local storage for bundles
+db_path = "/var/lib/pure-lambda/interplanetary"
+max_db_size_gb = 100
+compaction_interval = "1h"
+
+[monitoring]
+metrics_enabled = true
+metrics_port = 9090
+
+# Track interplanetary metrics
+[[monitoring.custom_metrics]]
+name = "earth_mars_rtt"
+type = "histogram"
+unit = "seconds"
+
+[[monitoring.custom_metrics]]
+name = "bundle_delivery_rate"
+type = "gauge"
+unit = "percent"
+
+[[monitoring.custom_metrics]]
+name = "consensus_rounds_total"
+type = "counter"
+unit = "rounds"
+
+[logging]
+level = "info"
+format = "json"
+output = "/var/log/pure-lambda/interplanetary.log"
+rotation = "daily"
+retention_days = 30

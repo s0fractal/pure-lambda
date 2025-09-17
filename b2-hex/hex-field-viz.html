@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2-Hex Field Visualizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', Consolas, monospace;
+            background: #0a0e27;
+            color: #e1e4e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 20px;
+        }
+
+        #controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 5px;
+            font-family: inherit;
+        }
+
+        button:hover { background: #2ea043; }
+
+        #field-svg {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+        }
+
+        .hex {
+            fill: #0d1117;
+            stroke: #30363d;
+            stroke-width: 2;
+        }
+
+        .hex.atom { stroke: #7c3aed; }
+        .hex.combinator { stroke: #f85149; }
+        .hex.active { fill: #1f6feb; }
+
+        .hex-label {
+            fill: #e1e4e8;
+            font-size: 11px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+        }
+
+        .edge {
+            stroke: #8b949e;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+
+        .edge.active {
+            stroke: #58a6ff;
+            stroke-width: 3;
+        }
+
+        #info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            width: 600px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+
+        .phash {
+            font-family: monospace;
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔷 B2-Hex Field Visualizer</h1>
+
+    <div id="controls">
+        <button onclick="loadExample('simple')">Simple Chain</button>
+        <button onclick="loadExample('split')">Split/Merge</button>
+        <button onclick="loadExample('delay')">With Delays</button>
+        <button onclick="animateRoute()">Animate Route</button>
+        <button onclick="toggleProfile()">Toggle Profile</button>
+    </div>
+
+    <svg id="field-svg" width="800" height="600" viewBox="-100 -50 900 700">
+        <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="10"
+                    refX="10" refY="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b949e"/>
+            </marker>
+        </defs>
+        <g id="edges"></g>
+        <g id="hexes"></g>
+    </svg>
+
+    <div id="info">
+        <div class="info-row">
+            <span>Field phash:</span>
+            <span class="phash" id="field-phash">ph_928586affb49f9d29340...</span>
+        </div>
+        <div class="info-row">
+            <span>Profile:</span>
+            <span id="profile">balanced</span>
+        </div>
+        <div class="info-row">
+            <span>Total cost:</span>
+            <span id="total-cost">lat=45µs, mem=8k</span>
+        </div>
+        <div class="info-row">
+            <span>Path length:</span>
+            <span id="path-length">5 hops</span>
+        </div>
+    </div>
+
+    <script>
+        // Hex math helpers
+        function hexToPixel(q, r, size = 30) {
+            const x = size * (3/2 * q);
+            const y = size * (Math.sqrt(3)/2 * q + Math.sqrt(3) * r);
+            return { x: x + 200, y: y + 200 };
+        }
+
+        function drawHex(q, r, label, type = 'atom') {
+            const { x, y } = hexToPixel(q, r);
+            const size = 30;
+            const angles = [30, 90, 150, 210, 270, 330];
+            const points = angles.map(a => {
+                const rad = a * Math.PI / 180;
+                return `${x + size * Math.cos(rad)},${y + size * Math.sin(rad)}`;
+            }).join(' ');
+
+            const hexes = document.getElementById('hexes');
+
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('points', points);
+            polygon.setAttribute('class', `hex ${type}`);
+            polygon.setAttribute('data-q', q);
+            polygon.setAttribute('data-r', r);
+            hexes.appendChild(polygon);
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x);
+            text.setAttribute('y', y);
+            text.setAttribute('class', 'hex-label');
+            text.textContent = label;
+            hexes.appendChild(text);
+        }
+
+        function drawEdge(q1, r1, q2, r2) {
+            const { x: x1, y: y1 } = hexToPixel(q1, r1);
+            const { x: x2, y: y2 } = hexToPixel(q2, r2);
+
+            const edges = document.getElementById('edges');
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('class', 'edge');
+            edges.appendChild(line);
+        }
+
+        function clearField() {
+            document.getElementById('hexes').innerHTML = '';
+            document.getElementById('edges').innerHTML = '';
+        }
+
+        // Example fields
+        const examples = {
+            simple: {
+                tiles: [
+                    { q: 0, r: 0, label: 'FOCUS', type: 'atom' },
+                    { q: 1, r: 0, label: 'SCAN', type: 'atom' },
+                    { q: 2, r: 0, label: 'MERGE', type: 'atom' }
+                ],
+                edges: [
+                    [0, 0, 1, 0],
+                    [1, 0, 2, 0]
+                ]
+            },
+            split: {
+                tiles: [
+                    { q: 0, r: 0, label: 'FOCUS', type: 'atom' },
+                    { q: 1, r: 0, label: 'SPLIT', type: 'combinator' },
+                    { q: 2, r: -1, label: 'SCAN', type: 'atom' },
+                    { q: 2, r: 1, label: 'DELAY', type: 'atom' },
+                    { q: 3, r: 0, label: 'MERGE', type: 'combinator' }
+                ],
+                edges: [
+                    [0, 0, 1, 0],
+                    [1, 0, 2, -1],
+                    [1, 0, 2, 1],
+                    [2, -1, 3, 0],
+                    [2, 1, 3, 0]
+                ]
+            },
+            delay: {
+                tiles: [
+                    { q: 0, r: 0, label: 'id', type: 'atom' },
+                    { q: 1, r: 0, label: 'DELAY', type: 'atom' },
+                    { q: 2, r: 0, label: 'FOCUS', type: 'atom' },
+                    { q: 3, r: 0, label: 'SCAN', type: 'atom' },
+                    { q: 3, r: -1, label: 'DELAY', type: 'atom' },
+                    { q: 4, r: 0, label: 'MERGE', type: 'combinator' }
+                ],
+                edges: [
+                    [0, 0, 1, 0],
+                    [1, 0, 2, 0],
+                    [2, 0, 3, 0],
+                    [3, 0, 3, -1],
+                    [3, -1, 4, 0],
+                    [3, 0, 4, 0]
+                ]
+            }
+        };
+
+        let currentProfile = 'balanced';
+
+        function loadExample(name) {
+            clearField();
+            const example = examples[name];
+
+            // Draw edges first (behind hexes)
+            example.edges.forEach(([q1, r1, q2, r2]) => {
+                drawEdge(q1, r1, q2, r2);
+            });
+
+            // Draw hexes
+            example.tiles.forEach(tile => {
+                drawHex(tile.q, tile.r, tile.label, tile.type);
+            });
+
+            // Update info
+            updatePhash();
+            document.getElementById('path-length').textContent = `${example.tiles.length} nodes`;
+        }
+
+        function updatePhash() {
+            // Generate a pseudo-phash based on current field
+            const hexes = document.querySelectorAll('.hex');
+            let hash = 'ph_';
+            hexes.forEach(hex => {
+                const q = hex.getAttribute('data-q');
+                const r = hex.getAttribute('data-r');
+                hash += Math.abs(q * 7 + r * 13) % 16;
+            });
+            hash += '...';
+            document.getElementById('field-phash').textContent = hash;
+        }
+
+        function toggleProfile() {
+            const profiles = ['balanced', 'apex', 'proof', 'perf'];
+            const idx = profiles.indexOf(currentProfile);
+            currentProfile = profiles[(idx + 1) % profiles.length];
+            document.getElementById('profile').textContent = currentProfile;
+
+            // Update cost display based on profile
+            const costs = {
+                'balanced': 'lat=45µs, mem=8k',
+                'apex': 'lat=120µs, mem=2k',
+                'proof': 'lat=60µs, mem=6k',
+                'perf': 'lat=25µs, mem=16k'
+            };
+            document.getElementById('total-cost').textContent = costs[currentProfile];
+        }
+
+        function animateRoute() {
+            const edges = document.querySelectorAll('.edge');
+            edges.forEach((edge, i) => {
+                setTimeout(() => {
+                    edge.classList.add('active');
+                    setTimeout(() => edge.classList.remove('active'), 1000);
+                }, i * 200);
+            });
+
+            const hexes = document.querySelectorAll('.hex');
+            hexes.forEach((hex, i) => {
+                setTimeout(() => {
+                    hex.classList.add('active');
+                    setTimeout(() => hex.classList.remove('active'), 1000);
+                }, i * 200);
+            });
+        }
+
+        // Load initial example
+        loadExample('split');
+    </script>
+</body>
+</html>

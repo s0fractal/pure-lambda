@@ -1,0 +1,462 @@
+/* Pure Lambda Seed Gallery Styles - Clean, minimal, M1-friendly */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+#searchInput {
+    flex: 1;
+    min-width: 300px;
+    padding: 12px 16px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.status {
+    color: #6c757d;
+    font-weight: 500;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+/* Main Content */
+.main-content {
+    min-height: 500px;
+}
+
+/* Seeds List */
+.seeds-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.seed-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.seed-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #4CAF50;
+}
+
+.seed-card h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.seed-card .category {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.seed-card .description {
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.metrics {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.metrics span {
+    background: #f8f9fa;
+    color: #6c757d;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Seed Detail */
+.seed-detail {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.detail-header h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+#backButton {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+#backButton:hover {
+    background: #5a6268;
+}
+
+/* Info Sections */
+.info-section {
+    margin-bottom: 30px;
+}
+
+.info-section h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+    border-left: 4px solid #4CAF50;
+    padding-left: 15px;
+}
+
+.metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.metadata-grid > div {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 3px solid #4CAF50;
+}
+
+.metadata-grid strong {
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.metadata-grid ul {
+    margin-top: 8px;
+    padding-left: 20px;
+}
+
+.metadata-grid li {
+    margin-bottom: 4px;
+}
+
+/* DAG SVG */
+#dagSvg {
+    width: 100%;
+    height: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    overflow: visible;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn.primary {
+    background: #4CAF50;
+    color: white;
+}
+
+.action-btn.primary:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+}
+
+.action-btn.secondary {
+    background: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+}
+
+.action-btn.secondary:hover {
+    background: #dee2e6;
+    border-color: #adb5bd;
+}
+
+/* Raw Data */
+#seedRawData {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #searchInput {
+        min-width: unset;
+    }
+
+    .seeds-list {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        text-align: center;
+        justify-content: center;
+    }
+
+    .metadata-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .seed-detail {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .metrics {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #dagSvg {
+        height: 300px;
+    }
+}
+
+/* Dark mode support for M1 systems */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #1a1a1a;
+        color: #e9ecef;
+    }
+
+    .seed-card, .seed-detail {
+        background: #2d3338;
+        border-color: #495057;
+    }
+
+    .seed-card .category {
+        background: #0d4377;
+        color: #66d9ef;
+    }
+
+    .metadata-grid > div {
+        background: #343a40;
+    }
+
+    #seedRawData {
+        background: #212529;
+        border-color: #495057;
+        color: #f8f9fa;
+    }
+
+    #dagSvg {
+        background: #2d3338;
+        border-color: #495057;
+    }
+
+    .status {
+        background: #2d3338;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    #searchInput {
+        background: #2d3338;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    #searchInput:focus {
+        border-color: #4CAF50;
+    }
+}
+
+/* Garden Seeds Styles */
+.section-header {
+    margin: 30px 0 20px 0;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+.section-header h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.section-description {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin: 5px 0 0 0;
+    font-style: italic;
+}
+
+.garden-seed {
+    border-left: 4px solid #4CAF50;
+    background: linear-gradient(135deg, #f8fff8 0%, #f0f8f0 100%);
+}
+
+.garden-seed:hover {
+    background: linear-gradient(135deg, #f0fff0 0%, #e8f5e8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+}
+
+.pattern {
+    color: #28a745;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 5px 0;
+    padding: 4px 8px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* Dark mode for garden elements */
+@media (prefers-color-scheme: dark) {
+    .section-header {
+        border-bottom-color: #495057;
+    }
+
+    .garden-seed {
+        background: linear-gradient(135deg, #1a2e1a 0%, #223522 100%);
+        border-left-color: #4CAF50;
+    }
+
+    .garden-seed:hover {
+        background: linear-gradient(135deg, #1e3c1e 0%, #254225 100%);
+    }
+
+    .pattern {
+        background: rgba(76, 175, 80, 0.2);
+        color: #66bb6a;
+    }
+}

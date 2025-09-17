@@ -1,0 +1,13 @@
+replication:
+  status: ACTIVE
+  policy: RFC-003
+  interval: pulse  # 24h
+  cities:
+    - kyiv-prime
+    - lviv-harbor
+  next_sync: 1757756947
+  auto_exchange:
+    - timecapsules
+    - champion_genes
+    - policy_updates
+    - reputation_scores

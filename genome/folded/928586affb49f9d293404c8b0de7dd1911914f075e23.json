@@ -1,0 +1,25 @@
+{
+  "op": "THEN",
+  "l": {
+    "op": "SPLIT",
+    "l": {
+      "op": "ATOM",
+      "name": "FOCUS"
+    },
+    "r": {
+      "op": "THEN",
+      "l": {
+        "op": "ATOM",
+        "name": "DELAY"
+      },
+      "r": {
+        "op": "ATOM",
+        "name": "SCAN"
+      }
+    }
+  },
+  "r": {
+    "op": "ATOM",
+    "name": "MERGE"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Gene Registry Schema",
+  "type": "object",
+  "required": ["cid", "soul", "name", "version", "license", "metrics"],
+  "properties": {
+    "cid": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{43,}={0,2}$",
+      "description": "Content identifier (Blake3 hash)"
+    },
+    "soul": {
+      "type": "string",
+      "pattern": "^λ-[a-f0-9]{8,}$",
+      "description": "Semantic hash of the gene"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z_]*$",
+      "description": "Gene name (e.g., FOCUS, OBSERVE)"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version"
+    },
+    "license": {
+      "type": "string",
+      "enum": ["MIT", "Apache-2.0", "BSD-3-Clause", "ISC", "CC0-1.0", "Unlicense"],
+      "description": "SPDX license identifier"
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo", "rev"],
+        "properties": {
+          "repo": {
+            "type": "string",
+            "format": "uri"
+          },
+          "rev": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "author": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["time_ns", "allocs", "proof_coverage"],
+      "properties": {
+        "time_ns": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Average execution time in nanoseconds"
+        },
+        "allocs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of allocations"
+        },
+        "proof_coverage": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Percentage of laws proven"
+        },
+        "speedup": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Speedup vs baseline"
+        },
+        "memory_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Memory usage in bytes"
+        }
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "sig"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^ed25519:[A-Za-z0-9+/]{43}=$",
+            "description": "Public key with algorithm prefix"
+          },
+          "sig": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{86}==$",
+            "description": "Base64 signature"
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Unix timestamp of signature"
+          }
+        }
+      }
+    },
+    "reputation": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Reputation score"
+        },
+        "votes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of votes"
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Leaderboard rank"
+        }
+      }
+    },
+    "laws": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "proven"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "proven": {
+            "type": "boolean"
+          },
+          "witness": {
+            "type": "string",
+            "description": "File:line reference"
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "CID of dependent gene"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["core", "optimization", "io", "quantum", "experimental"]
+      }
+    }
+  }
+}

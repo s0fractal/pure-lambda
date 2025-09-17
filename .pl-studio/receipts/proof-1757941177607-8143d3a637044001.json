@@ -1,0 +1,26 @@
+{
+  "type": "proof",
+  "id": "proof-1757941177607-8143d3a637044001",
+  "command": "echo 'Hello Lambda Studio'",
+  "timestamp": "2025-09-15T12:59:37.629Z",
+  "execution": {
+    "success": true,
+    "exitCode": 0,
+    "time_ms": 20,
+    "output_hash": "d1333fe7344acab738af50afa1d70a7149e53b6a7dec42271f19c38c60142573",
+    "error_hash": null
+  },
+  "oracle": {
+    "env_mutations": false,
+    "fs_mutations": false,
+    "network_access": false,
+    "time_access": false,
+    "random_access": false
+  },
+  "proof": {
+    "deterministic": true,
+    "side_effect_free": true,
+    "reproducible": true
+  },
+  "cid": "a0a5e242334769432e830686573900f9d53776837a70d188e7cdd45b407bbbf4"
+}

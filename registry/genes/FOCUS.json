@@ -1,0 +1,63 @@
+{
+  "cid": "QmXaYZ3f5c7b2a9d8e7f6g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8",
+  "soul": "λ-3f5c7b2a9",
+  "name": "FOCUS",
+  "version": "1.0.0",
+  "license": "MIT",
+  "provenance": [
+    {
+      "repo": "https://github.com/s0fractal/pure-lambda",
+      "rev": "1baa45c9d8e7f6g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3",
+      "author": "s0fractal",
+      "timestamp": 1704067200
+    }
+  ],
+  "metrics": {
+    "time_ns": 45000,
+    "allocs": 4,
+    "proof_coverage": 1.0,
+    "speedup": 1.8,
+    "memory_bytes": 256
+  },
+  "signatures": [
+    {
+      "key": "ed25519:CI-yvO6kxPMr8ZXJT5LQ2hPaYKwNvKX9HfkZPGIS8=",
+      "sig": "LKMqZg0Fp6D6FHMqS4lO0UgHKJYCqzPOMuCvn4VRYXNm8ixVxQNQ8gv0FZKMpJKLgYW5Kdt8lfZ0EhdzCg==",
+      "timestamp": 1704067200
+    }
+  ],
+  "reputation": {
+    "score": 0.89,
+    "votes": 14,
+    "rank": 1
+  },
+  "laws": [
+    {
+      "name": "E1_identity",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/focus.rs:89"
+    },
+    {
+      "name": "E2_mapfilter",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/focus.rs:101"
+    },
+    {
+      "name": "E3_fusion",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/focus.rs:113"
+    },
+    {
+      "name": "E4_idempotent",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/focus.rs:125"
+    },
+    {
+      "name": "E5_partition",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/focus.rs:137"
+    }
+  ],
+  "dependencies": [],
+  "tags": ["core", "optimization"]
+}

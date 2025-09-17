@@ -1,0 +1,232 @@
+# Invariant Lattice Policy Configuration
+
+invariants:
+  # Level 100 - Inviolable (Constitution-level)
+  inviolable:
+    - id: consent
+      description: "All actions require explicit consent from affected parties"
+      enforcement: automatic
+      violation_response: block_and_alert
+      proof_required: true
+      
+    - id: right_to_exit
+      description: "Any participant can exit the system freely"
+      enforcement: automatic
+      violation_response: block_and_alert
+      proof_required: true
+      
+    - id: human_dignity
+      description: "Respect for human agency and dignity"
+      enforcement: automatic
+      violation_response: block_and_alert
+      proof_required: true
+
+  # Level 90 - Critical (Treaty-level)
+  critical:
+    - id: city_autonomy
+      description: "Cities maintain sovereignty over local decisions"
+      enforcement: automatic
+      violation_response: require_supermajority
+      
+    - id: data_integrity
+      description: "Content-addressed data remains immutable"
+      enforcement: automatic
+      violation_response: reject_transaction
+      
+    - id: privacy_preservation
+      description: "Personal data requires explicit consent for use"
+      enforcement: automatic
+      violation_response: block_and_alert
+
+  # Level 80 - Essential (Protocol-level)
+  essential:
+    - id: federation_consensus
+      description: "Federation decisions require 2/3 majority"
+      enforcement: automatic
+      violation_response: reject_proposal
+      
+    - id: cryptographic_security
+      description: "All signatures must be cryptographically valid"
+      enforcement: automatic
+      violation_response: reject_transaction
+      
+    - id: economic_fairness
+      description: "Gini coefficient must remain below 0.4"
+      enforcement: monitored
+      violation_response: trigger_intervention
+
+  # Level 70 - Important (Governance-level)
+  important:
+    - id: stewardship_rotation
+      description: "Steward positions rotate regularly"
+      enforcement: scheduled
+      violation_response: force_rotation
+      
+    - id: decentralization_limit
+      description: "No entity controls >33% of resources"
+      enforcement: automatic
+      violation_response: rebalance_power
+      
+    - id: transparency_requirement
+      description: "All governance decisions are public"
+      enforcement: automatic
+      violation_response: publish_automatically
+
+  # Level 60 - Standard (Operational-level)
+  standard:
+    - id: performance_sla
+      description: "P99 latency < 1000ms"
+      enforcement: monitored
+      violation_response: scale_resources
+      
+    - id: availability_target
+      description: "System uptime > 99.9%"
+      enforcement: monitored
+      violation_response: activate_failover
+      
+    - id: cultural_vitality
+      description: "Minimum 1 cultural artifact per city per pulse"
+      enforcement: monitored
+      violation_response: incentivize_creation
+
+hierarchy:
+  # Define precedence relationships
+  overrides:
+    consent: [all]  # Consent overrides everything
+    right_to_exit: [all_except_consent]
+    human_dignity: [all_except_inviolable]
+    city_autonomy: [essential, important, standard]
+    data_integrity: [important, standard]
+    federation_consensus: [standard]
+    
+  # Define incomparable pairs (orthogonal concerns)
+  incomparable:
+    - [performance_sla, cultural_vitality]
+    - [cryptographic_security, economic_fairness]
+    - [stewardship_rotation, availability_target]
+
+enforcement:
+  # How violations are detected
+  detection:
+    continuous:  # Real-time monitoring
+      - consent
+      - right_to_exit
+      - data_integrity
+      - cryptographic_security
+      
+    periodic:  # Check every N blocks
+      interval: 100
+      invariants:
+        - city_autonomy
+        - federation_consensus
+        - decentralization_limit
+        
+    scheduled:  # Check at specific times
+      daily:
+        - cultural_vitality
+        - transparency_requirement
+      weekly:
+        - economic_fairness
+        - stewardship_rotation
+        
+  # Automatic repair actions
+  auto_repair:
+    enabled:
+      - data_integrity: rebuild_from_cid
+      - cryptographic_security: revoke_and_reissue
+      - performance_sla: auto_scale
+      - availability_target: activate_backup
+      
+    disabled:  # Require human/governance intervention
+      - consent
+      - right_to_exit
+      - city_autonomy
+      - economic_fairness
+
+  # Proof generation
+  formal_proof:
+    required_for:
+      - consent
+      - right_to_exit
+      - human_dignity
+      - data_integrity
+      
+    optional_for:
+      - city_autonomy
+      - federation_consensus
+      
+    proof_timeout: 300  # seconds
+    fallback: request_manual_review
+
+monitoring:
+  # Metrics to track
+  drift_metrics:
+    - name: invariant_violations_total
+      type: counter
+      labels: [invariant_id, severity]
+      
+    - name: drift_score
+      type: gauge
+      formula: sum(violations * weight) / ideal_state
+      
+    - name: repair_success_rate
+      type: gauge
+      window: 7d
+      
+    - name: hierarchy_violations
+      type: counter
+      alert_threshold: 0  # Any violation triggers alert
+      
+  # Dashboards
+  dashboards:
+    - name: lattice_health
+      refresh: 10s
+      public: true
+      
+    - name: drift_analysis
+      refresh: 60s
+      public: true
+      
+    - name: repair_status
+      refresh: 30s
+      restricted: stewards_only
+
+  # Alerting
+  alerts:
+    critical:
+      - condition: invariant_level >= 90 AND violated
+        notify: [all_stewards, emergency_response]
+        escalation: immediate
+        
+    high:
+      - condition: drift_score > 0.3
+        notify: [monitoring_circle]
+        escalation: 6h
+        
+    medium:
+      - condition: repair_failure_rate > 0.1
+        notify: [technical_circle]
+        escalation: 24h
+
+# Learning and adaptation
+learning:
+  track_decisions: true
+  analyze_patterns: true
+  
+  adaptation:
+    # Can adjust these parameters based on learning
+    adjustable:
+      - enforcement.periodic.interval
+      - monitoring.alerts.*.escalation
+      - enforcement.auto_repair.enabled
+      
+    # Cannot adjust these (protected)
+    protected:
+      - invariants.inviolable
+      - hierarchy.overrides.consent
+      - enforcement.formal_proof.required_for
+
+  feedback_loop:
+    source: [steward_reports, public_feedback, chaos_tests]
+    frequency: weekly
+    integration: autopoiesis_engine

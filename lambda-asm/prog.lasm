@@ -1,0 +1,37 @@
+; λ-ASM v0 - Breathing Circle Demo
+; input[0] = t (time parameter)
+; input[1] = s (scale factor)
+
+LOAD  r0, input[0]         ; r0 = t
+LOAD  r18, input[1]        ; r18 = s (scale)
+SIN   r0 -> r1             ; r1 = sin(t)
+MUL   r1, r18 -> r2        ; r2 = sin(t) * s
+ADD   r2, 150 -> r3        ; r3 = cx = 150 + sin(t)*s
+
+CONST r4, 150              ; r4 = cy = 150 (center Y)
+ADD   r1, 1 -> r5          ; r5 = sin(t) + 1 (shift to 0..2)
+MUL   r5, 10 -> r6         ; r6 = (sin(t)+1) * 10
+ADD   r6, 20 -> r7         ; r7 = r = 20 + (sin(t)+1)*10
+
+; Output to SVG circle attributes
+OUT   r3, "circle.cx"
+OUT   r4, "circle.cy"
+OUT   r7, "circle.r"
+
+; Second circle (orbiting)
+MUL   r0, 2 -> r8          ; r8 = t*2 (faster rotation)
+SIN   r8 -> r9             ; r9 = sin(2t)
+MUL   r9, 80 -> r10        ; r10 = sin(2t) * 80
+ADD   r10, 150 -> r11      ; r11 = cx2 = 150 + sin(2t)*80
+
+CONST r12, 0.7853          ; r12 = π/4
+ADD   r8, r12 -> r13       ; r13 = 2t + π/4
+SIN   r13 -> r14           ; r14 = sin(2t + π/4) = cos(2t)
+MUL   r14, 80 -> r15       ; r15 = cos(2t) * 80
+ADD   r15, 150 -> r16      ; r16 = cy2 = 150 + cos(2t)*80
+
+CONST r17, 8               ; r17 = r2 = 8 (small radius)
+
+OUT   r11, "orbit.cx"
+OUT   r16, "orbit.cy"
+OUT   r17, "orbit.r"

@@ -1,0 +1,19 @@
+# Endgame ruleset - only essential transformations
+rules:
+  - map_fusion      # (map f) ∘ (map g) = map (f ∘ g)
+  - fold_sink       # push fold to data source
+  - focus_hard      # FOCUS with 98% weight
+  - early_stop      # stop at 90% good enough
+  - clone_elim      # remove unnecessary clones
+
+laws:
+  - identity        # f(id) = id
+  - fusion          # compose preserves semantics
+  - round_trip      # there and back again
+  - length_preserved # transformations preserve cardinality
+  - monotone        # optimizations only improve
+
+target:
+  size: "< 1.2MB"
+  speedup: "> 10x"
+  distortion: "< 0.1"

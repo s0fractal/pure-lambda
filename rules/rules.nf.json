@@ -1,0 +1,109 @@
+{
+  "version": "1.0",
+  "description": "Safe normal form rewrite rules for local graph transformations",
+  "rules": [
+    {
+      "id": "THEN_IDENTITY",
+      "name": "THEN(id,f) → f",
+      "description": "Remove identity composition in THEN operations",
+      "pattern": {
+        "op": "THEN",
+        "left": { "op": "IDENTITY" },
+        "right": { "op": "*" }
+      },
+      "replacement": {
+        "op": "COPY_RIGHT"
+      },
+      "constraints": {
+        "pure_only": true,
+        "law_compatible": true,
+        "breath_governor_check": "kappa >= 0"
+      },
+      "cost_delta": {
+        "hops": -1,
+        "latency": -1,
+        "memory": 0
+      }
+    },
+    {
+      "id": "SPLIT_MERGE_IDENTITY",
+      "name": "SPLIT▶MERGE(id,id) → id",
+      "description": "Remove redundant split-merge with identical branches",
+      "pattern": {
+        "op": "SPLIT",
+        "followed_by": {
+          "op": "MERGE",
+          "left": { "same_as": "split_left" },
+          "right": { "same_as": "split_right" }
+        }
+      },
+      "replacement": {
+        "op": "IDENTITY"
+      },
+      "constraints": {
+        "pure_only": true,
+        "law_compatible": true,
+        "breath_governor_check": "kappa >= 0",
+        "branches_identical": true
+      },
+      "cost_delta": {
+        "hops": -2,
+        "latency": -2,
+        "memory": -1
+      }
+    },
+    {
+      "id": "FOCUS_COMPOSE",
+      "name": "FOCUS∘FOCUS → FOCUS'",
+      "description": "Compose two consecutive FOCUS operations into single optimized FOCUS",
+      "pattern": {
+        "op": "FOCUS",
+        "followed_by": {
+          "op": "FOCUS"
+        }
+      },
+      "replacement": {
+        "op": "FOCUS",
+        "code": "composed",
+        "gid": "generate_new"
+      },
+      "constraints": {
+        "pure_only": true,
+        "law_compatible": true,
+        "breath_governor_check": "kappa >= 0",
+        "both_tiles_pure": true,
+        "composable": true
+      },
+      "cost_delta": {
+        "hops": -1,
+        "latency": -1,
+        "memory": 0
+      },
+      "composition": {
+        "method": "syntactic_wrap",
+        "gid_update": "PNF_LITE"
+      }
+    }
+  ],
+  "constraints": {
+    "global": {
+      "breath_governor_expand_mode": false,
+      "kappa_threshold": 0,
+      "purity_required": true,
+      "law_compatibility_required": true
+    },
+    "safety": {
+      "max_rewrites_per_pass": 100,
+      "max_passes": 10,
+      "preserve_semantics": true,
+      "preserve_types": true
+    }
+  },
+  "composition_rules": {
+    "focus_compose": {
+      "wrap_template": "function composed_focus(input) { return focus2(focus1(input)); }",
+      "inline_threshold": 50,
+      "preserve_source_maps": true
+    }
+  }
+}

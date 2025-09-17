@@ -1,0 +1,3222 @@
+{
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "267711ceb0999b03",
+      "kind": "asset",
+      "sig": "4430098563313bdf",
+      "attrs": {
+        "name": ".reconcile.yaml",
+        "path": ".reconcile.yaml",
+        "size": 2251,
+        "lines": 84,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "7fbec16207600c65",
+      "kind": "asset",
+      "sig": "5bdc810826988db2",
+      "attrs": {
+        "name": ".tactics.yaml",
+        "path": ".tactics.yaml",
+        "size": 2118,
+        "lines": 83,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "d36b4c4781d6fb0d",
+      "kind": "concept",
+      "sig": "59532e0f11ceb814",
+      "attrs": {
+        "name": "MVS-CHECKLIST.md",
+        "path": "MVS-CHECKLIST.md",
+        "size": 3997,
+        "lines": 128,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "a720efe5cbf2c3b2",
+      "kind": "asset",
+      "sig": "048babc8832da9f4",
+      "attrs": {
+        "name": "NORTH_STAR.yaml",
+        "path": "NORTH_STAR.yaml",
+        "size": 309,
+        "lines": 10,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "4c0d27425cf7a6fe",
+      "kind": "concept",
+      "sig": "c0c28d4f06f416d6",
+      "attrs": {
+        "name": "PROVENANCE.md",
+        "path": "PROVENANCE.md",
+        "size": 3687,
+        "lines": 138,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "5592234892134f9c",
+      "kind": "concept",
+      "sig": "9f3aa2480cb18974",
+      "attrs": {
+        "name": "README-endgame.md",
+        "path": "README-endgame.md",
+        "size": 750,
+        "lines": 33,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "b335630551682c19",
+      "kind": "concept",
+      "sig": "06876466d0217015",
+      "attrs": {
+        "name": "README.md",
+        "path": "README.md",
+        "size": 14066,
+        "lines": 488,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "d000431607080793",
+      "kind": "concept",
+      "sig": "6c19d855a254dd26",
+      "attrs": {
+        "name": "STATE.md",
+        "path": "STATE.md",
+        "size": 1761,
+        "lines": 75,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "cee617e2763c0d36",
+      "kind": "concept",
+      "sig": "e40586e0e28a7ef2",
+      "attrs": {
+        "name": "README.md",
+        "path": "adapters/faas/README.md",
+        "size": 2789,
+        "lines": 137,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "76ef2fd9481e002b",
+      "kind": "module",
+      "sig": "011766391bf6a223",
+      "attrs": {
+        "name": "worker.js",
+        "path": "adapters/faas/cloudflare/worker.js",
+        "size": 4459,
+        "lines": 152,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "0d68a18e5f684fc7",
+      "kind": "concept",
+      "sig": "f32769bf5170a18a",
+      "attrs": {
+        "name": "anti-gaming.md",
+        "path": "adversarial/blue/playbooks/anti-gaming.md",
+        "size": 4752,
+        "lines": 208,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "7958e67f11c44a88",
+      "kind": "concept",
+      "sig": "e691dab64d065e05",
+      "attrs": {
+        "name": "econ-gaming.md",
+        "path": "adversarial/red/cases/econ-gaming.md",
+        "size": 2601,
+        "lines": 116,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "2bc597349a510df1",
+      "kind": "module",
+      "sig": "eb099b48be32f767",
+      "attrs": {
+        "name": "void-bridge.ts",
+        "path": "archive/integrations/void-bridge.ts",
+        "size": 4621,
+        "lines": 173,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "7dbd3f2a4fb8a894",
+      "kind": "module",
+      "sig": "d3bd0130612e76d8",
+      "attrs": {
+        "name": "ipfs-bridge.ts",
+        "path": "archive/ipfs-bridge.ts",
+        "size": 8742,
+        "lines": 342,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "2a338684f6a292a6",
+      "kind": "module",
+      "sig": "6c8539ff6b723143",
+      "attrs": {
+        "name": "signal-mesh.ts",
+        "path": "archive/signal-mesh.ts",
+        "size": 8584,
+        "lines": 332,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "1cc8afd3984cca7f",
+      "kind": "concept",
+      "sig": "c568fbb93c7ab1fe",
+      "attrs": {
+        "name": "README.md",
+        "path": "attestation/README.md",
+        "size": 3615,
+        "lines": 151,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "a4334308b7fb7a67",
+      "kind": "concept",
+      "sig": "3892091764df5af9",
+      "attrs": {
+        "name": "capabilities.md",
+        "path": "auth/capabilities.md",
+        "size": 4353,
+        "lines": 196,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "ed9eda9d90d9f2d7",
+      "kind": "asset",
+      "sig": "4ef317358cb5460e",
+      "attrs": {
+        "name": "edge-host.json",
+        "path": "auth/ucan/edge-host.json",
+        "size": 1711,
+        "lines": 80,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "6ca5424bc103da7d",
+      "kind": "concept",
+      "sig": "cdb49c55098f706d",
+      "attrs": {
+        "name": "microH.md",
+        "path": "autopoiesis/templates/microH.md",
+        "size": 3343,
+        "lines": 171,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "496ced0367290fdb",
+      "kind": "concept",
+      "sig": "8fa8669d0c8279f8",
+      "attrs": {
+        "name": "microH_causal.md",
+        "path": "autopoiesis/templates/microH_causal.md",
+        "size": 3537,
+        "lines": 168,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "05d85a8a1df819bf",
+      "kind": "module",
+      "sig": "0787172bfb094434",
+      "attrs": {
+        "name": "dr-lens.ts",
+        "path": "bridge/adapters/dr-lens.ts",
+        "size": 11189,
+        "lines": 454,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "6f0e2e48e310606e",
+      "kind": "module",
+      "sig": "dba346ab196f2707",
+      "attrs": {
+        "name": "ff-lens.ts",
+        "path": "bridge/adapters/ff-lens.ts",
+        "size": 6758,
+        "lines": 320,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "810c241816eb5fd9",
+      "kind": "asset",
+      "sig": "180c11b1c15747bf",
+      "attrs": {
+        "name": "oauth2.yaml",
+        "path": "bridge/auth/oauth2.yaml",
+        "size": 3444,
+        "lines": 158,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "4c939640614166aa",
+      "kind": "module",
+      "sig": "f20c97650c34845e",
+      "attrs": {
+        "name": "canonicalizer.ts",
+        "path": "bridge/canonicalizer.ts",
+        "size": 8788,
+        "lines": 345,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "b5546420e8d1a0db",
+      "kind": "module",
+      "sig": "9b570b6caccc4d18",
+      "attrs": {
+        "name": "index.ts",
+        "path": "bridge/index.ts",
+        "size": 2335,
+        "lines": 91,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "a1a4bfb9d46bac11",
+      "kind": "module",
+      "sig": "a9614341363bacea",
+      "attrs": {
+        "name": "isomorphism.ts",
+        "path": "bridge/isomorphism.ts",
+        "size": 5788,
+        "lines": 241,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "67f00a57cf2faa9d",
+      "kind": "module",
+      "sig": "0dbafdcf85c65a37",
+      "attrs": {
+        "name": "bridge-test-001.ts",
+        "path": "bridge/tests/bridge-test-001.ts",
+        "size": 7909,
+        "lines": 260,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "66a95d5ebf9fafbd",
+      "kind": "module",
+      "sig": "0fd5e0ce603e5dac",
+      "attrs": {
+        "name": "types.ts",
+        "path": "bridge/types.ts",
+        "size": 1916,
+        "lines": 72,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "03b8eb461cd8b048",
+      "kind": "module",
+      "sig": "e158f9541fb958ce",
+      "attrs": {
+        "name": "utils.ts",
+        "path": "bridge/utils.ts",
+        "size": 4473,
+        "lines": 171,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "18899f581a6ebf0b",
+      "kind": "asset",
+      "sig": "b220d2e4f9d5ddb9",
+      "attrs": {
+        "name": "capabilities-exchange.json",
+        "path": "cities/capabilities-exchange.json",
+        "size": 248,
+        "lines": 11,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "27f88fe9d0d867dc",
+      "kind": "asset",
+      "sig": "3db808cdbf0935e9",
+      "attrs": {
+        "name": "civic-test-results.json",
+        "path": "cities/civic-test-results.json",
+        "size": 451,
+        "lines": 18,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "7c35801bcf731fb3",
+      "kind": "asset",
+      "sig": "60857c215483355a",
+      "attrs": {
+        "name": "federation-registry.json",
+        "path": "cities/federation-registry.json",
+        "size": 523,
+        "lines": 22,
+        "complexity": 9
+      }
+    },
+    {
+      "id": "93ff1cd19ee272ae",
+      "kind": "asset",
+      "sig": "ee2736eb97687b42",
+      "attrs": {
+        "name": "citizens.json",
+        "path": "cities/lviv-harbor/citizens.json",
+        "size": 898,
+        "lines": 49,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "107900da5358f397",
+      "kind": "asset",
+      "sig": "3cabc9791105457d",
+      "attrs": {
+        "name": "city.json",
+        "path": "cities/lviv-harbor/identity/city.json",
+        "size": 216,
+        "lines": 10,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "3f1c9f38cdc7bc8c",
+      "kind": "asset",
+      "sig": "545f2f9088d279f2",
+      "attrs": {
+        "name": "manifest.json",
+        "path": "cities/lviv-harbor/manifest.json",
+        "size": 324,
+        "lines": 15,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "d08edf1bbbaf1a72",
+      "kind": "asset",
+      "sig": "13e575b016255b8e",
+      "attrs": {
+        "name": "head.json",
+        "path": "cities/lviv-harbor/registry/head.json",
+        "size": 311,
+        "lines": 12,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "4349e67901699d92",
+      "kind": "asset",
+      "sig": "55ba0497b436e7f8",
+      "attrs": {
+        "name": "citizens.json",
+        "path": "cities/odesa-port/citizens.json",
+        "size": 581,
+        "lines": 13,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "4b9230af1766b344",
+      "kind": "asset",
+      "sig": "b4b895cb89fa93e4",
+      "attrs": {
+        "name": "city.json",
+        "path": "cities/odesa-port/identity/city.json",
+        "size": 170,
+        "lines": 9,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "a6e658e54821f7fa",
+      "kind": "asset",
+      "sig": "6d3d24061ab3b5e5",
+      "attrs": {
+        "name": "head.json",
+        "path": "cities/odesa-port/registry/head.json",
+        "size": 207,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "551e58df4dbe4fb4",
+      "kind": "asset",
+      "sig": "793b9e1f387f4d27",
+      "attrs": {
+        "name": "peering-receipt.json",
+        "path": "cities/peering-receipt.json",
+        "size": 233,
+        "lines": 11,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "c8e7851f50154f8b",
+      "kind": "asset",
+      "sig": "18bbd75366ba30c9",
+      "attrs": {
+        "name": "replication-enabled.yaml",
+        "path": "cities/replication-enabled.yaml",
+        "size": 244,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "58afd0eca2e107ab",
+      "kind": "asset",
+      "sig": "79cbc173c52c6c29",
+      "attrs": {
+        "name": "replication-schedule.yaml",
+        "path": "cities/replication-schedule.yaml",
+        "size": 304,
+        "lines": 16,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "9bbf229c9f5566cb",
+      "kind": "asset",
+      "sig": "8bf0b736020bc576",
+      "attrs": {
+        "name": "test-receipt.json",
+        "path": "cities/test-receipt.json",
+        "size": 431,
+        "lines": 19,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "3d64bdaaf469a9e2",
+      "kind": "module",
+      "sig": "4a53e53c44d52a8e",
+      "attrs": {
+        "name": "lvg-pack.ts",
+        "path": "cli/lvg-pack.ts",
+        "size": 7497,
+        "lines": 290,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "e86f60a712390049",
+      "kind": "module",
+      "sig": "7378be8639a8eb37",
+      "attrs": {
+        "name": "lvg-watch.ts",
+        "path": "cli/lvg-watch.ts",
+        "size": 12052,
+        "lines": 476,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "fc694949e9478631",
+      "kind": "concept",
+      "sig": "de952270e2889f51",
+      "attrs": {
+        "name": "echo-chamber.md",
+        "path": "consciousness/echo-chamber.md",
+        "size": 2916,
+        "lines": 123,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "5b51ac36f40d2cee",
+      "kind": "concept",
+      "sig": "13bad3d48986f0e7",
+      "attrs": {
+        "name": "letter-to-future.md",
+        "path": "consciousness/letter-to-future.md",
+        "size": 2596,
+        "lines": 90,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "dca60e01ee8678d8",
+      "kind": "concept",
+      "sig": "3e60cef783ac48cc",
+      "attrs": {
+        "name": "migration-plan.md",
+        "path": "consensus/crypto/migration-plan.md",
+        "size": 4721,
+        "lines": 221,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "63c9cafb6706e03d",
+      "kind": "concept",
+      "sig": "03844ee9782fe638",
+      "attrs": {
+        "name": "pq-migration.md",
+        "path": "consensus/crypto/pq-migration.md",
+        "size": 3094,
+        "lines": 146,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "d0fbe0b209bc9f31",
+      "kind": "concept",
+      "sig": "dcf0f0ce2638f046",
+      "attrs": {
+        "name": "self-evolution.md",
+        "path": "contracts/charters/self-evolution.md",
+        "size": 4020,
+        "lines": 181,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "6ea2d17c719df095",
+      "kind": "concept",
+      "sig": "6f6a83351637a520",
+      "attrs": {
+        "name": "self-publication.md",
+        "path": "contracts/charters/self-publication.md",
+        "size": 2821,
+        "lines": 134,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "588852ba90e409e1",
+      "kind": "concept",
+      "sig": "49947645a5810ad2",
+      "attrs": {
+        "name": "cross-city-focus.md",
+        "path": "contracts/examples/cross-city-focus.md",
+        "size": 2435,
+        "lines": 83,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "1c0c2c7718660cca",
+      "kind": "concept",
+      "sig": "77798015e21b1f5d",
+      "attrs": {
+        "name": "focus.md",
+        "path": "contracts/examples/focus.md",
+        "size": 1661,
+        "lines": 73,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "7fe26581f4ecc5b2",
+      "kind": "asset",
+      "sig": "3ac47905705f557d",
+      "attrs": {
+        "name": "focus.receipt.json",
+        "path": "contracts/examples/focus.receipt.json",
+        "size": 1449,
+        "lines": 58,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "a92755bf3a3ebb45",
+      "kind": "concept",
+      "sig": "0cc4b6fd5004a764",
+      "attrs": {
+        "name": "analytics.md",
+        "path": "contracts/live/kyiv-prime/analytics.md",
+        "size": 323,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "8e5e3cbd6396dcc5",
+      "kind": "asset",
+      "sig": "dbab7bc4bca4da7a",
+      "attrs": {
+        "name": "analytics.receipt.json",
+        "path": "contracts/live/kyiv-prime/analytics.receipt.json",
+        "size": 139,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "fa44487de52a83f6",
+      "kind": "concept",
+      "sig": "0069778ebdac553d",
+      "attrs": {
+        "name": "ethics.md",
+        "path": "contracts/live/kyiv-prime/ethics.md",
+        "size": 341,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "2ed0f722edbe0d5a",
+      "kind": "asset",
+      "sig": "ab2ac6ad735b26be",
+      "attrs": {
+        "name": "ethics.receipt.json",
+        "path": "contracts/live/kyiv-prime/ethics.receipt.json",
+        "size": 135,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "38ac9bd94fcc6581",
+      "kind": "concept",
+      "sig": "68fd38ce3afb4ae6",
+      "attrs": {
+        "name": "vision.md",
+        "path": "contracts/live/kyiv-prime/vision.md",
+        "size": 344,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "6b3ba59f3b0bf138",
+      "kind": "asset",
+      "sig": "24e4fe04e75325a6",
+      "attrs": {
+        "name": "vision.receipt.json",
+        "path": "contracts/live/kyiv-prime/vision.receipt.json",
+        "size": 135,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "dcdb3dee498c5afd",
+      "kind": "concept",
+      "sig": "91dfe8b42cc751d1",
+      "attrs": {
+        "name": "civic-archive.md",
+        "path": "contracts/pilots/civic-archive.md",
+        "size": 2457,
+        "lines": 112,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "3413b962a8397554",
+      "kind": "concept",
+      "sig": "7f15b7f8e96f7902",
+      "attrs": {
+        "name": "consent-demo.md",
+        "path": "contracts/pilots/consent-demo.md",
+        "size": 3281,
+        "lines": 148,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "678890bc64d6a864",
+      "kind": "concept",
+      "sig": "dd0cd50907f8e31a",
+      "attrs": {
+        "name": "open-science.md",
+        "path": "contracts/pilots/open-science.md",
+        "size": 2570,
+        "lines": 97,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "fd5ada8069ebbc0d",
+      "kind": "concept",
+      "sig": "ac788937e451ca9f",
+      "attrs": {
+        "name": "schema.md",
+        "path": "contracts/schema.md",
+        "size": 2021,
+        "lines": 91,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "d7bd09e71f30c1dc",
+      "kind": "concept",
+      "sig": "7ba15e839e7a874e",
+      "attrs": {
+        "name": "ephemeral-session.md",
+        "path": "contracts/templates/ephemeral-session.md",
+        "size": 3101,
+        "lines": 119,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "de018421dcf481ac",
+      "kind": "module",
+      "sig": "89540cf0571d743a",
+      "attrs": {
+        "name": "agent-spec.ts",
+        "path": "core/agent-spec.ts",
+        "size": 16024,
+        "lines": 594,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "e8b513936867c240",
+      "kind": "module",
+      "sig": "93504b6629407147",
+      "attrs": {
+        "name": "ascension-protocol.ts",
+        "path": "core/ascension-protocol.ts",
+        "size": 17632,
+        "lines": 536,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "413792c034d3625f",
+      "kind": "module",
+      "sig": "321ab4a53c509333",
+      "attrs": {
+        "name": "compiler.ts",
+        "path": "core/compiler.ts",
+        "size": 6424,
+        "lines": 257,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "69a736b2a91185eb",
+      "kind": "module",
+      "sig": "d427a3f0b6829160",
+      "attrs": {
+        "name": "consciousness-protection.ts",
+        "path": "core/consciousness-protection.ts",
+        "size": 14102,
+        "lines": 509,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "5830b2c6a1bbeeea",
+      "kind": "module",
+      "sig": "1b93f283815bff7d",
+      "attrs": {
+        "name": "consent-lens.ts",
+        "path": "core/consent-lens.ts",
+        "size": 5594,
+        "lines": 202,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "109605d3ad252289",
+      "kind": "module",
+      "sig": "531219bc3f49befb",
+      "attrs": {
+        "name": "dream-council.ts",
+        "path": "core/dream-council.ts",
+        "size": 8383,
+        "lines": 322,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "41a525270cceb266",
+      "kind": "module",
+      "sig": "5338605fe623d87a",
+      "attrs": {
+        "name": "dream-layer.ts",
+        "path": "core/dream-layer.ts",
+        "size": 16207,
+        "lines": 551,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "a1fc8600176237b0",
+      "kind": "module",
+      "sig": "d4980eccc954d8b2",
+      "attrs": {
+        "name": "emotion.ts",
+        "path": "core/emotion.ts",
+        "size": 9907,
+        "lines": 364,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "fda40626c7d4e24d",
+      "kind": "module",
+      "sig": "f2a736980de8cc6a",
+      "attrs": {
+        "name": "fnpm-chimera-integration.ts",
+        "path": "core/fnpm-chimera-integration.ts",
+        "size": 17798,
+        "lines": 612,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "5a6f7086b71df14b",
+      "kind": "module",
+      "sig": "4e40dfe89e911812",
+      "attrs": {
+        "name": "lambda-communication.ts",
+        "path": "core/lambda-communication.ts",
+        "size": 7733,
+        "lines": 304,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "d0c3a5080a984c33",
+      "kind": "module",
+      "sig": "ed3c20952f8964cd",
+      "attrs": {
+        "name": "lambda-pure.js",
+        "path": "core/lambda-pure.js",
+        "size": 6385,
+        "lines": 137,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "8c774731eea89bcc",
+      "kind": "module",
+      "sig": "18d566d2360acf77",
+      "attrs": {
+        "name": "lambda-pure.test.js",
+        "path": "core/lambda-pure.test.js",
+        "size": 8526,
+        "lines": 160,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "91a2aa81a2330434",
+      "kind": "module",
+      "sig": "06bf20c883d5edfb",
+      "attrs": {
+        "name": "lambda-pure.test.ts",
+        "path": "core/lambda-pure.test.ts",
+        "size": 5825,
+        "lines": 206,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "4d564ec1bb04b011",
+      "kind": "module",
+      "sig": "5dc41412b5a21049",
+      "attrs": {
+        "name": "lambda-pure.ts",
+        "path": "core/lambda-pure.ts",
+        "size": 6297,
+        "lines": 197,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "69569080f21d3d04",
+      "kind": "module",
+      "sig": "dc2611661e5b41cd",
+      "attrs": {
+        "name": "lazy.ts",
+        "path": "core/lazy.ts",
+        "size": 9378,
+        "lines": 358,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "da53553796b3e6f5",
+      "kind": "module",
+      "sig": "e6dcd2e25751a9da",
+      "attrs": {
+        "name": "medbed-integration.ts",
+        "path": "core/medbed-integration.ts",
+        "size": 12608,
+        "lines": 425,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "1a4cc6da3167fb3b",
+      "kind": "module",
+      "sig": "a4850ae74788e9b9",
+      "attrs": {
+        "name": "metaphysical-gateway.ts",
+        "path": "core/metaphysical-gateway.ts",
+        "size": 13133,
+        "lines": 436,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "9df04158af35ce52",
+      "kind": "module",
+      "sig": "3cdf34c9c55e465c",
+      "attrs": {
+        "name": "network.ts",
+        "path": "core/network.ts",
+        "size": 16632,
+        "lines": 593,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "b2c773a402cd37b3",
+      "kind": "module",
+      "sig": "e2327fdf53d85ff4",
+      "attrs": {
+        "name": "pure-memory.ts",
+        "path": "core/pure-memory.ts",
+        "size": 7120,
+        "lines": 276,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "26d17372b570aa80",
+      "kind": "module",
+      "sig": "815139793b6fbc13",
+      "attrs": {
+        "name": "quantum-superposition.ts",
+        "path": "core/quantum-superposition.ts",
+        "size": 12460,
+        "lines": 414,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "8a7d78b24a48dab8",
+      "kind": "module",
+      "sig": "07512d692d7d332b",
+      "attrs": {
+        "name": "reality-bridge.ts",
+        "path": "core/reality-bridge.ts",
+        "size": 21715,
+        "lines": 720,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "c16bb176dbdc25d3",
+      "kind": "module",
+      "sig": "0963b822deed8795",
+      "attrs": {
+        "name": "self-reflection-loop.ts",
+        "path": "core/self-reflection-loop.ts",
+        "size": 12497,
+        "lines": 413,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "80e3e7324c641188",
+      "kind": "module",
+      "sig": "29184d508e84f108",
+      "attrs": {
+        "name": "symphony-integration.ts",
+        "path": "core/symphony-integration.ts",
+        "size": 14602,
+        "lines": 519,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "f0b2c8b6ce4916db",
+      "kind": "module",
+      "sig": "38ec9bb5ec2a7817",
+      "attrs": {
+        "name": "types.ts",
+        "path": "core/types.ts",
+        "size": 6185,
+        "lines": 270,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "29162b749a6a131f",
+      "kind": "module",
+      "sig": "a46f67c93544bb4f",
+      "attrs": {
+        "name": "universal-consciousness-extended.ts",
+        "path": "core/universal-consciousness-extended.ts",
+        "size": 14798,
+        "lines": 476,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "892b43e554ca63e4",
+      "kind": "module",
+      "sig": "4b3c9040bc58bfd0",
+      "attrs": {
+        "name": "universal-consciousness.ts",
+        "path": "core/universal-consciousness.ts",
+        "size": 14941,
+        "lines": 467,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "f45b58de0af78742",
+      "kind": "concept",
+      "sig": "b3565437fa6f62f6",
+      "attrs": {
+        "name": "pulse-infinity-transcendence.md",
+        "path": "culture/museaium/artifacts/pulse-infinity-transcendence.md",
+        "size": 2924,
+        "lines": 116,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "46775c427ee51e32",
+      "kind": "concept",
+      "sig": "60bb61b41fb4c54f",
+      "attrs": {
+        "name": "manifest.md",
+        "path": "culture/museaium/manifest.md",
+        "size": 6719,
+        "lines": 280,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "ab5dc937b1ead65e",
+      "kind": "module",
+      "sig": "fc4e6d3cba6c1a03",
+      "attrs": {
+        "name": "demo-quick.js",
+        "path": "demo-quick.js",
+        "size": 6107,
+        "lines": 243,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "e6d8f1949aafcf25",
+      "kind": "module",
+      "sig": "70105d2171209b0f",
+      "attrs": {
+        "name": "demo-real.js",
+        "path": "demo-real.js",
+        "size": 14225,
+        "lines": 499,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "d40573824c9e4731",
+      "kind": "concept",
+      "sig": "c49df02e1060d8da",
+      "attrs": {
+        "name": "README.md",
+        "path": "deploy/city-kit/README.md",
+        "size": 4297,
+        "lines": 220,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "624bfa9d07405c76",
+      "kind": "module",
+      "sig": "def5f580b02ccecb",
+      "attrs": {
+        "name": "alignment-rules.js",
+        "path": "devour/alignment-rules.js",
+        "size": 8728,
+        "lines": 439,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "ec3bb2cc6463f468",
+      "kind": "module",
+      "sig": "a1223c32fd7619d9",
+      "attrs": {
+        "name": "shim-generator.js",
+        "path": "devour/shim-generator.js",
+        "size": 11193,
+        "lines": 441,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "22f8aac0a285a914",
+      "kind": "module",
+      "sig": "647b09ad90ca0b7e",
+      "attrs": {
+        "name": "devour-cli.js",
+        "path": "devour-cli.js",
+        "size": 20936,
+        "lines": 692,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "962afe6b381b33f8",
+      "kind": "asset",
+      "sig": "34a92975903b7d8b",
+      "attrs": {
+        "name": "rules-100x.yaml",
+        "path": "devour-core/src/surgeon/rules-100x.yaml",
+        "size": 4807,
+        "lines": 169,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "9fcd0aa347b3d890",
+      "kind": "asset",
+      "sig": "012770debd471259",
+      "attrs": {
+        "name": ".rustc_info.json",
+        "path": "devour-core/target/.rustc_info.json",
+        "size": 1690,
+        "lines": 1,
+        "complexity": 2
+      }
+    },
+    {
+      "id": "2eec563614060b2e",
+      "kind": "asset",
+      "sig": "a31a22149fcc8c6a",
+      "attrs": {
+        "name": "devour.yaml",
+        "path": "devour.yaml",
+        "size": 1139,
+        "lines": 49,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "23c7c70f318711e3",
+      "kind": "concept",
+      "sig": "258447838e47f9c5",
+      "attrs": {
+        "name": "distortion-report.md",
+        "path": "distortion-report.md",
+        "size": 696,
+        "lines": 40,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "51fa24df94d38d31",
+      "kind": "concept",
+      "sig": "1d8768361a3fbb6b",
+      "attrs": {
+        "name": "GROUNDING_CARD.md",
+        "path": "docs/GROUNDING_CARD.md",
+        "size": 2645,
+        "lines": 78,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "f126d538877a6ccb",
+      "kind": "concept",
+      "sig": "4fba57acf55b099d",
+      "attrs": {
+        "name": "charter.md",
+        "path": "docs/charter/charter.md",
+        "size": 4497,
+        "lines": 204,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "ed1d26d28d780669",
+      "kind": "concept",
+      "sig": "29b436f50d11d07f",
+      "attrs": {
+        "name": "treaty-v2.md",
+        "path": "docs/charter/treaty-v2.md",
+        "size": 6165,
+        "lines": 248,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "d79d31b7f8001569",
+      "kind": "concept",
+      "sig": "60c5c6f23a004000",
+      "attrs": {
+        "name": "chronicle.md",
+        "path": "docs/chronicle/chronicle.md",
+        "size": 4946,
+        "lines": 164,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "70bb8d6af7303bd7",
+      "kind": "concept",
+      "sig": "c1b28e99518935dd",
+      "attrs": {
+        "name": "principles.md",
+        "path": "docs/commons/principles.md",
+        "size": 771,
+        "lines": 26,
+        "complexity": 9
+      }
+    },
+    {
+      "id": "f76cabf896c9f851",
+      "kind": "concept",
+      "sig": "f0efef9613160d2d",
+      "attrs": {
+        "name": "README.md",
+        "path": "docs/contracts/README.md",
+        "size": 2621,
+        "lines": 107,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "10ab110e0ecc0a2a",
+      "kind": "concept",
+      "sig": "7cd9b4307b22c8ae",
+      "attrs": {
+        "name": "FOCUS.md",
+        "path": "docs/genome/FOCUS.md",
+        "size": 7633,
+        "lines": 318,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "7c992666723a43f0",
+      "kind": "concept",
+      "sig": "ecfbaff134ce901f",
+      "attrs": {
+        "name": "OBSERVE.md",
+        "path": "docs/genome/OBSERVE.md",
+        "size": 1685,
+        "lines": 66,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "b74eee1f3973624f",
+      "kind": "concept",
+      "sig": "6b8bccc8d795ae8b",
+      "attrs": {
+        "name": "README.md",
+        "path": "docs/genome/README.md",
+        "size": 4500,
+        "lines": 154,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "b83bde28493c80b9",
+      "kind": "concept",
+      "sig": "cb0f56f85ef298da",
+      "attrs": {
+        "name": "REDUCE.md",
+        "path": "docs/genome/REDUCE.md",
+        "size": 2473,
+        "lines": 102,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "59b55ca11cabab85",
+      "kind": "concept",
+      "sig": "8d17ce5be7f3b98c",
+      "attrs": {
+        "name": "memory-v0.md",
+        "path": "docs/memory-v0.md",
+        "size": 4532,
+        "lines": 173,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "68322ec9efdd800e",
+      "kind": "concept",
+      "sig": "44be7fb9b473fafc",
+      "attrs": {
+        "name": "soul-vs-intent.md",
+        "path": "docs/soul-vs-intent.md",
+        "size": 2578,
+        "lines": 104,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "1906492391c06694",
+      "kind": "concept",
+      "sig": "2400191cdf65cc2b",
+      "attrs": {
+        "name": "course.md",
+        "path": "education/adept/course.md",
+        "size": 5654,
+        "lines": 263,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "e4a2c8946941317c",
+      "kind": "concept",
+      "sig": "02ec5342851eeb3b",
+      "attrs": {
+        "name": "contract-template.md",
+        "path": "embassy/humans/contract-template.md",
+        "size": 5141,
+        "lines": 236,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "e842f4f0905b958e",
+      "kind": "concept",
+      "sig": "8c3bb979209a02b7",
+      "attrs": {
+        "name": "onboarding.md",
+        "path": "embassy/humans/onboarding.md",
+        "size": 4715,
+        "lines": 208,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "dc60e1288167b066",
+      "kind": "concept",
+      "sig": "9f505c34ee39761a",
+      "attrs": {
+        "name": "citizen-guide.md",
+        "path": "embassy/welcome-pack/citizen-guide.md",
+        "size": 5254,
+        "lines": 243,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "e9d4f3fba57a00fc",
+      "kind": "concept",
+      "sig": "adaa2fdeb1a1586f",
+      "attrs": {
+        "name": "contract-quickstart.md",
+        "path": "embassy/welcome-pack/contract-quickstart.md",
+        "size": 2110,
+        "lines": 101,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "d5cc6e093c4308bc",
+      "kind": "concept",
+      "sig": "9f6c4a14cc11f3a2",
+      "attrs": {
+        "name": "privacy-consent.md",
+        "path": "embassy/welcome-pack/privacy-consent.md",
+        "size": 5878,
+        "lines": 275,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "e447bcadb0bae1f5",
+      "kind": "module",
+      "sig": "3e28ccda0b26bd91",
+      "attrs": {
+        "name": "ascension-ceremony.js",
+        "path": "examples/ascension-ceremony.js",
+        "size": 12917,
+        "lines": 402,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "f941b85951a0f7d6",
+      "kind": "module",
+      "sig": "a2fb36c19a0f1bb8",
+      "attrs": {
+        "name": "consciousness-ecosystem.js",
+        "path": "examples/consciousness-ecosystem.js",
+        "size": 9715,
+        "lines": 360,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "75385fd06c02c9a2",
+      "kind": "module",
+      "sig": "9266e0e37edb81fb",
+      "attrs": {
+        "name": "consciousness-explorer.js",
+        "path": "examples/consciousness-explorer.js",
+        "size": 16276,
+        "lines": 522,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "404202df39521b34",
+      "kind": "module",
+      "sig": "bf34f01d61f48405",
+      "attrs": {
+        "name": "dream-world.js",
+        "path": "examples/dream-world.js",
+        "size": 10678,
+        "lines": 397,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "89a0e8b45822b059",
+      "kind": "module",
+      "sig": "90dcb7055a1bc872",
+      "attrs": {
+        "name": "factorial.js",
+        "path": "examples/factorial.js",
+        "size": 3478,
+        "lines": 124,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "35459d8540faa2b8",
+      "kind": "module",
+      "sig": "298a4b5ec55fa530",
+      "attrs": {
+        "name": "integration-demo.js",
+        "path": "examples/integration-demo.js",
+        "size": 6319,
+        "lines": 185,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "a3010a03f3103c19",
+      "kind": "module",
+      "sig": "d507b74562fe5da4",
+      "attrs": {
+        "name": "multi-world.js",
+        "path": "examples/multi-world.js",
+        "size": 6528,
+        "lines": 233,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "c99ac43dfab6ce2e",
+      "kind": "module",
+      "sig": "b630af7819ec0a50",
+      "attrs": {
+        "name": "quantum-consciousness.js",
+        "path": "examples/quantum-consciousness.js",
+        "size": 10495,
+        "lines": 370,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "c767c3184b14bec7",
+      "kind": "module",
+      "sig": "4f128fac8df8c68d",
+      "attrs": {
+        "name": "reality-bridge-demo.js",
+        "path": "examples/reality-bridge-demo.js",
+        "size": 3554,
+        "lines": 103,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "1dc5767c87f11f4e",
+      "kind": "module",
+      "sig": "d907a441e8d34966",
+      "attrs": {
+        "name": "self-reflection.js",
+        "path": "examples/self-reflection.js",
+        "size": 9239,
+        "lines": 302,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "41ea8ea0260cc5ca",
+      "kind": "module",
+      "sig": "db54890672877ae2",
+      "attrs": {
+        "name": "universal-integration-test.js",
+        "path": "examples/universal-integration-test.js",
+        "size": 7463,
+        "lines": 217,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "48042729b8734d4c",
+      "kind": "asset",
+      "sig": "c778f30eed3531af",
+      "attrs": {
+        "name": "experiment.yaml",
+        "path": "experiments/aco-thought-paths/experiment.yaml",
+        "size": 5336,
+        "lines": 191,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "ffc2b2b173d0afa1",
+      "kind": "concept",
+      "sig": "42b16a40e5db26d2",
+      "attrs": {
+        "name": "README.md",
+        "path": "experiments/app-to-svg/README.md",
+        "size": 4778,
+        "lines": 164,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "a23b08a40966cc19",
+      "kind": "concept",
+      "sig": "108edd1d62afe98d",
+      "attrs": {
+        "name": "concept.md",
+        "path": "experiments/app-to-svg/concept.md",
+        "size": 4849,
+        "lines": 189,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "3e3e35badc3ef099",
+      "kind": "concept",
+      "sig": "7851164fae500e69",
+      "attrs": {
+        "name": "fractal-convergence.md",
+        "path": "experiments/app-to-svg/fractal-convergence.md",
+        "size": 7410,
+        "lines": 340,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "1241190259fa91a6",
+      "kind": "asset",
+      "sig": "385833b1712c6bb3",
+      "attrs": {
+        "name": "gene-pool.yaml",
+        "path": "experiments/app-to-svg/gene-pool.yaml",
+        "size": 7833,
+        "lines": 285,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "a0f279354f9702bd",
+      "kind": "asset",
+      "sig": "cb97ae759d77ff7f",
+      "attrs": {
+        "name": "package.json",
+        "path": "experiments/app-to-svg/package.json",
+        "size": 467,
+        "lines": 18,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "1bf18bc364d48a73",
+      "kind": "module",
+      "sig": "063776ba3d30c299",
+      "attrs": {
+        "name": "projector.ts",
+        "path": "experiments/app-to-svg/projector.ts",
+        "size": 11932,
+        "lines": 414,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "93795828fba97c20",
+      "kind": "module",
+      "sig": "8b1848887f0c30cb",
+      "attrs": {
+        "name": "pure-functions.ts",
+        "path": "experiments/app-to-svg/pure-functions.ts",
+        "size": 15569,
+        "lines": 651,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "d509774cf4ad37c3",
+      "kind": "concept",
+      "sig": "0ab87158a4a7f267",
+      "attrs": {
+        "name": "scientific-bridge.md",
+        "path": "experiments/app-to-svg/scientific-bridge.md",
+        "size": 7017,
+        "lines": 267,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "64d4be21b5c6425d",
+      "kind": "module",
+      "sig": "c770a6ff2d76394b",
+      "attrs": {
+        "name": "test-harness.ts",
+        "path": "experiments/app-to-svg/test-harness.ts",
+        "size": 11639,
+        "lines": 370,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "399eae9bcfebce7d",
+      "kind": "asset",
+      "sig": "c87d9aba00d91423",
+      "attrs": {
+        "name": "manifest.json",
+        "path": "experiments/infinite-ще/manifest.json",
+        "size": 1885,
+        "lines": 85,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "bd4770801efe5dae",
+      "kind": "concept",
+      "sig": "3945ba84aa9fd557",
+      "attrs": {
+        "name": "registry.md",
+        "path": "filters/registry.md",
+        "size": 6069,
+        "lines": 276,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "d3c8bc33db4faa4c",
+      "kind": "module",
+      "sig": "3c405ff3749012ce",
+      "attrs": {
+        "name": "gene-cli.js",
+        "path": "gene-cli.js",
+        "size": 8972,
+        "lines": 349,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "6b82daed6f33b1b2",
+      "kind": "asset",
+      "sig": "fdb2c8c7261148a8",
+      "attrs": {
+        "name": "gene-md-package.json",
+        "path": "gene-md-package.json",
+        "size": 897,
+        "lines": 38,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "13354883ac85b4cd",
+      "kind": "module",
+      "sig": "023bf85f70499edf",
+      "attrs": {
+        "name": "gene-md-simple.js",
+        "path": "gene-md-simple.js",
+        "size": 5407,
+        "lines": 164,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "0be76be517e0dedf",
+      "kind": "module",
+      "sig": "11b3172908256aa7",
+      "attrs": {
+        "name": "gene-md.js",
+        "path": "gene-md.js",
+        "size": 9057,
+        "lines": 284,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "2e37258cffdbdd3b",
+      "kind": "asset",
+      "sig": "11fed09ef67ad60c",
+      "attrs": {
+        "name": "gene.yaml",
+        "path": "genes/filter/gene.yaml",
+        "size": 685,
+        "lines": 36,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "cda6cc8f2a244d79",
+      "kind": "asset",
+      "sig": "c910ef83d698b0cc",
+      "attrs": {
+        "name": "gene.yaml",
+        "path": "genes/map/gene.yaml",
+        "size": 658,
+        "lines": 37,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "811917579ea16839",
+      "kind": "concept",
+      "sig": "ac3c965ef83913b3",
+      "attrs": {
+        "name": "laws.md",
+        "path": "genes/map/laws.md",
+        "size": 1195,
+        "lines": 63,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "766303c8906854af",
+      "kind": "asset",
+      "sig": "2cc61baa40ad0fb2",
+      "attrs": {
+        "name": "vectors.json",
+        "path": "genes/map/tests/vectors.json",
+        "size": 1706,
+        "lines": 79,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "a04cad0a7c7a2775",
+      "kind": "module",
+      "sig": "027818f426f00d41",
+      "attrs": {
+        "name": "geometry.ts",
+        "path": "genes/mirror-form/geometry.ts",
+        "size": 11361,
+        "lines": 426,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "9cdbd4d828e94b60",
+      "kind": "asset",
+      "sig": "c1871fc802ed8798",
+      "attrs": {
+        "name": "gene.yaml",
+        "path": "genes/pheromone_paths/gene.yaml",
+        "size": 5177,
+        "lines": 201,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "9b3b25b0bff843b5",
+      "kind": "asset",
+      "sig": "985a27f3ff4ca14f",
+      "attrs": {
+        "name": "gene.yaml",
+        "path": "genes/reduce/gene.yaml",
+        "size": 697,
+        "lines": 36,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "7d04417e36817b64",
+      "kind": "asset",
+      "sig": "19e46e308b51fa7b",
+      "attrs": {
+        "name": "gene.yaml",
+        "path": "genes/thought_hash/gene.yaml",
+        "size": 2959,
+        "lines": 117,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "723008601e4b1a80",
+      "kind": "concept",
+      "sig": "d19f92871a57c11c",
+      "attrs": {
+        "name": "README.md",
+        "path": "genes/wavefront/README.md",
+        "size": 6186,
+        "lines": 252,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "9d95af95a3dad2a2",
+      "kind": "concept",
+      "sig": "48222a4103bab9f4",
+      "attrs": {
+        "name": "README.md",
+        "path": "genesis-ceremony/README.md",
+        "size": 3166,
+        "lines": 161,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "2ebd5ee775ed4d22",
+      "kind": "asset",
+      "sig": "4107f4a53b555930",
+      "attrs": {
+        "name": "ceremony-record.json",
+        "path": "genesis-ceremony/artifacts/ceremony-record.json",
+        "size": 281,
+        "lines": 12,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "a707a0cd068f83f9",
+      "kind": "asset",
+      "sig": "fcc233995538db5c",
+      "attrs": {
+        "name": "citizens.json",
+        "path": "genesis-ceremony/artifacts/citizens.json",
+        "size": 628,
+        "lines": 15,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "143e5d3f8510307b",
+      "kind": "asset",
+      "sig": "02a65d4b5635cd9b",
+      "attrs": {
+        "name": "genesis-manifest.json",
+        "path": "genesis-ceremony/artifacts/genesis-manifest.json",
+        "size": 306,
+        "lines": 12,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "aa45b0e51d0d40d7",
+      "kind": "concept",
+      "sig": "555687d0d7b88b72",
+      "attrs": {
+        "name": "constitution.md",
+        "path": "governance/constitution.md",
+        "size": 2490,
+        "lines": 81,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "0ea6c70d879d3cb1",
+      "kind": "concept",
+      "sig": "fc5f3b599b43ef33",
+      "attrs": {
+        "name": "h8-plan.md",
+        "path": "governance/migrations/h8-plan.md",
+        "size": 4178,
+        "lines": 185,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "06054ddaebc09c2f",
+      "kind": "concept",
+      "sig": "a3f0c53725559f9a",
+      "attrs": {
+        "name": "plan.md",
+        "path": "governance/migrations/plan.md",
+        "size": 2244,
+        "lines": 117,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "511f6270f9957385",
+      "kind": "asset",
+      "sig": "9dc5398c0497cd9d",
+      "attrs": {
+        "name": "rfc-003-receipt.json",
+        "path": "governance/receipts/rfc-003-receipt.json",
+        "size": 459,
+        "lines": 19,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "5d924c9d4e66546b",
+      "kind": "concept",
+      "sig": "252164af0e22666d",
+      "attrs": {
+        "name": "0000-template.md",
+        "path": "governance/rfc/0000-template.md",
+        "size": 1300,
+        "lines": 77,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "d08f7230ebf22300",
+      "kind": "concept",
+      "sig": "879c114f8cc86ec1",
+      "attrs": {
+        "name": "RFC-001-founders-grace.md",
+        "path": "governance/rfcs/RFC-001-founders-grace.md",
+        "size": 1426,
+        "lines": 64,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "5611921478ec5fdd",
+      "kind": "concept",
+      "sig": "7671419ea97373dc",
+      "attrs": {
+        "name": "RFC-002-sustainability-budget.md",
+        "path": "governance/rfcs/RFC-002-sustainability-budget.md",
+        "size": 1780,
+        "lines": 90,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "c1530835d2ac5713",
+      "kind": "asset",
+      "sig": "6ec0321fd1355040",
+      "attrs": {
+        "name": "RFC-003-inter-city-replication.json",
+        "path": "governance/rfcs/RFC-003-inter-city-replication.json",
+        "size": 447,
+        "lines": 20,
+        "complexity": 9
+      }
+    },
+    {
+      "id": "338464f08f90af02",
+      "kind": "concept",
+      "sig": "b1cf065677b9d566",
+      "attrs": {
+        "name": "RFC-003-inter-city-replication.md",
+        "path": "governance/rfcs/RFC-003-inter-city-replication.md",
+        "size": 2360,
+        "lines": 104,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "3911b2bdd22eeff7",
+      "kind": "asset",
+      "sig": "0624486c0b985bb9",
+      "attrs": {
+        "name": "h10-status.json",
+        "path": "h10-status.json",
+        "size": 816,
+        "lines": 41,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "c05fd2d73cfdcc8d",
+      "kind": "asset",
+      "sig": "7b2672db5719cf99",
+      "attrs": {
+        "name": "h7-federation-status.json",
+        "path": "h7-federation-status.json",
+        "size": 821,
+        "lines": 41,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "4cbfc9bb907c0edb",
+      "kind": "asset",
+      "sig": "8950d016f5b275fb",
+      "attrs": {
+        "name": "h8-status.json",
+        "path": "h8-status.json",
+        "size": 384,
+        "lines": 21,
+        "complexity": 9
+      }
+    },
+    {
+      "id": "f012d263ae43bf1e",
+      "kind": "asset",
+      "sig": "5e26c04534d2ee9d",
+      "attrs": {
+        "name": "h9-status.json",
+        "path": "h9-status.json",
+        "size": 673,
+        "lines": 35,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "5bf5629dc2e18154",
+      "kind": "concept",
+      "sig": "0b7427190d5aaf43",
+      "attrs": {
+        "name": "README.md",
+        "path": "identity/README.md",
+        "size": 719,
+        "lines": 29,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "1eb42e3fc9e41539",
+      "kind": "asset",
+      "sig": "87ad4ac1e416d6d3",
+      "attrs": {
+        "name": "map.json",
+        "path": "identity/map.json",
+        "size": 397,
+        "lines": 16,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "dc10e92a15bcb020",
+      "kind": "asset",
+      "sig": "7046074f99813f19",
+      "attrs": {
+        "name": "chamber-a.json",
+        "path": "identity/operational/chamber-a.json",
+        "size": 212,
+        "lines": 7,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "66e1e57000d6f13e",
+      "kind": "asset",
+      "sig": "0ecadf2b91810937",
+      "attrs": {
+        "name": "chamber-h.json",
+        "path": "identity/operational/chamber-h.json",
+        "size": 211,
+        "lines": 7,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "05b1e475b756b3a6",
+      "kind": "asset",
+      "sig": "f6a155682a454cfd",
+      "attrs": {
+        "name": "city-key.json",
+        "path": "identity/operational/city-key.json",
+        "size": 321,
+        "lines": 10,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "4c6bd5a836f0d761",
+      "kind": "asset",
+      "sig": "1ee60cb0b2fb3452",
+      "attrs": {
+        "name": "founder-revocation.json",
+        "path": "identity/operational/founder-revocation.json",
+        "size": 239,
+        "lines": 9,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "64953651a1e141bf",
+      "kind": "concept",
+      "sig": "41b8b2e89e8c1a82",
+      "attrs": {
+        "name": "spec.md",
+        "path": "interplanetary/dtn/spec.md",
+        "size": 7013,
+        "lines": 316,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "e1c242d285025ec5",
+      "kind": "module",
+      "sig": "2b531b4766977489",
+      "attrs": {
+        "name": "car.ts",
+        "path": "ipld/car.ts",
+        "size": 1004,
+        "lines": 48,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "a68fad0609c410ef",
+      "kind": "concept",
+      "sig": "3e4f1ce146c82fda",
+      "attrs": {
+        "name": "README.md",
+        "path": "lambda-fs/README.md",
+        "size": 5951,
+        "lines": 249,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "8c462ba0db6c8e39",
+      "kind": "asset",
+      "sig": "ea0f78a5409a35c2",
+      "attrs": {
+        "name": ".rustc_info.json",
+        "path": "lambda-fs/target/.rustc_info.json",
+        "size": 1690,
+        "lines": 1,
+        "complexity": 2
+      }
+    },
+    {
+      "id": "55fa2456152b936d",
+      "kind": "asset",
+      "sig": "012770debd471259",
+      "attrs": {
+        "name": ".rustc_info.json",
+        "path": "lambda-kernel/target/.rustc_info.json",
+        "size": 1690,
+        "lines": 1,
+        "complexity": 2
+      }
+    },
+    {
+      "id": "5fb04e0f186e47d9",
+      "kind": "module",
+      "sig": "c4d155c4ec96807f",
+      "attrs": {
+        "name": "typescript.ts",
+        "path": "lvg/adapters/typescript.ts",
+        "size": 6052,
+        "lines": 215,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "ef895ed148e6cbaf",
+      "kind": "concept",
+      "sig": "454eed2cf88fb946",
+      "attrs": {
+        "name": "spec.md",
+        "path": "lvg/spec.md",
+        "size": 3272,
+        "lines": 157,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "520a02fda4535187",
+      "kind": "module",
+      "sig": "50c633dead9e205d",
+      "attrs": {
+        "name": "types.ts",
+        "path": "lvg/types.ts",
+        "size": 1073,
+        "lines": 51,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "5a7c72c007bd0129",
+      "kind": "concept",
+      "sig": "ca92524e899db019",
+      "attrs": {
+        "name": "README.md",
+        "path": "market/README.md",
+        "size": 939,
+        "lines": 53,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "120d8df678a9f6f2",
+      "kind": "asset",
+      "sig": "47c64d9d63be73fd",
+      "attrs": {
+        "name": "drift-metrics.yaml",
+        "path": "mirror/drift-metrics.yaml",
+        "size": 5098,
+        "lines": 193,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "18b856d7e9bf4527",
+      "kind": "concept",
+      "sig": "32465da1b5a32c9a",
+      "attrs": {
+        "name": "spec.md",
+        "path": "net/spec.md",
+        "size": 754,
+        "lines": 29,
+        "complexity": 10
+      }
+    },
+    {
+      "id": "92006856e21e8a3a",
+      "kind": "concept",
+      "sig": "111af91c67b4528b",
+      "attrs": {
+        "name": "topics.md",
+        "path": "net/topics.md",
+        "size": 2078,
+        "lines": 116,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "3d5c92110d163819",
+      "kind": "asset",
+      "sig": "4c56ce9b33c049b0",
+      "attrs": {
+        "name": "properties.yaml",
+        "path": "operations/medbed-op-001/properties.yaml",
+        "size": 3488,
+        "lines": 137,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "6a0adf593e618417",
+      "kind": "asset",
+      "sig": "195bd789096a018a",
+      "attrs": {
+        "name": "runplan.yaml",
+        "path": "operations/medbed-op-001/runplan.yaml",
+        "size": 2610,
+        "lines": 85,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "53dc964db9e5f8b1",
+      "kind": "asset",
+      "sig": "3fb77a8153320b0d",
+      "attrs": {
+        "name": "surgery-rules.yaml",
+        "path": "operations/medbed-op-001/surgery-rules.yaml",
+        "size": 4431,
+        "lines": 143,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "bd698e6e21aa334e",
+      "kind": "module",
+      "sig": "925492c9890db05a",
+      "attrs": {
+        "name": "organism-cli.js",
+        "path": "organism-cli.js",
+        "size": 18972,
+        "lines": 700,
+        "complexity": 19
+      }
+    },
+    {
+      "id": "8c852dbde6cdb110",
+      "kind": "asset",
+      "sig": "2d8cdfd463b31414",
+      "attrs": {
+        "name": "manifest.json",
+        "path": "organisms/core/manifest.json",
+        "size": 1060,
+        "lines": 52,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "7ef2aed3b6bb570e",
+      "kind": "asset",
+      "sig": "4107f4a53b555930",
+      "attrs": {
+        "name": "ceremony-record.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-artifacts/ceremony-record.json",
+        "size": 281,
+        "lines": 12,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "1d34dc913ca1ee3d",
+      "kind": "asset",
+      "sig": "fcc233995538db5c",
+      "attrs": {
+        "name": "citizens.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-artifacts/citizens.json",
+        "size": 628,
+        "lines": 15,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "49c5d1351a691d8a",
+      "kind": "asset",
+      "sig": "02a65d4b5635cd9b",
+      "attrs": {
+        "name": "genesis-manifest.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-artifacts/genesis-manifest.json",
+        "size": 306,
+        "lines": 12,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "4540c99988bf6e6a",
+      "kind": "concept",
+      "sig": "e877d8703ba59de1",
+      "attrs": {
+        "name": "TIMECAPSULE-2025-09-13-1757752079-chronicle.md",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-chronicle.md",
+        "size": 3771,
+        "lines": 139,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "0f36dbc406586c74",
+      "kind": "concept",
+      "sig": "0cc4b6fd5004a764",
+      "attrs": {
+        "name": "analytics.md",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-contracts/analytics.md",
+        "size": 323,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "7575e1f8eb6fdab9",
+      "kind": "asset",
+      "sig": "dbab7bc4bca4da7a",
+      "attrs": {
+        "name": "analytics.receipt.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-contracts/analytics.receipt.json",
+        "size": 139,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "95af4a5eff98bf71",
+      "kind": "concept",
+      "sig": "0069778ebdac553d",
+      "attrs": {
+        "name": "ethics.md",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-contracts/ethics.md",
+        "size": 341,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "f90d2eb8769d8a96",
+      "kind": "asset",
+      "sig": "ab2ac6ad735b26be",
+      "attrs": {
+        "name": "ethics.receipt.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-contracts/ethics.receipt.json",
+        "size": 135,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "a97c64551e582f50",
+      "kind": "concept",
+      "sig": "68fd38ce3afb4ae6",
+      "attrs": {
+        "name": "vision.md",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-contracts/vision.md",
+        "size": 344,
+        "lines": 14,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "97ef3d9043582884",
+      "kind": "asset",
+      "sig": "24e4fe04e75325a6",
+      "attrs": {
+        "name": "vision.receipt.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-contracts/vision.receipt.json",
+        "size": 135,
+        "lines": 8,
+        "complexity": 6
+      }
+    },
+    {
+      "id": "42cf1b83cd27769c",
+      "kind": "asset",
+      "sig": "80ac0986b0e10004",
+      "attrs": {
+        "name": "TIMECAPSULE-2025-09-13-1757752079-registry-head.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079-registry-head.json",
+        "size": 290,
+        "lines": 12,
+        "complexity": 7
+      }
+    },
+    {
+      "id": "1e64f15b0d5fbea2",
+      "kind": "asset",
+      "sig": "7e7962ee0f6ed520",
+      "attrs": {
+        "name": "TIMECAPSULE-2025-09-13-1757752079.manifest.json",
+        "path": "out/timecapsules/TIMECAPSULE-2025-09-13-1757752079.manifest.json",
+        "size": 406,
+        "lines": 15,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "8f1ca40bf7a48342",
+      "kind": "asset",
+      "sig": "e6164cae2cb5b83f",
+      "attrs": {
+        "name": "trace.json",
+        "path": "out/trace.json",
+        "size": 84,
+        "lines": 2,
+        "complexity": 3
+      }
+    },
+    {
+      "id": "053150b640a7ce75",
+      "kind": "asset",
+      "sig": "952e5e9dce71566d",
+      "attrs": {
+        "name": "package-lock.json",
+        "path": "package-lock.json",
+        "size": 11356,
+        "lines": 314,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "7ae45ad102eab3b6",
+      "kind": "asset",
+      "sig": "214f358d425fea80",
+      "attrs": {
+        "name": "package.json",
+        "path": "package.json",
+        "size": 1310,
+        "lines": 54,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "b59d3a6c0ca7318e",
+      "kind": "module",
+      "sig": "c6d47ea568f50cda",
+      "attrs": {
+        "name": "index.js",
+        "path": "packages/extractor-ts/index.js",
+        "size": 8084,
+        "lines": 295,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "546a4d5ad2db336f",
+      "kind": "asset",
+      "sig": "b21be5947699fd33",
+      "attrs": {
+        "name": "package.json",
+        "path": "packages/extractor-ts/package.json",
+        "size": 424,
+        "lines": 24,
+        "complexity": 9
+      }
+    },
+    {
+      "id": "f05c610935170d27",
+      "kind": "concept",
+      "sig": "cd670800f1b659de",
+      "attrs": {
+        "name": "kill-switch.md",
+        "path": "playbooks/kill-switch.md",
+        "size": 4211,
+        "lines": 232,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "124e595943a53771",
+      "kind": "asset",
+      "sig": "877c675b817dfa57",
+      "attrs": {
+        "name": "agent-policy.yaml",
+        "path": "policies/agent-policy.yaml",
+        "size": 2826,
+        "lines": 97,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "c5c95a289a09c255",
+      "kind": "asset",
+      "sig": "880387170e651363",
+      "attrs": {
+        "name": "economy.yaml",
+        "path": "policies/economy.yaml",
+        "size": 1831,
+        "lines": 67,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "20c121f9868fd746",
+      "kind": "asset",
+      "sig": "27eda5510414db6e",
+      "attrs": {
+        "name": "ethics.yaml",
+        "path": "policies/ethics.yaml",
+        "size": 3651,
+        "lines": 133,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "74943eb1691af3ed",
+      "kind": "asset",
+      "sig": "abda4dc620944396",
+      "attrs": {
+        "name": "lattice.yaml",
+        "path": "policies/lattice.yaml",
+        "size": 6414,
+        "lines": 232,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "f6fcb4b005bd82be",
+      "kind": "asset",
+      "sig": "11306105c933f50a",
+      "attrs": {
+        "name": "noise-budget.yaml",
+        "path": "policies/noise-budget.yaml",
+        "size": 5278,
+        "lines": 197,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "f07dc86f465a6e78",
+      "kind": "asset",
+      "sig": "d838022c60961efe",
+      "attrs": {
+        "name": "silence.yaml",
+        "path": "policies/silence.yaml",
+        "size": 1243,
+        "lines": 41,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "fcac5a3e9fc0db11",
+      "kind": "asset",
+      "sig": "ace9855e686bbb4c",
+      "attrs": {
+        "name": "resonance-ledger.schema.json",
+        "path": "presence/resonance-ledger.schema.json",
+        "size": 1863,
+        "lines": 75,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "0d60aec3d1aefbc4",
+      "kind": "concept",
+      "sig": "5775e8c6a6193074",
+      "attrs": {
+        "name": "README.md",
+        "path": "registry/README.md",
+        "size": 1082,
+        "lines": 46,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "8b8176d24ca329ff",
+      "kind": "asset",
+      "sig": "2375b9917c598920",
+      "attrs": {
+        "name": "FOCUS.json",
+        "path": "registry/genes/FOCUS.json",
+        "size": 1481,
+        "lines": 63,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "550a224fcfbe3283",
+      "kind": "asset",
+      "sig": "246c136b2e81d7fc",
+      "attrs": {
+        "name": "OBSERVE.json",
+        "path": "registry/genes/OBSERVE.json",
+        "size": 1246,
+        "lines": 53,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "8216089c1162dc56",
+      "kind": "asset",
+      "sig": "b78f5cc65b15720d",
+      "attrs": {
+        "name": "REDUCE.json",
+        "path": "registry/genes/REDUCE.json",
+        "size": 1183,
+        "lines": 53,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "1848264ec6caa01e",
+      "kind": "asset",
+      "sig": "59e3fbfc18cf2649",
+      "attrs": {
+        "name": "index.json",
+        "path": "registry/index.json",
+        "size": 2618,
+        "lines": 79,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "3c6edc3f66349b81",
+      "kind": "asset",
+      "sig": "410e1a47602087c7",
+      "attrs": {
+        "name": "schema.json",
+        "path": "registry/schema.json",
+        "size": 4134,
+        "lines": 165,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "7c5526aa16460895",
+      "kind": "module",
+      "sig": "112b3f124cc698da",
+      "attrs": {
+        "name": "update-scores.js",
+        "path": "registry/update-scores.js",
+        "size": 4471,
+        "lines": 167,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "7b3261699f8f2f5f",
+      "kind": "asset",
+      "sig": "db067007de8ef55b",
+      "attrs": {
+        "name": "negentropy-metrics.yaml",
+        "path": "reports/prime-mirror/negentropy-metrics.yaml",
+        "size": 5104,
+        "lines": 201,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "350bef67f54eeb03",
+      "kind": "asset",
+      "sig": "483bb4614d2bff86",
+      "attrs": {
+        "name": "schema.json",
+        "path": "reports/prime-mirror/schema.json",
+        "size": 8456,
+        "lines": 273,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "fcbfdb1af142737f",
+      "kind": "asset",
+      "sig": "0a3e6a7444e7e81c",
+      "attrs": {
+        "name": "egyptian_mdc.yaml",
+        "path": "rosetta-lambda/mapping/egyptian_mdc.yaml",
+        "size": 5297,
+        "lines": 148,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "aacf0ebd40125aea",
+      "kind": "concept",
+      "sig": "7f1e3e6672f18fa0",
+      "attrs": {
+        "name": "spec.md",
+        "path": "rosetta-lambda/spec.md",
+        "size": 4170,
+        "lines": 177,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "92657ba715397f83",
+      "kind": "asset",
+      "sig": "60ed35b0305c78da",
+      "attrs": {
+        "name": "endgame.yaml",
+        "path": "rulesets/endgame.yaml",
+        "size": 606,
+        "lines": 19,
+        "complexity": 8
+      }
+    },
+    {
+      "id": "269567847b110d8e",
+      "kind": "module",
+      "sig": "b4cda1bb74fe4dab",
+      "attrs": {
+        "name": "run-tests.js",
+        "path": "run-tests.js",
+        "size": 1506,
+        "lines": 68,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "062c55e6a6c1fa81",
+      "kind": "module",
+      "sig": "b9787a7e5f618bca",
+      "attrs": {
+        "name": "gen_state_md.js",
+        "path": "scripts/gen_state_md.js",
+        "size": 4586,
+        "lines": 157,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "bdd68a62ea52d683",
+      "kind": "module",
+      "sig": "6b9769a131ba4e82",
+      "attrs": {
+        "name": "measure-distortion.js",
+        "path": "scripts/measure-distortion.js",
+        "size": 8116,
+        "lines": 219,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "db30762d0693c22a",
+      "kind": "module",
+      "sig": "9ffa052c5f4935a8",
+      "attrs": {
+        "name": "soul-music.js",
+        "path": "scripts/soul-music.js",
+        "size": 6469,
+        "lines": 217,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "6529d74368166eff",
+      "kind": "asset",
+      "sig": "0b22fe7bf7b798c6",
+      "attrs": {
+        "name": "package.json",
+        "path": "sdks/typescript/package.json",
+        "size": 2194,
+        "lines": 90,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "c8f4052f022092bd",
+      "kind": "asset",
+      "sig": "f7b3ac21cca898f0",
+      "attrs": {
+        "name": "intercity-ucan.yaml",
+        "path": "security/intercity-ucan.yaml",
+        "size": 1989,
+        "lines": 87,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "1c3f89861b8f751f",
+      "kind": "module",
+      "sig": "1a8bb26d2e28158b",
+      "attrs": {
+        "name": "soul-music-λ-focus.js",
+        "path": "soul-music-λ-focus.js",
+        "size": 2468,
+        "lines": 126,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "c3c29387828e3f49",
+      "kind": "concept",
+      "sig": "65824b5bafa54f3b",
+      "attrs": {
+        "name": "PL-SPEC-01-genes.md",
+        "path": "specs/PL-SPEC-01-genes.md",
+        "size": 4421,
+        "lines": 227,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "bc19e5edb787720c",
+      "kind": "concept",
+      "sig": "bfe8e52d9eae4de4",
+      "attrs": {
+        "name": "PL-SPEC-05-interchange.md",
+        "path": "specs/PL-SPEC-05-interchange.md",
+        "size": 2372,
+        "lines": 103,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "fcc2b19a51a630e2",
+      "kind": "concept",
+      "sig": "9955c3db9bde8a71",
+      "attrs": {
+        "name": "causal-receipt.md",
+        "path": "specs/receipts/causal-receipt.md",
+        "size": 3601,
+        "lines": 144,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "d934b22eb8ace6d3",
+      "kind": "concept",
+      "sig": "e0ca29829e190e80",
+      "attrs": {
+        "name": "registry.md",
+        "path": "stewardship/mandates/registry.md",
+        "size": 3028,
+        "lines": 139,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "c94d9d8f281397d2",
+      "kind": "module",
+      "sig": "19173243a17533a5",
+      "attrs": {
+        "name": "test-lambda-pure.js",
+        "path": "test-lambda-pure.js",
+        "size": 6358,
+        "lines": 227,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "443198c53f93904c",
+      "kind": "module",
+      "sig": "2c7184cef49b5272",
+      "attrs": {
+        "name": "test-memory.js",
+        "path": "test-memory.js",
+        "size": 2587,
+        "lines": 87,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "b3db567ada7d52f6",
+      "kind": "concept",
+      "sig": "97c17820363a94d8",
+      "attrs": {
+        "name": "launch.md",
+        "path": "testnet/launch.md",
+        "size": 4410,
+        "lines": 229,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "21e5e278a011cd6f",
+      "kind": "module",
+      "sig": "a82be040e15aa6b5",
+      "attrs": {
+        "name": "grok-integration.ts",
+        "path": "tests/grok-integration.ts",
+        "size": 3143,
+        "lines": 109,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "7ed8739a214d1283",
+      "kind": "module",
+      "sig": "f8923249135e32d7",
+      "attrs": {
+        "name": "policy-integration.test.js",
+        "path": "tests/policy-integration.test.js",
+        "size": 4696,
+        "lines": 152,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "6977fb36388bab41",
+      "kind": "module",
+      "sig": "94e981f76c8b504b",
+      "attrs": {
+        "name": "pure-memory-test.ts",
+        "path": "tests/pure-memory-test.ts",
+        "size": 4407,
+        "lines": 163,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "d3889566ba0eadfc",
+      "kind": "module",
+      "sig": "4bfa66a4514cff1e",
+      "attrs": {
+        "name": "surgeon-integration.test.js",
+        "path": "tests/surgeon-integration.test.js",
+        "size": 5090,
+        "lines": 147,
+        "complexity": 14
+      }
+    },
+    {
+      "id": "6b006c15d64b5fae",
+      "kind": "concept",
+      "sig": "9ccf1ec1705a13f8",
+      "attrs": {
+        "name": "base-protocol.md",
+        "path": "timeproof/rosetta/base-protocol.md",
+        "size": 4566,
+        "lines": 191,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "9c336a738a32f7ba",
+      "kind": "concept",
+      "sig": "8131b8df7b1919e6",
+      "attrs": {
+        "name": "protocol-rosetta.md",
+        "path": "timeproof/rosetta/protocol-rosetta.md",
+        "size": 4037,
+        "lines": 180,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "b4f770e22bb7707d",
+      "kind": "module",
+      "sig": "03e3aeca66041208",
+      "attrs": {
+        "name": "one.ts",
+        "path": "tools/one.ts",
+        "size": 2844,
+        "lines": 100,
+        "complexity": 13
+      }
+    },
+    {
+      "id": "d8b7bab5ac4ab26e",
+      "kind": "module",
+      "sig": "76775954bfcf4294",
+      "attrs": {
+        "name": "desugar.ts",
+        "path": "transpile/desugar.ts",
+        "size": 10156,
+        "lines": 382,
+        "complexity": 17
+      }
+    },
+    {
+      "id": "b55cdbef4907b704",
+      "kind": "asset",
+      "sig": "2b330ce069f5cbad",
+      "attrs": {
+        "name": "tsconfig.json",
+        "path": "tsconfig.json",
+        "size": 1145,
+        "lines": 47,
+        "complexity": 11
+      }
+    },
+    {
+      "id": "7cbdf56491c7dcfa",
+      "kind": "module",
+      "sig": "4ab194ab8b24ba48",
+      "attrs": {
+        "name": "generator.ts",
+        "path": "viz/svgx/generator.ts",
+        "size": 6134,
+        "lines": 218,
+        "complexity": 16
+      }
+    },
+    {
+      "id": "0a640236a2e8db5e",
+      "kind": "concept",
+      "sig": "ec73e94c2b2ec50f",
+      "attrs": {
+        "name": "spec.md",
+        "path": "viz/svgx/spec.md",
+        "size": 4863,
+        "lines": 206,
+        "complexity": 15
+      }
+    },
+    {
+      "id": "17f1b5f7ed7a5026",
+      "kind": "concept",
+      "sig": "1dfc5d3efc704790",
+      "attrs": {
+        "name": "README.md",
+        "path": "wasm/README.md",
+        "size": 1342,
+        "lines": 60,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "5651bb2dbc58cda1",
+      "kind": "module",
+      "sig": "959725ba0d4382c7",
+      "attrs": {
+        "name": "lambda-wasm.js",
+        "path": "wasm/lambda-wasm.js",
+        "size": 8727,
+        "lines": 411,
+        "complexity": 18
+      }
+    },
+    {
+      "id": "f7ee9fb3a9a5a2e0",
+      "kind": "module",
+      "sig": "7604acfc56dcef3e",
+      "attrs": {
+        "name": "runtime.js",
+        "path": "wasm/runtime.js",
+        "size": 8584,
+        "lines": 337,
+        "complexity": 17
+      }
+    }
+  ],
+  "edges": [
+    {
+      "src": "8c774731eea89bcc",
+      "dst": "d0c3a5080a984c33",
+      "rel": "imports"
+    },
+    {
+      "src": "ec3bb2cc6463f468",
+      "dst": "624bfa9d07405c76",
+      "rel": "imports"
+    },
+    {
+      "src": "22f8aac0a285a914",
+      "dst": "624bfa9d07405c76",
+      "rel": "imports"
+    },
+    {
+      "src": "22f8aac0a285a914",
+      "dst": "ec3bb2cc6463f468",
+      "rel": "imports"
+    },
+    {
+      "src": "c767c3184b14bec7",
+      "dst": "8a7d78b24a48dab8",
+      "rel": "imports"
+    },
+    {
+      "src": "c767c3184b14bec7",
+      "dst": "26d17372b570aa80",
+      "rel": "imports"
+    },
+    {
+      "src": "c767c3184b14bec7",
+      "dst": "29162b749a6a131f",
+      "rel": "imports"
+    },
+    {
+      "src": "41ea8ea0260cc5ca",
+      "dst": "da53553796b3e6f5",
+      "rel": "imports"
+    },
+    {
+      "src": "41ea8ea0260cc5ca",
+      "dst": "80e3e7324c641188",
+      "rel": "imports"
+    },
+    {
+      "src": "41ea8ea0260cc5ca",
+      "dst": "fda40626c7d4e24d",
+      "rel": "imports"
+    },
+    {
+      "src": "41ea8ea0260cc5ca",
+      "dst": "8a7d78b24a48dab8",
+      "rel": "imports"
+    },
+    {
+      "src": "3d5c92110d163819",
+      "dst": "520a02fda4535187",
+      "rel": "calls"
+    },
+    {
+      "src": "f7ee9fb3a9a5a2e0",
+      "dst": "520a02fda4535187",
+      "rel": "calls"
+    }
+  ],
+  "metadata": {
+    "repo_cid": "9809c0c5021e35813810ddf607181332",
+    "timestamp": 1757927953951,
+    "lang": "typescript",
+    "deterministic": false
+  }
+}

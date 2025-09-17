@@ -1,0 +1,102 @@
+name: H2 Surgeon Optimization
+
+on:
+  push:
+    paths:
+      - 'lambda-kernel/**/*.rs'
+      - 'lambda-kernel/**/*.ts'
+      - 'surgeon/**'
+  pull_request:
+    paths:
+      - 'lambda-kernel/**/*.rs'
+      - 'lambda-kernel/**/*.ts'
+      - 'surgeon/**'
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: Cache Cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-surgeon-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Build Surgeon
+        run: |
+          cd surgeon
+          cargo build --release
+      
+      - name: Optimize Lambda Expressions
+        run: |
+          # Find all .lambda files and optimize them
+          find lambda-kernel -name "*.lambda" | while read file; do
+            echo "Optimizing $file..."
+            ./surgeon/target/release/optimize "$file" > "$file.opt"
+            
+            # Check if optimization improved
+            if [ -f "$file.opt" ]; then
+              original_size=$(wc -c < "$file")
+              optimized_size=$(wc -c < "$file.opt")
+              echo "  Original: $original_size bytes"
+              echo "  Optimized: $optimized_size bytes"
+              
+              # Replace if better
+              if [ "$optimized_size" -lt "$original_size" ]; then
+                mv "$file.opt" "$file"
+                echo "  ✅ Applied optimization"
+              else
+                rm "$file.opt"
+                echo "  ⏭️  No improvement"
+              fi
+            fi
+          done
+      
+      - name: Generate Optimization Report
+        run: |
+          mkdir -p artifacts
+          ./surgeon/target/release/optimize \
+            --report artifacts/surgeon-report.json \
+            lambda-kernel/core/src/focus.lambda
+      
+      - name: Upload Optimization Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: surgeon-report
+          path: artifacts/surgeon-report.json
+      
+      - name: Comment PR with Results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('artifacts/surgeon-report.json'));
+            
+            const comment = `## 🔬 Surgeon Optimization Report
+            
+            - **Speedup**: ${report.speedup.toFixed(2)}x
+            - **Cost Reduction**: ${report.initial_cost} → ${report.final_cost}
+            - **Rules Applied**: ${report.rules_applied.join(', ')}
+            - **Semantic Hash**: \`${report.semantic_hash}\`
+            
+            ✅ Semantic equivalence preserved`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

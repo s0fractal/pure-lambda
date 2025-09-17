@@ -1,0 +1,34 @@
+version: 1
+cities:
+  - name: kyiv-prime
+    peers: [lviv-harbor, odesa-port]
+    endpoint: tcp://localhost:7001
+    weight: 1.0
+  - name: lviv-harbor
+    peers: [kyiv-prime, odesa-port]
+    endpoint: tcp://localhost:8001
+    weight: 1.0
+  - name: odesa-port
+    peers: [kyiv-prime, lviv-harbor]
+    endpoint: tcp://localhost:9001
+    weight: 1.0
+
+routing:
+  gossip_topics:
+    - pl.genes
+    - pl.proofs
+    - pl.receipts
+    - pl.registry
+  multipath: true          # Multiple paths simultaneously
+  health_threshold_ms: 120 # Above this, degrade to single path
+  failover_timeout_ms: 5000
+  
+mesh:
+  topology: full           # Every city connects to every other
+  redundancy: 2           # Each message travels via 2 paths
+  convergence_target_ms: 50
+  
+monitoring:
+  divergence_alert: 0     # Alert on any divergence
+  latency_p50_target: 60  # Target p50 latency
+  latency_p99_target: 200 # Target p99 latency

@@ -1,0 +1,53 @@
+{
+  "createdAt": "2025-09-17T10:00:43.999Z",
+  "meta": {
+    "gidSet": [
+      "c0193e718c1dcabb4893ab2109e4211d62548c7ca13659da299e7a74ff56acf1",
+      "2a7e618160727748c02c596ae0740f364dd62c9f47fe81da9e631836c78d8791"
+    ],
+    "iidSet": [
+      "ce7284780c8c129616ac972463c1e8f1327a90e18fd31f8122322386d153b2b1",
+      "acb0fda0ebf72408f76b9e9e0466cddb723f531309889f32d16369b76633b52a"
+    ],
+    "stats": {
+      "hops": 2,
+      "latency": 0,
+      "mem": 2
+    },
+    "xidSet": [
+      "55c73b6fb1578f2e9b848d3e260dd4da18b57d5f832fa06dbf8a9705e34a59f4",
+      "0137df97743e7e0a43fcaae6f04a89b58ea294275013e3d43898eeb22dbbc20d"
+    ]
+  },
+  "name": "bounded-delay",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "data",
+          "out": "delayed"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "temporal",
+      "op": "DELAY"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "delayed",
+          "out": "windowed"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "accumulation",
+      "op": "WINDOW"
+    }
+  ],
+  "version": 1
+}

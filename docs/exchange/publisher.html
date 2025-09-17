@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Exchange Publisher</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segura UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .header p {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin: 10px 0 0 0;
+        }
+        .drop-zone {
+            border: 3px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #007bff;
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        .drop-zone.has-files {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+        .drop-icon {
+            font-size: 48px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .drop-text {
+            font-size: 1.2em;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        .drop-hint {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        .artifacts-section {
+            margin-bottom: 30px;
+        }
+        .artifacts-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .artifact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #e9ecef;
+        }
+        .artifact-info {
+            flex: 1;
+        }
+        .artifact-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .artifact-details {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .artifact-status {
+            text-align: right;
+            min-width: 120px;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .status-processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-dsse {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .actions-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-primary:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        .size-budget {
+            background: #e9ecef;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            flex: 1;
+        }
+        .budget-bar {
+            width: 100%;
+            height: 8px;
+            background: #dee2e6;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .budget-fill {
+            height: 100%;
+            background: #28a745;
+            transition: all 0.3s ease;
+        }
+        .budget-warning {
+            background: #ffc107;
+        }
+        .budget-danger {
+            background: #dc3545;
+        }
+        .json-preview {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .json-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .instructions {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #004085;
+        }
+        .instructions code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Seed Exchange Publisher</h1>
+            <p>Build and publish your artifact index for the Public Seed Exchange</p>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-icon">📦</div>
+            <div class="drop-text">Drop artifact files here</div>
+            <div class="drop-hint">Supported: .htmlc, .cartridge, .fed.zip</div>
+            <input type="file" id="fileInput" multiple accept=".htmlc,.cartridge,.fed.zip" style="display: none;">
+        </div>
+
+        <div class="artifacts-section">
+            <h3>Artifacts</h3>
+            <div class="artifacts-list" id="artifactsList">
+                <p style="text-align: center; color: #6c757d; margin: 40px 0;">
+                    No artifacts added yet. Drop files above to get started.
+                </p>
+            </div>
+        </div>
+
+        <div class="actions-section">
+            <button class="btn btn-primary" id="generateBtn" onclick="generateIndex()" disabled>
+                Generate index.json
+            </button>
+            <button class="btn btn-secondary" onclick="clearArtifacts()">
+                Clear All
+            </button>
+            <div class="size-budget">
+                <div>Page Budget: <span id="budgetText">0 / 60 KB</span></div>
+                <div class="budget-bar">
+                    <div class="budget-fill" id="budgetFill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="json-preview hidden" id="jsonPreview">
+            <h3>Generated index.json</h3>
+            <div class="json-content" id="jsonContent"></div>
+            <button class="btn btn-primary" onclick="downloadIndex()" style="margin-top: 15px;">
+                Download index.json
+            </button>
+        </div>
+
+        <div class="instructions">
+            <h3>Publishing Instructions</h3>
+            <ol>
+                <li>Drop your artifact files (.htmlc, .cartridge, .fed.zip) into the drop zone above</li>
+                <li>Wait for automatic BLAKE3 hash computation and DSSE detection</li>
+                <li>Click "Generate index.json" to create the canonical artifact list</li>
+                <li>Download the generated <code>index.json</code> file</li>
+                <li>Commit the <code>index.json</code> to your repository at <code>docs/exchange/index.json</code></li>
+                <li>The exchange will automatically load artifacts from the JSON file</li>
+            </ol>
+            <p><strong>Note:</strong> Keep page size under 60KB for optimal loading. Large artifacts will show a warning.</p>
+        </div>
+    </div>
+
+    <script>
+        // Minimal BLAKE3 implementation (using SHA-256 as fallback)
+        async function blake3(data) {
+            const encoder = new TextEncoder();
+            const dataBuffer = typeof data === 'string' ? encoder.encode(data) : data;
+            const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+            return Array.from(new Uint8Array(hashBuffer))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Check for DSSE signature in file
+        function detectDSSE(content) {
+            // Simple heuristic: look for JSON envelope structure
+            try {
+                const text = new TextDecoder('utf-8', { fatal: false }).decode(content.slice(0, 1024));
+                return text.includes('"signatures"') && text.includes('"payload"');
+            } catch {
+                return false;
+            }
+        }
+
+        // Determine artifact kind from filename
+        function getArtifactKind(filename) {
+            if (filename.endsWith('.htmlc')) return 'htmlc';
+            if (filename.endsWith('.cartridge')) return 'cartridge';
+            if (filename.endsWith('.fed.zip')) return 'federation';
+            return 'unknown';
+        }
+
+        let artifacts = [];
+        let totalSize = 0;
+        const maxBudget = 60 * 1024; // 60KB limit
+
+        // Setup file drop handling
+        function setupFileDropHandling() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(Array.from(e.dataTransfer.files));
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(Array.from(e.target.files));
+            });
+        }
+
+        // Handle multiple files
+        async function handleFiles(files) {
+            const validFiles = files.filter(file => {
+                const ext = '.' + file.name.split('.').pop();
+                return ['.htmlc', '.cartridge', '.fed.zip'].includes(ext);
+            });
+
+            if (validFiles.length === 0) {
+                alert('No valid artifacts found. Please select .htmlc, .cartridge, or .fed.zip files.');
+                return;
+            }
+
+            for (const file of validFiles) {
+                await processFile(file);
+            }
+
+            updateUI();
+        }
+
+        // Process individual file
+        async function processFile(file) {
+            const artifactId = `artifact-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+            // Add to artifacts list immediately with processing status
+            const artifact = {
+                id: artifactId,
+                name: file.name,
+                kind: getArtifactKind(file.name),
+                size: file.size,
+                blake3: null,
+                dsse: false,
+                status: 'processing',
+                file: file
+            };
+
+            artifacts.push(artifact);
+            updateArtifactsList();
+            updateBudget();
+
+            try {
+                // Read file content
+                const arrayBuffer = await file.arrayBuffer();
+                const content = new Uint8Array(arrayBuffer);
+
+                // Compute BLAKE3 hash
+                artifact.blake3 = await blake3(content);
+
+                // Detect DSSE signature
+                artifact.dsse = detectDSSE(content);
+
+                // Update status
+                artifact.status = 'ready';
+
+            } catch (error) {
+                console.error('Error processing file:', error);
+                artifact.status = 'error';
+                artifact.error = error.message;
+            }
+
+            updateArtifactsList();
+        }
+
+        // Update artifacts list display
+        function updateArtifactsList() {
+            const list = document.getElementById('artifactsList');
+
+            if (artifacts.length === 0) {
+                list.innerHTML = `
+                    <p style="text-align: center; color: #6c757d; margin: 40px 0;">
+                        No artifacts added yet. Drop files above to get started.
+                    </p>
+                `;
+                return;
+            }
+
+            list.innerHTML = artifacts.map(artifact => {
+                const sizeKB = Math.ceil(artifact.size / 1024);
+                const statusBadge = getStatusBadge(artifact);
+                const hash = artifact.blake3 ? `${artifact.blake3.substring(0, 16)}...` : 'Computing...';
+
+                return `
+                    <div class="artifact-item">
+                        <div class="artifact-info">
+                            <div class="artifact-name">${artifact.name}</div>
+                            <div class="artifact-details">
+                                ${artifact.kind} • ${sizeKB} KB • ${hash}
+                                ${artifact.error ? `<br><span style="color: #dc3545;">Error: ${artifact.error}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="artifact-status">
+                            ${statusBadge}
+                            <button onclick="removeArtifact('${artifact.id}')" style="margin-left: 8px; background: none; border: none; color: #dc3545; cursor: pointer; font-size: 16px;" title="Remove">×</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Get status badge for artifact
+        function getStatusBadge(artifact) {
+            switch (artifact.status) {
+                case 'processing':
+                    return '<span class="status-badge status-processing">Processing...</span>';
+                case 'ready':
+                    return `
+                        <span class="status-badge status-ready">Ready</span>
+                        ${artifact.dsse ? '<span class="status-badge status-dsse">DSSE</span>' : ''}
+                    `;
+                case 'error':
+                    return '<span class="status-badge status-error">Error</span>';
+                default:
+                    return '';
+            }
+        }
+
+        // Remove artifact
+        function removeArtifact(id) {
+            artifacts = artifacts.filter(a => a.id !== id);
+            updateUI();
+        }
+
+        // Clear all artifacts
+        function clearArtifacts() {
+            artifacts = [];
+            updateUI();
+        }
+
+        // Update size budget display
+        function updateBudget() {
+            totalSize = artifacts.reduce((sum, a) => sum + a.size, 0);
+            const percentage = Math.min((totalSize / maxBudget) * 100, 100);
+            const budgetKB = Math.ceil(totalSize / 1024);
+            const maxKB = Math.ceil(maxBudget / 1024);
+
+            document.getElementById('budgetText').textContent = `${budgetKB} / ${maxKB} KB`;
+
+            const fill = document.getElementById('budgetFill');
+            fill.style.width = `${percentage}%`;
+
+            // Update color based on usage
+            fill.className = 'budget-fill';
+            if (percentage > 90) {
+                fill.classList.add('budget-danger');
+            } else if (percentage > 75) {
+                fill.classList.add('budget-warning');
+            }
+        }
+
+        // Update UI elements
+        function updateUI() {
+            updateArtifactsList();
+            updateBudget();
+
+            const dropZone = document.getElementById('dropZone');
+            const generateBtn = document.getElementById('generateBtn');
+
+            // Update drop zone state
+            if (artifacts.length > 0) {
+                dropZone.classList.add('has-files');
+            } else {
+                dropZone.classList.remove('has-files');
+            }
+
+            // Enable/disable generate button
+            const readyArtifacts = artifacts.filter(a => a.status === 'ready');
+            generateBtn.disabled = readyArtifacts.length === 0;
+        }
+
+        // Generate index.json
+        function generateIndex() {
+            const readyArtifacts = artifacts.filter(a => a.status === 'ready');
+
+            if (readyArtifacts.length === 0) {
+                alert('No ready artifacts to include in index.');
+                return;
+            }
+
+            // Create deterministic sorted list
+            const indexData = {
+                version: "1.0",
+                generated: new Date().toISOString(),
+                artifacts: readyArtifacts
+                    .map(a => ({
+                        name: a.name,
+                        kind: a.kind,
+                        size: a.size,
+                        blake3: a.blake3,
+                        dsse: a.dsse
+                    }))
+                    .sort((a, b) => a.name.localeCompare(b.name))
+            };
+
+            // Show preview
+            const preview = document.getElementById('jsonPreview');
+            const content = document.getElementById('jsonContent');
+
+            content.textContent = JSON.stringify(indexData, null, 2);
+            preview.classList.remove('hidden');
+
+            // Store for download
+            window.generatedIndex = indexData;
+        }
+
+        // Download index.json
+        function downloadIndex() {
+            if (!window.generatedIndex) {
+                alert('No index generated yet. Please generate first.');
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(window.generatedIndex, null, 2)], {
+                type: 'application/json'
+            });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'index.json';
+            link.click();
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFileDropHandling();
+            updateUI();
+        });
+    </script>
+</body>
+</html>

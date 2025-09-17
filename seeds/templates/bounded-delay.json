@@ -1,0 +1,42 @@
+{
+  "name": "bounded-delay",
+  "version": 1,
+  "intent": "Energy-saving debounce with guaranteed max delay",
+  "size": "≤10KB",
+  "novelty": 0.45,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "focus": {
+      "op": "FOCUS",
+      "params": {
+        "filter": "spikes"
+      }
+    },
+    "delay": {
+      "op": "BOUNDED_DELAY",
+      "params": {
+        "min": 10,
+        "max": 100,
+        "unit": "ms"
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "focus"],
+    ["focus", "delay"],
+    ["delay", "exit"]
+  ],
+  "fixtures": [
+    {"interval": 5, "expected": "skip"},
+    {"interval": 50, "expected": "pass"},
+    {"interval": 150, "expected": "bounded"}
+  ],
+  "xidv2": "bounded-delay-v2-${timestamp}"
+}

@@ -1,0 +1,75 @@
+name: H2 Gene Registry Update
+
+on:
+  push:
+    paths:
+      - 'registry/genes/*.json'
+      - 'registry/score.toml'
+      - 'registry/update-scores.js'
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+
+jobs:
+  update-registry:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Dependencies
+        run: |
+          cd registry
+          npm install @iarna/toml
+      
+      - name: Update Gene Scores
+        run: |
+          cd registry
+          node update-scores.js
+      
+      - name: Validate Registry
+        run: |
+          # Validate all gene files against schema
+          for gene in registry/genes/*.json; do
+            echo "Validating $gene..."
+            npx ajv validate -s registry/schema.json -d "$gene"
+          done
+      
+      - name: Generate Registry Report
+        run: |
+          cd registry
+          cat leaderboard.json
+      
+      - name: Commit Updates
+        if: github.event_name != 'pull_request'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check if there are changes
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add registry/genes/*.json registry/leaderboard.json
+            git commit -m "🧬 Update gene registry scores
+            
+            - Recalculated reputation scores
+            - Updated leaderboard rankings
+            - Applied formula from score.toml"
+            
+            git push
+          fi
+      
+      - name: Upload Leaderboard
+        uses: actions/upload-artifact@v3
+        with:
+          name: gene-leaderboard
+          path: registry/leaderboard.json

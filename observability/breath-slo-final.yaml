@@ -1,0 +1,46 @@
+slo:
+  width:
+    target: [8, 24]
+    window: 128
+    success_pct: 0.95
+  curvature:
+    target: [-0.15, 0.20]
+    window: 128
+    success_pct: 0.90
+  regret:
+    avg_max: 0.03
+    p95_max: 0.07
+  quarantine:
+    duty_cycle_max: 0.20
+
+lyapunov:
+  alpha: 1.0     # вага L(route)
+  beta:  1.0     # штраф за κ > κmax
+  gamma: 1.0     # штраф за κ < κmin
+  delta: 1.0     # штраф за W > Wmax
+  window: 128
+  accept_pct: 0.95   # ΔΦ ≤ 0 у 95% тактів
+
+alerts:
+  ballooning: {kappa_lt: -0.30, span: 3}
+  collapse:   {kappa_gt:  0.40, span: 3}
+  asthma:     {width_jump_pct: 0.30, period: [2,3]}
+  apnea:      {width_eq: 0, antichain_eq: 0}
+  embolism:   {antichain_over_w: 0.95, cost_tile: "high"}
+
+recovery:
+  quarantine:
+    freeze_pct: 0.30
+    thaw_step_pct: 0.10
+    universal_fallback_ticks: 1
+
+stop_rules:
+  slo_violations_in_row: 3
+  lyapunov_growth_pct: 0.10
+  lyapunov_growth_window: 32
+  asthma_twice: true
+
+actions:
+  on_slo_breach:        {policy: "UNIVERSAL", ticks: 1}
+  on_phi_growth:        {enter: "silence"}
+  on_asthma_twice:      {recalibrate: true, disable_nf_one_cycle: true}

@@ -1,0 +1,9 @@
+width:
+  min: 8
+  max: 24
+kappa:
+  min: -0.15
+  max: 0.20
+regret:
+  avg_max: 0.03
+  p95_max: 0.07

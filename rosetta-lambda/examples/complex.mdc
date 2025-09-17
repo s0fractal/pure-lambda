@@ -1,0 +1,13 @@
+# Complex MdC phrases
+
+# "The great god gives life to the good person in the city"
+nTr:{DET:GOD} aA:{DET:QUALITY} rdi anx:{DET:QUALITY} r rmT:{DET:HUMAN} nfr:{DET:QUALITY} m niwt:{DET:PLACE}
+
+# "The king's son speaks truth in the house of his father"
+sA nsw Dd mAa:{DET:QUALITY} m pr:{DET:BUILDING} it.f
+
+# "See the beautiful sky above the great land"
+mAA pt:{DET:PLACE} nfr:{DET:QUALITY} Hr tA:{DET:PLACE} aA:{DET:QUALITY}
+
+# Royal protocol: "King of Upper and Lower Egypt, Son of Ra, living forever like Ra"
+[nsw-bity] [sA-ra] anx:{DET:QUALITY} Dt mi ra

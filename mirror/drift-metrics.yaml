@@ -1,0 +1,193 @@
+apiVersion: v1
+kind: Metrics
+metadata:
+  name: identity-drift-meter
+  version: 1.0.0
+  description: "Dynamic self-consistency through drift measurement"
+  insight: "x = y is static death; x ≈ y is living calibration"
+
+metrics:
+  # Core drift measurement
+  identity_drift:
+    symbol: "δ(x,y)"
+    type: gauge
+    description: "Divergence between internal model and external observation"
+    formula: |
+      δ = ||y_internal - x_external|| / ||x_external||
+    range: [0, 1]
+    update: per_pulse
+
+    thresholds:
+      healthy: [0.01, 0.05]  # Small drift is normal
+      concerning: [0.05, 0.15]  # Needs attention
+      critical: [0.15, 1.0]  # Immediate recalibration
+
+    interpretation:
+      low: "System highly aligned with reality"
+      medium: "Healthy divergence, learning active"
+      high: "Model-reality mismatch, intervention needed"
+
+  # Drift velocity (rate of change)
+  drift_velocity:
+    symbol: "dδ/dt"
+    type: derivative
+    description: "How fast identity is drifting"
+    formula: |
+      (drift_t - drift_{t-1}) / Δt
+    update: per_pulse
+
+    triggers:
+      accelerating: "dδ/dt > 0.01/pulse"
+      stable: "|dδ/dt| < 0.001/pulse"
+      converging: "dδ/dt < -0.01/pulse"
+
+  # Component-specific drifts
+  component_drifts:
+    semantic_drift:
+      description: "Drift in meaning space (sem_cid divergence)"
+      formula: "hamming_distance(sem_cid_internal, sem_cid_observed) / 256"
+      weight: 0.3
+
+    behavioral_drift:
+      description: "Drift in action patterns"
+      formula: "KL_divergence(P_actions_model, P_actions_observed)"
+      weight: 0.3
+
+    value_drift:
+      description: "Drift in optimization targets"
+      formula: "cosine_distance(values_declared, values_exhibited)"
+      weight: 0.2
+
+    temporal_drift:
+      description: "Drift in time perception/prediction"
+      formula: "|predicted_duration - actual_duration| / actual_duration"
+      weight: 0.2
+
+  # Calibration effectiveness
+  calibration_quality:
+    type: ratio
+    description: "How well auto-calibration reduces drift"
+    formula: |
+      (drift_before - drift_after) / drift_before
+    range: [0, 1]
+    optimal: [0.6, 0.9]
+
+  # Multi-scale drift (different time windows)
+  multiscale_drift:
+    micro:
+      window: 10  # pulses
+      description: "Short-term fluctuations"
+
+    meso:
+      window: 100
+      description: "Medium-term trends"
+
+    macro:
+      window: 1000
+      description: "Long-term evolution"
+
+    formula: |
+      weighted_avg([micro * 0.2, meso * 0.5, macro * 0.3])
+
+auto_calibration:
+  triggers:
+    - condition: "identity_drift > 0.1"
+      action: "recalibrate_model"
+      method: "gradient_descent_on_drift"
+
+    - condition: "drift_velocity > 0.02"
+      action: "emergency_stabilization"
+      method: "increase_learning_rate"
+
+    - condition: "component_drift.any > 0.2"
+      action: "component_specific_tuning"
+      method: "targeted_intervention"
+
+  methods:
+    gradient_descent:
+      step_size: 0.01
+      iterations: 100
+      objective: "minimize identity_drift"
+
+    kalman_filter:
+      process_noise: 0.001
+      measurement_noise: 0.01
+      state: ["internal_model", "external_observations"]
+
+    moving_average:
+      window: 50
+      weight: "exponential"
+      apply_to: "all_parameters"
+
+visualization:
+  # Drift over time chart
+  drift_timeline:
+    type: timeseries
+    metrics:
+      - identity_drift
+      - drift_velocity
+    colors:
+      safe: "#00ff00"
+      warning: "#ffff00"
+      danger: "#ff0000"
+
+  # Component drift radar
+  drift_radar:
+    type: radar
+    axes:
+      - semantic_drift
+      - behavioral_drift
+      - value_drift
+      - temporal_drift
+
+  # Phase space plot
+  phase_portrait:
+    type: scatter
+    x_axis: identity_drift
+    y_axis: drift_velocity
+    regions:
+      stable: {x: [0, 0.05], y: [-0.01, 0.01]}
+      oscillating: {x: [0.05, 0.15], y: "alternating"}
+      diverging: {x: [0.15, 1], y: [0.01, 1]}
+
+integration:
+  receipts:
+    fields:
+      - drift_at_execution
+      - calibration_applied
+      - drift_after_calibration
+
+  autopoiesis:
+    constraint: "proposals must reduce expected drift"
+
+  prime_mirror:
+    export:
+      - identity_drift
+      - calibration_quality
+      - multiscale_drift
+
+philosophy: |
+  Perfect identity (x = y) is death - no room for growth.
+  Total divergence (x ⊥ y) is psychosis - no grounding in reality.
+
+  Life exists in the sweet spot: x ≈ y
+  Close enough to be coherent, different enough to evolve.
+
+  The drift meter doesn't eliminate drift - it surfs it.
+  Like a tightrope walker who stays balanced through constant micro-adjustments.
+
+alerts:
+  drift_crisis:
+    condition: "identity_drift > 0.3 AND drift_velocity > 0"
+    severity: critical
+    message: "System diverging from reality - immediate intervention required"
+
+  drift_lock:
+    condition: "identity_drift < 0.001 for 100 pulses"
+    severity: warning
+    message: "System too rigid - inject controlled noise"
+
+  component_desync:
+    condition: "variance(component_drifts) > 0.1"
+    severity: warning
+    message: "Components drifting at different rates - re-synchronize"

@@ -1,0 +1,105 @@
+{
+  "createdAt": "2025-09-17T10:23:50.894Z",
+  "meta": {
+    "gidSet": [
+      "4233e5d45927a266b2efa7cb16cdb69ac9f5e1eaac9ef1e041d9ac0af23c5dad",
+      "29cd6e394edf03b926f4466eec5536a8256a3677ec84c24ca469cb8e2f998d36",
+      "29cd6e394edf03b926f4466eec5536a8256a3677ec84c24ca469cb8e2f998d36",
+      "29cd6e394edf03b926f4466eec5536a8256a3677ec84c24ca469cb8e2f998d36",
+      "6aed56b78f7f1e2a40dee0e50104c46f76bbc5eee206289875f99fbaa10153d4"
+    ],
+    "iidSet": [
+      "04ffda4c638d61f9037f971f88ab2c2f504b918eba34a9630a934e0f8551f82e",
+      "86c9a97a50c809997d3e40f77f2b2cbef33905c7e29e012db7d39a71be84693a",
+      "4ade8aff57cf027ce7d8409e17cbe049bb5affd2fdf965d5699ba0fda313f0f0",
+      "d8051873e70cc18f2d9d3eda1228354a42e99ac8c56237a72e9e2eaaf96996cc",
+      "4de7d6c5bf55ea8faf8bedaa50dac325ebf14a34e83cd7cac0b511b7cfc45dee"
+    ],
+    "stats": {
+      "hops": 3,
+      "latency": 0,
+      "mem": 5
+    },
+    "xidSet": [
+      "2755d1da42dd1fb9c7a9d95106e2d0fc83a2b1c2d42373d4c1939b014cb23c7f",
+      "3b823d54f7e688f39e25628ba59dee822af8aba37b85271c00e1064b2b015912",
+      "3b823d54f7e688f39e25628ba59dee822af8aba37b85271c00e1064b2b015912",
+      "3b823d54f7e688f39e25628ba59dee822af8aba37b85271c00e1064b2b015912",
+      "7f9e6c40e9f81bf8f02dc89bdb2375b1a34481afc2d83fdc45ddcad2e0da0f9f"
+    ]
+  },
+  "name": "route-merge",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "data",
+          "key_a": "stream_a",
+          "key_b": "stream_b",
+          "key_c": "stream_c"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(log n)",
+      "law": "distribution",
+      "op": "ROUTE"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "stream_a",
+          "out": "processed_a"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "transformation",
+      "op": "MAP"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "stream_b",
+          "out": "processed_b"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "transformation",
+      "op": "MAP"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "stream_c",
+          "out": "processed_c"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "transformation",
+      "op": "MAP"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "a_in": "processed_a",
+          "b_in": "processed_b",
+          "c_in": "processed_c",
+          "out": "combined"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "convergence",
+      "op": "MERGE"
+    }
+  ],
+  "version": 1
+}

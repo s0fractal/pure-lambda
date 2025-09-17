@@ -1,0 +1,11 @@
+node:
+  name: harbor-node-1
+  city: lviv-harbor
+  did: "did:pl:Node-harbor-node-1"
+  port: 8000
+  chamber: A
+  role: validator
+  capabilities:
+    - attestation
+    - contracts
+    - consensus

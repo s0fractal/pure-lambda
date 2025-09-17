@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pure-lambda.org/schemas/receipt/v1",
+  "title": "Pure Lambda Receipt",
+  "description": "Proof-carrying receipt for function execution equivalence and optimization",
+  "type": "object",
+  "required": ["type", "timestamp", "proof", "cid"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "equivalence",
+        "optimization",
+        "pcta-report",
+        "dom-snapshot",
+        "performance"
+      ],
+      "description": "Type of receipt"
+    },
+
+    "timestamp": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds"
+    },
+
+    "function": {
+      "type": "string",
+      "description": "Function name or identifier"
+    },
+
+    "module": {
+      "type": "string",
+      "description": "Module or file path"
+    },
+
+    "stats": {
+      "type": "object",
+      "properties": {
+        "total_calls": { "type": "integer", "minimum": 0 },
+        "cache_hits": { "type": "integer", "minimum": 0 },
+        "cache_misses": { "type": "integer", "minimum": 0 },
+        "hit_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "avg_time_ms": { "type": "number", "minimum": 0 },
+        "speedup": { "type": "number", "minimum": 1 },
+        "memory_saved_kb": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "proof": {
+      "type": "object",
+      "required": ["equivalence"],
+      "properties": {
+        "equivalence": {
+          "type": "boolean",
+          "description": "Output equivalence verified"
+        },
+        "deterministic": {
+          "type": "boolean",
+          "description": "Function is deterministic"
+        },
+        "side_effect_free": {
+          "type": "boolean",
+          "description": "No side effects detected"
+        },
+        "memoization_safe": {
+          "type": "boolean",
+          "description": "Safe to memoize"
+        },
+        "parallelizable": {
+          "type": "boolean",
+          "description": "Safe to parallelize"
+        },
+        "causal": {
+          "type": "object",
+          "properties": {
+            "intervention": { "type": "string" },
+            "effect": { "type": "string" },
+            "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+
+    "comparison": {
+      "type": "object",
+      "description": "Before/after comparison",
+      "properties": {
+        "baseline": {
+          "type": "object",
+          "properties": {
+            "time_ms": { "type": "number" },
+            "memory_mb": { "type": "number" },
+            "cpu_percent": { "type": "number" }
+          }
+        },
+        "optimized": {
+          "type": "object",
+          "properties": {
+            "time_ms": { "type": "number" },
+            "memory_mb": { "type": "number" },
+            "cpu_percent": { "type": "number" }
+          }
+        },
+        "improvement": {
+          "type": "object",
+          "properties": {
+            "time_percent": { "type": "number" },
+            "memory_percent": { "type": "number" },
+            "cpu_percent": { "type": "number" }
+          }
+        }
+      }
+    },
+
+    "dom_snapshot": {
+      "type": "object",
+      "description": "DOM equivalence for React components",
+      "properties": {
+        "baseline_hash": { "type": "string" },
+        "optimized_hash": { "type": "string" },
+        "identical": { "type": "boolean" },
+        "diff_count": { "type": "integer", "minimum": 0 },
+        "visual_regression": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+
+    "artifacts": {
+      "type": "object",
+      "description": "Related artifacts",
+      "properties": {
+        "trace": { "type": "string", "description": "Path to execution trace" },
+        "profile": { "type": "string", "description": "Path to performance profile" },
+        "snapshot": { "type": "string", "description": "Path to snapshot" },
+        "svg": { "type": "string", "description": "Path to LVG visualization" }
+      }
+    },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string" },
+        "branch": { "type": "string" },
+        "commit": { "type": "string" },
+        "ci_run": { "type": "string" },
+        "environment": { "type": "string" }
+      }
+    },
+
+    "cid": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Content identifier (SHA256 hash)"
+    },
+
+    "signature": {
+      "type": "string",
+      "description": "Optional cryptographic signature"
+    }
+  },
+
+  "additionalProperties": false,
+
+  "examples": [
+    {
+      "type": "equivalence",
+      "timestamp": 1699564800000,
+      "function": "calculateTotal",
+      "stats": {
+        "total_calls": 1000,
+        "cache_hits": 750,
+        "hit_rate": 0.75,
+        "avg_time_ms": 2.5,
+        "speedup": 4.0
+      },
+      "proof": {
+        "equivalence": true,
+        "deterministic": true,
+        "side_effect_free": true,
+        "memoization_safe": true
+      },
+      "cid": "abc123def456..."
+    }
+  ]
+}

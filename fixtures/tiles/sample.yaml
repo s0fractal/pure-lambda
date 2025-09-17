@@ -1,0 +1,9 @@
+op: FOCUS
+code: |
+  // Simple focus operation
+  x => x.focus()
+ports:
+  in: "data"
+  out: "focused"
+law: "identity"
+cost: "O(1)"

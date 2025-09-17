@@ -1,0 +1,33 @@
+# Lattice Control Thresholds v1
+# All operational limits in one place
+
+[triggers]
+misroute_max = 1.0          # % - fallback if exceeded
+ood_max = 2.0                # % - quarantine if exceeded
+entropy_spike_max = 1.5      # x - investigate if exceeded
+apex_drop_max = 20.0         # % - generate receipts if dropped
+
+[confidence]
+high = 0.80                  # Use best profile
+medium = 0.50                # Use branch with support
+low = 0.50                   # Below = universal
+
+[sentinels]
+hasse_distance_max = 2       # Max distance to known concept
+unknown_attr_limit = 2       # Max unknown attributes allowed
+quarantine_enabled = true    # Auto-quarantine OOD
+
+[performance]
+min_speedup = 1.5            # x - Expected vs universal
+target_speedup = 2.0         # x - Target for optimization
+rules_coverage_min = 80      # % - Minimum active rules
+
+[safety]
+oracle_violations_max = 0    # MUST be zero always
+proof_pass_min = 100         # % - All proofs must pass
+edge_preservation_min = 0.95 # Jaccard for stability
+
+[monitoring]
+pulse_interval_s = 300       # 5 minutes
+drift_log_retention_d = 7    # Keep 7 days of drift logs
+badge_update_interval_s = 60 # Update badge every minute

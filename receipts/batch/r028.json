@@ -1,0 +1,38 @@
+{
+  "id": "r028",
+  "type": "synthetic",
+  "command": "dijkstra(10)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": true,
+    "time_ms": 5,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "env:node_18",
+    "exec:success",
+    "gene:SURGEON",
+    "inv:deterministic",
+    "lang:typescript",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:xs_1_10kb",
+    "speed:fast",
+    "type:graph_algo"
+  ],
+  "cid": "45af69277e2db4c2"
+}

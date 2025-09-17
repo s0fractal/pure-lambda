@@ -1,0 +1,56 @@
+{
+  "name": "bounded-partition",
+  "version": 1,
+  "intent": "Fair distribution with upper wait bound",
+  "size": "≤10KB",
+  "novelty": 0.59,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "partition": {
+      "op": "PARTITION",
+      "params": {
+        "buckets": 4,
+        "policy": "fair"
+      }
+    },
+    "bound": {
+      "op": "BOUND",
+      "params": {
+        "max_wait": 100,
+        "unit": "ms",
+        "overflow": "spill"
+      }
+    },
+    "process": {
+      "op": "PROCESS",
+      "params": {
+        "parallel": true
+      }
+    },
+    "collect": {
+      "op": "COLLECT",
+      "params": {
+        "ordered": false
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "partition"],
+    ["partition", "bound"],
+    ["bound", "process"],
+    ["process", "collect"],
+    ["collect", "exit"]
+  ],
+  "fixtures": [
+    {"items": 100, "expected": {"bucket1": 25, "bucket2": 25, "bucket3": 25, "bucket4": 25}},
+    {"items": 101, "expected": {"spilled": 1}}
+  ],
+  "xidv2": "bounded-partition-v2-${timestamp}"
+}

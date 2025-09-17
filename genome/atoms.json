@@ -1,0 +1,65 @@
+{
+  "version": "GENOME@v1",
+  "timestamp": "2025-09-16T00:00:00Z",
+  "lattice_ref": "Qm62651d02...",
+  "atoms": {
+    "id": {
+      "phash": "ph_1d00000000000000000000000000000000000000000",
+      "type": "a → a",
+      "category": "Arrow",
+      "immutable": true
+    },
+    "FOCUS": {
+      "phash": "ph_f0c5000000000000000000000000000000000000000",
+      "type": "a → Option b",
+      "category": "ArrowChoice",
+      "semantics": "filter + map",
+      "laws": ["pure", "composable"]
+    },
+    "SCAN": {
+      "phash": "ph_5ca4000000000000000000000000000000000000000",
+      "type": "(s, a) → (s', Option b)",
+      "category": "Mealy",
+      "semantics": "stateful accumulator",
+      "laws": ["causal", "deterministic"]
+    },
+    "DELAY": {
+      "phash": "ph_de1a000000000000000000000000000000000000000",
+      "type": "a_t → a_{t-1}",
+      "category": "ArrowLoop",
+      "semantics": "unit delay z⁻¹",
+      "laws": ["prevents_algebraic_loops", "causal"]
+    },
+    "MERGE": {
+      "phash": "ph_me63000000000000000000000000000000000000000",
+      "type": "(Option a, Option a) → Option a",
+      "category": "Monoid",
+      "semantics": "left-biased union",
+      "laws": ["associative", "identity_None", "left_bias"]
+    },
+    "PAIR": {
+      "phash": "ph_pa12000000000000000000000000000000000000000",
+      "type": "(a, b) → (a, b)",
+      "category": "Product",
+      "semantics": "pair constructor",
+      "laws": ["structural"]
+    }
+  },
+  "combinators": {
+    "THEN": {
+      "symbol": "▶",
+      "phash": "ph_7he4000000000000000000000000000000000000000",
+      "type": "(a → b) → (b → c) → (a → c)",
+      "category": "Arrow",
+      "laws": ["associative", "non_commutative"]
+    },
+    "SPLIT": {
+      "symbol": "∆",
+      "phash": "ph_5p1700000000000000000000000000000000000000",
+      "type": "(a → b) → (a → c) → (a → (b,c))",
+      "category": "Arrow",
+      "laws": ["coassociative", "distributes_input"]
+    }
+  },
+  "signature": "Ed25519:3045022100..."
+}

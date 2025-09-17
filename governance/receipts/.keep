@@ -1,0 +1,9 @@
+# Governance Receipts
+
+This directory stores voting results and applied changes.
+One file per RFC: `rfc-{id}.receipt.json`
+
+Receipts are cryptographically signed records of:
+- Final vote tally
+- Applied changes
+- Timestamp of application

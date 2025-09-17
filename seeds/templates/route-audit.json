@@ -1,0 +1,46 @@
+{
+  "name": "route-audit",
+  "version": 1,
+  "intent": "Auto-generate receipts on merge",
+  "size": "≤10KB",
+  "novelty": 0.48,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "split": {
+      "op": "SPLIT",
+      "params": {
+        "branches": 3
+      }
+    },
+    "process": {
+      "op": "PROCESS",
+      "params": {
+        "parallel": true
+      }
+    },
+    "merge": {
+      "op": "MERGE",
+      "params": {
+        "receipt": true,
+        "hook": "audit"
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "split"],
+    ["split", "process"],
+    ["process", "merge"],
+    ["merge", "exit"]
+  ],
+  "fixtures": [
+    {"input": [1, 2, 3], "expected": {"result": 6, "receipt": true}}
+  ],
+  "xidv2": "route-audit-v2-${timestamp}"
+}

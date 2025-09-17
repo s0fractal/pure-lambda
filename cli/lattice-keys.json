@@ -1,0 +1,6 @@
+{
+  "publicKey": "-----BEGIN PUBLIC KEY-----\\nMCowBQYDK2VwAyEAzXXQolAqK7KPGOklRyPSSKzcM0S+nED9A6dcb2+2l+A=\\n-----END PUBLIC KEY-----\\n",
+  "privateKey": "-----BEGIN PRIVATE KEY-----\\nMC4CAQAwBQYDK2VwBCIEIIcvcbNrsNFvJTZgfOWwFBby5OYIQZ4b5IGHS+akp+Wu\\n-----END PRIVATE KEY-----\\n",
+  "algorithm": "Ed25519",
+  "generated": "2025-09-15T15:26:33.321Z"
+}

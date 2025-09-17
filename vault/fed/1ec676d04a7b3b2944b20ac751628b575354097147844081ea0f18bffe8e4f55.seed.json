@@ -1,0 +1,53 @@
+{
+  "createdAt": "2025-09-17T10:02:45.125Z",
+  "meta": {
+    "gidSet": [
+      "29cd6e394edf03b926f4466eec5536a8256a3677ec84c24ca469cb8e2f998d36",
+      "3c5139ece859180c485acd6aa2985b3c8c458b963830a60693017d4bb69ef5a4"
+    ],
+    "iidSet": [
+      "95390f92d34d7decaa6f80d38f5ae89889896c9c98add24b5e8447f7063b728d",
+      "2ae33190ebf8a5931fed0140da6af9c9891ce6ad47624d2d6b75b6af587ae48a"
+    ],
+    "stats": {
+      "hops": 2,
+      "latency": 0,
+      "mem": 2
+    },
+    "xidSet": [
+      "3b823d54f7e688f39e25628ba59dee822af8aba37b85271c00e1064b2b015912",
+      "8503c8f4d48ed347d42f88705e1997a01d54dd07ae366943d73478e7c7c25110"
+    ]
+  },
+  "name": "select",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "items",
+          "out": "transformed"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "transformation",
+      "op": "MAP"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "transformed",
+          "out": "selected"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "selection",
+      "op": "FILTER"
+    }
+  ],
+  "version": 1
+}

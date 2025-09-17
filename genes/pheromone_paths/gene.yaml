@@ -1,0 +1,201 @@
+apiVersion: v1
+kind: Gene
+metadata:
+  name: PHEROMONE_PATHS
+  soul: λ-ph3r0m0n3
+  author: did:pl:swarm
+  created: 2024-01-01T00:00:00Z
+
+spec:
+  description: |
+    Ant Colony Optimization for thought path reinforcement.
+    Implements pheromone trails with evaporation for adaptive forgetting.
+
+  inputs:
+    - name: sem_cid_sequence
+      type: array[CID]
+      description: Sequence of semantic hashes (thought path)
+
+    - name: trails
+      type: map[path -> PheromoneTrail]
+      description: Current pheromone trails
+
+    - name: config
+      type: ACOConfig
+      default:
+        alpha: 1.0      # Pheromone importance
+        beta: 2.0       # Heuristic importance
+        rho: 0.1        # Evaporation rate (10% per pulse)
+        Q: 100.0        # Deposit constant
+        max_iterations: 100
+        ant_count: 20
+
+  outputs:
+    - name: updated_trails
+      type: map[path -> PheromoneTrail]
+      description: Updated pheromone levels
+
+    - name: best_path
+      type: array[CID]
+      description: Current strongest path
+
+code: |
+  λ(sequence, trails, config).
+    let path_key = hash_path(sequence) in
+
+    # Evaporate all trails (forgetting mechanism)
+    let evaporated = map_values(trails, λtrail.
+      trail {
+        strength: trail.strength * (1 - config.rho),
+        last_used: if path_key = trail.path then now() else trail.last_used
+      }
+    ) in
+
+    # Reinforce current path
+    let current_trail = lookup_or_default(evaporated, path_key, {
+      path: sequence,
+      strength: 0.0,
+      evaporation_rate: config.rho,
+      reinforcements: 0,
+      last_used: now()
+    }) in
+
+    # Calculate reinforcement based on path quality
+    let path_quality = calculate_quality(sequence) in
+    let deposit = config.Q * path_quality in
+
+    let reinforced_trail = current_trail {
+      strength: min(1.0, current_trail.strength + deposit),
+      reinforcements: current_trail.reinforcements + 1,
+      last_used: now()
+    } in
+
+    # Update trails map
+    let updated = insert(evaporated, path_key, reinforced_trail) in
+
+    # Prune dead trails (strength < 0.01)
+    let pruned = filter_values(updated, λt. t.strength > 0.01) in
+
+    # Find best path
+    let best = max_by(values(pruned), λt. t.strength) in
+
+    (pruned, best.path)
+
+functions:
+  calculate_quality: |
+    λpath.
+      let coherence = path_coherence(path) in
+      let diversity = semantic_diversity(path) in
+      let efficiency = 1.0 / length(path) in
+      weighted_avg([coherence, diversity, efficiency], [0.5, 0.3, 0.2])
+
+  path_coherence: |
+    λpath.
+      # Average semantic similarity between consecutive nodes
+      let pairs = zip(path, tail(path)) in
+      let similarities = map(pairs, λ(a,b). sem_similarity(a, b)) in
+      average(similarities)
+
+  semantic_diversity: |
+    λpath.
+      # Unique semantic regions covered
+      let unique = dedup(path) in
+      length(unique) / length(path)
+
+  ant_simulation: |
+    λ(graph, trails, config).
+      # Run multiple ants to explore paths
+      let ants = replicate(config.ant_count, new_ant()) in
+
+      let paths = map(ants, λant.
+        explore_path(graph, trails, config.alpha, config.beta)
+      ) in
+
+      # Update trails based on all ant paths
+      fold(paths, trails, λpath acc.
+        update_trail(acc, path, config)
+      )
+
+invariants:
+  - name: pheromone_bounds
+    check: |
+      ∀trail. 0.0 ≤ trail.strength ≤ 1.0
+
+  - name: evaporation_monotonic
+    check: |
+      ∀trail t₁ t₂. t₂ = evaporate(t₁) →
+        t₂.strength ≤ t₁.strength
+
+  - name: reinforcement_increases
+    check: |
+      ∀path quality>0. reinforce(path).strength > path.strength
+
+  - name: forgetting_works
+    check: |
+      ∀trail. unused_for(trail, 100_pulses) →
+        trail.strength < 0.01
+
+proof:
+  method: "Convergence analysis"
+  sketch: |
+    1. Pheromone bounded in [0,1]
+    2. Evaporation ensures forgetting
+    3. Best paths get reinforced
+    4. System converges to stable trails
+    ∴ ACO finds and maintains optimal paths
+
+tests:
+  - name: evaporation_test
+    input:
+      trail: {strength: 0.5, evaporation_rate: 0.1}
+      pulses_without_use: 10
+    expected:
+      strength: ~0.174  # 0.5 * (0.9^10)
+
+  - name: reinforcement_test
+    input:
+      sequence: ["cid1", "cid2", "cid3"]
+      quality: 0.8
+      config: {Q: 100.0}
+    expected:
+      deposit: 80.0
+      strength_increase: true
+
+  - name: pruning_test
+    input:
+      trails: [
+        {strength: 0.5},
+        {strength: 0.009},  # Below threshold
+        {strength: 0.2}
+      ]
+    expected:
+      remaining: 2  # One pruned
+
+performance:
+  complexity: O(n * m)  # n ants, m nodes
+  memory: O(p)         # p active paths
+  optimization: |
+    - Cache path quality calculations
+    - Use sparse representation for trails
+    - Batch evaporation updates
+
+integration:
+  scheduler: "Use trail strength as path priority"
+  receipt: "Include best_path in execution trace"
+  chronicle: "Log path evolution over time"
+
+config_recommendations:
+  high_exploration:
+    alpha: 0.5
+    beta: 3.0
+    rho: 0.2  # Fast forgetting
+
+  exploitation:
+    alpha: 2.0
+    beta: 1.0
+    rho: 0.05  # Slow forgetting
+
+  balanced:
+    alpha: 1.0
+    beta: 2.0
+    rho: 0.1

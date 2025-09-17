@@ -1,0 +1,104 @@
+# Edge Habitat Resource Profiles
+# Select with PROFILE environment variable
+
+[balanced]
+# Default profile - good balance of power and safety
+cpu_quota = "300%"          # 3 cores
+mem_max = "24G"             # 24GB RAM
+gpu = true                  # GPU enabled if available
+gpu_memory = "8G"           # GPU memory limit
+network_bandwidth = "100M"   # 100 Mbps
+disk_iops = 10000           # IOPS limit
+egress_allow = [
+    "4001/tcp",             # IPFS swarm
+    "5001/tcp",             # IPFS API
+    "4001/udp",             # IPFS swarm UDP
+    "30303/tcp",            # Federation protocol
+]
+
+[safe]
+# Conservative profile - minimal resource usage
+cpu_quota = "150%"          # 1.5 cores
+mem_max = "8G"              # 8GB RAM
+gpu = false                 # No GPU
+network_bandwidth = "50M"    # 50 Mbps
+disk_iops = 5000            # Lower IOPS
+egress_allow = [
+    "4001/tcp",             # IPFS only
+    "5001/tcp",
+    "4001/udp",
+]
+max_ops_per_pulse = 64      # Reduced operations
+max_credits_per_pulse = 500  # Minimal credits
+
+[max]
+# Full power profile - use all available resources
+cpu_quota = "800%"          # 8 cores
+mem_max = "64G"             # 64GB RAM
+gpu = true                  # Full GPU access
+gpu_memory = "24G"          # Max GPU memory
+network_bandwidth = "1G"     # 1 Gbps
+disk_iops = 50000           # High IOPS
+egress_allow = [
+    "4001/tcp",
+    "5001/tcp",
+    "4001/udp",
+    "30303/tcp",
+    "8080/tcp",             # HTTP gateway
+    "9090/tcp",             # Metrics
+]
+max_ops_per_pulse = 512      # Maximum operations
+max_credits_per_pulse = 10000 # Maximum credits
+
+[minimal]
+# Bare minimum - observer mode only
+cpu_quota = "50%"           # 0.5 cores
+mem_max = "2G"              # 2GB RAM
+gpu = false                 # No GPU
+network_bandwidth = "10M"    # 10 Mbps
+disk_iops = 1000            # Minimal IOPS
+egress_allow = [
+    "5001/tcp",             # IPFS API only
+]
+max_ops_per_pulse = 16       # Very limited
+max_credits_per_pulse = 100  # Minimal credits
+mode = "observer"           # Read-only mode
+
+[gpu-compute]
+# Optimized for GPU workloads
+cpu_quota = "200%"          # 2 cores (GPU does heavy lifting)
+mem_max = "32G"             # 32GB RAM
+gpu = true                  # GPU required
+gpu_memory = "32G"          # Maximum GPU memory
+gpu_compute_mode = "exclusive" # Exclusive GPU access
+network_bandwidth = "200M"   # 200 Mbps
+disk_iops = 20000           # Good IOPS for data loading
+egress_allow = [
+    "4001/tcp",
+    "5001/tcp",
+    "4001/udp",
+    "30303/tcp",
+]
+priority_workloads = [
+    "proof_generation",
+    "zkp_verification",
+    "matrix_operations",
+]
+
+# Security constraints (apply to all profiles)
+[security]
+wasm_deterministic = true    # Only deterministic WASM
+attestation_required = true  # All operations need attestation
+network_isolation = true     # Strict network filtering
+filesystem_isolation = true  # No access outside CAS
+process_isolation = true     # Container/sandbox required
+kill_switch_enabled = true   # Emergency stop always available
+audit_all_operations = true  # Full audit trail
+
+# Monitoring thresholds (trigger alerts)
+[monitoring]
+cpu_alert = 90              # Alert at 90% CPU
+memory_alert = 85           # Alert at 85% memory
+disk_alert = 80             # Alert at 80% disk
+error_rate_alert = 0.01     # Alert at 1% error rate
+latency_p99_alert = 5000    # Alert if p99 > 5 seconds

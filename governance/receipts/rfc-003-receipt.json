@@ -1,0 +1,18 @@
+{
+  "receipt_cid": "QmReceiptf0efe9f790bd7defec640e3e02d5a95e3ddee76dda11",
+  "rfc": "RFC-003",
+  "action": "approved_and_applied",
+  "timestamp": 1757756947,
+  "votes": {
+    "total": 12,
+    "yes": 12,
+    "no": 0
+  },
+  "effects": [
+    "Mandatory inter-city replication enabled",
+    "Minimum 2 cities for major changes",
+    "Automatic capsule exchange every 24h",
+    "Gene pool sharing activated"
+  ],
+  "attestation": "QmAttestf0efe9f790bd7defec64"
+}

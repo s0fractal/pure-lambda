@@ -1,0 +1,20 @@
+{
+  "timestamp": 1757762600,
+  "mode": "status",
+  "version": "H8",
+  "components": {
+    "geo_sharding": true,
+    "bft_consensus": true,
+    "ml_tuning": true,
+    "formal_specs": true,
+    "disaster_drills": true
+  },
+  "metrics": {
+    "cities": 13,
+    "regions": 8,
+    "nodes": 50,
+    "citizens": 78,
+    "inter_region_latency_target_ms": 120
+  },
+  "health": "OPERATIONAL"
+}

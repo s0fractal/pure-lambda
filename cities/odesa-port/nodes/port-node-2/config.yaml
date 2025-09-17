@@ -1,0 +1,6 @@
+node:
+  name: port-node-2
+  city: odesa-port
+  port: 9001
+  chamber: A
+  capabilities: [attestation, contracts, consensus, sharding]

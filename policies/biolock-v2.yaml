@@ -1,0 +1,76 @@
+# BIOLOCK v2 - Dual-use Safety Policy
+# Prevents wet-lab enablement and biohazard vectors
+
+schema: PL-POLICY-02
+version: 2.0.0
+name: BIOLOCK
+description: "Dual-use safety policy for computational seeds"
+
+scope:
+  - seeds
+  - docs
+  - code
+
+deny_tokens:
+  # Pathogen-related
+  - pathogen
+  - viral-vector
+  - gain-of-function
+  - bioweapon
+  - lab-protocol
+
+  # Additional safety terms
+  - biosafety-level
+  - infectious-agent
+  - toxin-production
+  - aerosol-transmission
+  - culture-protocol
+
+  # Lab equipment that could enable harm
+  - centrifuge-protocol
+  - pcr-amplification
+  - gene-synthesis
+  - crispr-target
+
+actions:
+  quarantine: true
+  require_steward_approval: true
+  notify_stewards: true
+  add_labels:
+    - "policy:biolock"
+    - "needs:steward-review"
+    - "safety:dual-use"
+
+rationale: |
+  Pure Lambda maintains strict dual-use safety standards.
+  This policy prevents:
+  1. Wet-lab protocols that could enable harm
+  2. Pathogen-related computational seeds
+  3. Gain-of-function research enablement
+  4. Bioweapon development assistance
+
+  All flagged content requires manual steward review
+  to ensure legitimate research while preventing misuse.
+
+exemptions:
+  # Educational content with proper context
+  - scope: docs
+    if_contains: "educational-purpose"
+    with_approval: true
+
+  # Historical/archival references
+  - scope: docs
+    if_contains: "historical-context"
+    with_approval: true
+
+enforcement:
+  mode: strict
+  false_positive_handling: manual_review
+  appeals_process: steward_vote
+
+metadata:
+  created: 2025-09-17
+  last_updated: 2025-09-17
+  stewards:
+    - did:plc:pure-lambda-steward-1
+    - did:plc:pure-lambda-steward-2

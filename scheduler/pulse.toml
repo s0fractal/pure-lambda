@@ -1,0 +1,63 @@
+# Pulse Scheduler Configuration
+# SLA-driven contract scheduling with preemption
+
+[pulse]
+period_hours = 24
+preemption = true
+backlog_alarm_ms = 30000
+checkpoint_interval_s = 300  # Save state every 5 min
+
+[queues]
+# High priority - real-time operations
+high.sla_ms = 50
+high.weight = 0.4
+high.preemptible = false
+
+# Normal priority - standard contracts
+normal.sla_ms = 200
+normal.weight = 0.4
+normal.preemptible = true
+
+# Bulk priority - batch operations
+bulk.sla_ms = 1000
+bulk.weight = 0.2
+bulk.preemptible = true
+
+[limits]
+max_concurrent_contracts = 64
+agent_hogging_pct = 0.25  # One agent cannot take >25% of slots
+max_queue_depth = 1000
+max_retries = 3
+
+[preemption]
+enabled = true
+check_interval_ms = 100
+min_progress_pct = 0.1  # Must make 10% progress to avoid preemption
+grace_period_ms = 500   # Grace period before killing
+
+[fairness]
+algorithm = "weighted_fair_queue"
+human_priority_boost = 1.2  # Humans get 20% priority boost
+reputation_factor = true    # Higher reputation = higher priority
+starvation_prevention = true
+max_wait_time_s = 300      # No contract waits >5 min
+
+[backpressure]
+enabled = true
+threshold_pct = 80         # At 80% capacity, start throttling
+reduction_factor = 0.5     # Accept 50% fewer contracts
+recovery_threshold_pct = 60 # Resume normal at 60%
+
+[monitoring]
+export_metrics = true
+metrics_port = 9092
+alert_on_sla_breach = true
+alert_on_hogging = true
+alert_on_backlog = true
+
+[recovery]
+auto_restart_failed = true
+quarantine_duration_s = 60  # Quarantine failing contracts
+circuit_breaker = true
+failure_threshold = 5       # Open circuit after 5 failures
+recovery_timeout_s = 30     # Try to close circuit after 30s

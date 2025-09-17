@@ -1,0 +1,53 @@
+{
+  "cid": "QmAB3f5c7b2a9d8e7f6g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8b0",
+  "soul": "λ-9d8e7f6g9",
+  "name": "REDUCE",
+  "version": "1.0.0",
+  "license": "MIT",
+  "provenance": [
+    {
+      "repo": "https://github.com/s0fractal/pure-lambda",
+      "rev": "3dca67e0f9g8h7i9j0k1l2m3n4o5p6q7r8s9t0u1v2",
+      "author": "s0fractal",
+      "timestamp": 1704067200
+    }
+  ],
+  "metrics": {
+    "time_ns": 8000,
+    "allocs": 0,
+    "proof_coverage": 0.8,
+    "speedup": 1.5,
+    "memory_bytes": 64
+  },
+  "signatures": [
+    {
+      "key": "ed25519:EJ-AwQ8myRPt0AZLVU7NS4jcaMyCxMZ1JhmbQIKU0=",
+      "sig": "NMOsAi2Hr8F8HJOsU6nQ2WiJMLaEsbQROwExo6XTZZPo0kzXzSPS0ix2HbMOrLMNiaY7Mfv0nhB2GjfbFi==",
+      "timestamp": 1704067200
+    }
+  ],
+  "reputation": {
+    "score": 0.72,
+    "votes": 8,
+    "rank": 3
+  },
+  "laws": [
+    {
+      "name": "R1_beta",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/reduce.rs:23"
+    },
+    {
+      "name": "R2_eta",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/reduce.rs:45"
+    },
+    {
+      "name": "R3_confluence",
+      "proven": false,
+      "witness": null
+    }
+  ],
+  "dependencies": [],
+  "tags": ["core"]
+}

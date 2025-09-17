@@ -1,0 +1,242 @@
+[
+  {
+    "type": "pure",
+    "input": 0,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 1,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 2,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 3,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 4,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 5,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 6,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 7,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 8,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "pure",
+    "input": 9,
+    "expected_gate": "G0",
+    "expected_profile": "deterministic"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 0,
+      "value": 0
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 1,
+      "value": 2
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 2,
+      "value": 4
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 3,
+      "value": 6
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 4,
+      "value": 8
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 5,
+      "value": 10
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 6,
+      "value": 12
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 7,
+      "value": 14
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 8,
+      "value": 16
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "stateful",
+    "input": {
+      "state": 9,
+      "value": 18
+    },
+    "expected_gate": "G0",
+    "expected_profile": "scan"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 0,
+      "value": 0
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 100,
+      "value": 0.8414709848078965
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 200,
+      "value": 0.9092974268256817
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 300,
+      "value": 0.1411200080598672
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 400,
+      "value": -0.7568024953079282
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 500,
+      "value": -0.9589242746631385
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 600,
+      "value": -0.27941549819892586
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 700,
+      "value": 0.6569865987187891
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 800,
+      "value": 0.9893582466233818
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  },
+  {
+    "type": "temporal",
+    "input": {
+      "t": 900,
+      "value": 0.4121184852417566
+    },
+    "expected_gate": "G0",
+    "expected_profile": "delay"
+  }
+]

@@ -1,0 +1,56 @@
+version: 1
+objective:
+  # maximize accepted seeds × novelty, під trust-гейтами
+  acceptance_weight: 1.0
+  novelty_weight: 0.6
+  min_trust: 0.95
+  min_conformance: 0.90
+
+buckets:
+  core:
+    share: 0.40
+    priors: {alpha: 12, beta: 3}   # стартові прийняття
+    patterns:
+      - {name: select-focus,          weight: 1.0}
+      - {name: scan-metrics,          weight: 0.8}
+      - {name: bounded-delay,         weight: 0.8}
+      - {name: partition-rr,          weight: 0.7}
+      - {name: route-audit,           weight: 0.7}
+
+  advanced:
+    share: 0.35
+    priors: {alpha: 7, beta: 4}
+    patterns:
+      - {name: split-metric-select,   weight: 1.0}
+      - {name: delay-scan-smoother,   weight: 0.9}
+      - {name: select-tee,            weight: 0.9}
+      - {name: bounded-partition,     weight: 0.8}
+
+  proof:
+    share: 0.15
+    priors: {alpha: 3, beta: 3}
+    patterns:
+      - {name: merge-proof-lite,      weight: 1.0}
+      - {name: merge-proof,           weight: 0.7}
+
+  experimental:
+    share: 0.10
+    priors: {alpha: 1, beta: 4}
+    patterns:
+      - {name: branch-stress,         weight: 1.0}
+      - {name: route-merge-variant,   weight: 0.8}
+
+constraints:
+  per_day:
+    max_total: 20
+    max_per_pattern: 4
+  gates:
+    biolock: true
+    dsse_required: true
+    xid: v2
+
+novelty:
+  target_median: 0.35
+  lsh:
+    simhash_bits: 64
+    hamming_threshold: 6   # <6 → дублікат

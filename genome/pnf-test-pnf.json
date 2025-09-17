@@ -1,0 +1,11 @@
+{
+  "op": "THEN",
+  "left": {
+    "op": "ATOM",
+    "name": "FOCUS"
+  },
+  "right": {
+    "op": "ATOM",
+    "name": "SCAN"
+  }
+}

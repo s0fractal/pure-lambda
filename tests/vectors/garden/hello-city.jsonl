@@ -1,0 +1,3 @@
+{"name": "hello_city_journey", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/hello-city.json", "expect": {"gidStable": true, "iidStable": true, "minRouteLen": 4, "pattern": "journey_choice_convergence"}}
+{"name": "hello_city_laws", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/hello-city.json", "expect": {"lawTypes": ["entrance", "pathfinding", "exchange", "restoration", "convergence"], "abiPatterns": ["JOURNEY", "CHOICE", "CONVERGENCE"]}}
+{"name": "hello_city_structure", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/hello-city.json", "expect": {"totalNodes": 5, "choicePoint": true, "convergencePoint": true, "minRouteLen": 4}}

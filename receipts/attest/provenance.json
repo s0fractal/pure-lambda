@@ -1,0 +1,41 @@
+{
+  "ts": "2025-09-17T10:12:52.983Z",
+  "gitRev": "873a585bafdafa41413675f8ae9b4a30884ffa36",
+  "tools": {
+    "node": "v20.18.3",
+    "tsnode": "v10.9.2",
+    "pkg": "0.1.0"
+  },
+  "inputs": {
+    "fixturesHash": "9795d63feeadf14a26756e12aec7fd9073b64e517276a30d0be43abc10043858"
+  },
+  "outputs": {
+    "files": [
+      {
+        "path": "dist/operon.json",
+        "hash": "600c6bf011673933ea51a4807370ccf3a461a37066af66790ccd52b6da311b1a"
+      },
+      {
+        "path": "dist/operon.nf.json",
+        "hash": "7c4fee6e883840a9dc8bf720e4dd9bbc1d1447f7404932aca46eed3734544106"
+      },
+      {
+        "path": "dist/operon.nf.patch.json",
+        "hash": "8b2ea5b7859ddc28af619d560e79a8e6e9a3ae30646bd133fea9ddfb70310a8d"
+      }
+    ]
+  },
+  "rulesHash": null,
+  "autopilot": {
+    "Lbest": 2.202,
+    "routeLen": null
+  },
+  "nf": {
+    "patchCount": 11,
+    "delta": {
+      "hops": null,
+      "lat": null,
+      "mem": null
+    }
+  }
+}

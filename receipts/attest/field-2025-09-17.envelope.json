@@ -1,0 +1,17 @@
+{
+  "payload": "eyJwZXJpb2QiOiIyMDI1LTA5LTE3IiwidG90YWxSZWNlaXB0cyI6NSwidmFsaWRSZWNlaXB0cyI6NSwiaW52YWxpZFJlY2VpcHRzIjowLCJhY3Rpb25zIjp7InZlcmlmeSI6MSwiYmVuY2giOjEsImNvbnRyaWJ1dGUiOjN9LCJ1bmlxdWVTZWVkcyI6NSwidG90YWxSdW5zIjoxMSwiZGV2aWNlRGlzdHJpYnV0aW9uIjp7ImJyb3dzZXIiOjEsIm1vYmlsZSI6Miwia2lvc2siOjJ9LCJob3VybHlEaXN0cmlidXRpb24iOnsiMCI6MSwiOSI6MSwiMTIiOjEsIjE1IjoxLCIxOSI6MX19",
+  "payloadType": "application/json",
+  "signatures": [
+    {
+      "keyid": "did:plc:field-ingest-2025-09-17",
+      "sig": "yYXV/r7ThQYeA2lXXXIe0puWETDbYLMBg92X9/nhsWSJ8NZjBRl9Wy0NcJwQKlJGPjkRDhcTpb/9ZQGWRS7Hxg=="
+    }
+  ],
+  "_meta": {
+    "schema": "PL-FIELD-01-SUMMARY",
+    "date": "2025-09-17",
+    "timestamp": "2025-09-17T12:38:18.810Z",
+    "receipts": 5,
+    "valid": 5
+  }
+}

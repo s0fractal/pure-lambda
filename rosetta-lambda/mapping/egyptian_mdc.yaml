@@ -1,0 +1,148 @@
+# Egyptian Hieroglyphic to Lambda Mapping
+# MdC-like notation to λ-terms and types
+
+# Basic vocabulary mappings
+terms:
+  # Beings and entities
+  rmT:      { lambda: "person",    type: "Entity",  gloss: "human being" }
+  nTr:      { lambda: "god",       type: "Entity",  gloss: "deity" }
+  nsw:      { lambda: "king",      type: "Entity",  gloss: "king of Upper Egypt" }
+  bity:     { lambda: "king_lower", type: "Entity", gloss: "king of Lower Egypt" }
+  sA:       { lambda: "son",       type: "Entity -> Entity", gloss: "son of" }
+  sAt:      { lambda: "daughter",  type: "Entity -> Entity", gloss: "daughter of" }
+
+  # Qualities and attributes
+  nfr:      { lambda: "GOOD",      type: "Quality", gloss: "beautiful, good" }
+  aA:       { lambda: "GREAT",     type: "Quality", gloss: "great, large" }
+  nDs:      { lambda: "SMALL",     type: "Quality", gloss: "small" }
+  mAa:      { lambda: "TRUE",      type: "Quality", gloss: "true, justified" }
+  anx:      { lambda: "LIVING",    type: "Quality", gloss: "living, life" }
+
+  # Places and locations
+  niwt:     { lambda: "city",      type: "Place",   gloss: "city, town" }
+  pr:       { lambda: "house",     type: "Place",   gloss: "house, temple" }
+  st:       { lambda: "throne",    type: "Place",   gloss: "throne, seat" }
+  tA:       { lambda: "land",      type: "Place",   gloss: "land, earth" }
+  pt:       { lambda: "sky",       type: "Place",   gloss: "sky, heaven" }
+
+  # Actions and states
+  iri:      { lambda: "DO",        type: "Entity -> Action -> Prop", gloss: "to do, make" }
+  Dd:       { lambda: "SPEAK",     type: "Entity -> Text -> Prop",   gloss: "to say, speak" }
+  mAA:      { lambda: "SEE",       type: "Entity -> Entity -> Prop", gloss: "to see" }
+  rdi:      { lambda: "GIVE",      type: "Entity -> Entity -> Entity -> Prop", gloss: "to give" }
+
+  # Prepositions and relations
+  m:        { lambda: "IN",        type: "Place -> Entity -> Prop",  gloss: "in, at" }
+  r:        { lambda: "TO",        type: "Place -> Entity -> Prop",  gloss: "to, toward" }
+  Hr:       { lambda: "UPON",      type: "Entity -> Entity -> Prop", gloss: "upon, on" }
+  xr:       { lambda: "UNDER",     type: "Entity -> Entity -> Prop", gloss: "under" }
+  Hna:      { lambda: "WITH",      type: "Entity -> Entity -> Prop", gloss: "with" }
+
+  # Divine and royal compounds
+  "nsw-bity": { lambda: "PHARAOH", type: "Title -> Entity", gloss: "pharaoh (dual king)" }
+  "sA-ra":    { lambda: "SON_OF_RA", type: "Name -> Entity", gloss: "son of Ra" }
+  "di-anx":   { lambda: "GIVEN_LIFE", type: "Entity -> Prop", gloss: "given life" }
+
+# Determinatives (type refinements)
+determinatives:
+  # Entity refinements
+  HUMAN:    { refines: "Entity",  symbol: "𓀀", description: "seated man" }
+  WOMAN:    { refines: "Entity",  symbol: "𓁐", description: "seated woman" }
+  GOD:      { refines: "Entity",  symbol: "𓀭", description: "seated god" }
+  KING:     { refines: "Entity",  symbol: "𓀯", description: "royal figure" }
+  ANIMAL:   { refines: "Entity",  symbol: "𓃾", description: "hide and tail" }
+
+  # Quality refinements
+  QUALITY:  { refines: "Quality", symbol: "𓄿", description: "abstract quality" }
+  DIVINE:   { refines: "Quality", symbol: "𓊹", description: "divine attribute" }
+
+  # Place refinements
+  PLACE:    { refines: "Place",   symbol: "𓊖", description: "town with crossroads" }
+  BUILDING: { refines: "Place",   symbol: "𓉐", description: "house plan" }
+  FOREIGN:  { refines: "Place",   symbol: "𓈉", description: "foreign land" }
+
+  # Action refinements
+  MOTION:   { refines: "Action",  symbol: "𓂻", description: "walking legs" }
+  FORCE:    { refines: "Action",  symbol: "𓂡", description: "striking arm" }
+
+  # Abstract concepts
+  ABSTRACT: { refines: "Quality", symbol: "𓏛", description: "papyrus roll" }
+  TIME:     { refines: "Quality", symbol: "𓇳", description: "sun disk" }
+
+# Composition rules
+composition:
+  # How to read composite signs
+  default_direction: "left_to_right"
+
+  # Intra-word composition (:)
+  colon:
+    associativity: "right"
+    interpretation: "apply"
+
+  # Inter-word connection (-)
+  hyphen:
+    associativity: "left"
+    interpretation: "compose"
+
+  # Cartouche binding
+  cartouche:
+    creates: "lambda_binding"
+    scope: "following_terms"
+
+# Type hierarchy
+type_hierarchy:
+  Entity:
+    - HUMAN
+    - WOMAN
+    - GOD
+    - KING
+    - ANIMAL
+
+  Quality:
+    - QUALITY
+    - DIVINE
+    - ABSTRACT
+    - TIME
+
+  Place:
+    - PLACE
+    - BUILDING
+    - FOREIGN
+
+  Action:
+    - MOTION
+    - FORCE
+
+# Special constructs
+special:
+  # Royal protocol
+  royal_titles:
+    pattern: "[NAME]"
+    creates: "λtitle. PHARAOH title"
+    type: "Title -> Entity"
+
+  # Divine epithets
+  divine_epithets:
+    pattern: "nTr:QUALITY"
+    creates: "λgod. ATTR god QUALITY"
+    type: "Entity -> Prop"
+
+  # Offering formula
+  offering_formula:
+    pattern: "Htp:di:nsw"
+    creates: "OFFERING_GIVEN_BY_KING"
+    type: "Entity -> Prop"
+
+# Example projections
+examples:
+  - mdc: "rmT:{DET:HUMAN} nfr:{DET:QUALITY}"
+    lambda: "(ATTR person GOOD)"
+    type: "Prop"
+
+  - mdc: "[nsw-bity] m pr:{DET:BUILDING}"
+    lambda: "let PHARAOH = (λt. PHARAOH t) in (IN house PHARAOH)"
+    type: "Prop"
+
+  - mdc: "nTr:{DET:GOD} aA:{DET:QUALITY} Hr st:{DET:PLACE}"
+    lambda: "(UPON throne god) ∧ (ATTR god GREAT)"
+    type: "Prop"

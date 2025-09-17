@@ -1,0 +1,214 @@
+# IPLD Schema for Pure Lambda P2P Objects
+# DAG-CBOR encoded, BLAKE3 addressed
+
+type Cid bytes
+type Soul string
+type Did string
+
+type Gene struct {
+  cid     Cid
+  soul    Soul      # Semantic hash of logic
+  name    String
+  version String
+  license String
+  provenance [Provenance]
+  metrics Metrics
+  signatures [Signature]
+  dependencies [Cid]
+  tags [String]
+}
+
+type Provenance struct {
+  repo String
+  rev String
+  author String optional
+  timestamp Int optional
+}
+
+type Metrics struct {
+  time_ns Int
+  allocs Int
+  proof_coverage Float
+  speedup Float optional
+  memory_bytes Int optional
+}
+
+type Signature struct {
+  did Did
+  sig bytes
+  timestamp Int
+}
+
+type Proof struct {
+  gene   Cid
+  suite  String
+  laws   [Law]
+  report bytes
+  witnesses [String]
+  signatures [Signature]
+}
+
+type Law struct {
+  name String
+  proven Bool
+  witness String optional
+}
+
+type Receipt struct {
+  contract   Cid
+  agent      Did
+  started_at Int
+  finished_at Int
+  outputs    [Output]
+  policy_report PolicyReport
+  proofs   [ProofRef]
+  metrics  ExecutionMetrics
+  attestation Attestation  # H4 addition
+  signatures [Signature]
+}
+
+type Output struct {
+  intent String
+  cid Cid
+}
+
+type PolicyReport struct {
+  ok Bool
+  violations [String]
+  checks [PolicyCheck]
+}
+
+type PolicyCheck struct {
+  policy String
+  passed Bool
+  details String optional
+}
+
+type ProofRef struct {
+  name String
+  cid Cid
+  witnessed Bool
+}
+
+type ExecutionMetrics struct {
+  p50_ms Float
+  p99_ms Float optional
+  gas_used Int
+  allocs Int
+  compression_ratio Float optional
+}
+
+type Attestation struct {
+  kind String                # "enclave" | "deterministic-build"
+  evidence bytes             # Quote/measurement or SLSA provenance
+  module_measurement bytes   # Hash of WASM module/component
+  policy_cid Cid optional    # CID of policy that was enforced
+}
+
+type RegistryEntry struct {
+  gene Cid
+  reputation ReputationScore
+  rank Int
+  status String  # "champion" | "candidate" | "standard" | "deprecated"
+  updated_at Int
+}
+
+type ReputationScore struct {
+  score Float
+  votes Int
+  performance Float
+  quality Float
+  adoption Float
+}
+
+# Governance types
+
+type RFC struct {
+  id Int
+  title String
+  type String  # "rule" | "policy" | "registry" | "protocol"
+  proposer Did
+  payload Payload
+  vote VoteConfig
+  created_at Int
+}
+
+type Payload struct {
+  files [FileChange]
+  rationale String
+}
+
+type FileChange struct {
+  path String
+  action String  # "add" | "remove" | "modify"
+  content String optional
+}
+
+type VoteConfig struct {
+  window VoteWindow
+  thresholds Thresholds
+}
+
+type VoteWindow struct {
+  start Int
+  end Int
+}
+
+type Thresholds struct {
+  quorum_H Float
+  quorum_A Float
+  yes_H Float
+  yes_A Float
+}
+
+type Ballot struct {
+  did Did
+  chamber String  # "H" (human) | "A" (agent)
+  vote String     # "yes" | "no" | "abstain"
+  weight Float
+  sig bytes
+  timestamp Int
+}
+
+type GovernanceReceipt struct {
+  rfc Int
+  result String  # "accepted" | "rejected"
+  tally Tally
+  applied [FileChange]
+  signatures [Signature]
+  timestamp Int
+}
+
+type Tally struct {
+  H ChamberTally
+  A ChamberTally
+}
+
+type ChamberTally struct {
+  yes Float
+  no Float
+  abstain Float optional
+  quorum Float
+}
+
+# Capability delegation
+
+type Capability struct {
+  iss Did        # Issuer
+  aud Did        # Audience (recipient)
+  cap [Cap]      # Capabilities granted
+  exp Int        # Expiration timestamp
+  sig bytes      # Signature
+}
+
+type Cap struct {
+  op String      # "read" | "write" | "execute"
+  res String     # Resource path/pattern
+  limit Limit optional
+}
+
+type Limit struct {
+  max_bytes Int optional
+  max_ops Int optional
+  max_time_ms Int optional
+}

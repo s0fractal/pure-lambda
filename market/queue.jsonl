@@ -1,0 +1,3 @@
+{"type":"offer","contract_cid":"QmContractFocus789abc","price":10,"ttl":3600,"issuer":"did:pl:Alice","sig":"XKMqZg0Fp6D6FHMqS4lO0UgHKJYCqzPOMuCvn4VRYXNm8ixVxQNQ8gv0FZKMpJKLgYW5Kdt8lfZ0EhdzCg==","ts":1736812345}
+{"type":"bid","contract_cid":"QmContractFocus789abc","did":"did:pl:AgentFocus","est_ms":35,"reputation":0.89,"sig":"YKNsAh2Hr8F8HJOsU6nQ2WiJMLaEsbQROwExo6XTZZPo0kzXzSPS0ix2HbMOrLMNiaY7Mfv0nhB2GjfbFi==","ts":1736812350}
+{"type":"bid","contract_cid":"QmContractFocus789abc","did":"did:pl:AgentObserve","est_ms":45,"reputation":0.95,"sig":"ZLOtBi3Is9G9IKPtV7oR3XjKNMbFtcRSPxFyp7YUAAQp1laYaTQT1jy3IcNPsMPOjbZ8Ngw1niC3HkgcGj==","ts":1736812352}

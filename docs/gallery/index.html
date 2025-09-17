@@ -1,0 +1,74 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2025 Pure Lambda Authors -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Lambda - Seed Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pure Lambda Seed Gallery</h1>
+            <p>Offline SPA for exploring canonical operons and minimal invariant seeds</p>
+        </header>
+
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search seeds by name..." />
+            <div class="status" id="statusDiv">Loading seeds...</div>
+        </div>
+
+        <div class="main-content">
+            <div class="seeds-list" id="seedsList">
+                <!-- Seeds will be populated here -->
+            </div>
+
+            <div class="seed-detail" id="seedDetail" style="display: none;">
+                <div class="detail-header">
+                    <h2 id="seedTitle">Seed Details</h2>
+                    <button id="backButton">← Back to List</button>
+                </div>
+
+                <div class="seed-info">
+                    <div class="info-section">
+                        <h3>Metadata</h3>
+                        <div id="seedMetadata"></div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>DAG Visualization</h3>
+                        <svg id="dagSvg" width="800" height="400" viewBox="0 0 800 400">
+                            <!-- DAG will be rendered here -->
+                        </svg>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Actions</h3>
+                        <div class="action-buttons">
+                            <button id="openMirrorBench" class="action-btn primary">
+                                🔬 Open in MirrorBench
+                            </button>
+                            <button id="exportJson" class="action-btn secondary">
+                                📁 Export JSON
+                            </button>
+                            <button id="compareWithCurrent" class="action-btn secondary" style="display: none;">
+                                🔍 Compare with Current
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Raw Data</h3>
+                        <pre id="seedRawData"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

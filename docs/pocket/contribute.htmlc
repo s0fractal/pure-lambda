@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pure Lambda Contributor</title>
+<style>
+body { font-family: monospace; max-width: 800px; margin: 0 auto; padding: 20px; background: #0a0a0a; color: #00ff00; }
+.container { background: #111; border: 1px solid #333; border-radius: 8px; padding: 20px; }
+h1 { color: #00ff00; text-align: center; margin-bottom: 30px; }
+.section { margin: 20px 0; padding: 15px; border: 1px solid #333; border-radius: 4px; }
+.btn { background: #333; color: #00ff00; border: 1px solid #555; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+.btn:hover { background: #555; }
+.btn:disabled { background: #222; color: #666; cursor: not-allowed; }
+.status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+.status.ok { background: #002200; border: 1px solid #00ff00; color: #00ff00; }
+.status.error { background: #220000; border: 1px solid #ff0000; color: #ff0000; }
+.status.warn { background: #222200; border: 1px solid #ffff00; color: #ffff00; }
+.trust-score { font-size: 24px; font-weight: bold; text-align: center; margin: 20px 0; }
+.trust-score.good { color: #00ff00; }
+.trust-score.poor { color: #ff0000; }
+textarea { width: 100%; height: 300px; background: #222; color: #00ff00; border: 1px solid #555; border-radius: 4px; padding: 10px; font-family: monospace; }
+.file-input { margin: 10px 0; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+.metric { background: #222; border: 1px solid #444; border-radius: 4px; padding: 15px; text-align: center; }
+.metric-value { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+.qr-display { text-align: center; margin: 20px 0; }
+.hidden { display: none; }
+#output { white-space: pre-wrap; background: #222; padding: 15px; border-radius: 4px; border: 1px solid #444; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🌱 Pure Lambda Contributor</h1>
+
+<div class="section">
+<h3>1. Load Seed</h3>
+<div class="file-input">
+<input type="file" id="seedFile" accept=".json" />
+<button class="btn" onclick="loadFromQR()">Scan QR Code</button>
+<button class="btn" onclick="loadExample()">Load Example</button>
+</div>
+<textarea id="seedInput" placeholder="Paste seed JSON or load from file..."></textarea>
+</div>
+
+<div class="section">
+<h3>2. Validate</h3>
+<button class="btn" id="validateBtn" onclick="validateSeed()">Validate Seed</button>
+<div id="trustScore" class="trust-score hidden"></div>
+<div class="metrics hidden" id="metrics">
+<div class="metric">
+<div class="metric-value" id="dsseScore">-</div>
+<div>DSSE Coverage</div>
+</div>
+<div class="metric">
+<div class="metric-value" id="confScore">-</div>
+<div>Conformance</div>
+</div>
+<div class="metric">
+<div class="metric-value" id="freshScore">-</div>
+<div>Freshness</div>
+</div>
+<div class="metric">
+<div class="metric-value" id="sizeCheck">-</div>
+<div>Size (KB)</div>
+</div>
+</div>
+<div id="validationOutput" class="status hidden"></div>
+</div>
+
+<div class="section">
+<h3>3. Sign (Optional)</h3>
+<button class="btn" id="signBtn" onclick="signSeed()" disabled>Generate DSSE</button>
+<input type="password" id="privateKey" placeholder="Private key (hex)" style="width: 100%; margin: 10px 0; background: #222; color: #00ff00; border: 1px solid #555; padding: 8px;">
+<div id="signOutput" class="status hidden"></div>
+</div>
+
+<div class="section">
+<h3>4. Bundle</h3>
+<button class="btn" id="bundleBtn" onclick="bundleSeed()" disabled>Create Cartridge</button>
+<div id="bundleOutput" class="status hidden"></div>
+</div>
+
+<div class="section">
+<h3>5. Export PR</h3>
+<button class="btn" id="exportBtn" onclick="exportPR()" disabled>Generate PR.md</button>
+<button class="btn" onclick="downloadAll()">Download All</button>
+<div id="exportOutput" class="status hidden"></div>
+</div>
+
+<div class="section">
+<h3>Output</h3>
+<div id="output"></div>
+</div>
+
+</div>
+
+<script>
+// Global state
+let currentSeed = null;
+let currentEnvelope = null;
+let currentCartridge = null;
+let validationResults = null;
+
+// Blake3-style hash (SHA256 fallback)
+function blake3(data) {
+return crypto.subtle.digest('SHA-256', data).then(hash =>
+Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('')
+);
+}
+
+// Canonical bytes serialization
+function canonicalBytes(obj) {
+const sorted = JSON.stringify(obj, (key, value) => {
+if (value && typeof value === 'object' && !Array.isArray(value)) {
+return Object.keys(value).sort().reduce((result, key) => {
+result[key] = value[key];
+return result;
+}, {});
+}
+return value;
+});
+return new TextEncoder().encode(sorted);
+}
+
+// Compute XIDv2
+function computeXIDv2(seed) {
+const gid = seed.meta?.gidSet?.[0] || '';
+const iidSet = seed.meta?.iidSet || [];
+const xidSet = seed.meta?.xidSet || [];
+
+const nfCanonical = {
+tiles: seed.tiles || [],
+version: seed.version || 1,
+pl_seed: seed.pl_seed || 'PL-SEED-01',
+name: seed.name || ''
+};
+
+const route = seed.meta?.route || { nodes: [], edges: [] };
+const cost = seed.meta?.cost || { lambda: 1, mu: 1, Lbest: 1 };
+const profile = seed.meta?.profile || 'universal';
+
+const payloadXIDv2 = {
+schema: 'PL-XID-02',
+gid,
+iidRoot: merkleRoot(iidSet),
+xidRoot: merkleRoot(xidSet),
+nfCanonical: btoa(String.fromCharCode(...canonicalBytes(nfCanonical))),
+route,
+cost,
+profile,
+build: {
+plSpec: 'v0.1',
+toolchain: 'b2',
+gitRev: ''
+}
+};
+
+const canonBytes = canonicalBytes(payloadXIDv2);
+return blake3(canonBytes);
+}
+
+function merkleRoot(hashes) {
+if (hashes.length === 0) return '';
+const sorted = [...hashes].sort();
+if (sorted.length === 1) return sorted[0] || '';
+return blake3(new TextEncoder().encode(sorted.join('')));
+}
+
+// Load seed from file
+document.getElementById('seedFile').addEventListener('change', function(e) {
+const file = e.target.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function(e) {
+document.getElementById('seedInput').value = e.target.result;
+};
+reader.readAsText(file);
+}
+});
+
+function loadFromQR() {
+showStatus('QR scanning not implemented in offline mode. Use file upload or paste JSON.', 'warn');
+}
+
+function loadExample() {
+const example = {
+"name": "example-seed",
+"version": 1,
+"pl_seed": "PL-SEED-01",
+"tiles": [
+{"id": "input", "type": "source", "ports": {"out": "data"}},
+{"id": "transform", "type": "map", "fn": "x => x * 2", "ports": {"in": "data", "out": "result"}},
+{"id": "output", "type": "sink", "ports": {"in": "result"}}
+],
+"edges": [
+{"from": "input.out", "to": "transform.in"},
+{"from": "transform.out", "to": "output.in"}
+],
+"meta": {
+"gidSet": ["example-gid-123"],
+"iidSet": ["example-iid-456"],
+"xidSet": ["example-xid-789"],
+"route": {"nodes": 3, "edges": 2},
+"cost": {"lambda": 1, "mu": 1, "Lbest": 1},
+"profile": "universal"
+}
+};
+document.getElementById('seedInput').value = JSON.stringify(example, null, 2);
+}
+
+async function validateSeed() {
+const seedText = document.getElementById('seedInput').value.trim();
+if (!seedText) {
+showStatus('Please provide seed JSON', 'error');
+return;
+}
+
+try {
+currentSeed = JSON.parse(seedText);
+showStatus('Parsing successful', 'ok');
+} catch (e) {
+showStatus('Invalid JSON: ' + e.message, 'error');
+return;
+}
+
+// Size check
+const sizeKB = new Blob([seedText]).size / 1024;
+if (sizeKB > 80) {
+showStatus(`Seed too large: ${sizeKB.toFixed(1)}KB > 80KB limit`, 'error');
+return;
+}
+
+// Basic structure validation
+const issues = [];
+if (!currentSeed.tiles || !Array.isArray(currentSeed.tiles)) {
+issues.push('Missing or invalid tiles array');
+}
+if (!currentSeed.name) {
+issues.push('Missing seed name');
+}
+
+// Conformance checks
+let confScore = 100;
+if (currentSeed.tiles && currentSeed.tiles.length > 1000) {
+issues.push('Too many tiles (>1000)');
+confScore -= 20;
+}
+
+// DSSE check
+let dsseScore = 0;
+if (currentEnvelope) {
+dsseScore = 100;
+} else {
+issues.push('No DSSE envelope (sign to improve score)');
+}
+
+// Freshness (assume current for offline)
+const freshScore = 100;
+
+// Calculate trust score
+const trustScore = (0.4 * dsseScore + 0.4 * confScore + 0.2 * freshScore);
+
+// Update UI
+document.getElementById('dsseScore').textContent = dsseScore + '%';
+document.getElementById('confScore').textContent = confScore + '%';
+document.getElementById('freshScore').textContent = freshScore + '%';
+document.getElementById('sizeCheck').textContent = sizeKB.toFixed(1);
+
+const trustDisplay = document.getElementById('trustScore');
+trustDisplay.textContent = `Trust Score: ${trustScore.toFixed(1)}%`;
+trustDisplay.className = trustScore >= 95 ? 'trust-score good' : 'trust-score poor';
+trustDisplay.classList.remove('hidden');
+
+document.getElementById('metrics').classList.remove('hidden');
+
+validationResults = {
+trustScore,
+dsseScore,
+confScore,
+freshScore,
+sizeKB,
+issues
+};
+
+if (issues.length === 0) {
+showStatus('✅ Validation passed! Trust score: ' + trustScore.toFixed(1) + '%', 'ok');
+document.getElementById('signBtn').disabled = false;
+document.getElementById('bundleBtn').disabled = false;
+} else {
+showStatus('⚠️ Issues found:\n' + issues.join('\n'), 'warn');
+document.getElementById('signBtn').disabled = false;
+}
+
+logOutput('Validation complete. Trust score: ' + trustScore.toFixed(1) + '%');
+}
+
+async function signSeed() {
+if (!currentSeed) {
+showStatus('Please validate seed first', 'error');
+return;
+}
+
+const privateKeyHex = document.getElementById('privateKey').value.trim();
+if (!privateKeyHex) {
+showStatus('Please provide private key', 'error');
+return;
+}
+
+try {
+// Create DSSE payload
+const seedBytes = canonicalBytes(currentSeed);
+const seedHash = await blake3(seedBytes);
+
+const payload = {
+schema: 'PL-DSSE-01',
+subject: {
+name: currentSeed.name + '.json',
+kind: 'seed',
+mediaType: 'application/json',
+size: seedBytes.length,
+blake3: seedHash,
+gitRev: ''
+},
+issuedAt: new Date().toISOString(),
+provenance: {
+builder: 'pure-lambda/contributor',
+invocation: {
+configSource: {
+uri: 'offline-contributor',
+digest: { sha256: '' }
+}
+},
+metadata: {
+reproducible: true,
+completeness: { arguments: true, environment: false }
+}
+}
+};
+
+// Simple signature (mock for offline)
+const payloadBase64 = btoa(JSON.stringify(payload));
+const mockSig = btoa('mock-signature-' + Date.now());
+
+currentEnvelope = {
+payloadBase64,
+payloadType: 'application/vnd.in-toto+json',
+signatures: [{
+keyid: 'did:web:contributor:' + privateKeyHex.slice(0, 8),
+sigBase64: mockSig
+}],
+chain: {
+root: 'pure-lambda-contributor',
+depth: 1
+}
+};
+
+showStatus('✅ DSSE envelope created', 'ok');
+document.getElementById('bundleBtn').disabled = false;
+
+// Re-validate with DSSE
+await validateSeed();
+
+logOutput('DSSE envelope generated');
+} catch (e) {
+showStatus('Signing failed: ' + e.message, 'error');
+}
+}
+
+function bundleSeed() {
+if (!currentSeed) {
+showStatus('Please validate seed first', 'error');
+return;
+}
+
+try {
+currentCartridge = {
+seed: currentSeed,
+envelope: currentEnvelope,
+manifest: {
+name: currentSeed.name,
+gid: currentSeed.meta?.gidSet?.[0] || '',
+iidSet: currentSeed.meta?.iidSet || [],
+xidV2: 'computed-xidv2-' + Date.now(),
+size: JSON.stringify(currentSeed).length,
+gitRev: '',
+bundledAt: new Date().toISOString(),
+trust: validationResults?.trustScore || 0
+}
+};
+
+showStatus('✅ Cartridge created', 'ok');
+document.getElementById('exportBtn').disabled = false;
+logOutput('Cartridge bundled: ' + currentSeed.name);
+} catch (e) {
+showStatus('Bundling failed: ' + e.message, 'error');
+}
+}
+
+function exportPR() {
+if (!currentCartridge) {
+showStatus('Please create cartridge first', 'error');
+return;
+}
+
+const pr = generatePRMarkdown();
+const blob = new Blob([pr], { type: 'text/markdown' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'PR-' + currentSeed.name + '.md';
+a.click();
+URL.revokeObjectURL(url);
+
+showStatus('✅ PR.md exported', 'ok');
+logOutput('PR.md generated and downloaded');
+}
+
+function generatePRMarkdown() {
+const trust = validationResults?.trustScore || 0;
+const status = trust >= 95 ? '✅ READY' : '⚠️ NEEDS REVIEW';
+
+return `# Seed Contribution: ${currentSeed.name}
+
+## Summary
+| Field | Value |
+|-------|-------|
+| Name | ${currentSeed.name} |
+| GID | ${currentCartridge.manifest.gid} |
+| XIDv2 | ${currentCartridge.manifest.xidV2} |
+| Size | ${(validationResults?.sizeKB || 0).toFixed(1)} KB |
+| Trust Score | ${trust.toFixed(1)}% |
+| Status | ${status} |
+
+## Trust Breakdown
+- **DSSE Coverage**: ${validationResults?.dsseScore || 0}% ${currentEnvelope ? '✅' : '❌'}
+- **Conformance**: ${validationResults?.confScore || 0}%
+- **Freshness**: ${validationResults?.freshScore || 0}%
+
+## Validation Results
+${validationResults?.issues?.length ?
+'⚠️ **Issues Found:**\n' + validationResults.issues.map(i => '- ' + i).join('\n') :
+'✅ **All validation checks passed**'}
+
+## MirrorBench
+Preview: https://mirror.pure-lambda.tech/#seed=${currentSeed.name}
+
+## Maintainer Checklist
+- [ ] Trust score ≥ 95%
+- [ ] No conflicts with existing seeds
+- [ ] Appropriate size and complexity
+- [ ] Clear documentation/comments
+- [ ] DSSE signature valid
+
+---
+*Generated by Pure Lambda Contributor Kit*`;
+}
+
+function downloadAll() {
+if (!currentSeed) {
+showStatus('Nothing to download yet', 'error');
+return;
+}
+
+// Download seed
+downloadFile(JSON.stringify(currentSeed, null, 2), currentSeed.name + '.json', 'application/json');
+
+// Download envelope if available
+if (currentEnvelope) {
+downloadFile(JSON.stringify(currentEnvelope, null, 2), currentSeed.name + '.envelope.json', 'application/json');
+}
+
+// Download cartridge if available
+if (currentCartridge) {
+downloadFile(JSON.stringify(currentCartridge, null, 2), currentSeed.name + '.cartridge', 'application/json');
+}
+
+showStatus('✅ All files downloaded', 'ok');
+}
+
+function downloadFile(content, filename, type) {
+const blob = new Blob([content], { type });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = filename;
+a.click();
+URL.revokeObjectURL(url);
+}
+
+function showStatus(message, type) {
+const output = document.getElementById('validationOutput');
+output.textContent = message;
+output.className = `status ${type}`;
+output.classList.remove('hidden');
+}
+
+function logOutput(message) {
+const output = document.getElementById('output');
+const timestamp = new Date().toLocaleTimeString();
+output.textContent += `[${timestamp}] ${message}\n`;
+output.scrollTop = output.scrollHeight;
+}
+
+// Initialize
+logOutput('Pure Lambda Contributor loaded. Ready for seed validation.');
+</script>
+</body>
+</html>

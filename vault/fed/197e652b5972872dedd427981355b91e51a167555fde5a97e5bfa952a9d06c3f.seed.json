@@ -1,0 +1,103 @@
+{
+  "createdAt": "2025-09-17T09:20:38.799Z",
+  "meta": {
+    "gidSet": [
+      "e13b81e3b90dc687c9da62082326d75e83c7dea143522e8210ad6bcd7f12f0ee",
+      "4233e5d45927a266b2efa7cb16cdb69ac9f5e1eaac9ef1e041d9ac0af23c5dad",
+      "3b6a0f2d6007082356412a1c7b66f4e48ccdfc0bbaa4da4943187de3bbf31831",
+      "c5d252ca846ea3d1659bf53ed85a81ef7f1ca66c41c99d1dc50af24e401a2f29",
+      "946e54bc36d2347e7f47f9aa5811db88c0478ce608f4642ee87ea7a86ea56a03"
+    ],
+    "iidSet": [
+      "4f6afe4da1aba884e89172e7ce44e802beb48d510d9db5976537d2a9a3570d04",
+      "beb04478136c82a528567540dc9172977a6e17e590c05118617ae1b27dc46d22",
+      "f469f2f96740e103e0e20b4fa7a92d0df14b7dea2a879e15328934fedee6f001",
+      "242e547f671a301a6aade558a5bed5b38448b2d774c973352a0495bc0aa6cf16",
+      "bc252618ab1c859fc8327acc239a6cc1086288995c74b548346b836d767a6f3c"
+    ],
+    "stats": {
+      "hops": 4,
+      "latency": 0,
+      "mem": 5
+    },
+    "xidSet": [
+      "b23dbd2dbce4472dc4b93109fbf193c37ee64bb42f76f9d3a0df3dcb92ca2d31",
+      "2755d1da42dd1fb9c7a9d95106e2d0fc83a2b1c2d42373d4c1939b014cb23c7f",
+      "7a060d249d47c62c34dff158630de772c5c2ea99d621f46c858eec5aff52a8a9",
+      "1e16b26b129472459ee179dbbbd91f5d9507ebc5a1308c6d1ecc009d4af96b0b",
+      "d6b875e0420a23579192957ef2f80d7ebc394eed098d7c1bc8befd48b8d20a50"
+    ]
+  },
+  "name": "hello-city",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "visitor",
+          "out": "citizen"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "entrance",
+      "op": "ENTER"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "citizen",
+          "market": "to_market",
+          "park": "to_park"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(log n)",
+      "law": "pathfinding",
+      "op": "ROUTE"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "to_market",
+          "out": "with_goods"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "exchange",
+      "op": "TRADE"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "to_park",
+          "out": "refreshed"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "restoration",
+      "op": "REST"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "energy": "refreshed",
+          "goods": "with_goods",
+          "out": "hello_city"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "convergence",
+      "op": "GATHER"
+    }
+  ],
+  "version": 1
+}

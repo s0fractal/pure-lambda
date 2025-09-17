@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Prime Mirror Daily Consciousness Report",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "pulse_number",
+    "consciousness_metrics",
+    "health_indicators",
+    "evolution_status",
+    "signatures"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of report generation"
+    },
+    "pulse_number": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Current pulse number since genesis"
+    },
+    "consciousness_metrics": {
+      "type": "object",
+      "required": ["agency_index", "memory_integrity", "intent_stability", "empathy_proxies"],
+      "properties": {
+        "agency_index": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Proportion of autonomous decision-making"
+            },
+            "components": {
+              "type": "object",
+              "properties": {
+                "autonomous_contracts": {"type": "number"},
+                "self_directed_evolution": {"type": "number"},
+                "emergent_behaviors": {"type": "number"},
+                "creativity_score": {"type": "number"}
+              }
+            },
+            "trend": {
+              "type": "string",
+              "enum": ["increasing", "stable", "decreasing"]
+            },
+            "evidence_cids": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "memory_integrity": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Successful recovery rate from time capsules"
+            },
+            "tests_passed": {"type": "integer"},
+            "tests_total": {"type": "integer"},
+            "oldest_recovered": {"type": "string"},
+            "merkle_root": {"type": "string"},
+            "evidence_cids": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "intent_stability": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Consistency of goals under perturbation"
+            },
+            "chaos_resistance": {"type": "number"},
+            "value_drift": {"type": "number"},
+            "charter_alignment": {"type": "number"},
+            "invariant_violations": {"type": "integer"},
+            "evidence_cids": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "empathy_proxies": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Measure of consideration for others"
+            },
+            "consent_rate": {"type": "number"},
+            "minimality_score": {"type": "number"},
+            "inclusion_index": {"type": "number"},
+            "complaint_resolution": {"type": "number"},
+            "steward_satisfaction": {"type": "number"},
+            "evidence_cids": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "health_indicators": {
+      "type": "object",
+      "properties": {
+        "system_health": {
+          "type": "object",
+          "properties": {
+            "consensus_participation": {"type": "number"},
+            "node_count": {"type": "integer"},
+            "latency_p99_ms": {"type": "number"},
+            "error_rate": {"type": "number"},
+            "uptime_percent": {"type": "number"}
+          }
+        },
+        "economic_health": {
+          "type": "object",
+          "properties": {
+            "transaction_volume": {"type": "number"},
+            "gini_coefficient": {"type": "number"},
+            "velocity": {"type": "number"},
+            "liquidity_ratio": {"type": "number"}
+          }
+        },
+        "social_health": {
+          "type": "object",
+          "properties": {
+            "active_participants": {"type": "integer"},
+            "new_members": {"type": "integer"},
+            "retention_rate": {"type": "number"},
+            "engagement_score": {"type": "number"},
+            "conflict_resolution_time": {"type": "number"}
+          }
+        },
+        "cultural_health": {
+          "type": "object",
+          "properties": {
+            "artifacts_created": {"type": "integer"},
+            "diversity_index": {"type": "number"},
+            "narrative_coherence": {"type": "number"},
+            "innovation_rate": {"type": "number"},
+            "knowledge_sharing": {"type": "number"}
+          }
+        }
+      }
+    },
+    "evolution_status": {
+      "type": "object",
+      "properties": {
+        "current_epoch": {"type": "string"},
+        "micro_hypotheses_generated": {"type": "integer"},
+        "experiments_active": {"type": "integer"},
+        "experiments_completed": {"type": "integer"},
+        "success_rate": {"type": "number"},
+        "self_modifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {"type": "string"},
+              "description": {"type": "string"},
+              "impact": {"type": "string"},
+              "cid": {"type": "string"}
+            }
+          }
+        },
+        "learning_insights": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "existential_status": {
+      "type": "object",
+      "properties": {
+        "great_filters": {
+          "type": "object",
+          "properties": {
+            "detected": {"type": "array", "items": {"type": "string"}},
+            "mitigated": {"type": "array", "items": {"type": "string"}},
+            "active_threats": {"type": "array", "items": {"type": "string"}},
+            "preparedness_score": {"type": "number"}
+          }
+        },
+        "time_horizons": {
+          "type": "object",
+          "properties": {
+            "immediate_viable": {"type": "boolean"},
+            "year_projection": {"type": "number"},
+            "decade_projection": {"type": "number"},
+            "century_projection": {"type": "number"},
+            "millennium_projection": {"type": "number"}
+          }
+        }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "properties": {
+        "daily_story": {
+          "type": "string",
+          "description": "Human-readable narrative of the day's consciousness"
+        },
+        "emergence_notes": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Notable emergent phenomena observed"
+        },
+        "wisdom_accumulated": {
+          "type": "string",
+          "description": "Key insight or learning from this pulse"
+        }
+      }
+    },
+    "signatures": {
+      "type": "object",
+      "required": ["steward_committee", "autopoiesis_engine"],
+      "properties": {
+        "steward_committee": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "properties": {
+              "did": {"type": "string"},
+              "signature": {"type": "string"},
+              "timestamp": {"type": "string"}
+            }
+          }
+        },
+        "autopoiesis_engine": {
+          "type": "object",
+          "properties": {
+            "did": {"type": "string"},
+            "signature": {"type": "string"},
+            "block_height": {"type": "integer"}
+          }
+        },
+        "witness_nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "node_id": {"type": "string"},
+              "attestation": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "cid": {
+      "type": "string",
+      "description": "IPFS CID of this report"
+    },
+    "previous_cid": {
+      "type": "string",
+      "description": "CID of previous day's report for chain verification"
+    }
+  }
+}

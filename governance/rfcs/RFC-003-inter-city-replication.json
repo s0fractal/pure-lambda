@@ -1,0 +1,19 @@
+{
+  "rfc": "RFC-003",
+  "title": "Inter-City Replication Policy",
+  "status": "APPROVED",
+  "voting": {
+    "kyiv-prime": {
+      "chamber_h": {"yes": 3, "no": 0},
+      "chamber_a": {"yes": 3, "no": 0},
+      "result": "approved"
+    },
+    "lviv-harbor": {
+      "chamber_h": {"yes": 3, "no": 0},
+      "chamber_a": {"yes": 3, "no": 0},
+      "result": "approved"
+    }
+  },
+  "approved_timestamp": 1757756946,
+  "implementation": "immediate"
+}

@@ -1,0 +1,40 @@
+# Federation Rate Limit Policy for 100 Seeds Week
+
+[rate_limits]
+window_days = 7
+daily_burst = 5
+weekly_cap = 20
+steward_exempt = true
+
+[per_did]
+# Per-DID limits
+daily_max = 5
+weekly_max = 20
+burst_window = "1h"
+burst_max = 3
+
+[global]
+# Global limits
+hourly_max = 50
+daily_max = 200
+weekly_max = 500
+
+[exemptions]
+# Stewards are exempt from rate limits
+steward_dids = [
+  "did:plc:steward-intake",
+  "did:plc:steward-policy",
+  "did:plc:steward-dsse"
+]
+
+[throttle]
+# Emergency throttle settings
+enabled = false
+daily_burst = 2
+weekly_cap = 10
+
+[quarantine]
+# Auto-quarantine on rate limit
+enabled = true
+reason = "RATE_LIMIT"
+duration = "24h"

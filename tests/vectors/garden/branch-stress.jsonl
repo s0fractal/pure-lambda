@@ -1,0 +1,3 @@
+{"name": "branch_stress_wide_fanout", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/branch-stress.json", "expect": {"gidStable": true, "iidStable": true, "minRouteLen": 2, "pattern": "wide_split_fanout"}}
+{"name": "branch_stress_laws", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/branch-stress.json", "expect": {"lawTypes": ["distribution", "identity"], "opTypes": ["SPLIT", "ID"], "parallelPaths": 5}}
+{"name": "branch_stress_fanout", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/branch-stress.json", "expect": {"splitPorts": 5, "totalNodes": 6, "parallelProcessing": true, "minRouteLen": 2}}

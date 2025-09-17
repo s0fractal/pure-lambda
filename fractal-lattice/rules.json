@@ -1,0 +1,75 @@
+{
+  "implications": [
+    {
+      "premise": [
+        "exec:success"
+      ],
+      "conclusion": [
+        "oracle:no_fs",
+        "speed:fast"
+      ],
+      "support": 2,
+      "confidence": 1
+    },
+    {
+      "premise": [
+        "exec:success",
+        "oracle:no_fs"
+      ],
+      "conclusion": [
+        "speed:fast"
+      ],
+      "support": 2,
+      "confidence": 1
+    },
+    {
+      "premise": [
+        "exec:success",
+        "oracle:no_fs",
+        "oracle:no_net"
+      ],
+      "conclusion": [
+        "proof:deterministic",
+        "speed:fast",
+        "type:proof"
+      ],
+      "support": 1,
+      "confidence": 1
+    },
+    {
+      "premise": [
+        "exec:success",
+        "oracle:no_fs",
+        "oracle:no_net",
+        "proof:deterministic"
+      ],
+      "conclusion": [
+        "speed:fast",
+        "type:proof"
+      ],
+      "support": 1,
+      "confidence": 1
+    },
+    {
+      "premise": [
+        "exec:success",
+        "oracle:no_fs",
+        "oracle:no_net",
+        "proof:deterministic",
+        "speed:fast"
+      ],
+      "conclusion": [
+        "type:proof"
+      ],
+      "support": 1,
+      "confidence": 1
+    }
+  ],
+  "metrics": {
+    "ruleCount": 5,
+    "coverage": 0.4,
+    "avgPremiseSize": 3,
+    "avgConclusionSize": 1.8
+  },
+  "timestamp": "2025-09-15T14:28:22.508Z"
+}

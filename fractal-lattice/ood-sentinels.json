@@ -1,0 +1,7 @@
+{
+  "confidence_threshold": 0.5,
+  "hasse_distance_max": 2,
+  "entropy_spike_threshold": 1.5,
+  "unknown_attr_limit": 2,
+  "quarantine_log": "fractal-lattice/quarantine.jsonl"
+}

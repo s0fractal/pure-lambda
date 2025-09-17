@@ -1,0 +1,9 @@
+{
+  "did": "did:pl:LvivHarbor1757756206",
+  "name": "lviv-harbor",
+  "founded": 1757756206,
+  "founder": "did:pl:FederationCouncil",
+  "nodes": 3,
+  "location": "west",
+  "specialization": "creativity_and_culture"
+}

@@ -1,0 +1,124 @@
+{
+  "nodes": {
+    "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd": {
+      "cost": "O(n)",
+      "gid": "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "iid": "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "law": "transform",
+      "links": {
+        "out": "baf9876543210fedcba0987654321098765432109876543210fedcba098"
+      },
+      "op": "MAP",
+      "ports": {
+        "in": "data",
+        "out": "stage1"
+      },
+      "receipt": null,
+      "xid": "506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+    },
+    "baf9876543210fedcba0987654321098765432109876543210fedcba098": {
+      "cost": "O(n)",
+      "gid": "c2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+      "iid": "a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+      "law": "predicate",
+      "links": {
+        "out": "baf1234567890abcdef1234567890abcdef1234567890abcdef123456789"
+      },
+      "op": "FILTER",
+      "ports": {
+        "in": "stage1",
+        "out": "stage2"
+      },
+      "receipt": null,
+      "xid": "d1e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i2"
+    },
+    "baf1234567890abcdef1234567890abcdef1234567890abcdef123456789": {
+      "cost": "O(n)",
+      "gid": "e3f2d1c0b9a8778695847362514039f2e1d0c9b8a77685949372615049382716",
+      "iid": "b2c3d4e5f6g7890123456789012345678901234567890123456789012345678901",
+      "law": "accumulate",
+      "links": {
+        "out": "bafabcdef0123456789abcdef0123456789abcdef0123456789abcdef012"
+      },
+      "op": "REDUCE",
+      "ports": {
+        "in": "stage2",
+        "out": "stage3"
+      },
+      "receipt": null,
+      "xid": "e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i3"
+    },
+    "bafabcdef0123456789abcdef0123456789abcdef0123456789abcdef012": {
+      "cost": "O(n)",
+      "gid": "f4e3d2c1b0a9887776655443322110f9e8d7c6b5a49382716055944938271605",
+      "iid": "c3d4e5f6g7h8901234567890123456789012345678901234567890123456789012",
+      "law": "transform",
+      "links": {
+        "out": "bafdef456789012345def456789012345def456789012345def45678901"
+      },
+      "op": "TRANSFORM",
+      "ports": {
+        "in": "stage3",
+        "out": "stage4"
+      },
+      "receipt": null,
+      "xid": "f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i4"
+    },
+    "bafdef456789012345def456789012345def456789012345def45678901": {
+      "cost": "O(1)",
+      "gid": "g5f4e3d2c1b0a9887766554433221100f8e7d6c5b4a3927160554493827160",
+      "iid": "d4e5f6g7h8i9012345678901234567890123456789012345678901234567890123",
+      "law": "focus",
+      "links": {},
+      "op": "FOCUS",
+      "ports": {
+        "in": "stage4",
+        "out": "result"
+      },
+      "receipt": null,
+      "xid": "g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i5"
+    },
+    "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c": {
+      "oids": [
+        "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd",
+        "baf9876543210fedcba0987654321098765432109876543210fedcba098",
+        "baf1234567890abcdef1234567890abcdef1234567890abcdef123456789",
+        "bafabcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+        "bafdef456789012345def456789012345def456789012345def45678901"
+      ],
+      "root": "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd"
+    }
+  },
+  "root": "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c",
+  "name": "pipeline",
+  "abi": {
+    "ports": {
+      "in": "data",
+      "out": "result"
+    },
+    "description": "5-stage linear processing pipeline: MAP → FILTER → REDUCE → TRANSFORM → FOCUS"
+  },
+  "gidSet": [
+    "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+    "c2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+    "e3f2d1c0b9a8778695847362514039f2e1d0c9b8a77685949372615049382716",
+    "f4e3d2c1b0a9887776655443322110f9e8d7c6b5a49382716055944938271605",
+    "g5f4e3d2c1b0a9887766554433221100f8e7d6c5b4a3927160554493827160"
+  ],
+  "iidSet": [
+    "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+    "a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+    "b2c3d4e5f6g7890123456789012345678901234567890123456789012345678901",
+    "c3d4e5f6g7h8901234567890123456789012345678901234567890123456789012",
+    "d4e5f6g7h8i9012345678901234567890123456789012345678901234567890123"
+  ],
+  "expected": {
+    "minRouteLen": 5,
+    "invariants": [
+      "GID independent of ports",
+      "IID equal for abi-equal",
+      "Linear processing pipeline",
+      "Sequential execution order maintained"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ts": "2025-09-16T12:20:39.674Z",
+  "rootCID": "baf69fd6d4c95ba57397c7f44e84d859df1ad8950474e697a1587dda0",
+  "bestRoute": [
+    "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c"
+  ],
+  "Lbest": 1,
+  "gidSet": [
+    "f5a4991646772b3129c8c8abe20d6e3b5e7ca7540f90eb30ee66521622a306b0",
+    "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602"
+  ],
+  "iidSet": [
+    "0e591762d4761574096a65dbdf3d77e1c5bd22fabcbc20b1f9b0eff8de9795bd",
+    "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b"
+  ],
+  "xidSet": [
+    "ba20656bcf93cd7ff56f6003276a0d473da8139b1731e60f10f1f454075ebd6d",
+    "506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+  ],
+  "slo": {
+    "W_ok": true,
+    "K_ok": true
+  },
+  "hashes": {
+    "blake3_of_payload": "989b609164cc064f5cbf6629e8b1b85e84e142a0af873b9c21cbabf1a200c7f9"
+  },
+  "publicKey": "fde267b2517f324cd847a2d7f3a967a256f543d9dd2c95c6baa7cd59333700c3",
+  "signature": "a3a6e9bea76805237500589c568d354073dbfeffcd4a4b47a0a10129bd3a627226fddcf2f6b9bcd5ed31369d0f3404641c2796ced26f856b7652337ded075a00"
+}

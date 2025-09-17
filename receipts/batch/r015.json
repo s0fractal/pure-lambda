@@ -1,0 +1,37 @@
+{
+  "id": "r015",
+  "type": "synthetic",
+  "command": "validate_schema(large.json)",
+  "timestamp": "2025-09-15T14:38:38.670Z",
+  "execution": {
+    "success": false,
+    "time_ms": 500,
+    "exitCode": 1
+  },
+  "oracle": {
+    "env": false,
+    "fs": false,
+    "rand": true,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "cap:random",
+    "env:node_18",
+    "exec:failure",
+    "gene:SURGEON",
+    "lang:python",
+    "oracle:no_env",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_time",
+    "size:l_100mb_plus",
+    "speed:slow",
+    "type:validation"
+  ],
+  "cid": "faa4eb7d12c36c47"
+}

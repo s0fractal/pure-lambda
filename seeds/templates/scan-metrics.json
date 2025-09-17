@@ -1,0 +1,47 @@
+{
+  "name": "scan-metrics",
+  "version": 1,
+  "intent": "Threshold aggregator with color coding",
+  "size": "≤10KB",
+  "novelty": 0.47,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "scan": {
+      "op": "SCAN",
+      "params": {
+        "window": 100,
+        "aggregate": "sum"
+      }
+    },
+    "threshold": {
+      "op": "FOCUS",
+      "params": {
+        "min": 50,
+        "max": 150,
+        "colors": {
+          "low": "green",
+          "mid": "yellow",
+          "high": "red"
+        }
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "scan"],
+    ["scan", "threshold"],
+    ["threshold", "exit"]
+  ],
+  "fixtures": [
+    {"value": 25, "expected": "green"},
+    {"value": 75, "expected": "yellow"},
+    {"value": 175, "expected": "red"}
+  ],
+  "xidv2": "scan-metrics-v2-${timestamp}"
+}

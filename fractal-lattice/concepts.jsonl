@@ -1,0 +1,4 @@
+{"intent":[],"extent":["r001","r002","r003","r004","r005"]}
+{"intent":["type:proof"],"extent":["r001","r002","r005"]}
+{"intent":["exec:success","oracle:no_fs","speed:fast"],"extent":["r001","r003"]}
+{"intent":["exec:success","oracle:no_fs","oracle:no_net","proof:deterministic","speed:fast","type:proof"],"extent":["r001"]}

@@ -1,0 +1,125 @@
+{
+  "pl_seed": "PL-SEED-01",
+  "version": 1,
+  "createdAt": "2025-09-17T09:00:00.000Z",
+  "nodes": {
+    "bafroute123abc456def789012345678901234567890123456789012345678": {
+      "cost": "O(log n)",
+      "gid": "key_router_8h4ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "iid": "routing_97fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "law": "distribution",
+      "links": {
+        "key_a": "bafkeya456def789012345678901234567890123456789012345678901234",
+        "key_b": "bafkeyb567890123456789012345678901234567890123456789012345",
+        "key_c": "bafkeyc678901234567890123456789012345678901234567890123456"
+      },
+      "op": "ROUTE",
+      "ports": {
+        "in": "data",
+        "key_a": "stream_a",
+        "key_b": "stream_b",
+        "key_c": "stream_c"
+      },
+      "receipt": null,
+      "xid": "route_c3df04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+    },
+    "bafkeya456def789012345678901234567890123456789012345678901234": {
+      "cost": "O(n)",
+      "gid": "proc_a_cff1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+      "iid": "handle_a_aeb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+      "law": "transformation",
+      "links": {
+        "out": "bafmerge890123456789012345678901234567890123456789012345678901"
+      },
+      "op": "MAP",
+      "ports": {
+        "in": "stream_a",
+        "out": "processed_a"
+      },
+      "receipt": null,
+      "xid": "proc_a_dee2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i2"
+    },
+    "bafkeyb567890123456789012345678901234567890123456789012345": {
+      "cost": "O(n)",
+      "gid": "proc_b_d0f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+      "iid": "handle_b_afb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+      "law": "transformation",
+      "links": {
+        "out": "bafmerge890123456789012345678901234567890123456789012345678901"
+      },
+      "op": "MAP",
+      "ports": {
+        "in": "stream_b",
+        "out": "processed_b"
+      },
+      "receipt": null,
+      "xid": "proc_b_dfe2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i2"
+    },
+    "bafkeyc678901234567890123456789012345678901234567890123456": {
+      "cost": "O(n)",
+      "gid": "proc_c_d1f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+      "iid": "handle_c_agb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+      "law": "transformation",
+      "links": {
+        "out": "bafmerge890123456789012345678901234567890123456789012345678901"
+      },
+      "op": "MAP",
+      "ports": {
+        "in": "stream_c",
+        "out": "processed_c"
+      },
+      "receipt": null,
+      "xid": "proc_c_e0e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i2"
+    },
+    "bafmerge890123456789012345678901234567890123456789012345678901": {
+      "cost": "O(1)",
+      "gid": "key_merge_d2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+      "iid": "combining_ahb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+      "law": "convergence",
+      "links": {},
+      "op": "MERGE",
+      "ports": {
+        "a_in": "processed_a",
+        "b_in": "processed_b",
+        "c_in": "processed_c",
+        "out": "combined"
+      },
+      "receipt": null,
+      "xid": "merge_e1e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i2"
+    },
+    "bafroute901234567890123456789012345678901234567890123456789012": {
+      "oids": [
+        "bafroute123abc456def789012345678901234567890123456789012345678",
+        "bafkeya456def789012345678901234567890123456789012345678901234",
+        "bafkeyb567890123456789012345678901234567890123456789012345",
+        "bafkeyc678901234567890123456789012345678901234567890123456",
+        "bafmerge890123456789012345678901234567890123456789012345678901"
+      ],
+      "root": "bafroute123abc456def789012345678901234567890123456789012345678"
+    }
+  },
+  "root": "bafroute901234567890123456789012345678901234567890123456789012",
+  "name": "route-merge",
+  "gidSet": [
+    "key_router_8h4ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+    "proc_a_cff1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+    "proc_b_d0f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+    "proc_c_d1f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+    "key_merge_d2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1"
+  ],
+  "iidSet": [
+    "routing_97fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+    "handle_a_aeb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+    "handle_b_afb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+    "handle_c_agb2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+    "combining_ahb2c3d4e5f6789012345678901234567890123456789012345678901234567890"
+  ],
+  "expected": {
+    "minRouteLen": 3,
+    "invariants": [
+      "GID independent of ports",
+      "IID equal for abi-equal",
+      "Route + merge by key pattern"
+    ]
+  }
+}

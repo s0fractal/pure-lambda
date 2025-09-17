@@ -1,0 +1,15 @@
+replication:
+  enabled: true
+  interval: 24h  # One pulse
+  cities:
+    - kyiv-prime
+    - lviv-harbor
+  exchange:
+    - timecapsules
+    - champion_genes
+    - policy_updates
+    - reputation_scores
+  conflict_resolution: higher_reputation
+  monitoring:
+    divergence_alert: 0
+    latency_max_ms: 1000

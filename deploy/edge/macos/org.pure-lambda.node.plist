@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.pure-lambda.node</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/pl-node</string>
+        <string>--ipfs</string>
+        <string>/ip4/127.0.0.1/tcp/5001</string>
+        <string>--mode</string>
+        <string>attested</string>
+        <string>--ucan</string>
+        <string>/usr/local/pure-lambda/ucan/edge-host.json</string>
+        <string>--silence</string>
+        <string>/usr/local/pure-lambda/policies/silence.yaml</string>
+        <string>--cas</string>
+        <string>/usr/local/pure-lambda/cas</string>
+        <string>--chronicle</string>
+        <string>/usr/local/pure-lambda/chronicle</string>
+        <string>--museaium</string>
+        <string>/usr/local/pure-lambda/museaium</string>
+        <string>--attestation-strict</string>
+        <string>--max-ops-per-pulse</string>
+        <string>256</string>
+        <string>--max-credits-per-pulse</string>
+        <string>5000</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+        <key>Crashed</key>
+        <true/>
+    </dict>
+
+    <key>ThrottleInterval</key>
+    <integer>5</integer>
+
+    <key>StandardOutPath</key>
+    <string>/usr/local/pure-lambda/logs/stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/usr/local/pure-lambda/logs/stderr.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>RUST_LOG</key>
+        <string>info</string>
+        <key>PL_PROFILE</key>
+        <string>balanced</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/usr/local/pure-lambda</string>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+
+    <key>Nice</key>
+    <integer>10</integer>
+
+    <key>SoftResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>65536</integer>
+    </dict>
+
+    <key>HardResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>65536</integer>
+    </dict>
+</dict>
+</plist>

@@ -1,0 +1,30 @@
+BREATH := scripts/breath.mjs
+SLOCFG := observability/breath-slo-final.yaml
+
+.PHONY: breath-slo breath-report breath-drill
+
+# Check SLO compliance
+breath-slo:
+	@echo "📊 Checking Breathing SLO Compliance..."
+	@node $(BREATH) check --cfg $(SLOCFG) --csv observability/branchial.csv
+
+# Generate weekly report
+breath-report:
+	@echo "📋 Generating Weekly Breathing Report..."
+	@node $(BREATH) report --cfg $(SLOCFG) --csv observability/branchial.csv > reports/breath-weekly.md
+	@echo "✓ Report saved to reports/breath-weekly.md"
+
+# Run chaos drill (CASE=ballooning|collapse|asthma)
+breath-drill:
+	@echo "🌪️ Running Breathing Chaos Drill: $(CASE)"
+	@node $(BREATH) drill --case $(CASE) --cfg $(SLOCFG) --csv observability/branchial.csv
+
+# Run all drills
+breath-drill-all:
+	@make breath-drill CASE=ballooning
+	@make breath-drill CASE=collapse
+	@make breath-drill CASE=asthma
+
+# Generate status badges
+breath-badges:
+	@node $(BREATH) report --cfg $(SLOCFG) --csv observability/branchial.csv | grep -A 10 "Status Badges"

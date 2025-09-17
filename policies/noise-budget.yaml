@@ -1,0 +1,197 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: noise-budget
+  version: 1.0.0
+  description: "Controlled noise injection for generalization and creativity"
+  author: did:pl:serendipity
+
+spec:
+  rationale: |
+    Noise is not a bug - it's a feature when properly controlled.
+    It enables: generalization, creativity, escape from local optima.
+
+  parameters:
+    # Global noise level (0.0 = deterministic, 1.0 = maximum chaos)
+    global_level:
+      default: 0.05
+      min: 0.0
+      max: 0.3
+      description: "Base noise level across all operations"
+
+    # Per-component noise budgets
+    components:
+      thought_graphs:
+        level: 0.08
+        type: "gaussian"
+        apply_to: ["edge_weights", "node_positions"]
+        seed_source: "pulse_number"
+
+      pheromone_trails:
+        level: 0.1
+        type: "uniform"
+        apply_to: ["evaporation_rate", "deposit_amount"]
+        seed_source: "path_hash"
+
+      autopoiesis:
+        level: 0.03
+        type: "bernoulli"
+        apply_to: ["mutation_points"]
+        seed_source: "hypothesis_id"
+
+      semantic_hashing:
+        level: 0.02
+        type: "laplacian"
+        apply_to: ["eigenvalue_truncation"]
+        seed_source: "graph_structure"
+
+    # Injection strategies
+    strategies:
+      exploration:
+        when: "stuck_in_local_optimum"
+        boost: 2.0  # Double noise temporarily
+        duration: 10  # pulses
+        decay: "exponential"
+
+      exploitation:
+        when: "converging_to_solution"
+        reduce: 0.5  # Halve noise
+        duration: 5
+        decay: "linear"
+
+      creative_burst:
+        when: "user_requests OR high_negentropy"
+        boost: 3.0
+        duration: 3
+        decay: "immediate"
+
+  guardrails:
+    # Never inject noise into these critical areas
+    forbidden_zones:
+      - "cryptographic_operations"
+      - "financial_calculations"
+      - "identity_verification"
+      - "consensus_critical_paths"
+
+    # Maximum noise levels by operation type
+    max_by_operation:
+      proof_generation: 0.01
+      contract_execution: 0.02
+      user_data_handling: 0.0
+      creative_synthesis: 0.5
+      pattern_discovery: 0.3
+
+    # Automatic reduction triggers
+    auto_reduce:
+      - condition: "error_rate > 0.05"
+        action: "multiply_by: 0.5"
+      - condition: "user_complaint"
+        action: "set_to: 0.01"
+      - condition: "convergence_failure > 3"
+        action: "reset_to_default"
+
+  measurement:
+    # Track noise effectiveness
+    metrics:
+      - name: "generalization_gain"
+        formula: "test_accuracy - train_accuracy"
+        optimal_range: [0.02, 0.08]
+
+      - name: "creativity_index"
+        formula: "unique_solutions / total_solutions"
+        optimal_range: [0.1, 0.3]
+
+      - name: "escape_velocity"
+        formula: "iterations_to_escape_local_optimum"
+        optimal_range: [5, 20]
+
+      - name: "signal_to_noise"
+        formula: "useful_variance / total_variance"
+        minimum: 3.0
+
+    # Receipt fields
+    receipt_tracking:
+      - noise_level_used
+      - noise_type
+      - seed_value
+      - injection_points
+      - measured_impact
+
+  enforcement:
+    mode: "strict"
+
+    pre_execution:
+      - validate_noise_budget
+      - check_forbidden_zones
+      - set_deterministic_seed
+
+    during_execution:
+      - inject_at_designated_points
+      - monitor_impact
+      - adjust_if_needed
+
+    post_execution:
+      - measure_effectiveness
+      - update_receipt
+      - learn_optimal_levels
+
+  examples:
+    # Example 1: Stuck in local optimum
+    - scenario: "ACO convergence stalled"
+      detection: "best_path unchanged for 10 pulses"
+      action:
+        increase_noise_to: 0.15
+        apply_to: "pheromone_evaporation"
+        duration: 5
+
+    # Example 2: Creative task
+    - scenario: "Generate novel solution"
+      trigger: "user intent: 'surprise me'"
+      action:
+        set_noise_to: 0.25
+        apply_to: "all_creative_components"
+        duration: 1
+
+    # Example 3: High-stakes computation
+    - scenario: "Financial smart contract"
+      detection: "contract_type: financial"
+      action:
+        set_noise_to: 0.0
+        enforce: "deterministic_only"
+
+  learning:
+    # System learns optimal noise levels over time
+    adaptive_tuning:
+      enabled: true
+      method: "gradient_free_optimization"
+      objective: "maximize generalization while maintaining stability"
+      update_frequency: "every_100_pulses"
+
+    history_tracking:
+      - scenario_type
+      - noise_level_used
+      - outcome_quality
+      - side_effects
+
+  integration:
+    - with: "prime-mirror"
+      exports: ["noise_metrics", "generalization_curves"]
+
+    - with: "receipts"
+      adds: ["noise_budget_field", "injection_audit"]
+
+    - with: "autopoiesis"
+      provides: ["controlled_mutation_noise"]
+
+warnings:
+  - "Too little noise: System becomes brittle and overfit"
+  - "Too much noise: System becomes chaotic and unreliable"
+  - "Optimal noise depends on task - learn and adapt"
+
+philosophy: |
+  Embrace controlled chaos. Perfect determinism is death.
+  Life exists at the edge between order and disorder.
+  Noise is the source of novelty, creativity, and robustness.
+
+  As Prigogine showed: dissipative structures need fluctuations to evolve.
+  We parameterize these fluctuations and make them functional.

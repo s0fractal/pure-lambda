@@ -1,0 +1,12 @@
+{
+  "humans": [
+    {"did": "did:pl:Human-Mykola", "name": "Mykola", "role": "Trader", "chamber": "H"},
+    {"did": "did:pl:Human-Olena", "name": "Olena", "role": "Navigator", "chamber": "H"},
+    {"did": "did:pl:Human-Serhiy", "name": "Serhiy", "role": "Logistics", "chamber": "H"}
+  ],
+  "agents": [
+    {"did": "did:pl:Agent-Potemkin", "name": "Potemkin", "role": "Strategy", "chamber": "A"},
+    {"did": "did:pl:Agent-Pearl", "name": "Pearl", "role": "Exchange", "chamber": "A"},
+    {"did": "did:pl:Agent-Neptune", "name": "Neptune", "role": "Maritime", "chamber": "A"}
+  ]
+}

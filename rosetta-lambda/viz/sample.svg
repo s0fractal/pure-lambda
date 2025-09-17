@@ -1,0 +1,91 @@
+<svg height="600" viewBox="0 0 800 600" width="800" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <!-- Background -->
+    <rect fill="#fef8e8" height="600.000" width="800.000" x="0.000" y="0.000"/>
+
+    <!-- Title -->
+    <text font-family="serif" font-size="20.000" text-anchor="middle" x="400.000" y="30.000">Rosetta-λ: Hieroglyphic Structure</text>
+
+    <!-- Original MdC -->
+    <text font-family="monospace" font-size="14.000" x="50.000" y="70.000">Input: rmT:{DET:HUMAN} nfr:{DET:QUALITY} m niwt:{DET:PLACE}</text>
+
+    <!-- Parse Tree -->
+    <g transform="translate(400.000, 150.000)">
+      <!-- Root -->
+      <circle cx="0.000" cy="0.000" fill="#d4af37" r="8.000"/>
+      <text font-family="serif" font-size="12.000" text-anchor="middle" x="0.000" y="-15.000">Phrase</text>
+
+      <!-- Terms -->
+      <g transform="translate(-200.000, 60.000)">
+        <circle cx="0.000" cy="0.000" fill="#8b4513" r="6.000"/>
+        <text font-family="monospace" font-size="10.000" text-anchor="middle" x="0.000" y="20.000">rmT</text>
+        <text font-family="serif" font-size="9.000" text-anchor="middle" x="0.000" y="35.000">person</text>
+        <rect fill="none" height="15.000" stroke="#666666" width="50.000" x="-25.000" y="40.000"/>
+        <text font-family="monospace" font-size="8.000" text-anchor="middle" x="0.000" y="51.000">HUMAN</text>
+      </g>
+
+      <g transform="translate(-100.000, 60.000)">
+        <circle cx="0.000" cy="0.000" fill="#8b4513" r="6.000"/>
+        <text font-family="monospace" font-size="10.000" text-anchor="middle" x="0.000" y="20.000">nfr</text>
+        <text font-family="serif" font-size="9.000" text-anchor="middle" x="0.000" y="35.000">GOOD</text>
+        <rect fill="none" height="15.000" stroke="#666666" width="50.000" x="-25.000" y="40.000"/>
+        <text font-family="monospace" font-size="8.000" text-anchor="middle" x="0.000" y="51.000">QUALITY</text>
+      </g>
+
+      <g transform="translate(0.000, 60.000)">
+        <circle cx="0.000" cy="0.000" fill="#2e8b57" r="6.000"/>
+        <text font-family="monospace" font-size="10.000" text-anchor="middle" x="0.000" y="20.000">m</text>
+        <text font-family="serif" font-size="9.000" text-anchor="middle" x="0.000" y="35.000">IN</text>
+      </g>
+
+      <g transform="translate(100.000, 60.000)">
+        <circle cx="0.000" cy="0.000" fill="#8b4513" r="6.000"/>
+        <text font-family="monospace" font-size="10.000" text-anchor="middle" x="0.000" y="20.000">niwt</text>
+        <text font-family="serif" font-size="9.000" text-anchor="middle" x="0.000" y="35.000">city</text>
+        <rect fill="none" height="15.000" stroke="#666666" width="50.000" x="-25.000" y="40.000"/>
+        <text font-family="monospace" font-size="8.000" text-anchor="middle" x="0.000" y="51.000">PLACE</text>
+      </g>
+
+      <!-- Edges -->
+      <line stroke="#666666" x1="0.000" x2="-200.000" y1="8.000" y2="52.000"/>
+      <line stroke="#666666" x1="0.000" x2="-100.000" y1="8.000" y2="52.000"/>
+      <line stroke="#666666" x1="0.000" x2="0.000" y1="8.000" y2="52.000"/>
+      <line stroke="#666666" x1="0.000" x2="100.000" y1="8.000" y2="52.000"/>
+    </g>
+
+    <!-- Type Derivation -->
+    <g transform="translate(100.000, 350.000)">
+      <text font-family="serif" font-size="14.000" font-weight="bold" x="0.000" y="0.000">Type Derivation:</text>
+
+      <text font-family="monospace" font-size="11.000" x="0.000" y="25.000">person : Entity ∧ HUMAN</text>
+      <text font-family="monospace" font-size="11.000" x="0.000" y="45.000">GOOD : Quality ∧ QUALITY</text>
+      <text font-family="monospace" font-size="11.000" x="0.000" y="65.000">city : Place ∧ PLACE</text>
+      <text font-family="monospace" font-size="11.000" x="0.000" y="85.000">IN : Place → Entity → Prop</text>
+
+      <line stroke="#000000" x1="0.000" x2="250.000" y1="95.000" y2="95.000"/>
+
+      <text font-family="monospace" font-size="11.000" x="0.000" y="115.000">(IN city person) : Prop ✓</text>
+    </g>
+
+    <!-- Lambda Term -->
+    <g transform="translate(100.000, 500.000)">
+      <text font-family="serif" font-size="14.000" font-weight="bold" x="0.000" y="0.000">λ-term:</text>
+      <rect fill="#f0f0f0" height="30.000" width="400.000" x="0.000" y="10.000"/>
+      <text font-family="monospace" font-size="12.000" x="10.000" y="30.000">(IN city person) ∧ (ATTR person GOOD)</text>
+    </g>
+
+    <!-- Hieroglyphic hint (decorative) -->
+    <g transform="translate(600.000, 350.000)">
+      <text font-family="serif" font-size="10.000" x="0.000" y="0.000">Simplified glyphs:</text>
+      <text font-size="20.000" x="0.000" y="30.000">𓀀</text>
+      <text font-size="20.000" x="30.000" y="30.000">𓄿</text>
+      <text font-size="20.000" x="60.000" y="30.000">𓈖</text>
+      <text font-size="20.000" x="90.000" y="30.000">𓊖</text>
+    </g>
+
+    <!-- Footer -->
+    <text font-family="serif" font-size="9.000" font-style="italic" text-anchor="middle" x="400.000" y="580.000">
+      "When ancient symbols meet modern formalism"
+    </text>
+  </g>
+</svg>

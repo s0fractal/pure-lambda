@@ -1,0 +1,36 @@
+{
+  "id": "r019",
+  "type": "synthetic",
+  "command": "read_config()",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": true,
+    "time_ms": 5,
+    "exitCode": 0
+  },
+  "oracle": {
+    "env": false,
+    "fs": true,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "env:node_20",
+    "exec:success",
+    "inv:deterministic",
+    "lang:typescript",
+    "oracle:no_env",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:xs_1_10kb",
+    "speed:fast",
+    "type:io_bounded"
+  ],
+  "cid": "1365e0acbc1f5287"
+}

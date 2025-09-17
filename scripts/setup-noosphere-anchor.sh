@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # Setup s0fractal as unified gravity center in noosphere
 
 echo "╔════════════════════════════════════════════════════════════════╗"

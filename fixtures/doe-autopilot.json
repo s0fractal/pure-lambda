@@ -1,0 +1,1181 @@
+{
+  "testCases": [
+    {
+      "name": "small_2routes_basic",
+      "description": "Simple 2-route operon with clear winner",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["node1", "node2"],
+            "root": "node1"
+          },
+          "node1": {
+            "cost": "O(1)",
+            "gid": "test1_node1",
+            "iid": "iid1_node1",
+            "law": "identity",
+            "links": {
+              "next": "node2"
+            },
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "focused"},
+            "receipt": null,
+            "xid": "xid1_node1"
+          },
+          "node2": {
+            "cost": "O(1)",
+            "gid": "test1_node2",
+            "iid": "iid1_node2",
+            "law": "identity",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "focused", "out": "mapped"},
+            "receipt": null,
+            "xid": "xid1_node2"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 2.4
+      }
+    },
+    {
+      "name": "small_2routes_cost_diff",
+      "description": "Two routes with different costs, O(1) vs O(n)",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["fast", "slow"],
+            "root": "fast"
+          },
+          "fast": {
+            "cost": "O(1)",
+            "gid": "fast_gid",
+            "iid": "fast_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "fast_xid"
+          },
+          "slow": {
+            "cost": "O(n)",
+            "gid": "slow_gid",
+            "iid": "slow_iid",
+            "law": "linear",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "slow_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0
+      }
+    },
+    {
+      "name": "small_3routes_chain",
+      "description": "Sequential 3-node chain",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["n1", "n2", "n3"],
+            "root": "n1"
+          },
+          "n1": {
+            "cost": "O(1)",
+            "gid": "chain_n1",
+            "iid": "chain_n1_i",
+            "law": "identity",
+            "links": {"next": "n2"},
+            "op": "SPLIT",
+            "ports": {"in": "stream", "out": "split"},
+            "receipt": null,
+            "xid": "chain_n1_x"
+          },
+          "n2": {
+            "cost": "O(log n)",
+            "gid": "chain_n2",
+            "iid": "chain_n2_i",
+            "law": "associative",
+            "links": {"next": "n3"},
+            "op": "FOCUS",
+            "ports": {"in": "split", "out": "focused"},
+            "receipt": null,
+            "xid": "chain_n2_x"
+          },
+          "n3": {
+            "cost": "O(1)",
+            "gid": "chain_n3",
+            "iid": "chain_n3_i",
+            "law": "identity",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "focused", "out": "final"},
+            "receipt": null,
+            "xid": "chain_n3_x"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 4.6
+      }
+    },
+    {
+      "name": "small_4routes_branched",
+      "description": "Branching structure with 4 possible routes",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["hub", "a", "b", "c"],
+            "root": "hub"
+          },
+          "hub": {
+            "cost": "O(1)",
+            "gid": "hub_gid",
+            "iid": "hub_iid",
+            "law": "identity",
+            "links": {"a": "a", "b": "b", "c": "c"},
+            "op": "SPLIT",
+            "ports": {"in": "data", "a": "branch_a", "b": "branch_b", "c": "branch_c"},
+            "receipt": null,
+            "xid": "hub_xid"
+          },
+          "a": {
+            "cost": "O(1)",
+            "gid": "a_gid",
+            "iid": "a_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "branch_a", "out": "result"},
+            "receipt": null,
+            "xid": "a_xid"
+          },
+          "b": {
+            "cost": "O(log n)",
+            "gid": "b_gid",
+            "iid": "b_iid",
+            "law": "associative",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "branch_b", "out": "result"},
+            "receipt": null,
+            "xid": "b_xid"
+          },
+          "c": {
+            "cost": "O(n)",
+            "gid": "c_gid",
+            "iid": "c_iid",
+            "law": "linear",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "branch_c", "out": "result"},
+            "receipt": null,
+            "xid": "c_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 2.4
+      }
+    },
+    {
+      "name": "tie_case_equal_cost",
+      "description": "Tie case: Two routes with identical L values",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["r1", "r2"],
+            "root": "r1"
+          },
+          "r1": {
+            "cost": "O(1)",
+            "gid": "r1_gid",
+            "iid": "r1_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "r1_xid"
+          },
+          "r2": {
+            "cost": "O(1)",
+            "gid": "r2_gid",
+            "iid": "r2_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "r2_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "tie_case_balanced_tradeoff",
+      "description": "Tie case: Different costs but balanced by hops/memory",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["short", "long1", "long2"],
+            "root": "short"
+          },
+          "short": {
+            "cost": "O(log n)",
+            "gid": "short_gid",
+            "iid": "short_iid",
+            "law": "associative",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "short_xid"
+          },
+          "long1": {
+            "cost": "O(1)",
+            "gid": "long1_gid",
+            "iid": "long1_iid",
+            "law": "identity",
+            "links": {"next": "long2"},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "intermediate"},
+            "receipt": null,
+            "xid": "long1_xid"
+          },
+          "long2": {
+            "cost": "O(1)",
+            "gid": "long2_gid",
+            "iid": "long2_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "intermediate", "out": "result"},
+            "receipt": null,
+            "xid": "long2_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 6.0,
+        "isTie": false
+      }
+    },
+    {
+      "name": "memory_heavy_case",
+      "description": "Routes with heavy memory operations",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["light", "heavy"],
+            "root": "light"
+          },
+          "light": {
+            "cost": "O(1)",
+            "gid": "light_gid",
+            "iid": "light_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "light_xid"
+          },
+          "heavy": {
+            "cost": "O(1)",
+            "gid": "heavy_gid",
+            "iid": "heavy_iid",
+            "law": "identity",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "heavy_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0
+      }
+    },
+    {
+      "name": "complexity_ladder",
+      "description": "Routes with increasing complexity: O(1), O(log n), O(n)",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["const", "log", "linear"],
+            "root": "const"
+          },
+          "const": {
+            "cost": "O(1)",
+            "gid": "const_gid",
+            "iid": "const_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "const_xid"
+          },
+          "log": {
+            "cost": "O(log n)",
+            "gid": "log_gid",
+            "iid": "log_iid",
+            "law": "associative",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "log_xid"
+          },
+          "linear": {
+            "cost": "O(n)",
+            "gid": "linear_gid",
+            "iid": "linear_iid",
+            "law": "linear",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "linear_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0
+      }
+    },
+    {
+      "name": "deep_chain_4nodes",
+      "description": "Deep sequential chain with 4 nodes",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["d1", "d2", "d3", "d4"],
+            "root": "d1"
+          },
+          "d1": {
+            "cost": "O(1)",
+            "gid": "d1_gid",
+            "iid": "d1_iid",
+            "law": "identity",
+            "links": {"next": "d2"},
+            "op": "SPLIT",
+            "ports": {"in": "data", "out": "split"},
+            "receipt": null,
+            "xid": "d1_xid"
+          },
+          "d2": {
+            "cost": "O(1)",
+            "gid": "d2_gid",
+            "iid": "d2_iid",
+            "law": "identity",
+            "links": {"next": "d3"},
+            "op": "FOCUS",
+            "ports": {"in": "split", "out": "focused"},
+            "receipt": null,
+            "xid": "d2_xid"
+          },
+          "d3": {
+            "cost": "O(1)",
+            "gid": "d3_gid",
+            "iid": "d3_iid",
+            "law": "identity",
+            "links": {"next": "d4"},
+            "op": "MAP",
+            "ports": {"in": "focused", "out": "mapped"},
+            "receipt": null,
+            "xid": "d3_xid"
+          },
+          "d4": {
+            "cost": "O(1)",
+            "gid": "d4_gid",
+            "iid": "d4_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "mapped", "out": "result"},
+            "receipt": null,
+            "xid": "d4_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 4.8
+      }
+    },
+    {
+      "name": "high_cost_single",
+      "description": "Single high-cost route O(n^2)",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["expensive"],
+            "root": "expensive"
+          },
+          "expensive": {
+            "cost": "O(n^2)",
+            "gid": "expensive_gid",
+            "iid": "expensive_iid",
+            "law": "quadratic",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "expensive_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 100.0
+      }
+    },
+    {
+      "name": "mixed_memory_ops",
+      "description": "Different operations with varying memory usage",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["split_op", "merge_op"],
+            "root": "split_op"
+          },
+          "split_op": {
+            "cost": "O(1)",
+            "gid": "split_gid",
+            "iid": "split_iid",
+            "law": "identity",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "split_xid"
+          },
+          "merge_op": {
+            "cost": "O(1)",
+            "gid": "merge_gid",
+            "iid": "merge_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MERGE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "merge_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0
+      }
+    },
+    {
+      "name": "tie_case_triple_equal",
+      "description": "Tie case: Three identical routes",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["t1", "t2", "t3"],
+            "root": "t1"
+          },
+          "t1": {
+            "cost": "O(1)",
+            "gid": "t1_gid",
+            "iid": "t1_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "t1_xid"
+          },
+          "t2": {
+            "cost": "O(1)",
+            "gid": "t2_gid",
+            "iid": "t2_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "t2_xid"
+          },
+          "t3": {
+            "cost": "O(1)",
+            "gid": "t3_gid",
+            "iid": "t3_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "t3_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "moderate_chain_vs_single",
+      "description": "Compare moderate 3-node chain vs single expensive node",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["chain_start", "expensive_single"],
+            "root": "chain_start"
+          },
+          "chain_start": {
+            "cost": "O(1)",
+            "gid": "chain_start_gid",
+            "iid": "chain_start_iid",
+            "law": "identity",
+            "links": {"next": "chain_mid"},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "focused"},
+            "receipt": null,
+            "xid": "chain_start_xid"
+          },
+          "chain_mid": {
+            "cost": "O(1)",
+            "gid": "chain_mid_gid",
+            "iid": "chain_mid_iid",
+            "law": "identity",
+            "links": {"next": "chain_end"},
+            "op": "MAP",
+            "ports": {"in": "focused", "out": "mapped"},
+            "receipt": null,
+            "xid": "chain_mid_xid"
+          },
+          "chain_end": {
+            "cost": "O(1)",
+            "gid": "chain_end_gid",
+            "iid": "chain_end_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "mapped", "out": "result"},
+            "receipt": null,
+            "xid": "chain_end_xid"
+          },
+          "expensive_single": {
+            "cost": "O(log n)",
+            "gid": "expensive_single_gid",
+            "iid": "expensive_single_iid",
+            "law": "associative",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "expensive_single_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 3.6
+      }
+    },
+    {
+      "name": "exponential_cost_route",
+      "description": "Route with exponential cost O(2^n)",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["fast_alt", "exponential"],
+            "root": "fast_alt"
+          },
+          "fast_alt": {
+            "cost": "O(n)",
+            "gid": "fast_alt_gid",
+            "iid": "fast_alt_iid",
+            "law": "linear",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "fast_alt_xid"
+          },
+          "exponential": {
+            "cost": "O(2^n)",
+            "gid": "exponential_gid",
+            "iid": "exponential_iid",
+            "law": "exponential",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "exponential_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 10.0
+      }
+    },
+    {
+      "name": "memory_vs_latency_tradeoff",
+      "description": "Route optimizing memory vs latency tradeoff",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["memory_light", "latency_light"],
+            "root": "memory_light"
+          },
+          "memory_light": {
+            "cost": "O(log n)",
+            "gid": "memory_light_gid",
+            "iid": "memory_light_iid",
+            "law": "associative",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "memory_light_xid"
+          },
+          "latency_light": {
+            "cost": "O(1)",
+            "gid": "latency_light_gid",
+            "iid": "latency_light_iid",
+            "law": "identity",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "latency_light_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0
+      }
+    },
+    {
+      "name": "tie_case_memory_balanced",
+      "description": "Tie case: Routes balanced by memory consumption",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["low_mem_slow", "high_mem_fast"],
+            "root": "low_mem_slow"
+          },
+          "low_mem_slow": {
+            "cost": "O(log n)",
+            "gid": "low_mem_slow_gid",
+            "iid": "low_mem_slow_iid",
+            "law": "associative",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "low_mem_slow_xid"
+          },
+          "high_mem_fast": {
+            "cost": "O(1)",
+            "gid": "high_mem_fast_gid",
+            "iid": "high_mem_fast_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MERGE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "high_mem_fast_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "cubic_cost_comparison",
+      "description": "Cubic cost O(n^3) vs alternatives",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["reasonable", "cubic"],
+            "root": "reasonable"
+          },
+          "reasonable": {
+            "cost": "O(n log n)",
+            "gid": "reasonable_gid",
+            "iid": "reasonable_iid",
+            "law": "quasilinear",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "reasonable_xid"
+          },
+          "cubic": {
+            "cost": "O(n^3)",
+            "gid": "cubic_gid",
+            "iid": "cubic_iid",
+            "law": "cubic",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "cubic_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 20.0
+      }
+    },
+    {
+      "name": "multi_hop_penalty",
+      "description": "Long chain to test hop penalty",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["h1", "h2", "h3", "h4", "short"],
+            "root": "h1"
+          },
+          "h1": {
+            "cost": "O(1)",
+            "gid": "h1_gid",
+            "iid": "h1_iid",
+            "law": "identity",
+            "links": {"next": "h2"},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "step1"},
+            "receipt": null,
+            "xid": "h1_xid"
+          },
+          "h2": {
+            "cost": "O(1)",
+            "gid": "h2_gid",
+            "iid": "h2_iid",
+            "law": "identity",
+            "links": {"next": "h3"},
+            "op": "MAP",
+            "ports": {"in": "step1", "out": "step2"},
+            "receipt": null,
+            "xid": "h2_xid"
+          },
+          "h3": {
+            "cost": "O(1)",
+            "gid": "h3_gid",
+            "iid": "h3_iid",
+            "law": "identity",
+            "links": {"next": "h4"},
+            "op": "FILTER",
+            "ports": {"in": "step2", "out": "step3"},
+            "receipt": null,
+            "xid": "h3_xid"
+          },
+          "h4": {
+            "cost": "O(1)",
+            "gid": "h4_gid",
+            "iid": "h4_iid",
+            "law": "identity",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {"in": "step3", "out": "result"},
+            "receipt": null,
+            "xid": "h4_xid"
+          },
+          "short": {
+            "cost": "O(log n)",
+            "gid": "short_gid",
+            "iid": "short_iid",
+            "law": "associative",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "short_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 2.0
+      }
+    },
+    {
+      "name": "tie_case_complex_equal",
+      "description": "Tie case: Complex routes with equal L values",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["path_a", "path_b1", "path_b2"],
+            "root": "path_a"
+          },
+          "path_a": {
+            "cost": "O(log n)",
+            "gid": "path_a_gid",
+            "iid": "path_a_iid",
+            "law": "associative",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "path_a_xid"
+          },
+          "path_b1": {
+            "cost": "O(1)",
+            "gid": "path_b1_gid",
+            "iid": "path_b1_iid",
+            "law": "identity",
+            "links": {"next": "path_b2"},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "intermediate"},
+            "receipt": null,
+            "xid": "path_b1_xid"
+          },
+          "path_b2": {
+            "cost": "O(1)",
+            "gid": "path_b2_gid",
+            "iid": "path_b2_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "intermediate", "out": "result"},
+            "receipt": null,
+            "xid": "path_b2_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 2.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "tie_case_operations_equal",
+      "description": "Tie case: All operation types with equal L values",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["split_node", "focus_node", "merge_node", "map_node", "filter_node", "reduce_node"],
+            "root": "split_node"
+          },
+          "split_node": {
+            "cost": "O(1)",
+            "gid": "split_showcase_gid",
+            "iid": "split_showcase_iid",
+            "law": "identity",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "split_showcase_xid"
+          },
+          "focus_node": {
+            "cost": "O(1)",
+            "gid": "focus_showcase_gid",
+            "iid": "focus_showcase_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "focus_showcase_xid"
+          },
+          "merge_node": {
+            "cost": "O(1)",
+            "gid": "merge_showcase_gid",
+            "iid": "merge_showcase_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MERGE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "merge_showcase_xid"
+          },
+          "map_node": {
+            "cost": "O(1)",
+            "gid": "map_showcase_gid",
+            "iid": "map_showcase_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MAP",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "map_showcase_xid"
+          },
+          "filter_node": {
+            "cost": "O(1)",
+            "gid": "filter_showcase_gid",
+            "iid": "filter_showcase_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FILTER",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "filter_showcase_xid"
+          },
+          "reduce_node": {
+            "cost": "O(1)",
+            "gid": "reduce_showcase_gid",
+            "iid": "reduce_showcase_iid",
+            "law": "identity",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "reduce_showcase_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "tie_case_balanced_complexity",
+      "description": "Tie case: Balanced complexity routes with equal L values",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["path1", "path2"],
+            "root": "path1"
+          },
+          "path1": {
+            "cost": "O(log n)",
+            "gid": "path1_gid",
+            "iid": "path1_iid",
+            "law": "associative",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "path1_xid"
+          },
+          "path2": {
+            "cost": "O(log n)",
+            "gid": "path2_gid",
+            "iid": "path2_iid",
+            "law": "associative",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "path2_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 2.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "tie_case_near_equal",
+      "description": "Tie case: Nearly equal L values within tolerance",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["near_a", "near_b"],
+            "root": "near_a"
+          },
+          "near_a": {
+            "cost": "O(1)",
+            "gid": "near_a_gid",
+            "iid": "near_a_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "near_a_xid"
+          },
+          "near_b": {
+            "cost": "O(1)",
+            "gid": "near_b_gid",
+            "iid": "near_b_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "near_b_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 1.0,
+        "isTie": true
+      }
+    },
+    {
+      "name": "diamond_pattern_4routes",
+      "description": "Diamond pattern with 4 distinct routes through network",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["start", "left", "right", "end"],
+            "root": "start"
+          },
+          "start": {
+            "cost": "O(1)",
+            "gid": "start_gid",
+            "iid": "start_iid",
+            "law": "identity",
+            "links": {"left": "left", "right": "right", "direct": "end"},
+            "op": "SPLIT",
+            "ports": {"in": "data", "left": "left_path", "right": "right_path", "direct": "direct_path"},
+            "receipt": null,
+            "xid": "start_xid"
+          },
+          "left": {
+            "cost": "O(1)",
+            "gid": "left_gid",
+            "iid": "left_iid",
+            "law": "identity",
+            "links": {"to_end": "end"},
+            "op": "FOCUS",
+            "ports": {"in": "left_path", "out": "focused_left"},
+            "receipt": null,
+            "xid": "left_xid"
+          },
+          "right": {
+            "cost": "O(log n)",
+            "gid": "right_gid",
+            "iid": "right_iid",
+            "law": "associative",
+            "links": {"to_end": "end"},
+            "op": "MAP",
+            "ports": {"in": "right_path", "out": "mapped_right"},
+            "receipt": null,
+            "xid": "right_xid"
+          },
+          "end": {
+            "cost": "O(1)",
+            "gid": "end_gid",
+            "iid": "end_iid",
+            "law": "identity",
+            "links": {},
+            "op": "MERGE",
+            "ports": {"in": "any", "out": "result"},
+            "receipt": null,
+            "xid": "end_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 2.4
+      }
+    },
+    {
+      "name": "performance_regression_test",
+      "description": "Test with known performance regression pattern",
+      "operon": {
+        "nodes": {
+          "root": {
+            "oids": ["fast_path", "slow_chain1", "slow_chain2", "slow_chain3"],
+            "root": "fast_path"
+          },
+          "fast_path": {
+            "cost": "O(n log n)",
+            "gid": "fast_path_gid",
+            "iid": "fast_path_iid",
+            "law": "quasilinear",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {"in": "data", "out": "result"},
+            "receipt": null,
+            "xid": "fast_path_xid"
+          },
+          "slow_chain1": {
+            "cost": "O(n)",
+            "gid": "slow1_gid",
+            "iid": "slow1_iid",
+            "law": "linear",
+            "links": {"next": "slow_chain2"},
+            "op": "FILTER",
+            "ports": {"in": "data", "out": "filtered"},
+            "receipt": null,
+            "xid": "slow1_xid"
+          },
+          "slow_chain2": {
+            "cost": "O(n)",
+            "gid": "slow2_gid",
+            "iid": "slow2_iid",
+            "law": "linear",
+            "links": {"next": "slow_chain3"},
+            "op": "MAP",
+            "ports": {"in": "filtered", "out": "mapped"},
+            "receipt": null,
+            "xid": "slow2_xid"
+          },
+          "slow_chain3": {
+            "cost": "O(1)",
+            "gid": "slow3_gid",
+            "iid": "slow3_iid",
+            "law": "identity",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {"in": "mapped", "out": "result"},
+            "receipt": null,
+            "xid": "slow3_xid"
+          }
+        },
+        "root": "root"
+      },
+      "expected": {
+        "selectedRouteIndex": 0,
+        "minL": 20.0
+      }
+    }
+  ]
+}

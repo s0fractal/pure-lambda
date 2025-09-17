@@ -1,0 +1,3 @@
+{"name": "route_merge_key_routing", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/route-merge.json", "expect": {"gidStable": true, "iidStable": true, "minRouteLen": 3, "pattern": "route_merge_by_key"}}
+{"name": "route_merge_laws", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/route-merge.json", "expect": {"lawTypes": ["distribution", "transformation", "convergence"], "opTypes": ["ROUTE", "MAP", "MERGE"], "parallelPaths": 3}}
+{"name": "route_merge_structure", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/route-merge.json", "expect": {"routeKeys": 3, "processNodes": 3, "mergeNodes": 1, "keyBasedRouting": true, "minRouteLen": 3}}

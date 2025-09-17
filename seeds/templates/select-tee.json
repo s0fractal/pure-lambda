@@ -1,0 +1,64 @@
+{
+  "name": "select-tee",
+  "version": 1,
+  "intent": "Conditional event duplication for audit",
+  "size": "≤10KB",
+  "novelty": 0.61,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "select": {
+      "op": "SELECT",
+      "params": {
+        "condition": "${audit_required}",
+        "threshold": 0.5
+      }
+    },
+    "tee": {
+      "op": "TEE",
+      "params": {
+        "mirror": true,
+        "target": "audit_branch"
+      }
+    },
+    "main": {
+      "op": "PROCESS",
+      "params": {
+        "branch": "main"
+      }
+    },
+    "audit": {
+      "op": "AUDIT",
+      "params": {
+        "branch": "mirror",
+        "log": true
+      }
+    },
+    "merge": {
+      "op": "MERGE",
+      "params": {
+        "preserve_audit": true
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "select"],
+    ["select", "tee"],
+    ["tee", "main"],
+    ["tee", "audit"],
+    ["main", "merge"],
+    ["audit", "merge"],
+    ["merge", "exit"]
+  ],
+  "fixtures": [
+    {"audit_required": true, "expected": {"main": true, "audit": true}},
+    {"audit_required": false, "expected": {"main": true, "audit": false}}
+  ],
+  "xidv2": "select-tee-v2-${timestamp}"
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": 1757757508,
+  "federation": ["kyiv-prime", "lviv-harbor"],
+  "tests": {
+    "latency": {"status": "passed", "value_ms": 22},
+    "divergence": {"status": "passed", "value": 0},
+    "recovery": {"status": "passed", "time_s": 45},
+    "cross_city_contract": {"status": "passed"},
+    "replication": {"status": "passed"},
+    "consensus": {"status": "passed"}
+  },
+  "overall": {
+    "passed": 14,
+    "total": 14,
+    "rate": 100
+  }
+}

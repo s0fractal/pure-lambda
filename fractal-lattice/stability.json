@@ -1,0 +1,13 @@
+{
+  "avgJaccard": 1,
+  "avgEdgeRate": 1,
+  "avgConcepts": 13,
+  "entropy": 3.7004397181410926,
+  "avgBranching": 1.625,
+  "stable": true,
+  "timestamp": "2025-09-15T14:48:05.749Z",
+  "parameters": {
+    "iterations": 100,
+    "sampleRate": 0.7
+  }
+}

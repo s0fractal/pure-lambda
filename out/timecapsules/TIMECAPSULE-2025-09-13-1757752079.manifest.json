@@ -1,0 +1,14 @@
+{
+  "capsule": "TIMECAPSULE-2025-09-13-1757752079",
+  "timestamp": 1757752079,
+  "cid": "QmCapsulec1b0f7d408508f6656efe986161e6cf07c3ad773790b",
+  "size": "8.0K",
+  "contents": {
+    "ceremony_artifacts": true,
+    "contracts": true,
+    "chronicle": true,
+    "registry_head": true
+  },
+  "pinned_nodes": 3,
+  "integrity_check": "sha256:06a1beafc594d3b3275ed3179010809cdc39dca1ece666d751dccf41b3d789e4"
+}

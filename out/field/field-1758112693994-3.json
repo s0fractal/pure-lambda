@@ -1,0 +1,16 @@
+{
+  "schema": "PL-FIELD-01",
+  "version": "1.0.0",
+  "ts": "2025-09-16T21:15:20.842Z",
+  "seedGID": "f87c4c45a1e4d54efe20905ce8f2e2e5807ea01957efdcbba10c9d8276e4d554",
+  "seedXIDv2": "7bc0e78ae6253eb5b3534355209742b2773facff51aecaa824d73b1972933d04",
+  "action": "bench",
+  "runs": 2,
+  "deviceHint": "mobile",
+  "subjectHash": "a10c2c2f5b47cba28cd97744d0798460b6d4804cf4e544c04e53442d3d88e4be",
+  "signer": {
+    "did": "did:plc:ephemeral-1758112693993-3",
+    "pub": "ed25519:base64:hWnryuFzKhhbBVOeFPa9/vYzAedQsUscdrbNbdeNCC0="
+  },
+  "sig": "GyZ81gKjwifuQ5NlOORvsAPvGpwKz1Lc2tMP2O74ZdGfxQ0QA9znLfykDeyq9Gx3nyqEou5KnSlsLP+F3GREow=="
+}

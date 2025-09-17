@@ -1,0 +1,235 @@
+name: 🚧 GA Gate - Quality Assurance Pipeline
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  ga-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 🦀 Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          npm install -g typescript ts-node
+          pip install pytest
+
+      - name: 🧪 Run conformance tests
+        run: |
+          echo "🧪 Running conformance tests..."
+          npm run test:conformance
+
+      - name: 🔄 Test SDK parity
+        run: |
+          echo "🔄 Testing SDK parity..."
+          make sdk-parity
+
+      - name: 📋 Test examples
+        run: |
+          echo "📋 Testing examples..."
+          make examples-test
+
+      - name: 🏛️ Build Pocket Embassy
+        id: pocket-build
+        run: |
+          echo "🏛️ Building Pocket Embassy..."
+          make pocket
+
+          # Check if pocket was built successfully
+          if [ ! -f "docs/pocket/index.htmlc" ]; then
+            echo "❌ Pocket Embassy build failed - file not found"
+            exit 1
+          fi
+
+          # Get file size
+          POCKET_SIZE=$(stat -c%s "docs/pocket/index.htmlc" 2>/dev/null || stat -f%z "docs/pocket/index.htmlc" 2>/dev/null)
+          POCKET_SIZE_KB=$((POCKET_SIZE / 1024))
+          MAX_SIZE_KB=60
+
+          echo "📏 Pocket size: ${POCKET_SIZE_KB}KB (limit: ${MAX_SIZE_KB}KB)"
+          echo "pocket_size_kb=${POCKET_SIZE_KB}" >> $GITHUB_OUTPUT
+          echo "pocket_size_bytes=${POCKET_SIZE}" >> $GITHUB_OUTPUT
+
+          # Verify size constraint
+          if [ $POCKET_SIZE_KB -gt $MAX_SIZE_KB ]; then
+            echo "❌ Pocket Embassy exceeds size limit: ${POCKET_SIZE_KB}KB > ${MAX_SIZE_KB}KB"
+            exit 1
+          fi
+
+          echo "✅ Pocket Embassy size constraint met: ${POCKET_SIZE_KB}KB ≤ ${MAX_SIZE_KB}KB"
+
+      - name: 📄 Verify Pocket Embassy documentation
+        run: |
+          echo "📄 Verifying Pocket Embassy documentation..."
+
+          if [ ! -f "docs/POCKET-EMBASSY.md" ]; then
+            echo "❌ docs/POCKET-EMBASSY.md not found"
+            exit 1
+          fi
+
+          # Check that the documentation mentions the size constraint
+          if ! grep -q "≤60KB" docs/POCKET-EMBASSY.md; then
+            echo "⚠️ Warning: docs/POCKET-EMBASSY.md doesn't mention 60KB size constraint"
+          fi
+
+          echo "✅ Pocket Embassy documentation verified"
+
+      - name: 🔍 Validate Pocket Embassy functionality
+        run: |
+          echo "🔍 Validating Pocket Embassy functionality..."
+
+          # Basic HTML validation
+          if ! grep -q "<html" docs/pocket/index.htmlc; then
+            echo "❌ Pocket Embassy doesn't appear to be valid HTML"
+            exit 1
+          fi
+
+          # Check for required components
+          if ! grep -q "HELLO_CITY_SEED" docs/pocket/index.htmlc; then
+            echo "❌ Pocket Embassy missing Hello-City seed data"
+            exit 1
+          fi
+
+          if ! grep -q "AirGap" docs/pocket/index.htmlc; then
+            echo "❌ Pocket Embassy missing AirGap functionality"
+            exit 1
+          fi
+
+          echo "✅ Pocket Embassy functionality validated"
+
+      - name: 🎯 GA Gate Summary
+        run: |
+          echo "🎯 GA Gate Results:"
+          echo "=================="
+          echo "✅ Conformance tests: PASSED"
+          echo "✅ SDK parity: PASSED"
+          echo "✅ Examples test: PASSED"
+          echo "✅ Pocket Embassy: BUILT (${{ steps.pocket-build.outputs.pocket_size_kb }}KB)"
+          echo "✅ Size constraint: MET (≤60KB)"
+          echo "✅ Documentation: VERIFIED"
+          echo ""
+          echo "🎉 POCKET READY: ✅"
+          echo ""
+          echo "📦 Release artifacts ready for deployment"
+
+      - name: 📦 Prepare release artifacts
+        run: |
+          echo "📦 Preparing release artifacts..."
+          mkdir -p dist/release-artifacts
+
+          # Copy Pocket Embassy
+          cp docs/pocket/index.htmlc dist/release-artifacts/pocket-embassy.htmlc
+
+          # Copy documentation
+          cp docs/POCKET-EMBASSY.md dist/release-artifacts/
+
+          # Create release manifest
+          cat > dist/release-artifacts/manifest.json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "commit": "${{ github.sha }}",
+            "pocket_embassy": {
+              "file": "pocket-embassy.htmlc",
+              "size_bytes": ${{ steps.pocket-build.outputs.pocket_size_bytes }},
+              "size_kb": ${{ steps.pocket-build.outputs.pocket_size_kb }},
+              "size_constraint_met": true,
+              "max_size_kb": 60
+            },
+            "documentation": {
+              "file": "POCKET-EMBASSY.md",
+              "included": true
+            },
+            "ga_gate": {
+              "passed": true,
+              "tests": {
+                "conformance": true,
+                "sdk_parity": true,
+                "examples": true,
+                "pocket_build": true,
+                "size_verification": true,
+                "documentation": true
+              }
+            }
+          }
+          EOF
+
+          echo "✅ Release artifacts prepared in dist/release-artifacts/"
+
+      - name: 📤 Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga-gate-artifacts
+          path: dist/release-artifacts/
+          retention-days: 90
+
+      - name: 📊 Generate GA badge data
+        run: |
+          mkdir -p .badges
+
+          # Create badge data for shields.io
+          cat > .badges/pocket-size.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "pocket",
+            "message": "${{ steps.pocket-build.outputs.pocket_size_kb }}KB",
+            "color": "success"
+          }
+          EOF
+
+          cat > .badges/ga-gate.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "GA gate",
+            "message": "READY ✅",
+            "color": "brightgreen"
+          }
+          EOF
+
+          echo "✅ Badge data generated"
+
+      - name: 📤 Upload badge data
+        uses: actions/upload-artifact@v4
+        with:
+          name: badges
+          path: .badges/
+          retention-days: 30
+
+  post-gate:
+    needs: ga-gate
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: 🎉 GA Gate Success
+        run: |
+          echo "🎉 GA Gate completed successfully!"
+          echo ""
+          echo "✅ All quality checks passed"
+          echo "✅ Pocket Embassy built and verified"
+          echo "✅ Size constraint met (≤60KB)"
+          echo "✅ Documentation included"
+          echo ""
+          echo "🚀 Ready for release!"

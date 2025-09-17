@@ -1,0 +1,37 @@
+{
+  "id": "r026",
+  "type": "synthetic",
+  "command": "json_validate(medium)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": false,
+    "time_ms": 25,
+    "exitCode": 1
+  },
+  "oracle": {
+    "env": true,
+    "fs": false,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0
+  },
+  "attributes": [
+    "cache:low",
+    "cap:env_mutation",
+    "env:node_18",
+    "exec:failure",
+    "gene:PAR",
+    "lang:rust",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:m_1_10mb",
+    "speed:medium",
+    "type:validation"
+  ],
+  "cid": "32353803678137e0"
+}

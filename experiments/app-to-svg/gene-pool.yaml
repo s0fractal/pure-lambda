@@ -1,0 +1,285 @@
+apiVersion: v1
+kind: GenePool
+metadata:
+  name: repository-transformation-genes
+  version: 1.0.0
+  description: "Gene sequences for transforming repository projections"
+
+spec:
+  # Core transformation genes
+  core_genes:
+    EXTRACT_COMPONENT:
+      description: "Collapse subgraph into single component node"
+      input: "Set<NodeId>"
+      output: "ComponentNode"
+      invariant: "behavior_preserved AND node_count_reduced"
+      applications:
+        - "Modularization"
+        - "Complexity reduction"
+        - "Boundary definition"
+
+    INLINE_FUNCTION:
+      description: "Expand node into its implementation"
+      input: "NodeId"
+      output: "ExpandedSubgraph"
+      invariant: "semantics_preserved"
+      applications:
+        - "Performance optimization"
+        - "Debugging"
+        - "Dead code elimination"
+
+    MEMOIZE_COMPUTATION:
+      description: "Cache expensive computations"
+      input: "ExpensiveNode"
+      output: "MemoizedNode"
+      invariant: "pure_function AND deterministic"
+      applications:
+        - "Performance optimization"
+        - "Resource management"
+
+    PARALLELIZE_BOTTLENECK:
+      description: "Split sequential work into parallel paths"
+      input: "BottleneckNode"
+      output: "ParallelSubgraph"
+      invariant: "no_data_races AND order_independent"
+      applications:
+        - "Throughput optimization"
+        - "Latency reduction"
+
+  # Analysis genes
+  analysis_genes:
+    FIND_DEAD_CODE:
+      description: "Identify unreachable code"
+      input: "SVG"
+      output: "Set<DeadNode>"
+      invariant: "no_incoming_edges"
+
+    DETECT_CYCLES:
+      description: "Find circular dependencies"
+      input: "SVG"
+      output: "List<Cycle>"
+      invariant: "strongly_connected_components"
+
+    MEASURE_COMPLEXITY:
+      description: "Calculate cyclomatic complexity"
+      input: "Subgraph"
+      output: "ComplexityScore"
+      invariant: "mccabe_metric"
+
+  # Optimization genes
+  optimization_genes:
+    REMOVE_REDUNDANCY:
+      description: "Eliminate redundant edges via transitive reduction"
+      input: "SVG"
+      output: "ReducedSVG"
+      invariant: "reachability_preserved"
+
+    CLUSTER_COHESIVE:
+      description: "Group highly connected nodes"
+      input: "SVG"
+      output: "ClusteredSVG"
+      invariant: "connectivity_preserved"
+
+    BALANCE_LOAD:
+      description: "Distribute work evenly"
+      input: "SVG"
+      output: "BalancedSVG"
+      invariant: "total_work_constant"
+
+  # Refactoring genes
+  refactoring_genes:
+    EXTRACT_INTERFACE:
+      description: "Define contract from implementation"
+      input: "ConcreteNode"
+      output: "InterfaceNode + ImplementationNode"
+      invariant: "liskov_substitution"
+
+    SPLIT_MONOLITH:
+      description: "Break large node into smaller ones"
+      input: "LargeNode"
+      output: "Set<SmallNode>"
+      invariant: "functionality_preserved"
+
+    MERGE_DUPLICATES:
+      description: "Combine similar nodes"
+      input: "Set<SimilarNode>"
+      output: "SingleNode"
+      invariant: "no_behavior_change"
+
+  # Pattern genes
+  pattern_genes:
+    APPLY_FACTORY:
+      description: "Create factory pattern"
+      input: "ConstructorNodes"
+      output: "FactoryPattern"
+      invariant: "creation_logic_centralized"
+
+    INJECT_DEPENDENCY:
+      description: "Invert control flow"
+      input: "TightlyCoupled"
+      output: "LooselyCoupled"
+      invariant: "dependency_inversion"
+
+    ADD_OBSERVER:
+      description: "Implement pub-sub pattern"
+      input: "DirectCalls"
+      output: "ObserverPattern"
+      invariant: "decoupled_communication"
+
+  # Composition rules
+  composition:
+    sequences:
+      MODULARIZE:
+        steps:
+          - FIND_DEAD_CODE
+          - REMOVE_REDUNDANCY
+          - CLUSTER_COHESIVE
+          - EXTRACT_COMPONENT
+        description: "Complete modularization pipeline"
+
+      OPTIMIZE_PERFORMANCE:
+        steps:
+          - MEASURE_COMPLEXITY
+          - MEMOIZE_COMPUTATION
+          - PARALLELIZE_BOTTLENECK
+          - BALANCE_LOAD
+        description: "Performance optimization pipeline"
+
+      CLEAN_ARCHITECTURE:
+        steps:
+          - DETECT_CYCLES
+          - SPLIT_MONOLITH
+          - EXTRACT_INTERFACE
+          - INJECT_DEPENDENCY
+        description: "Architectural cleanup pipeline"
+
+    compatibility:
+      # Genes that work well together
+      synergistic:
+        - [EXTRACT_COMPONENT, EXTRACT_INTERFACE]
+        - [MEMOIZE_COMPUTATION, PARALLELIZE_BOTTLENECK]
+        - [CLUSTER_COHESIVE, EXTRACT_COMPONENT]
+
+      # Genes that conflict
+      conflicting:
+        - [INLINE_FUNCTION, EXTRACT_COMPONENT]
+        - [SPLIT_MONOLITH, MERGE_DUPLICATES]
+
+  # Repository-specific genes
+  repository_genes:
+    # React-specific
+    EXTRACT_HOOK:
+      framework: react
+      description: "Extract stateful logic to custom hook"
+      input: "ComponentWithState"
+      output: "Hook + Component"
+
+    MEMO_COMPONENT:
+      framework: react
+      description: "Wrap component in React.memo"
+      input: "PureComponent"
+      output: "MemoizedComponent"
+
+    # Node.js specific
+    STREAM_PIPELINE:
+      framework: nodejs
+      description: "Convert to stream processing"
+      input: "BatchProcessor"
+      output: "StreamPipeline"
+
+    CLUSTER_WORKERS:
+      framework: nodejs
+      description: "Distribute across worker threads"
+      input: "CPUIntensive"
+      output: "WorkerPool"
+
+  # Evolution strategies
+  evolution:
+    mutation_rate: 0.05
+    crossover_rate: 0.7
+    selection_pressure: 2.0
+
+    fitness_function: |
+      f(svg) = w1 * complexity_reduction +
+               w2 * performance_gain +
+               w3 * maintainability_score +
+               w4 * test_coverage
+
+    mutation_operators:
+      - RANDOM_GENE_SWAP
+      - PARAMETER_TWEAK
+      - GENE_DUPLICATION
+      - GENE_DELETION
+
+    crossover_operators:
+      - SINGLE_POINT
+      - TWO_POINT
+      - UNIFORM
+
+  # Integration with other systems
+  integration:
+    with_autopoiesis:
+      trigger: "hypothesis_validation"
+      genes: [MEASURE_COMPLEXITY, EXTRACT_COMPONENT]
+
+    with_pheromones:
+      trigger: "path_optimization"
+      genes: [PARALLELIZE_BOTTLENECK, BALANCE_LOAD]
+
+    with_thought_graphs:
+      trigger: "semantic_analysis"
+      genes: [CLUSTER_COHESIVE, EXTRACT_INTERFACE]
+
+    with_causal_receipts:
+      trigger: "proof_generation"
+      genes: [FIND_DEAD_CODE, DETECT_CYCLES]
+
+  # Fractal properties
+  fractal:
+    self_similarity:
+      - "File → Function → Block → Statement"
+      - "Each level uses same transformation genes"
+
+    scale_invariance:
+      - "Genes work at any zoom level"
+      - "Patterns repeat across scales"
+
+    recursive_application:
+      - "Genes can apply to their own output"
+      - "Transformations compose fractally"
+
+  # Convergence patterns
+  convergence:
+    attractors:
+      - name: "Hexagonal Architecture"
+        genes: [EXTRACT_INTERFACE, INJECT_DEPENDENCY]
+        stability: 0.9
+
+      - name: "Microservices"
+        genes: [EXTRACT_COMPONENT, SPLIT_MONOLITH]
+        stability: 0.8
+
+      - name: "Event Sourcing"
+        genes: [ADD_OBSERVER, STREAM_PIPELINE]
+        stability: 0.7
+
+    repellors:
+      - name: "Big Ball of Mud"
+        indicator: "high_coupling AND low_cohesion"
+
+      - name: "God Object"
+        indicator: "node_size > threshold"
+
+philosophy: |
+  Each repository is a living organism with its own genome.
+  Genes are transformations that preserve essential properties.
+  Evolution happens through controlled application of genes.
+  The fittest architectures survive and propagate.
+
+  SVG projection makes the invisible visible.
+  Pure functions ensure transformations are safe.
+  Composition allows complex refactoring from simple genes.
+
+  This is not just visualization - it's active transformation.
+  The map becomes the territory.
+  The genes become the architecture.

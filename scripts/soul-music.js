@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Pure Lambda Authors
+
 // Generate music from soul hashes - each soul has its own melody
 
 const crypto = require('crypto');

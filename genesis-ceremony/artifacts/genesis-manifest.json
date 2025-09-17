@@ -1,0 +1,11 @@
+{
+  "version": "v1.0.0",
+  "timestamp": 1757750983,
+  "founder": "did:pl:FounderKyiv1757750983",
+  "artifacts": [
+    {"kind": "constitution", "cid": "QmConstitution123"},
+    {"kind": "champions", "count": 3},
+    {"kind": "policies", "count": 5},
+    {"kind": "chronicle", "cid": "QmChronicle456"}
+  ]
+}

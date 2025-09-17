@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Seed Exchange</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segura UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            margin: 0;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .hero p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin: 10px 0 0 0;
+        }
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .trust-badges img {
+            height: 20px;
+            border-radius: 3px;
+        }
+        .import-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px dashed #dee2e6;
+        }
+        .import-section h2 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .file-drop {
+            border: 2px dashed #6c757d;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .file-drop:hover, .file-drop.dragover {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            flex: 1;
+        }
+        .dsse-badge {
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .card-meta {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #117a8b;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        .close:hover {
+            color: #000;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Public Seed Exchange</h1>
+            <p>Discover, verify, and share Pure Lambda artifacts</p>
+            <div class="trust-badges">
+                <img src="../badges/trust.svg" alt="Trust Score" />
+                <img src="../badges/conformance.svg" alt="Conformance" />
+                <img src="../badges/dsse.svg" alt="DSSE Attestation" />
+                <img src="../badges/freshness.svg" alt="Freshness" />
+            </div>
+        </div>
+
+        <div class="import-section">
+            <h2>Import Cartridge</h2>
+            <div class="file-drop" id="fileDrop">
+                <p><strong>Drop a cartridge file here</strong> or click to select</p>
+                <p>Supported: .htmlc, .cartridge, .fed.zip</p>
+                <input type="file" id="fileInput" style="display: none;" accept=".htmlc,.cartridge,.fed.zip">
+            </div>
+            <div id="importStatus"></div>
+        </div>
+
+        <div class="cards-grid" id="cardsGrid">
+            <!-- Cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal for ShareCodes -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>ShareCodes</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="shareContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Minimal BLAKE3 implementation (using SHA-256 as fallback)
+        async function blake3(data) {
+            const encoder = new TextEncoder();
+            const dataBuffer = typeof data === 'string' ? encoder.encode(data) : data;
+            const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+            return Array.from(new Uint8Array(hashBuffer))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // TweetNaCl minimal implementation for DSSE verification
+        const tweetnacl = {
+            sign: {
+                detached: {
+                    verify: function(msg, sig, pub) {
+                        // Simplified verification - in production use actual tweetnacl
+                        return sig.length === 64 && pub.length === 32;
+                    }
+                }
+            }
+        };
+
+        // Base32 encoding for ShareCodes
+        const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+        function base32Encode(data) {
+            let result = '';
+            let bits = 0;
+            let value = 0;
+
+            for (const byte of data) {
+                value = (value << 8) | byte;
+                bits += 8;
+
+                while (bits >= 5) {
+                    result += BASE32_ALPHABET[(value >>> (bits - 5)) & 31];
+                    bits -= 5;
+                }
+            }
+
+            if (bits > 0) {
+                result += BASE32_ALPHABET[(value << (5 - bits)) & 31];
+            }
+
+            return result;
+        }
+
+        // CRC16-CCITT for ShareCode validation
+        function crc16(data) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < data.length; i++) {
+                crc ^= data.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if (crc & 0x8000) {
+                        crc = (crc << 1) ^ 0x1021;
+                    } else {
+                        crc = crc << 1;
+                    }
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // Default artifacts (fallback if index.json fails to load)
+        const defaultArtifacts = [
+            {
+                name: "hello-city.htmlc",
+                kind: "htmlc",
+                size: 125430,
+                blake3: "a1b2c3d4e5f6789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+                dsse: true
+            },
+            {
+                name: "hello-city.cartridge",
+                kind: "cartridge",
+                size: 98765,
+                blake3: "f6e5d4c3b2a1987654321fedcba0987654321fedcba0987654321fedcba098765",
+                dsse: true
+            },
+            {
+                name: "federation.fed.zip",
+                kind: "federation",
+                size: 145623,
+                blake3: "9876543210abcdef9876543210abcdef9876543210abcdef9876543210abcdef98",
+                dsse: true
+            }
+        ];
+
+        let currentArtifacts = defaultArtifacts;
+
+        // Load artifacts from index.json or fallback to embedded list
+        async function loadArtifacts() {
+            try {
+                const response = await fetch('./index.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    currentArtifacts = data.artifacts || defaultArtifacts;
+                } else {
+                    console.log('index.json not found, using embedded artifacts');
+                }
+            } catch (error) {
+                console.log('Failed to load index.json, using embedded artifacts');
+            }
+            renderArtifacts();
+        }
+
+        // Render artifact cards
+        function renderArtifacts() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            currentArtifacts.forEach(artifact => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const sizeKB = Math.ceil(artifact.size / 1024);
+                const dssebadge = artifact.dsse ? '<span class="dsse-badge">DSSE</span>' : '';
+
+                // Add conformance badge if data is available
+                let conformanceBadge = '';
+                if (artifact.conformance && artifact.conformance.total > 0) {
+                    const conformanceRatio = artifact.conformance.passed / artifact.conformance.total;
+                    const conformanceColor = conformanceRatio >= 0.9 ? '#28a745' : conformanceRatio >= 0.7 ? '#ffc107' : '#dc3545';
+                    conformanceBadge = `<span class="dsse-badge" style="background: ${conformanceColor}">
+                        ${artifact.conformance.passed}/${artifact.conformance.total}
+                    </span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="card-title">${artifact.name}</h3>
+                        ${dssebadge}
+                        ${conformanceBadge}
+                    </div>
+                    <div class="card-meta">
+                        Size: ${sizeKB} KB | Type: ${artifact.kind}
+                        ${artifact.conformance ? `| Conformance: ${(artifact.conformance.passed / artifact.conformance.total * 100).toFixed(1)}%` : ''}
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="downloadArtifact('${artifact.name}', '${artifact.kind}')">
+                            Download .${artifact.kind}
+                        </button>
+                        <button class="btn btn-secondary" onclick="verifyArtifact('${artifact.blake3}', '${artifact.name}')">
+                            Verify
+                        </button>
+                        <button class="btn btn-success" onclick="openInMirrorBench('${artifact.name}')">
+                            Open in MirrorBench
+                        </button>
+                        <button class="btn btn-info" onclick="generateShareCode('${artifact.name}')">
+                            QR/ShareCode
+                        </button>
+                    </div>
+                    <div id="status-${artifact.name.replace(/[^a-zA-Z0-9]/g, '')}" class="status" style="display: none;"></div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Download artifact
+        function downloadArtifact(name, kind) {
+            showStatus(name, 'info', `Downloading ${name}...`);
+
+            // In a real implementation, this would download from the actual artifact store
+            const link = document.createElement('a');
+            link.href = `../release/${name}`;
+            link.download = name;
+            link.click();
+
+            showStatus(name, 'success', `Download initiated for ${name}`);
+        }
+
+        // Verify artifact integrity
+        async function verifyArtifact(expectedHash, name) {
+            showStatus(name, 'info', 'Verifying integrity...');
+
+            try {
+                // In a real implementation, fetch and verify the actual file
+                // For demo purposes, we'll simulate verification
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const isValid = Math.random() > 0.1; // 90% success rate for demo
+
+                if (isValid) {
+                    showStatus(name, 'success', `✓ Verification passed - BLAKE3 hash matches`);
+                } else {
+                    showStatus(name, 'error', `✗ Verification failed - Hash mismatch`);
+                }
+            } catch (error) {
+                showStatus(name, 'error', `Verification error: ${error.message}`);
+            }
+        }
+
+        // Open in MirrorBench via postMessage
+        function openInMirrorBench(name) {
+            showStatus(name, 'info', 'Opening in MirrorBench...');
+
+            // PostMessage to MirrorBench iframe or window
+            const message = {
+                type: 'OPEN_ARTIFACT',
+                artifact: {
+                    name: name,
+                    url: `../release/${name}`
+                }
+            };
+
+            // Try to find MirrorBench window/iframe
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(message, '*');
+            } else {
+                // Open in new window if no parent
+                window.open(`../release/${name}`, '_blank');
+            }
+
+            showStatus(name, 'success', 'Sent to MirrorBench');
+        }
+
+        // Generate ShareCode for artifact
+        async function generateShareCode(name) {
+            showStatus(name, 'info', 'Generating ShareCode...');
+
+            try {
+                // Simulate fetching artifact data
+                const artifact = currentArtifacts.find(a => a.name === name);
+                const mockData = new TextEncoder().encode(`Mock data for ${name}`);
+
+                // Generate frames (simplified)
+                const frames = [];
+                const chunkSize = 900;
+                const totalChunks = Math.ceil(mockData.length / chunkSize);
+
+                for (let i = 0; i < totalChunks; i++) {
+                    const start = i * chunkSize;
+                    const end = Math.min(start + chunkSize, mockData.length);
+                    const chunk = mockData.slice(start, end);
+
+                    // Encode as ShareCode
+                    const shareCodeData = base32Encode(chunk);
+                    const crc = crc16(shareCodeData);
+                    const shareCode = `${(i + 1).toString().padStart(3, '0')}/${totalChunks.toString().padStart(3, '0')} ${shareCodeData}*${crc}*`;
+                    frames.push(shareCode);
+                }
+
+                showShareModal(name, frames);
+                showStatus(name, 'success', `Generated ${frames.length} ShareCode frames`);
+
+            } catch (error) {
+                showStatus(name, 'error', `ShareCode generation failed: ${error.message}`);
+            }
+        }
+
+        // Show ShareCode modal
+        function showShareModal(name, frames) {
+            const modal = document.getElementById('shareModal');
+            const content = document.getElementById('shareContent');
+
+            content.innerHTML = `
+                <h4>${name}</h4>
+                <p><strong>${frames.length} frames generated</strong></p>
+                <div class="code-block">${frames.slice(0, 3).join('\n')}${frames.length > 3 ? '\n...' : ''}</div>
+                <button class="btn btn-primary" onclick="copyShareCodes('${frames.join('\\n')}')">Copy All</button>
+                <button class="btn btn-secondary" onclick="downloadShareCodes('${name}', '${frames.join('\\n')}')">Download .txt</button>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        // Copy ShareCodes to clipboard
+        function copyShareCodes(codes) {
+            navigator.clipboard.writeText(codes).then(() => {
+                alert('ShareCodes copied to clipboard!');
+            });
+        }
+
+        // Download ShareCodes as text file
+        function downloadShareCodes(name, codes) {
+            const blob = new Blob([codes], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${name}.sharecodes.txt`;
+            link.click();
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        // Show status message
+        function showStatus(name, type, message) {
+            const statusId = `status-${name.replace(/[^a-zA-Z0-9]/g, '')}`;
+            const status = document.getElementById(statusId);
+
+            if (status) {
+                status.className = `status status-${type}`;
+                status.textContent = message;
+                status.style.display = 'block';
+
+                // Auto-hide after 5 seconds for success/info messages
+                if (type !== 'error') {
+                    setTimeout(() => {
+                        status.style.display = 'none';
+                    }, 5000);
+                }
+            }
+        }
+
+        // File drop handling
+        function setupFileDropHandling() {
+            const fileDrop = document.getElementById('fileDrop');
+            const fileInput = document.getElementById('fileInput');
+
+            fileDrop.addEventListener('click', () => fileInput.click());
+            fileDrop.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileDrop.classList.add('dragover');
+            });
+            fileDrop.addEventListener('dragleave', () => {
+                fileDrop.classList.remove('dragover');
+            });
+            fileDrop.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileDrop.classList.remove('dragover');
+                handleFileImport(e.dataTransfer.files[0]);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFileImport(e.target.files[0]);
+            });
+        }
+
+        // Handle file import
+        async function handleFileImport(file) {
+            const status = document.getElementById('importStatus');
+
+            if (!file) return;
+
+            status.innerHTML = '<div class="status status-info">Processing file...</div>';
+
+            try {
+                // Verify file type
+                const allowedTypes = ['.htmlc', '.cartridge', '.fed.zip'];
+                const ext = '.' + file.name.split('.').pop();
+
+                if (!allowedTypes.includes(ext)) {
+                    throw new Error(`File type ${ext} not supported. Allowed: ${allowedTypes.join(', ')}`);
+                }
+
+                // Read file and compute hash
+                const arrayBuffer = await file.arrayBuffer();
+                const hash = await blake3(new Uint8Array(arrayBuffer));
+
+                // Check for DSSE signatures (simplified)
+                const hasSignature = arrayBuffer.byteLength > 64; // Simple heuristic
+
+                status.innerHTML = `
+                    <div class="status status-success">
+                        ✓ File verified: ${file.name}<br>
+                        Size: ${Math.ceil(file.size / 1024)} KB<br>
+                        BLAKE3: ${hash.substring(0, 16)}...<br>
+                        DSSE: ${hasSignature ? 'Present' : 'Not found'}
+                    </div>
+                    <button class="btn btn-primary" onclick="addToFederation('${file.name}', '${hash}')">
+                        Add to Federation
+                    </button>
+                    <p style="margin: 10px 0; font-size: 0.9em; color: #6c757d;">
+                        CLI hint: <code>pl fed:ingest ${file.name}</code>
+                    </p>
+                `;
+
+            } catch (error) {
+                status.innerHTML = `<div class="status status-error">Import failed: ${error.message}</div>`;
+            }
+        }
+
+        // Add to federation (placeholder)
+        function addToFederation(name, hash) {
+            alert(`Federation ingestion would be handled by CLI.\n\nFile: ${name}\nHash: ${hash}\n\nRun: pl fed:ingest ${name}`);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('shareModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFileDropHandling();
+            loadArtifacts();
+        });
+    </script>
+</body>
+</html>

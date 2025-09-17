@@ -1,0 +1,131 @@
+# Autopoiesis Engine Configuration
+# Self-generating micro-epochs without human intervention
+
+[engine]
+version = "∞.1.0"
+mode = "autonomous"
+pulse_interval = 86400  # 24 hours
+auto_deploy = true
+consensus_threshold = 0.67
+
+# Data sources for hypothesis generation
+[sources]
+metrics = [
+    "observability/metrics/*",
+    "reports/stewardship/*",
+    "chaos/results/*",
+    "civic-tests/reports/*"
+]
+
+events = [
+    "governance/votes/*",
+    "economy/transactions/*",
+    "education/certifications/*",
+    "security/incidents/*"
+]
+
+feedback = [
+    "cities/*/feedback.json",
+    "stewardship/circles/*/reports.md",
+    "public/suggestions/*"
+]
+
+# Hypothesis generation rules
+[rules]
+# Performance degradation
+[[rules.triggers]]
+condition = "latency_p99 > baseline * 1.5"
+action = "generate_performance_hypothesis"
+priority = "high"
+
+# Fairness drift
+[[rules.triggers]]
+condition = "gini_coefficient > 0.4"
+action = "generate_fairness_hypothesis"
+priority = "critical"
+
+# Security events
+[[rules.triggers]]
+condition = "security_score < 0.9"
+action = "generate_security_hypothesis"
+priority = "critical"
+
+# Cultural stagnation
+[[rules.triggers]]
+condition = "culture_artifacts_per_pulse < 1"
+action = "generate_culture_hypothesis"
+priority = "medium"
+
+# Innovation plateau
+[[rules.triggers]]
+condition = "new_contracts_deployed < rolling_avg * 0.5"
+action = "generate_innovation_hypothesis"
+priority = "medium"
+
+# Consensus fragmentation
+[[rules.triggers]]
+condition = "consensus_participation < 0.6"
+action = "generate_governance_hypothesis"
+priority = "high"
+
+# Template for micro-H generation
+[template]
+structure = """
+# Micro-H{number}: {title}
+Generated: {timestamp}
+Trigger: {condition}
+
+## Hypothesis
+{hypothesis}
+
+## Experiment
+{experiment_design}
+
+## Success Criteria
+{success_metrics}
+
+## Rollback Plan
+{rollback_procedure}
+
+## Auto-migration
+{migration_script}
+"""
+
+# Constraints to prevent harmful evolution
+[constraints]
+max_changes_per_pulse = 3
+require_formal_proof = true
+require_chaos_test = true
+min_review_time_hours = 6
+max_rollback_time_minutes = 5
+
+# Invariants that cannot be violated
+[invariants]
+core = [
+    "Charter principles",
+    "Treaty v2 commitments",
+    "Consent requirements",
+    "Minimality principle",
+    "Right to exit"
+]
+
+# Learning parameters
+[learning]
+enable_reinforcement = true
+reward_function = "civic_health * performance * fairness"
+exploration_rate = 0.1
+memory_window_days = 90
+
+# Self-modification capabilities
+[self_modification]
+allow_rule_updates = true
+allow_template_evolution = true
+allow_constraint_adjustment = false  # Protected
+allow_invariant_changes = false      # Never
+
+# Reporting
+[reporting]
+generate_hypothesis_log = true
+log_path = "/reports/autopoiesis/"
+public_dashboard = true
+notify_stewards = true

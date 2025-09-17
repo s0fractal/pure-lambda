@@ -1,0 +1,226 @@
+{
+  "timestamp": "2025-09-15T15:41:36.239Z",
+  "n_samples": 24,
+  "n_errors": 0,
+  "error_rate": 0,
+  "pac_bound_95": 0.27722131103874453,
+  "target_5_percent": false,
+  "results": [
+    {
+      "id": "pac-0",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-1",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-2",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-3",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-4",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-5",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-6",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-7",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-8",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-9",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-10",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-11",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-12",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-13",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-14",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-15",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-16",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-17",
+      "expected": "apex",
+      "actual": "apex",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-18",
+      "expected": "proof",
+      "actual": "proof",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-19",
+      "expected": "proof",
+      "actual": "proof",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-20",
+      "expected": "proof",
+      "actual": "proof",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-21",
+      "expected": "proof",
+      "actual": "proof",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-22",
+      "expected": "performance",
+      "actual": "performance",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    },
+    {
+      "id": "pac-23",
+      "expected": "performance",
+      "actual": "performance",
+      "confidence": 1,
+      "correct": true,
+      "gate": "none",
+      "reasons": []
+    }
+  ]
+}

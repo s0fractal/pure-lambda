@@ -1,0 +1,46 @@
+// Pure Lambda ABI v0 - Minimal host interface for agents
+// Target: Zero side effects, deterministic replay
+
+package pl:abi@0.1.0;
+
+/// Host functions provided to the agent
+interface host {
+    /// Read a materialized view (λFS lens)
+    /// Returns empty list if view doesn't exist
+    read: func(view: string) -> list<u8>;
+    
+    /// Write intent with data, returns CID as hex string
+    /// Intent describes what agent wants to achieve
+    write: func(intent: string, data: list<u8>) -> string;
+    
+    /// Log message (for debugging, not computation)
+    /// Level: 0=trace, 1=debug, 2=info, 3=warn, 4=error
+    log: func(level: u8, msg: string);
+    
+    /// Current time in milliseconds since Unix epoch
+    /// Warning: breaks determinism if used for computation
+    now-ms: func() -> u64;
+    
+    /// Pseudo-random u64 (seeded for determinism in tests)
+    rand64: func() -> u64;
+    
+    /// Remaining gas units (computation budget)
+    gas-left: func() -> u64;
+}
+
+/// Agent's exported interface
+world agent {
+    import host;
+    
+    /// Called periodically by runtime
+    /// Returns desired delay until next tick (ms)
+    /// Return 0 for immediate next tick
+    /// Return u32::MAX to halt
+    export tick: func() -> u32;
+    
+    /// Initialize agent (called once on startup)
+    export init: func(config: list<u8>);
+    
+    /// Handle external event (optional)
+    export handle-event: func(event: list<u8>) -> list<u8>;
+}

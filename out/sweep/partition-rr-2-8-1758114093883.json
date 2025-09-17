@@ -1,0 +1,67 @@
+{
+  "name": "partition-rr-2-8",
+  "version": 1,
+  "intent": "Fair round-robin scheduling across branches",
+  "size": "≤10KB",
+  "novelty": 0.63,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "split": {
+      "op": "SPLIT",
+      "params": {
+        "n": 3,
+        "policy": "partition"
+      }
+    },
+    "scan": {
+      "op": "SCAN",
+      "params": {
+        "policy": "round-robin"
+      }
+    },
+    "merge": {
+      "op": "MERGE",
+      "params": {
+        "fair": true
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    [
+      "entry",
+      "split"
+    ],
+    [
+      "split",
+      "scan"
+    ],
+    [
+      "scan",
+      "merge"
+    ],
+    [
+      "merge",
+      "exit"
+    ]
+  ],
+  "fixtures": [
+    {
+      "events": 1000,
+      "expected": {
+        "branch1": 333,
+        "branch2": 333,
+        "branch3": 334
+      }
+    }
+  ],
+  "xidv2": "partition-rr-2-8-v2-874cf9ac92dd944b-1758114093883",
+  "generated": "2025-09-17T13:01:33.883Z",
+  "sweep": true
+}

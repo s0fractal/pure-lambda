@@ -1,0 +1,31 @@
+{
+  "type": "LVG",
+  "version": "1.0",
+  "id": "mirror-1757941182713-82a0e81a04ce313b",
+  "timestamp": "2025-09-15T12:59:43.059Z",
+  "source": "/Users/chaoshex/Projects/pure-lambda/playground/test-project",
+  "nodes": [
+    {
+      "id": "06e07391f1bb908c",
+      "type": "file",
+      "path": "/test.js",
+      "size": 1926,
+      "hash": "06e07391f1bb908c"
+    },
+    {
+      "id": "e7a0057768ba4c54",
+      "type": "file",
+      "path": "/package.json",
+      "size": 117,
+      "hash": "e7a0057768ba4c54"
+    },
+    {
+      "id": "12a0272eb1b1dcaf",
+      "type": "file",
+      "path": "/test-with-pl.js",
+      "size": 3428,
+      "hash": "12a0272eb1b1dcaf"
+    }
+  ],
+  "edges": []
+}

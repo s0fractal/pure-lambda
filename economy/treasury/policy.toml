@@ -1,0 +1,141 @@
+# Treasury and Sustainability Fund Policy
+# Managing the commons for long-term civilization health
+
+[emission]
+# Deflationary emission schedule
+initial_supply = 1000000
+daily_emission = 10000
+halving_period_days = 365
+min_emission = 100  # Floor to ensure continued incentive
+
+[distribution]
+# Where new credits go
+proof_of_work = 0.70      # 70% to contract executors
+sustainability = 0.10     # 10% to sustainability fund
+governance = 0.05         # 5% to governance participants
+bug_bounty = 0.05         # 5% to security researchers
+commons = 0.10            # 10% to public goods
+
+[sustainability_fund]
+# Long-term resilience fund
+target_balance = 100000
+min_balance = 10000
+
+eligible_expenses = [
+  "infrastructure",       # Nodes, storage, bandwidth
+  "development",         # Core protocol improvements
+  "audits",             # Security and economic audits
+  "research",           # R&D for future capabilities
+  "education",          # Onboarding and documentation
+  "emergency"           # Crisis response
+]
+
+approval_requirements = {
+  small = {max = 1000, approvers = 3}      # 3 treasury members
+  medium = {max = 10000, approvers = 5}    # 5 treasury members
+  large = {max = 100000, chambers = true}  # Both chambers vote
+  emergency = {max = 50000, committee = 7} # Emergency committee
+}
+
+[treasury_governance]
+# Who controls the treasury
+committee_size = 13
+term_days = 30
+selection = "reputation_weighted"
+rotation = "staggered"  # 1/3 rotate each period
+
+required_quorum = 0.67
+veto_threshold = 0.34   # 1/3 can block
+
+[spending_rules]
+# Constraints on spending
+max_per_pulse = 50000
+max_per_project = 100000
+min_time_between = 86400  # 24 hours
+
+prohibited = [
+  "private_benefit",     # No personal enrichment
+  "speculation",         # No trading/gambling
+  "political",          # No partisan activities
+  "harmful"             # No malicious use
+]
+
+transparency = [
+  "public_proposal",     # All proposals visible
+  "public_vote",        # Vote records visible
+  "public_spending",    # Actual spends visible
+  "public_audit"        # Audit results visible
+]
+
+[investment]
+# How to grow the treasury
+allowed_strategies = [
+  "staking",            # Stake for network security
+  "liquidity",          # Provide liquidity
+  "bonds"               # Time-locked commitments
+]
+
+risk_limits = {
+  max_risk_ratio = 0.20  # Max 20% in risky assets
+  diversification = 5    # Min 5 different positions
+  lockup_max_days = 90   # Max 90 day lockup
+}
+
+[grants]
+# Supporting ecosystem growth
+categories = [
+  {name = "infrastructure", budget_pct = 0.30},
+  {name = "tooling", budget_pct = 0.20},
+  {name = "research", budget_pct = 0.20},
+  {name = "education", budget_pct = 0.15},
+  {name = "adoption", budget_pct = 0.15}
+]
+
+grant_process = {
+  proposal_template = "economy/treasury/grant-template.md"
+  review_period_days = 7
+  milestone_based = true
+  clawback_enabled = true
+}
+
+[reporting]
+# Transparency requirements
+frequency = "per_pulse"  # Daily reports
+
+required_metrics = [
+  "balance",
+  "income",
+  "expenses",
+  "allocations",
+  "roi"
+]
+
+public_dashboards = [
+  "treasury_balance",
+  "spending_breakdown",
+  "grant_status",
+  "emission_schedule"
+]
+
+[emergency]
+# Crisis response
+triggers = [
+  "network_attack",
+  "economic_exploit",
+  "mass_exodus",
+  "legal_threat"
+]
+
+emergency_powers = {
+  max_spend = 50000
+  max_duration_hours = 48
+  required_members = 7
+  post_review = true  # Must review after crisis
+}
+
+[audit]
+# Regular review
+internal_audit_frequency = "monthly"
+external_audit_frequency = "quarterly"
+public_disclosure = true
+audit_firm_rotation = true  # Different firm each time

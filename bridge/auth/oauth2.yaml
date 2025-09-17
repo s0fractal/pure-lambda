@@ -1,0 +1,158 @@
+# OAuth2 to UCAN Bridge Configuration
+# Maps external identity providers to internal capabilities
+
+providers:
+  google:
+    client_id: ${GOOGLE_CLIENT_ID}
+    issuer: https://accounts.google.com
+    scopes_to_capabilities:
+      email:
+        - read:profile
+        - read:public_data
+      profile:
+        - read:identity
+        - create:contracts@personal
+      
+  microsoft:
+    client_id: ${MICROSOFT_CLIENT_ID}
+    issuer: https://login.microsoftonline.com
+    scopes_to_capabilities:
+      User.Read:
+        - read:profile
+        - read:public_data
+      Files.Read:
+        - read:personal_views
+        
+  github:
+    client_id: ${GITHUB_CLIENT_ID}
+    issuer: https://github.com
+    scopes_to_capabilities:
+      read:user:
+        - read:profile
+        - create:contracts@open_source
+      repo:
+        - read:code_views
+        - write:intents@development
+        
+  eidas:
+    # European eIDAS bridge
+    issuer: https://eidas.europa.eu
+    trust_framework: high
+    scopes_to_capabilities:
+      identity:
+        - read:verified_identity
+        - create:contracts@civic
+        - vote:governance
+      qualified_signature:
+        - sign:legal_contracts
+        - attest:documents
+
+bridge_policies:
+  capability_defaults:
+    ttl: 86400  # 24 hours
+    renewable: true
+    max_renewals: 7
+    
+  minimum_capabilities:
+    # Everyone gets these
+    - read:public_data
+    - read:chronicle
+    - observe:governance
+    
+  verification_required:
+    # These require additional verification
+    - vote:governance
+    - create:contracts@financial
+    - sign:legal_contracts
+    
+  never_grant:
+    # These are never granted via OAuth
+    - admin:*
+    - delete:registry
+    - modify:consensus
+
+mapping_rules:
+  - name: basic_user
+    if:
+      provider: any
+      verified_email: true
+    grant:
+      - read:public_data
+      - create:contracts@personal
+      - reputation:earn
+      
+  - name: verified_human
+    if:
+      provider: eidas
+      assurance_level: high
+    grant:
+      - vote:governance
+      - create:contracts@civic
+      - participate:chambers
+      
+  - name: developer
+    if:
+      provider: github
+      contributions: ">10"
+    grant:
+      - create:contracts@development
+      - submit:improvements
+      - debug:contracts
+
+consent_management:
+  explicit_consent_required: true
+  consent_ttl: 2592000  # 30 days
+  
+  consent_scopes:
+    - personal_data_processing
+    - contract_execution
+    - reputation_tracking
+    
+  withdrawal:
+    immediate: true
+    cascade_revoke: true
+    preserve_audit_trail: true
+
+security:
+  token_binding: strict
+  pkce_required: true
+  state_validation: true
+  
+  rate_limits:
+    auth_attempts_per_hour: 10
+    token_refresh_per_day: 24
+    capability_changes_per_day: 5
+    
+  audit:
+    log_all_bridges: true
+    log_capability_use: true
+    retention_days: 90
+
+transformation:
+  # How to create DID from OAuth identity
+  did_generation:
+    algorithm: "did:pl:Human-{provider}-{hash(sub)[:8]}"
+    
+  claims_mapping:
+    email: contact
+    name: display_name
+    picture: avatar_cid
+    email_verified: verified
+    
+  reputation_seed:
+    verified_email: 0.1
+    verified_identity: 0.3
+    github_contributions: 0.2
+
+monitoring:
+  metrics:
+    - bridge_success_rate
+    - capability_usage
+    - consent_withdrawals
+    - security_violations
+    
+  alerts:
+    - excessive_privilege_requests
+    - consent_violations
+    - bridge_failures
+    - suspicious_patterns

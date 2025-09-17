@@ -1,0 +1,24 @@
+package pl:net
+
+world peering {
+  // Fetch content by CID
+  export fetch: func(cid: string) -> result<list<u8>, string>
+  
+  // Advertise new content heads
+  export advert: func(topic: string, head: string)
+  
+  // Query registry diffs
+  export query: func(topic: string) -> list<u8>
+  
+  // Import host capabilities
+  import host {
+    // Store content locally
+    store: func(bytes: list<u8>) -> string  // returns CID
+    
+    // Get peer list
+    peers: func() -> list<string>
+    
+    // Connect to peer
+    connect: func(peer: string) -> result<bool, string>
+  }
+}

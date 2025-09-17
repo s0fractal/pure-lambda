@@ -1,0 +1,39 @@
+name: Watchdog
+
+on:
+  schedule: [ { cron: "*/30 * * * *" } ]   # кожні 30 хв
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - name: Scan risks
+        id: r
+        run: |
+          node scripts/policy/enforce.mjs || echo "::set-output name=biolock::HIT"
+          node scripts/ci/quarantine-scan.mjs || true
+          test -f observability/quarantine.json || echo '{}' > observability/quarantine.json
+          QN=$(jq '.frozen|length // 0' observability/quarantine.json)
+          echo "q=$QN" >> $GITHUB_OUTPUT
+      - name: Engage brakes on risk
+        if: ${{ steps.r.outputs.biolock == 'HIT' || fromJSON(steps.r.outputs.q) > 0 }}
+        run: |
+          echo "⚠️ Risk detected: BIOLOCK or Quarantine>0"
+          yq -i '.daily_burst=1' policies/fed-rate.toml || true
+          node scripts/ops/freeze.mjs || true
+          gh issue create --title "⚠️ Autopilot throttle engaged" --body "BIOLOCK or quarantine triggered. Throttled & freeze applied." || true
+      - name: Commit throttle
+        run: |
+          git add policies/fed-rate.toml || true
+          git add observability/quarantine.json || true
+          git diff --cached --quiet || git commit -m "watchdog: throttle/freeze"
+          git push || true

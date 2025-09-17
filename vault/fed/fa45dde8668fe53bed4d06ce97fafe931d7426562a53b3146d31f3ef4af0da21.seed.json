@@ -1,0 +1,53 @@
+{
+  "createdAt": "2025-09-17T09:58:21.728Z",
+  "meta": {
+    "gidSet": [
+      "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "c2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1"
+    ],
+    "iidSet": [
+      "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "e47d520d3ea2b98f1b1f92b1ef19c14acaadfb7b5092fbc8ad5929adca48eccc"
+    ],
+    "stats": {
+      "hops": 2,
+      "latency": 0,
+      "mem": 2
+    },
+    "xidSet": [
+      "506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea",
+      "73550dd9266d3064de132166afbb316ee2f34825ab9f6a47a66177fda14a7e57"
+    ]
+  },
+  "name": "focus-delay",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "data",
+          "out": "focused"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "identity",
+      "op": "FOCUS"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "focused",
+          "out": "delayed"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "temporal",
+      "op": "DELAY"
+    }
+  ],
+  "version": 1
+}

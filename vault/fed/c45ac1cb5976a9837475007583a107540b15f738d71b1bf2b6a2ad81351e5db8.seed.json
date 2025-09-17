@@ -1,0 +1,54 @@
+{
+  "createdAt": "2025-09-17T10:02:19.708Z",
+  "meta": {
+    "gidSet": [
+      "19cd0648d03e4b7edd6d809c878e4106639b39d2c1c498f0a59ab540e53514ec",
+      "c0193e718c1dcabb4893ab2109e4211d62548c7ca13659da299e7a74ff56acf1"
+    ],
+    "iidSet": [
+      "b723ecad8f6304b2924e543123528a0eb39f849e0529241bf70719ec4567ad5e",
+      "f070ad8740629a027deb0586eaa4dc7173f182ec560d4b78ba1aef1a824e6614"
+    ],
+    "stats": {
+      "hops": 2,
+      "latency": 0,
+      "mem": 2
+    },
+    "xidSet": [
+      "ee5db6c6441c41bfeddbcffcaba88a62adafb26ebbf9e181897bdff112d79442",
+      "55c73b6fb1578f2e9b848d3e260dd4da18b57d5f832fa06dbf8a9705e34a59f4"
+    ]
+  },
+  "name": "loop-lite",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "continue": "next_state",
+          "in": "state",
+          "out": "result"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "recursive",
+      "op": "BRANCH"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "next_state",
+          "out": "delayed_state"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "temporal",
+      "op": "DELAY"
+    }
+  ],
+  "version": 1
+}

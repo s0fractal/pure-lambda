@@ -1,0 +1,58 @@
+{
+  "nodes": {
+    "baf123456789abcdef0123456789abcdef0123456789abcdef0123456789ab": {
+      "cost": "O(n)",
+      "gid": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5",
+      "iid": "b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+      "law": "scanning",
+      "links": {
+        "out": "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd"
+      },
+      "op": "SCAN",
+      "ports": {
+        "in": "dataset",
+        "out": "scanned"
+      },
+      "receipt": null,
+      "xid": "e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3"
+    },
+    "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd": {
+      "cost": "O(1)",
+      "gid": "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "iid": "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "law": "identity",
+      "links": {},
+      "op": "FOCUS",
+      "ports": {
+        "in": "scanned",
+        "out": "focused"
+      },
+      "receipt": null,
+      "xid": "506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+    },
+    "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c": {
+      "oids": [
+        "baf123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+        "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd"
+      ],
+      "root": "baf123456789abcdef0123456789abcdef0123456789abcdef0123456789ab"
+    }
+  },
+  "root": "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c",
+  "name": "scan-focus",
+  "gidSet": [
+    "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5",
+    "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602"
+  ],
+  "iidSet": [
+    "b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+    "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b"
+  ],
+  "expected": {
+    "minRouteLen": 2,
+    "invariants": [
+      "GID independent of ports",
+      "IID equal for abi-equal"
+    ]
+  }
+}

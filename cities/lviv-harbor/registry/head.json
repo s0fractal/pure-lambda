@@ -1,0 +1,11 @@
+{
+  "version": "v1.0.0",
+  "timestamp": 1757756206,
+  "city": "lviv-harbor",
+  "genesis_cid": "QmLvivGenesis57248c65e69808d7c11cd647c28e9c9517887072ceb6",
+  "head_cid": "QmLvivGenesis57248c65e69808d7c11cd647c28e9c9517887072ceb6",
+  "citizens": 6,
+  "contracts": 0,
+  "genes": 0,
+  "parent_city": "kyiv-prime"
+}

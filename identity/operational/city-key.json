@@ -1,0 +1,9 @@
+{
+  "did": "did:pl:KyivPrime",
+  "type": "Ed25519VerificationKey2020",
+  "publicKey": "ae6d379cd9cf6290324a91828f8907c872c5b7efd22639492f8927acf46bca4e",
+  "privateKey": "[REDACTED]",
+  "created": 1757752706,
+  "rotatedFrom": "did:pl:FounderKyiv1757750983",
+  "capabilities": ["governance", "contracts", "attestation"]
+}

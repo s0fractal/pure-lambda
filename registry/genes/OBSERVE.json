@@ -1,0 +1,53 @@
+{
+  "cid": "QmYZ3f5c7b2a9d8e7f6g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9",
+  "soul": "λ-7b2a9d8e7",
+  "name": "OBSERVE",
+  "version": "1.0.0",
+  "license": "MIT",
+  "provenance": [
+    {
+      "repo": "https://github.com/s0fractal/pure-lambda",
+      "rev": "2cba56d9e8f7g6h9i0j1k2l3m4n5o6p7q8r9s0t1u2",
+      "author": "s0fractal",
+      "timestamp": 1704067200
+    }
+  ],
+  "metrics": {
+    "time_ns": 12000,
+    "allocs": 1,
+    "proof_coverage": 1.0,
+    "speedup": 2.3,
+    "memory_bytes": 128
+  },
+  "signatures": [
+    {
+      "key": "ed25519:DI-zvP7lxQNs9ZYKUT6MR3ibZLxOwLY0IglaPHJT9=",
+      "sig": "MLNrZh1Gq7E7GINrT5mP1VhILKZDraPQNvDwo5WSYYOn9jyWyROR9hw1GaLNqKLMhZX6Leu9mgA1FieaEh==",
+      "timestamp": 1704067200
+    }
+  ],
+  "reputation": {
+    "score": 0.95,
+    "votes": 23,
+    "rank": 1
+  },
+  "laws": [
+    {
+      "name": "O1_identity",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/observe.rs:45"
+    },
+    {
+      "name": "O2_composition",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/observe.rs:67"
+    },
+    {
+      "name": "O3_idempotence",
+      "proven": true,
+      "witness": "lambda-kernel/core/src/observe.rs:89"
+    }
+  ],
+  "dependencies": [],
+  "tags": ["core", "quantum"]
+}

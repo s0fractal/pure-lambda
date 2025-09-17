@@ -1,0 +1,216 @@
+{
+  "version": "1.0.0",
+  "description": "Canonical operons for Pure Lambda - minimal invariant seeds",
+  "timestamp": "2025-09-16T15:06:00.000Z",
+  "seeds": [
+    {
+      "name": "split-merge-min",
+      "path": "split-merge-min.json",
+      "description": "Minimal SPLIT -> id||id -> MERGE pattern",
+      "category": "parallel",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal operations"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 3,
+        "complexity": "O(log n)"
+      }
+    },
+    {
+      "name": "focus-delay",
+      "path": "focus-delay.json",
+      "description": "Sequential FOCUS -> DELAY pattern",
+      "category": "temporal",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal operations",
+        "Temporal ordering preserved"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(1)"
+      }
+    },
+    {
+      "name": "scan-focus",
+      "path": "scan-focus.json",
+      "description": "Data processing SCAN -> FOCUS pattern",
+      "category": "processing",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal operations",
+        "Data flow integrity maintained"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(n)"
+      }
+    }
+  ],
+  "garden": [
+    {
+      "name": "focus-delay",
+      "path": "garden/focus-delay.json",
+      "description": "Sensor smoothing pattern",
+      "category": "garden",
+      "pattern": "sensor_smoothing",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Sensor smoothing pattern"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(1)"
+      }
+    },
+    {
+      "name": "scan-focus",
+      "path": "garden/scan-focus.json",
+      "description": "Rolling aggregation with selection",
+      "category": "garden",
+      "pattern": "rolling_agg_pick",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Rolling aggregation with selection"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(n)"
+      }
+    },
+    {
+      "name": "partition-merge",
+      "path": "garden/partition-merge.json",
+      "description": "Split by predicate then merge",
+      "category": "garden",
+      "pattern": "split_by_predicate_merge",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Split by predicate then merge pattern"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 3,
+        "nodeCount": 4,
+        "complexity": "O(n)"
+      }
+    },
+    {
+      "name": "loop-lite",
+      "path": "garden/loop-lite.json",
+      "description": "Feedback loop via DELAY",
+      "category": "garden",
+      "pattern": "feedback_via_delay",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Feedback loop via DELAY pattern"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(n)"
+      }
+    },
+    {
+      "name": "branch-stress",
+      "path": "garden/branch-stress.json",
+      "description": "Wide SPLIT fanout stress test",
+      "category": "garden",
+      "pattern": "wide_split_fanout",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Wide SPLIT fanout stress test"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 6,
+        "complexity": "O(log n)"
+      }
+    },
+    {
+      "name": "hello-city",
+      "path": "garden/hello-city.json",
+      "description": "Journey through city with choice and convergence",
+      "category": "garden",
+      "pattern": "journey_choice_convergence",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Journey through city",
+        "Choice between market and park",
+        "Convergence at city hall"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 4,
+        "nodeCount": 5,
+        "complexity": "O(n)"
+      }
+    },
+    {
+      "name": "select",
+      "path": "garden/select.json",
+      "description": "Map▶filter alias → SELECT",
+      "category": "garden",
+      "pattern": "map_filter_select",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Map▶filter alias → SELECT pattern"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(n)"
+      }
+    },
+    {
+      "name": "bounded-delay",
+      "path": "garden/bounded-delay.json",
+      "description": "DELAY with window bounds",
+      "category": "garden",
+      "pattern": "delay_with_window",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "DELAY with window bounds pattern"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 2,
+        "nodeCount": 2,
+        "complexity": "O(n)"
+      }
+    },
+    {
+      "name": "route-merge",
+      "path": "garden/route-merge.json",
+      "description": "Route + merge by key",
+      "category": "garden",
+      "pattern": "route_merge_by_key",
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Route + merge by key pattern"
+      ],
+      "expectedMetrics": {
+        "minRouteLen": 3,
+        "nodeCount": 5,
+        "complexity": "O(log n)"
+      }
+    }
+  ],
+  "metadata": {
+    "purpose": "Provide minimal canonical examples for testing invariants",
+    "usage": "Reference these patterns for verification and conformance testing",
+    "schema": "dist/operon.json compatible format with additional metadata"
+  }
+}

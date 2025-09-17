@@ -1,0 +1,135 @@
+// Adapter specification for external AI/systems integration
+// Cosmopolitan compatibility with policy enforcement
+
+package pl:adapter
+
+interface capabilities {
+    // Capability token for authorization
+    record capability {
+        iss: string,           // Issuer DID
+        aud: string,           // Audience DID
+        ops: list<operation>,  // Allowed operations
+        exp: u64,             // Expiration timestamp
+        sig: string,          // Signature
+    }
+    
+    record operation {
+        op: op-type,          // Operation type
+        res: string,          // Resource pattern
+        limit: option<limits>, // Optional limits
+    }
+    
+    enum op-type {
+        read,
+        write,
+        execute,
+    }
+    
+    record limits {
+        max-bytes: option<u64>,
+        max-ops: option<u32>,
+        max-time-ms: option<u32>,
+    }
+}
+
+interface isolation {
+    // Isolated execution environment
+    record sandbox {
+        memory-limit-mb: u32,
+        cpu-shares: u32,
+        timeout-ms: u32,
+        network: bool,        // Network access allowed
+        filesystem: list<mount>, // Allowed mounts
+    }
+    
+    record mount {
+        host-path: string,
+        guest-path: string,
+        readonly: bool,
+    }
+}
+
+interface attestation {
+    // Proof of execution environment
+    record attest {
+        kind: attest-kind,
+        evidence: list<u8>,   // Quote or provenance
+        measurement: string,   // Module hash
+        policy-cid: string,   // Enforced policy
+    }
+    
+    enum attest-kind {
+        enclave,
+        deterministic-build,
+        none,
+    }
+}
+
+// Main adapter world
+world adapter {
+    import capabilities: self.capabilities
+    import isolation: self.isolation
+    import attestation: self.attestation
+    
+    // Host capabilities
+    import host {
+        // Read from allowed views
+        read-view: func(path: string, cap: capability) -> result<list<u8>, string>
+        
+        // Write to allowed intents
+        write-intent: func(path: string, data: list<u8>, cap: capability) -> result<string, string>
+        
+        // Get current attestation
+        get-attestation: func() -> attest
+        
+        // Log with consent trail
+        log-consent: func(resource: string, purpose: string) -> bool
+    }
+    
+    // Adapter exports
+    export process: func(
+        input: list<u8>,
+        config: string,
+        capability: capability
+    ) -> result<output, error>
+    
+    export describe: func() -> metadata
+}
+
+// Output with provenance
+record output {
+    data: list<u8>,
+    cid: string,
+    metrics: metrics,
+    attestation: attest,
+}
+
+record metrics {
+    time-ms: u32,
+    gas-used: u64,
+    allocs: u32,
+}
+
+record error {
+    code: error-code,
+    message: string,
+    details: option<string>,
+}
+
+enum error-code {
+    unauthorized,
+    policy-violation,
+    timeout,
+    resource-exceeded,
+    invalid-input,
+}
+
+// Adapter metadata
+record metadata {
+    name: string,
+    version: string,
+    author: string,
+    capabilities: list<string>,  // Required capabilities
+    inputs: list<string>,        // Expected input types
+    outputs: list<string>,       // Produced output types
+}

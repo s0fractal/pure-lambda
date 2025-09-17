@@ -1,0 +1,14 @@
+{
+  "payloadBase64": "eyJzY2hlbWEiOiJQTC1EU1NFLTAxIiwic3ViamVjdCI6eyJuYW1lIjoibG9vcC1saXRlLmpzb24iLCJraW5kIjoic2VlZCIsIm1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24iLCJzaXplIjoyNDUxLCJibGFrZTMiOiI4ZjAyZGRjY2Q5MDk2NmNjNzkzNTNjY2M3NWU2YjAzYjMyN2QxN2NmNTQyOTQ3ZGU2NDZmYTJhYjVjZTEyODE0IiwiZ2l0UmV2IjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCJ9LCJpc3N1ZWRBdCI6IjIwMjUtMDktMTdUMTA6MzI6MTAuMzU5WiIsInByb3ZlbmFuY2UiOnsiYnVpbGRlciI6InB1cmUtbGFtYmRhL2dhcmRlbiIsImludm9jYXRpb24iOnsiY29uZmlnU291cmNlIjp7InVyaSI6Imh0dHBzOi8vZ2l0aHViLmNvbS9zMGZyYWN0YWwvcHVyZS1sYW1iZGEiLCJkaWdlc3QiOnsic2hhMjU2IjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCJ9fX0sIm1ldGFkYXRhIjp7InJlcHJvZHVjaWJsZSI6dHJ1ZSwiY29tcGxldGVuZXNzIjp7ImFyZ3VtZW50cyI6dHJ1ZSwiZW52aXJvbm1lbnQiOmZhbHNlfX19fQ==",
+  "payloadType": "application/vnd.in-toto+json",
+  "signatures": [
+    {
+      "keyid": "did:web:pure-lambda.tech:keys:garden",
+      "sigBase64": "4gjBmrTuUvA+LqqthMP0WzbuV93CSAErcLbEdbJfkwY="
+    }
+  ],
+  "chain": {
+    "root": "pure-lambda-root",
+    "depth": 1
+  }
+}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mirror-Form Geometry Transformations</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #61dafb;
+      text-shadow: 0 0 20px rgba(97, 218, 251, 0.5);
+      margin-bottom: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .transform-box {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(97, 218, 251, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 20px rgba(97, 218, 251, 0.1);
+    }
+    .transform-box h3 {
+      color: #61dafb;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    svg {
+      background: rgba(255,255,255,0.02);
+      border-radius: 5px;
+    }
+    .controls {
+      text-align: center;
+      margin: 30px 0;
+    }
+    button {
+      background: #61dafb;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: monospace;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #4fa8c5;
+      transform: scale(1.05);
+    }
+    .info {
+      text-align: center;
+      color: #666;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+    .grid-lines {
+      stroke: #333;
+      stroke-width: 0.5;
+    }
+    path {
+      transition: all 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>🪞 Mirror-Form Geometry Transformations</h1>
+
+  <div class="controls">
+    <button onclick="animateAll()">🎬 Animate All</button>
+    <button onclick="resetAll()">🔄 Reset</button>
+    <button onclick="randomPath()">🎲 Random Path</button>
+  </div>
+
+  <div class="grid">
+    <!-- Original -->
+    <div class="transform-box">
+      <h3>📍 Original Path</h3>
+      <svg id="original" width="350" height="250" viewBox="-50 -50 300 200">
+        <defs>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#222" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect x="-50" y="-50" width="300" height="200" fill="url(#grid)"/>
+        <line x1="0" y1="-50" x2="0" y2="150" stroke="#444" stroke-width="1"/>
+        <line x1="-50" y1="0" x2="250" y2="0" stroke="#444" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Simplified -->
+    <div class="transform-box">
+      <h3>🔧 CURVE_SIMPLIFY (ε=<span id="epsilon">10</span>)</h3>
+      <svg id="simplified" width="350" height="250" viewBox="-50 -50 300 200">
+        <rect x="-50" y="-50" width="300" height="200" fill="url(#grid)"/>
+        <line x1="0" y1="-50" x2="0" y2="150" stroke="#444" stroke-width="1"/>
+        <line x1="-50" y1="0" x2="250" y2="0" stroke="#444" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Straightened -->
+    <div class="transform-box">
+      <h3>📏 STRAIGHTEN (τ=<span id="tau">0.5</span>)</h3>
+      <svg id="straightened" width="350" height="250" viewBox="-50 -50 300 200">
+        <rect x="-50" y="-50" width="300" height="200" fill="url(#grid)"/>
+        <line x1="0" y1="-50" x2="0" y2="150" stroke="#444" stroke-width="1"/>
+        <line x1="-50" y1="0" x2="250" y2="0" stroke="#444" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Mirror Y -->
+    <div class="transform-box">
+      <h3>🔄 MIRROR (axis=Y)</h3>
+      <svg id="mirror-y" width="350" height="250" viewBox="-250 -50 300 200">
+        <rect x="-250" y="-50" width="300" height="200" fill="url(#grid)"/>
+        <line x1="0" y1="-50" x2="0" y2="150" stroke="#f00" stroke-width="2" opacity="0.5"/>
+        <line x1="-250" y1="0" x2="50" y2="0" stroke="#444" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Mirror X -->
+    <div class="transform-box">
+      <h3>🔃 MIRROR (axis=X)</h3>
+      <svg id="mirror-x" width="350" height="250" viewBox="-50 -200 300 200">
+        <rect x="-50" y="-200" width="300" height="200" fill="url(#grid)"/>
+        <line x1="0" y1="-200" x2="0" y2="0" stroke="#444" stroke-width="1"/>
+        <line x1="-50" y1="0" x2="250" y2="0" stroke="#f00" stroke-width="2" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <!-- Flow Field -->
+    <div class="transform-box">
+      <h3>🌊 FLOW_FIELD (κ=<span id="kappa">0.1</span>)</h3>
+      <svg id="flow" width="350" height="250" viewBox="-50 -50 300 200">
+        <rect x="-50" y="-50" width="300" height="200" fill="url(#grid)"/>
+        <line x1="0" y1="-50" x2="0" y2="150" stroke="#444" stroke-width="1"/>
+        <line x1="-50" y1="0" x2="250" y2="0" stroke="#444" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="info">
+    Pure Lambda - Mirror-Form Geometry | Each transformation preserves mathematical invariants
+  </div>
+
+  <script>
+    // Original path
+    let originalPath = [
+      {x: 0, y: 0},
+      {x: 50, y: 80},
+      {x: 100, y: 40},
+      {x: 150, y: 120},
+      {x: 200, y: 60}
+    ];
+
+    // Draw functions
+    function drawPath(svgId, points, color = '#61dafb', showPoints = true) {
+      const svg = document.getElementById(svgId);
+
+      // Clear previous paths
+      svg.querySelectorAll('.path, .point').forEach(el => el.remove());
+
+      // Create path
+      const pathData = points.map((p, i) =>
+        (i === 0 ? 'M' : 'L') + ` ${p.x} ${-p.y}`
+      ).join(' ');
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', pathData);
+      path.setAttribute('stroke', color);
+      path.setAttribute('stroke-width', '3');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('class', 'path');
+      path.style.filter = 'drop-shadow(0 0 5px ' + color + ')';
+      svg.appendChild(path);
+
+      // Draw points
+      if (showPoints) {
+        points.forEach((p, i) => {
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', p.x);
+          circle.setAttribute('cy', -p.y);
+          circle.setAttribute('r', '5');
+          circle.setAttribute('fill', i === 0 || i === points.length - 1 ? '#ff0' : '#fff');
+          circle.setAttribute('class', 'point');
+          svg.appendChild(circle);
+        });
+      }
+    }
+
+    // Transformation functions
+    function simplify(points, epsilon) {
+      function perpendicularDistance(point, lineStart, lineEnd) {
+        const dx = lineEnd.x - lineStart.x;
+        const dy = lineEnd.y - lineStart.y;
+        if (dx === 0 && dy === 0) {
+          return Math.sqrt(Math.pow(point.x - lineStart.x, 2) + Math.pow(point.y - lineStart.y, 2));
+        }
+        const t = ((point.x - lineStart.x) * dx + (point.y - lineStart.y) * dy) / (dx * dx + dy * dy);
+        const projection = { x: lineStart.x + t * dx, y: lineStart.y + t * dy };
+        return Math.sqrt(Math.pow(point.x - projection.x, 2) + Math.pow(point.y - projection.y, 2));
+      }
+
+      function douglasPeucker(pts, eps) {
+        if (pts.length <= 2) return pts;
+        let maxDist = 0, maxIndex = 0;
+        for (let i = 1; i < pts.length - 1; i++) {
+          const dist = perpendicularDistance(pts[i], pts[0], pts[pts.length - 1]);
+          if (dist > maxDist) { maxDist = dist; maxIndex = i; }
+        }
+        if (maxDist > eps) {
+          const left = douglasPeucker(pts.slice(0, maxIndex + 1), eps);
+          const right = douglasPeucker(pts.slice(maxIndex), eps);
+          return [...left.slice(0, -1), ...right];
+        }
+        return [pts[0], pts[pts.length - 1]];
+      }
+      return douglasPeucker(points, epsilon);
+    }
+
+    function straighten(points, tau) {
+      const start = points[0];
+      const end = points[points.length - 1];
+      return points.map((point, i) => {
+        if (i === 0 || i === points.length - 1) return point;
+        const t = i / (points.length - 1);
+        const linearX = start.x + t * (end.x - start.x);
+        const linearY = start.y + t * (end.y - start.y);
+        return {
+          x: point.x + tau * (linearX - point.x),
+          y: point.y + tau * (linearY - point.y)
+        };
+      });
+    }
+
+    function mirrorY(points) {
+      return points.map(p => ({ x: -p.x, y: p.y }));
+    }
+
+    function mirrorX(points) {
+      return points.map(p => ({ x: p.x, y: -p.y }));
+    }
+
+    function flowField(points, kappa) {
+      return points.map((point, i) => {
+        if (i === 0 || i === points.length - 1) return point;
+        const flowX = Math.sin(point.y * kappa) * 10;
+        const flowY = Math.cos(point.x * kappa) * 10;
+        return {
+          x: point.x + flowX * 0.1,
+          y: point.y + flowY * 0.1
+        };
+      });
+    }
+
+    // Update all visualizations
+    function updateAll() {
+      drawPath('original', originalPath);
+      drawPath('simplified', simplify(originalPath, 10), '#10b981');
+      drawPath('straightened', straighten(originalPath, 0.5), '#f59e0b');
+      drawPath('mirror-y', mirrorY(originalPath), '#ef4444');
+      drawPath('mirror-x', mirrorX(originalPath), '#9333ea');
+      drawPath('flow', flowField(originalPath, 0.1), '#3178c6');
+    }
+
+    // Animation
+    function animateAll() {
+      let t = 0;
+      const interval = setInterval(() => {
+        t += 0.02;
+        if (t > 1) {
+          clearInterval(interval);
+          return;
+        }
+        drawPath('straightened', straighten(originalPath, t), '#f59e0b');
+        document.getElementById('tau').textContent = t.toFixed(2);
+      }, 50);
+    }
+
+    // Reset
+    function resetAll() {
+      document.getElementById('tau').textContent = '0.5';
+      updateAll();
+    }
+
+    // Random path
+    function randomPath() {
+      originalPath = [];
+      for (let i = 0; i <= 4; i++) {
+        originalPath.push({
+          x: i * 50,
+          y: Math.random() * 100 + 20
+        });
+      }
+      updateAll();
+    }
+
+    // Initialize
+    updateAll();
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "mod-001",
+      "kind": "module",
+      "sig": "hash-module-main",
+      "attrs": {
+        "name": "index.ts",
+        "path": "src/index.ts",
+        "size": 2500,
+        "complexity": 12
+      }
+    },
+    {
+      "id": "fn-001",
+      "kind": "fn",
+      "sig": "hash-fn-transform",
+      "attrs": {
+        "name": "transform",
+        "path": "src/index.ts",
+        "complexity": 5,
+        "params": 2
+      }
+    },
+    {
+      "id": "fn-002",
+      "kind": "fn",
+      "sig": "hash-fn-compose",
+      "attrs": {
+        "name": "compose",
+        "path": "src/compose.ts",
+        "complexity": 8,
+        "params": 3
+      }
+    },
+    {
+      "id": "type-001",
+      "kind": "type",
+      "sig": "hash-type-lvg",
+      "attrs": {
+        "name": "LVG",
+        "path": "src/types.ts",
+        "members": 4
+      }
+    }
+  ],
+  "edges": [
+    {
+      "src": "mod-001",
+      "dst": "fn-001",
+      "rel": "calls"
+    },
+    {
+      "src": "fn-001",
+      "dst": "fn-002",
+      "rel": "calls"
+    },
+    {
+      "src": "fn-002",
+      "dst": "type-001",
+      "rel": "refines"
+    },
+    {
+      "src": "mod-001",
+      "dst": "type-001",
+      "rel": "imports"
+    }
+  ],
+  "metadata": {
+    "repo_cid": "d8222a4188df8a1a70db28398459880c",
+    "timestamp": 1757927870892,
+    "lang": "typescript",
+    "deterministic": true
+  }
+}

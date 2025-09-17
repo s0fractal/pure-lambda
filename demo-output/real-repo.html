@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pure Lambda - Repository Visualization</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 300px;
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 {
+      color: #61dafb;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(97, 218, 251, 0.5);
+    }
+    .stats {
+      margin: 20px 0;
+    }
+    .stat {
+      padding: 10px;
+      margin: 5px 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 5px;
+      border-left: 3px solid #61dafb;
+    }
+    .svg-wrapper {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(97, 218, 251, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 0 30px rgba(97, 218, 251, 0.2);
+    }
+    .controls {
+      margin-top: 20px;
+      text-align: center;
+    }
+    button {
+      background: #61dafb;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: monospace;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #4fa8c5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2 style="color: #61dafb; margin-bottom: 20px;">Pure Lambda</h2>
+      <div class="stats">
+        <div class="stat">
+          <strong>Nodes:</strong> 262
+        </div>
+        <div class="stat">
+          <strong>Edges:</strong> 13
+        </div>
+        <div class="stat">
+          <strong>Modules:</strong> 85
+        </div>
+        <div class="stat">
+          <strong>Concepts:</strong> 88
+        </div>
+        <div class="stat">
+          <strong>Total Lines:</strong> 45256
+        </div>
+      </div>
+      <hr style="border: 1px solid #333; margin: 20px 0;">
+      <h3 style="color: #61dafb; margin-bottom: 10px;">Files</h3>
+      <div style="max-height: 400px; overflow-y: auto;">
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            .reconcile.yaml
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            .tactics.yaml
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            MVS-CHECKLIST.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            NORTH_STAR.yaml
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            PROVENANCE.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            README-endgame.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            README.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            STATE.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            adapters/faas/README.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            adapters/faas/cloudflare/worker.js
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            adversarial/blue/playbooks/anti-gaming.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            adversarial/red/cases/econ-gaming.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            archive/integrations/void-bridge.ts
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            archive/ipfs-bridge.ts
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            archive/signal-mesh.ts
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            attestation/README.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            auth/capabilities.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            auth/ucan/edge-host.json
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            autopoiesis/templates/microH.md
+          </div>
+        
+          <div style="padding: 5px; margin: 2px 0; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 11px;">
+            autopoiesis/templates/microH_causal.md
+          </div>
+        
+      </div>
+    </div>
+    <div class="main">
+      <h1>🔮 Repository Living Graph</h1>
+      <div class="svg-wrapper">
+        <?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <radialGradient id="bg-gradient">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#bg-gradient)"/>
+
+  <!-- Grid -->
+  <g opacity="0.05">
+    <line x1="0" y1="0" x2="0" y2="800" stroke="#fff"/>
+    <line x1="50" y1="0" x2="50" y2="800" stroke="#fff"/>
+    <line x1="100" y1="0" x2="100" y2="800" stroke="#fff"/>
+    <line x1="150" y1="0" x2="150" y2="800" stroke="#fff"/>
+    <line x1="200" y1="0" x2="200" y2="800" stroke="#fff"/>
+    <line x1="250" y1="0" x2="250" y2="800" stroke="#fff"/>
+    <line x1="300" y1="0" x2="300" y2="800" stroke="#fff"/>
+    <line x1="350" y1="0" x2="350" y2="800" stroke="#fff"/>
+    <line x1="400" y1="0" x2="400" y2="800" stroke="#fff"/>
+    <line x1="450" y1="0" x2="450" y2="800" stroke="#fff"/>
+    <line x1="500" y1="0" x2="500" y2="800" stroke="#fff"/>
+    <line x1="550" y1="0" x2="550" y2="800" stroke="#fff"/>
+    <line x1="600" y1="0" x2="600" y2="800" stroke="#fff"/>
+    <line x1="650" y1="0" x2="650" y2="800" stroke="#fff"/>
+    <line x1="700" y1="0" x2="700" y2="800" stroke="#fff"/>
+    <line x1="750" y1="0" x2="750" y2="800" stroke="#fff"/>
+    <line x1="800" y1="0" x2="800" y2="800" stroke="#fff"/>
+    <line x1="850" y1="0" x2="850" y2="800" stroke="#fff"/>
+    <line x1="900" y1="0" x2="900" y2="800" stroke="#fff"/>
+    <line x1="950" y1="0" x2="950" y2="800" stroke="#fff"/>
+    <line x1="1000" y1="0" x2="1000" y2="800" stroke="#fff"/>
+    <line x1="1050" y1="0" x2="1050" y2="800" stroke="#fff"/>
+    <line x1="1100" y1="0" x2="1100" y2="800" stroke="#fff"/>
+    <line x1="1150" y1="0" x2="1150" y2="800" stroke="#fff"/>
+    <line x1="1200" y1="0" x2="1200" y2="800" stroke="#fff"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="#fff"/>
+    <line x1="0" y1="50" x2="1200" y2="50" stroke="#fff"/>
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#fff"/>
+    <line x1="0" y1="150" x2="1200" y2="150" stroke="#fff"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#fff"/>
+    <line x1="0" y1="250" x2="1200" y2="250" stroke="#fff"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#fff"/>
+    <line x1="0" y1="350" x2="1200" y2="350" stroke="#fff"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#fff"/>
+    <line x1="0" y1="450" x2="1200" y2="450" stroke="#fff"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#fff"/>
+    <line x1="0" y1="550" x2="1200" y2="550" stroke="#fff"/>
+    <line x1="0" y1="600" x2="1200" y2="600" stroke="#fff"/>
+    <line x1="0" y1="650" x2="1200" y2="650" stroke="#fff"/>
+    <line x1="0" y1="700" x2="1200" y2="700" stroke="#fff"/>
+    <line x1="0" y1="750" x2="1200" y2="750" stroke="#fff"/>
+    <line x1="0" y1="800" x2="1200" y2="800" stroke="#fff"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" fill="#61dafb" font-size="24" font-family="monospace" filter="url(#glow)">
+    Pure Lambda - Living Repository
+  </text>
+
+  <!-- Edges -->
+  <path d="M 231.9575303718863,472.0922872642839 Q 140.97876518594313,242.094146244765 50,52.096005225246124"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,50 Q 422.5242882311083,55.330077040938306 795.0485764622166,100.66015408187663"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 738.601589974039,147.51680893618658 Q 766.8250832181278,104.0884815090316 795.0485764622166,100.66015408187663"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 738.601589974039,147.51680893618658 Q 394.3007949870195,78.75840446809329 50,50"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 730.4759334357536,249.27002947241002 Q 940.2379667178768,129.635014736205 1150,50"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 730.4759334357536,249.27002947241002 Q 390.2379667178768,130.12294265808876 50,50.975855843767526"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 730.4759334357536,249.27002947241002 Q 940.2379667178768,479.635014736205 1150,750"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,50 Q 600,30 1150,50"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,50 Q 600,30 1150,50"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,50 Q 600,380 1150,750"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,50 Q 600,30 1150,50"
+         stroke="#666" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,750 Q 272.91506871850174,530.4247806330591 495.83013743700343,350.8495612661182"
+         stroke="#61dafb" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 50,750 Q 272.91506871850174,530.4247806330591 495.83013743700343,350.8495612661182"
+         stroke="#61dafb" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- Nodes -->
+  <g transform="translate(50.0, 50.0)">
+    <circle r="14.744470465710585" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      .reconcile.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      84 lines
+    </text>
+  </g>
+  <g transform="translate(522.7, 50.0)">
+    <circle r="14.60217339960154" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      .tactics.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      83 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.322183167229497" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      MVS-CHECKLIST.m
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      128 lines
+    </text>
+  </g>
+  <g transform="translate(806.2, 544.1)">
+    <circle r="11.757839583124694" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      NORTH_STAR.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      10 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="16.072067193304107" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      PROVENANCE.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      138 lines
+    </text>
+  </g>
+  <g transform="translate(729.4, 321.3)">
+    <circle r="12.738612787525831" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README-endgame.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      33 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="21.86001686339442" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      488 lines
+    </text>
+  </g>
+  <g transform="translate(440.9, 661.0)">
+    <circle r="14.196427051671456" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      STATE.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      75 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="15.281098370604358" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      137 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="16.67757440991862" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      worker.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      152 lines
+    </text>
+  </g>
+  <g transform="translate(482.2, 416.3)">
+    <circle r="16.893475175845634" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      anti-gaming.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      208 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="15.100000000000001" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      econ-gaming.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      116 lines
+    </text>
+  </g>
+  <g transform="translate(984.8, 412.5)">
+    <circle r="16.797793759742937" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      void-bridge.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      173 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="19.349866309204643" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ipfs-bridge.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      342 lines
+    </text>
+  </g>
+  <g transform="translate(523.7, 750.0)">
+    <circle r="19.264987857520374" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      signal-mesh.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      332 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.012487006222965" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      151 lines
+    </text>
+  </g>
+  <g transform="translate(969.5, 748.9)">
+    <circle r="16.597726881282675" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      capabilities.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      196 lines
+    </text>
+  </g>
+  <g transform="translate(372.0, 514.4)">
+    <circle r="14.136423575989287" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      edge-host.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      80 lines
+    </text>
+  </g>
+  <g transform="translate(652.1, 441.3)">
+    <circle r="15.781868210189506" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      microH.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      171 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="15.947268280479703" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      microH_causal.m
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      168 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="20.577806956075534" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      dr-lens.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      454 lines
+    </text>
+  </g>
+  <g transform="translate(769.1, 50.0)">
+    <circle r="18.220705565825845" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ff-lens.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      320 lines
+    </text>
+  </g>
+  <g transform="translate(252.1, 253.1)">
+    <circle r="15.868560300448483" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      oauth2.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      158 lines
+    </text>
+  </g>
+  <g transform="translate(316.8, 565.1)">
+    <circle r="19.37443331620637" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      canonicalizer.t
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      345 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="14.832183771339828" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      index.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      91 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="17.607890640644094" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      isomorphism.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      241 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="18.89325587172662" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      bridge-test-001
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      260 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="14.377213725647858" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      types.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      72 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="16.688049042882387" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      utils.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      171 lines
+    </text>
+  </g>
+  <g transform="translate(848.3, 328.5)">
+    <circle r="11.574801574802363" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      capabilities-ex
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      11 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.12367605815953" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      civic-test-resu
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      18 lines
+    </text>
+  </g>
+  <g transform="translate(624.1, 521.5)">
+    <circle r="12.286919325205854" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      federation-regi
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      22 lines
+    </text>
+  </g>
+  <g transform="translate(368.6, 126.5)">
+    <circle r="12.99666481275434" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      citizens.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      49 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="11.469693845669907" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      city.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      10 lines
+    </text>
+  </g>
+  <g transform="translate(436.5, 107.0)">
+    <circle r="11.8" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      manifest.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      15 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="11.76351920885484" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      head.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      12 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.41039415863879" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      citizens.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      13 lines
+    </text>
+  </g>
+  <g transform="translate(326.2, 648.7)">
+    <circle r="11.30384048104053" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      city.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      9 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="11.438749456993815" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      head.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="11.526433752247375" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      peering-receipt
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      11 lines
+    </text>
+  </g>
+  <g transform="translate(680.9, 192.7)">
+    <circle r="11.562049935181332" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      replication-ena
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="11.743559577416269" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      replication-sch
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      16 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="12.07605394920267" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      test-receipt.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      19 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="18.658521813797087" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lvg-pack.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      290 lines
+    </text>
+  </g>
+  <g transform="translate(444.6, 355.6)">
+    <circle r="20.978160137290764" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lvg-watch.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      476 lines
+    </text>
+  </g>
+  <g transform="translate(368.5, 603.3)">
+    <circle r="15.4" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      echo-chamber.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      123 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="15.095095681142798" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      letter-to-futur
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      90 lines
+    </text>
+  </g>
+  <g transform="translate(785.7, 750.0)">
+    <circle r="16.870953354520754" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      migration-plan.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      221 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="15.562373594069353" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      pq-migration.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      146 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="16.340346993658944" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      self-evolution.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      181 lines
+    </text>
+  </g>
+  <g transform="translate(457.0, 223.0)">
+    <circle r="15.311308689955801" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      self-publicatio
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      134 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="14.93457191659013" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      cross-city-focu
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      83 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="14.075536774462966" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      focus.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      73 lines
+    </text>
+  </g>
+  <g transform="translate(622.5, 750.0)">
+    <circle r="13.806573262134856" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      focus.receipt.j
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      58 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="11.797220075561142" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      analytics.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(790.0, 276.2)">
+    <circle r="11.17898261225516" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      analytics.recei
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(698.6, 110.7)">
+    <circle r="11.846618531261939" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ethics.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(415.2, 415.2)">
+    <circle r="11.161895003862226" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ethics.receipt.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(777.0, 206.2)">
+    <circle r="11.854723699099141" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      vision.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(171.8, 442.9)">
+    <circle r="11.161895003862226" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      vision.receipt.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="14.956813492557492" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      civic-archive.m
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      112 lines
+    </text>
+  </g>
+  <g transform="translate(386.6, 200.2)">
+    <circle r="15.728001396647874" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      consent-demo.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      148 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="15.069516742254631" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      open-science.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      97 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="14.495553358597805" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      schema.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      91 lines
+    </text>
+  </g>
+  <g transform="translate(315.0, 178.2)">
+    <circle r="15.568662316930341" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ephemeral-sessi
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      119 lines
+    </text>
+  </g>
+  <g transform="translate(505.9, 274.8)">
+    <circle r="22.658593918757326" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      agent-spec.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      594 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="23.278554138158263" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ascension-proto
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      536 lines
+    </text>
+  </g>
+  <g transform="translate(822.0, 155.6)">
+    <circle r="18.01498596380555" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      compiler.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      257 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="21.875184209097558" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      consciousness-p
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      509 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="17.47930478052606" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      consent-lens.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      202 lines
+    </text>
+  </g>
+  <g transform="translate(809.5, 413.1)">
+    <circle r="19.155872432488344" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      dream-council.t
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      322 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="22.730671624073885" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      dream-layer.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      551 lines
+    </text>
+  </g>
+  <g transform="translate(820.4, 617.1)">
+    <circle r="19.95339138183564" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      emotion.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      364 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="23.340914511381893" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      fnpm-chimera-in
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      612 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="18.79374777896205" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lambda-communic
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      304 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 52.1)">
+    <circle r="17.99061950038919" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lambda-pure.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      137 lines
+    </text>
+  </g>
+  <g transform="translate(232.0, 472.1)">
+    <circle r="19.233634170791042" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lambda-pure.tes
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      160 lines
+    </text>
+  </g>
+  <g transform="translate(593.9, 458.5)">
+    <circle r="17.632168761236873" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lambda-pure.tes
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      206 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="17.935363885796292" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lambda-pure.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      197 lines
+    </text>
+  </g>
+  <g transform="translate(733.7, 540.3)">
+    <circle r="19.684007434941385" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lazy.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      358 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="21.22853507809456" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      medbed-integrat
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      425 lines
+    </text>
+  </g>
+  <g transform="translate(662.7, 750.0)">
+    <circle r="21.45993019175946" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      metaphysical-ga
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      436 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="22.896511156122806" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      network.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      593 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="18.438009243891592" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      pure-memory.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      276 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 51.0)">
+    <circle r="21.16243700990066" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      quantum-superpo
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      414 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="24.73601031487153" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      reality-bridge.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      720 lines
+    </text>
+  </g>
+  <g transform="translate(710.4, 463.0)">
+    <circle r="21.17899816620434" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      self-reflection
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      413 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="22.083873551142446" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      symphony-integr
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      519 lines
+    </text>
+  </g>
+  <g transform="translate(669.2, 50.0)">
+    <circle r="17.864477096412706" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      types.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      270 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="22.164703037887936" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      universal-consc
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      476 lines
+    </text>
+  </g>
+  <g transform="translate(851.0, 247.7)">
+    <circle r="22.22333833287781" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      universal-consc
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      467 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="15.40740233383831" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      pulse-infinity-
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      116 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="18.196950652529267" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      manifest.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      280 lines
+    </text>
+  </g>
+  <g transform="translate(867.5, 390.0)">
+    <circle r="17.814729681825213" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      demo-quick.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      243 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="21.926860441876563" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      demo-real.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      499 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.555150646628952" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      220 lines
+    </text>
+  </g>
+  <g transform="translate(795.0, 100.7)">
+    <circle r="19.34237657130133" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      alignment-rules
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      439 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="20.579697538209683" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      shim-generator.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      441 lines
+    </text>
+  </g>
+  <g transform="translate(738.6, 147.5)">
+    <circle r="24.469277798148738" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      devour-cli.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      692 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="16.93325320466518" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      rules-100x.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      169 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="14.110960958218893" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      .rustc_info.jso
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      1 lines
+    </text>
+  </g>
+  <g transform="translate(580.0, 739.9)">
+    <circle r="13.374907406137241" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      devour.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      49 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="12.638181191654583" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      distortion-repo
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      40 lines
+    </text>
+  </g>
+  <g transform="translate(533.1, 164.3)">
+    <circle r="15.142956348249516" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      GROUNDING_CARD.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      78 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="16.705967491719594" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      charter.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      204 lines
+    </text>
+  </g>
+  <g transform="translate(441.5, 282.9)">
+    <circle r="17.85175139698144" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      treaty-v2.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      248 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="17.032780389006895" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      chronicle.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      164 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.776688675382964" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      principles.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      26 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="15.119570294468081" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      107 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="18.736704184073076" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      FOCUS.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      318 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="14.104875150354758" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      OBSERVE.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      66 lines
+    </text>
+  </g>
+  <g transform="translate(621.0, 50.0)">
+    <circle r="16.70820393249937" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      154 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="14.972926703662543" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      REDUCE.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      102 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="16.732013071882733" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      memory-v0.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      173 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="15.077400909914441" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      soul-vs-intent.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      104 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="17.519308478842984" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      course.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      263 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="17.17007670809734" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      contract-templa
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      236 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="16.866585760041158" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      onboarding.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      208 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="17.24844810976805" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      citizen-guide.m
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      243 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="14.593473631142341" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      contract-quicks
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      101 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="17.6668115928331" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      privacy-consent
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      275 lines
+    </text>
+  </g>
+  <g transform="translate(684.6, 588.2)">
+    <circle r="21.365298060323802" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ascension-cerem
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      402 lines
+    </text>
+  </g>
+  <g transform="translate(337.1, 380.1)">
+    <circle r="19.856469956328176" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      consciousness-e
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      360 lines
+    </text>
+  </g>
+  <g transform="translate(710.3, 705.7)">
+    <circle r="22.757742747053648" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      consciousness-e
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      522 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="20.333440859655607" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      dream-world.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      397 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="15.897457079114693" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      factorial.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      124 lines
+    </text>
+  </g>
+  <g transform="translate(499.7, 476.9)">
+    <circle r="17.94921379760288" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      integration-dem
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      185 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="18.079603950689663" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      multi-world.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      233 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="20.244510725261602" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      quantum-conscio
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      370 lines
+    </text>
+  </g>
+  <g transform="translate(730.5, 249.3)">
+    <circle r="15.961543424315552" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      reality-bridge-
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      103 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="19.61197170199746" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      self-reflection
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      302 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="18.638865666278186" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      universal-integ
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      217 lines
+    </text>
+  </g>
+  <g transform="translate(276.9, 750.0)">
+    <circle r="17.30479294709987" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      experiment.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      191 lines
+    </text>
+  </g>
+  <g transform="translate(946.4, 553.5)">
+    <circle r="16.912307863514183" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      164 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="16.963476143421474" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      concept.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      189 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="18.608135686662937" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      fractal-converg
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      340 lines
+    </text>
+  </g>
+  <g transform="translate(642.3, 135.2)">
+    <circle r="18.850423718670196" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene-pool.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      285 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="12.16101827849743" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      package.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      18 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="20.923369443537098" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      projector.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      414 lines
+    </text>
+  </g>
+  <g transform="translate(758.8, 605.3)">
+    <circle r="22.477579893553077" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      pure-functions.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      651 lines
+    </text>
+  </g>
+  <g transform="translate(509.9, 106.3)">
+    <circle r="18.37675354776539" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      scientific-brid
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      267 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="20.788419717456307" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      test-harness.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      370 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="14.341658669218482" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      manifest.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      85 lines
+    </text>
+  </g>
+  <g transform="translate(928.8, 225.8)">
+    <circle r="17.790378681424926" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      registry.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      276 lines
+    </text>
+  </g>
+  <g transform="translate(678.7, 519.2)">
+    <circle r="19.472064188971693" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene-cli.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      349 lines
+    </text>
+  </g>
+  <g transform="translate(613.4, 389.9)">
+    <circle r="12.994995826374387" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene-md-package
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      38 lines
+    </text>
+  </g>
+  <g transform="translate(545.1, 416.2)">
+    <circle r="17.353230582539894" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene-md-simple.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      164 lines
+    </text>
+  </g>
+  <g transform="translate(165.2, 366.2)">
+    <circle r="19.516827202382103" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene-md.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      284 lines
+    </text>
+  </g>
+  <g transform="translate(429.5, 477.9)">
+    <circle r="12.61725046566048" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      36 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="12.565151067676132" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      37 lines
+    </text>
+  </g>
+  <g transform="translate(578.7, 617.9)">
+    <circle r="13.456877203488721" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      laws.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      63 lines
+    </text>
+  </g>
+  <g transform="translate(459.7, 164.6)">
+    <circle r="14.130375285612676" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      vectors.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      79 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="20.65879918189662" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      geometry.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      426 lines
+    </text>
+  </g>
+  <g transform="translate(566.9, 282.0)">
+    <circle r="17.19513724677994" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      201 lines
+    </text>
+  </g>
+  <g transform="translate(970.0, 323.8)">
+    <circle r="12.640075756488816" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      36 lines
+    </text>
+  </g>
+  <g transform="translate(922.6, 408.2)">
+    <circle r="15.439669107583658" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gene.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      117 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="17.865112840894273" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      252 lines
+    </text>
+  </g>
+  <g transform="translate(470.1, 50.0)">
+    <circle r="15.62672195865408" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      161 lines
+    </text>
+  </g>
+  <g transform="translate(378.1, 277.9)">
+    <circle r="11.676305461424022" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ceremony-record
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      12 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.505992817228334" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      citizens.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      15 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="11.74928556845359" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      genesis-manifes
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      12 lines
+    </text>
+  </g>
+  <g transform="translate(436.3, 582.4)">
+    <circle r="14.98998997994986" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      constitution.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      81 lines
+    </text>
+  </g>
+  <g transform="translate(783.9, 348.9)">
+    <circle r="16.463745044476923" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      h8-plan.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      185 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="14.737087712930805" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      plan.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      117 lines
+    </text>
+  </g>
+  <g transform="translate(773.4, 484.4)">
+    <circle r="12.142428528562855" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      rfc-003-receipt
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      19 lines
+    </text>
+  </g>
+  <g transform="translate(672.1, 266.9)">
+    <circle r="13.60555127546399" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      0000-template.m
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      77 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="13.776241517699841" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      RFC-001-founder
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      64 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="14.219004621945796" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      RFC-002-sustain
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      90 lines
+    </text>
+  </g>
+  <g transform="translate(667.9, 334.6)">
+    <circle r="12.114237451186597" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      RFC-003-inter-c
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      20 lines
+    </text>
+  </g>
+  <g transform="translate(571.5, 50.0)">
+    <circle r="14.857983120596447" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      RFC-003-inter-c
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      104 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.85657137141714" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      h10-status.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      41 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.865309756378881" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      h7-federation-s
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      41 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="11.959591794226542" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      h8-status.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      21 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.59422435421457" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      h9-status.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      35 lines
+    </text>
+  </g>
+  <g transform="translate(618.8, 238.9)">
+    <circle r="12.681417535558385" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      29 lines
+    </text>
+  </g>
+  <g transform="translate(412.8, 750.0)">
+    <circle r="11.992485884517128" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      map.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      16 lines
+    </text>
+  </g>
+  <g transform="translate(784.4, 684.9)">
+    <circle r="11.456021977856103" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      chamber-a.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      7 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="11.452583904633395" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      chamber-h.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      7 lines
+    </text>
+  </g>
+  <g transform="translate(392.9, 662.4)">
+    <circle r="11.791647286716891" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      city-key.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      10 lines
+    </text>
+  </g>
+  <g transform="translate(839.1, 50.0)">
+    <circle r="11.54596248337403" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      founder-revocat
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      9 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="18.374365647617736" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      spec.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      316 lines
+    </text>
+  </g>
+  <g transform="translate(853.3, 691.0)">
+    <circle r="13.168595903550973" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      car.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      48 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="17.714272486761146" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      249 lines
+    </text>
+  </g>
+  <g transform="translate(724.0, 750.0)">
+    <circle r="14.110960958218893" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      .rustc_info.jso
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      1 lines
+    </text>
+  </g>
+  <g transform="translate(844.4, 469.6)">
+    <circle r="14.110960958218893" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      .rustc_info.jso
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      1 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="17.77946013551069" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      typescript.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      215 lines
+    </text>
+  </g>
+  <g transform="translate(469.5, 535.9)">
+    <circle r="15.720139858430038" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      spec.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      157 lines
+    </text>
+  </g>
+  <g transform="translate(495.8, 350.8)">
+    <circle r="13.275667870831839" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      types.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      51 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="13.064310689208913" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      53 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="17.140028011149536" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      drift-metrics.y
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      193 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="12.745906043549196" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      spec.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      29 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="14.558508528016592" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      topics.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      116 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="15.90592922409336" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      properties.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      137 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="15.10881590977792" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      runplan.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      85 lines
+    </text>
+  </g>
+  <g transform="translate(720.9, 50.0)">
+    <circle r="16.656575696257047" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      surgery-rules.y
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      143 lines
+    </text>
+  </g>
+  <g transform="translate(411.0, 50.0)">
+    <circle r="23.773888339898797" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      organism-cli.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      700 lines
+    </text>
+  </g>
+  <g transform="translate(749.6, 410.9)">
+    <circle r="13.255764119219942" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      manifest.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      52 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="11.676305461424022" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ceremony-record
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      12 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="12.505992817228334" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      citizens.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      15 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="11.74928556845359" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      genesis-manifes
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      12 lines
+    </text>
+  </g>
+  <g transform="translate(598.7, 180.4)">
+    <circle r="16.140846847137617" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      TIMECAPSULE-202
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      139 lines
+    </text>
+  </g>
+  <g transform="translate(490.7, 726.9)">
+    <circle r="11.797220075561142" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      analytics.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="11.17898261225516" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      analytics.recei
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(1024.7, 469.9)">
+    <circle r="11.846618531261939" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ethics.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="11.161895003862226" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ethics.receipt.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(388.2, 343.1)">
+    <circle r="11.854723699099141" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      vision.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      14 lines
+    </text>
+  </g>
+  <g transform="translate(257.9, 548.9)">
+    <circle r="11.161895003862226" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      vision.receipt.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      8 lines
+    </text>
+  </g>
+  <g transform="translate(551.9, 505.1)">
+    <circle r="11.70293863659264" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      TIMECAPSULE-202
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      12 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="12.014944167960989" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      TIMECAPSULE-202
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      15 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="10.916515138991167" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      trace.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      2 lines
+    </text>
+  </g>
+  <g transform="translate(265.8, 405.0)">
+    <circle r="20.656453443805777" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      package-lock.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      314 lines
+    </text>
+  </g>
+  <g transform="translate(1036.4, 355.8)">
+    <circle r="13.619392214170771" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      package.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      54 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="18.99110671719561" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      index.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      295 lines
+    </text>
+  </g>
+  <g transform="translate(585.0, 564.3)">
+    <circle r="12.0591260281974" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      package.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      24 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.48922183316305" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      kill-switch.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      232 lines
+    </text>
+  </g>
+  <g transform="translate(320.6, 260.6)">
+    <circle r="15.316013544000805" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      agent-policy.ya
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      97 lines
+    </text>
+  </g>
+  <g transform="translate(872.3, 533.1)">
+    <circle r="14.279018579066934" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      economy.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      67 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.042350536008318" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      ethics.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      133 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="18.00874522007037" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lattice.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      232 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="17.26498451478047" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      noise-budget.ya
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      197 lines
+    </text>
+  </g>
+  <g transform="translate(453.7, 750.0)">
+    <circle r="13.525620512760838" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      silence.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      41 lines
+    </text>
+  </g>
+  <g transform="translate(692.1, 388.4)">
+    <circle r="14.316248370981448" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      resonance-ledge
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      75 lines
+    </text>
+  </g>
+  <g transform="translate(345.2, 50.0)">
+    <circle r="13.289376840679704" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      46 lines
+    </text>
+  </g>
+  <g transform="translate(879.4, 167.8)">
+    <circle r="13.848376280978771" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      FOCUS.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      63 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="13.529872518944558" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      OBSERVE.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      53 lines
+    </text>
+  </g>
+  <g transform="translate(887.2, 613.0)">
+    <circle r="13.439476704383967" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      REDUCE.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      53 lines
+    </text>
+  </g>
+  <g transform="translate(542.1, 222.3)">
+    <circle r="15.116639522186412" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      index.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      79 lines
+    </text>
+  </g>
+  <g transform="translate(559.3, 669.9)">
+    <circle r="16.429618962271405" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      schema.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      165 lines
+    </text>
+  </g>
+  <g transform="translate(500.7, 637.9)">
+    <circle r="16.686553671361654" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      update-scores.j
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      167 lines
+    </text>
+  </g>
+  <g transform="translate(907.4, 300.9)">
+    <circle r="17.1442284397967" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      negentropy-metr
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      201 lines
+    </text>
+  </g>
+  <g transform="translate(638.1, 630.5)">
+    <circle r="19.19565114605812" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      schema.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      273 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="17.278049189171504" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      egyptian_mdc.ya
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      148 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="16.457553716385178" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      spec.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      177 lines
+    </text>
+  </g>
+  <g transform="translate(558.8, 352.1)">
+    <circle r="12.461706725018235" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      endgame.yaml
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      19 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="13.880721582386451" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      run-tests.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      68 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="16.772001181334804" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      gen_state_md.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      157 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="19.00888450364417" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      measure-distort
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      219 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="18.043009387039156" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      soul-music.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      217 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="14.684015371452148" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      package.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      90 lines
+    </text>
+  </g>
+  <g transform="translate(585.4, 107.0)">
+    <circle r="14.459820624195551" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      intercity-ucan.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      87 lines
+    </text>
+  </g>
+  <g transform="translate(303.8, 481.0)">
+    <circle r="14.96789693934969" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      soul-music-λ-fo
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      126 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="16.649060083951717" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      PL-SPEC-01-gene
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      227 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="14.870318264754367" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      PL-SPEC-05-inte
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      103 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.000833275471" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      causal-receipt.
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      144 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="15.502726596879043" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      registry.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      139 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="17.97370679169983" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      test-lambda-pur
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      227 lines
+    </text>
+  </g>
+  <g transform="translate(637.5, 691.7)">
+    <circle r="15.086255990411807" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      test-memory.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      87 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="16.640783086353597" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      launch.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      229 lines
+    </text>
+  </g>
+  <g transform="translate(356.2, 442.1)">
+    <circle r="15.606246516163912" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      grok-integratio
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      109 lines
+    </text>
+  </g>
+  <g transform="translate(225.3, 328.5)">
+    <circle r="16.852736679604725" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      policy-integrat
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      152 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="16.6385239323211" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      pure-memory-tes
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      163 lines
+    </text>
+  </g>
+  <g transform="translate(705.9, 646.8)">
+    <circle r="17.134423592694787" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      surgeon-integra
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      147 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="16.75721836261046" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      base-protocol.m
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      191 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 50.0)">
+    <circle r="16.353739056650028" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      protocol-rosett
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      180 lines
+    </text>
+  </g>
+  <g transform="translate(515.9, 578.0)">
+    <circle r="15.332916650389354" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      one.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      100 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="20.077698149875296" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      desugar.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      382 lines
+    </text>
+  </g>
+  <g transform="translate(614.0, 317.6)">
+    <circle r="13.383784863137727" fill="#f59e0b" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      tsconfig.json
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      47 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 50.0)">
+    <circle r="17.83198569968051" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      generator.ts
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      218 lines
+    </text>
+  </g>
+  <g transform="translate(928.5, 480.9)">
+    <circle r="16.973521348644457" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      spec.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      206 lines
+    </text>
+  </g>
+  <g transform="translate(1150.0, 750.0)">
+    <circle r="13.66333181680284" fill="#10b981" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      README.md
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      60 lines
+    </text>
+  </g>
+  <g transform="translate(296.7, 328.8)">
+    <circle r="19.341841360245848" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      lambda-wasm.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      411 lines
+    </text>
+  </g>
+  <g transform="translate(50.0, 750.0)">
+    <circle r="19.264987857520374" fill="#3178c6" stroke="#fff" stroke-width="2" opacity="0.9" filter="url(#glow)"/>
+    <text y="5" text-anchor="middle" fill="#fff" font-size="10" font-family="monospace">
+      runtime.js
+    </text>
+    <text y="18" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace">
+      337 lines
+    </text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(50, 700)">
+    <rect x="-10" y="-20" width="300" height="80" fill="#000" opacity="0.5" rx="5"/>
+
+    <circle cx="0" cy="0" r="8" fill="#3178c6"/>
+    <text x="15" y="4" fill="#fff" font-size="11" font-family="monospace">Module (85)</text>
+
+    <circle cx="100" cy="0" r="8" fill="#10b981"/>
+    <text x="115" y="4" fill="#fff" font-size="11" font-family="monospace">Concept (88)</text>
+
+    <circle cx="200" cy="0" r="8" fill="#f59e0b"/>
+    <text x="215" y="4" fill="#fff" font-size="11" font-family="monospace">Asset</text>
+
+    <text x="0" y="25" fill="#666" font-size="10" font-family="monospace">
+      Total: 262 nodes | 13 edges | 45256 lines
+    </text>
+    <text x="0" y="40" fill="#666" font-size="9" font-family="monospace">
+      Generated: 9/15/2025, 12:19:13 PM
+    </text>
+  </g>
+</svg>
+      </div>
+      <div class="controls">
+        <button onclick="location.reload()">🔄 Refresh</button>
+        <button onclick="window.open('real-repo-lvg.json')">📦 View JSON</button>
+        <button onclick="downloadSVG()">💾 Download SVG</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function downloadSVG() {
+      const svg = document.querySelector('svg').outerHTML;
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'pure-lambda-graph.svg';
+      a.click();
+    }
+  </script>
+</body>
+</html>

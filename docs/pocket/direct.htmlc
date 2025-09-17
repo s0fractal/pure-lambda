@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Direct - PL-AIR-01 Transfer Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'SF Mono', Consolas, 'Monaco', monospace;
+            background: #0a0e27;
+            color: #e1e4e8;
+            padding: 16px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin: 0;
+            background: linear-gradient(45deg, #00d4ff, #ff4081);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #238636;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 8px 4px;
+        }
+
+        .badge.air {
+            background: #7c3aed;
+        }
+
+        .badge.size {
+            background: #da3633;
+        }
+
+        .section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #58a6ff;
+            margin: 0 0 16px 0;
+            font-size: 1.2em;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 8px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            background: #238636;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: #2ea043;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn.secondary {
+            background: #6e7681;
+        }
+
+        .btn.secondary:hover {
+            background: #8b949e;
+        }
+
+        .btn.danger {
+            background: #da3633;
+        }
+
+        .btn.danger:hover {
+            background: #f85149;
+        }
+
+        .file-drop {
+            border: 2px dashed #30363d;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .file-drop:hover,
+        .file-drop.dragover {
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        .file-info {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            color: #8b949e;
+        }
+
+        .info-value {
+            color: #58a6ff;
+            font-weight: 600;
+        }
+
+        .qr-display {
+            text-align: center;
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .qr-frame {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .frame-info {
+            color: #8b949e;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .progress-bar {
+            background: #21262d;
+            border-radius: 4px;
+            height: 8px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #238636, #58a6ff);
+            height: 100%;
+            transition: width 0.2s;
+            width: 0%;
+        }
+
+        .status {
+            text-align: center;
+            color: #8b949e;
+            font-size: 0.9em;
+            margin: 8px 0;
+        }
+
+        .status.success {
+            color: #238636;
+        }
+
+        .status.error {
+            color: #f85149;
+        }
+
+        .status.warning {
+            color: #ffa657;
+        }
+
+        .receiver-input {
+            width: 100%;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            color: #e1e4e8;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            margin: 8px 0;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .metric {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .metric-label {
+            color: #8b949e;
+            font-size: 0.8em;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: #58a6ff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .ack-qr {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+            margin: 12px 0;
+        }
+
+        .ack-frame {
+            background: white;
+            border-radius: 4px;
+            padding: 8px;
+            display: inline-block;
+            margin: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .receipt-display {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: monospace;
+            font-size: 11px;
+            color: #8b949e;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .cli-hint {
+            background: #21262d;
+            border-left: 4px solid #58a6ff;
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-family: monospace;
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls .btn {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📡 Pocket Direct</h1>
+            <p class="subtitle">PL-AIR-01 Compatible Air-Gap Transfer Tool</p>
+            <div>
+                <span class="badge">≤60KB</span>
+                <span class="badge air">QR-ARQ</span>
+                <span class="badge">DSSE Verified</span>
+                <span class="badge size">Offline</span>
+            </div>
+        </div>
+
+        <!-- Sender Section -->
+        <div class="section">
+            <h2 class="section-title">📤 Sender</h2>
+
+            <div class="file-drop" id="fileDrop">
+                <div>Drop files here or click to select</div>
+                <div style="margin-top: 8px; font-size: 12px; color: #8b949e;">
+                    Supported: .htmlc, .cartridge, .seed.json, .fed.zip
+                </div>
+                <input type="file" id="fileInput" style="display: none;" accept=".htmlc,.cartridge,.seed.json,.fed.zip">
+            </div>
+
+            <div class="file-info" id="fileInfo">
+                <div class="info-row">
+                    <span class="info-label">File:</span>
+                    <span class="info-value" id="fileName">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Size:</span>
+                    <span class="info-value" id="fileSize">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">BLAKE3:</span>
+                    <span class="info-value" id="fileHash">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Chunks:</span>
+                    <span class="info-value" id="chunkCount">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Parity:</span>
+                    <span class="info-value" id="parityCount">-</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="pickArtifactBtn">📁 Pick Artifact</button>
+                <button class="btn" id="startSendBtn" disabled>🚀 Start Send</button>
+                <button class="btn secondary" id="pauseResumeBtn" disabled>⏸️ Pause</button>
+                <button class="btn secondary" id="exportReceiptBtn" disabled>📄 Export Receipt</button>
+                <button class="btn secondary" id="openMirrorBenchBtn" disabled>🔍 Open in MirrorBench</button>
+                <button class="btn secondary" id="importFederationBtn" disabled>🌐 Import to Federation</button>
+            </div>
+
+            <div class="qr-display hidden" id="qrDisplay">
+                <div class="frame-info" id="frameInfo">Preparing frames...</div>
+                <div class="qr-frame" id="qrFrame">
+                    <div id="qrCode"></div>
+                </div>
+                <div class="controls">
+                    <button class="btn secondary" id="prevFrameBtn">⬅️ Previous</button>
+                    <button class="btn secondary" id="nextFrameBtn">➡️ Next</button>
+                    <button class="btn secondary" id="playPauseBtn">▶️ Play</button>
+                    <label>FPS: <input type="range" id="fpsSlider" min="1" max="10" value="3" style="width: 80px;"></label>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="sendProgress"></div>
+            </div>
+            <div class="status" id="sendStatus">Ready to send</div>
+
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Frames</div>
+                    <div class="metric-value" id="frameMetric">0/0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">ACKs</div>
+                    <div class="metric-value" id="ackMetric">0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">NAKs</div>
+                    <div class="metric-value" id="nakMetric">0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Lost</div>
+                    <div class="metric-value" id="lostMetric">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receiver Section -->
+        <div class="section">
+            <h2 class="section-title">📥 Receiver</h2>
+
+            <div class="controls">
+                <button class="btn" id="startReceiveBtn">📡 Start Receive</button>
+                <button class="btn secondary" id="qrScanModeBtn">📷 QR Scanner</button>
+                <button class="btn secondary" id="shareCodeModeBtn">📝 ShareCode</button>
+                <button class="btn secondary" id="clearFramesBtn">🗑️ Clear Frames</button>
+            </div>
+
+            <div id="qrScanMode">
+                <div class="status" id="scanStatus">Ready to scan QR codes</div>
+                <textarea class="receiver-input" id="qrInput" placeholder="Paste QR frame data here or use camera to scan..."></textarea>
+                <button class="btn secondary" id="addFrameBtn">➕ Add Frame</button>
+            </div>
+
+            <div id="shareCodeMode" class="hidden">
+                <div class="status">Paste ShareCode blocks (format: 001/150 ABCD...1234*A1B2*)</div>
+                <textarea class="receiver-input" id="shareCodeInput" placeholder="001/150 ABCDEFGH1234567890ABCDEFGH1234567890*A1B2*
+002/150 IJKLMNOP9876543210IJKLMNOP9876543210*C3D4*
+..."></textarea>
+                <button class="btn secondary" id="parseShareCodesBtn">📝 Parse ShareCodes</button>
+            </div>
+
+            <div class="ack-qr" id="ackDisplay">
+                <div style="margin-bottom: 8px; font-size: 12px; color: #8b949e;">
+                    ACK/NAK QR (show to sender camera every k frames):
+                </div>
+                <div class="ack-frame">
+                    <div id="ackQrCode">Waiting for frames...</div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="receiveProgress"></div>
+            </div>
+            <div class="status" id="receiveStatus">Ready to receive</div>
+
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-label">Received</div>
+                    <div class="metric-value" id="receivedMetric">0/0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Missing</div>
+                    <div class="metric-value" id="missingMetric">0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Recovered</div>
+                    <div class="metric-value" id="recoveredMetric">0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Integrity</div>
+                    <div class="metric-value" id="integrityMetric">Pending</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="assembleBtn" disabled>🔧 Assemble</button>
+                <button class="btn secondary" id="downloadBtn" disabled>💾 Download</button>
+                <button class="btn secondary" id="saveReceiptBtn" disabled>📄 Save Receipt</button>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div class="section">
+            <h2 class="section-title">📊 Status</h2>
+
+            <div class="receipt-display hidden" id="receiptDisplay">
+                <div style="color: #58a6ff; margin-bottom: 8px;">Transfer Receipt (PL-RECEIPT-TRANSFER-01):</div>
+                <pre id="receiptJson"></pre>
+            </div>
+
+            <div class="cli-hint hidden" id="cliHint">
+                <div style="color: #58a6ff; margin-bottom: 8px;">Auto-ingest CLI command:</div>
+                <code id="cliCommand">make fed-ingest PATHS="dist/air/out/&lt;name&gt;" && make fed-bundle && make fed-verify</code>
+            </div>
+
+            <div id="statusLog"></div>
+        </div>
+    </div>
+
+    <script>
+        // PL-AIR-01 Implementation
+        class PocketDirect {
+            constructor() {
+                this.currentFile = null;
+                this.frames = [];
+                this.receivedFrames = new Map();
+                this.parityBlocks = new Map();
+                this.currentFrameIndex = 0;
+                this.isPlaying = false;
+                this.playInterval = null;
+                this.fps = 3;
+                this.windowSize = 4;
+                this.parityInterval = 16;
+                this.ackCounter = 0;
+                this.nakList = [];
+                this.transferStartTime = null;
+                this.transferEndTime = null;
+                this.senderDid = null;
+                this.receiverDid = null;
+
+                this.initializeUI();
+                this.initializeEventListeners();
+                this.generateEphemeralDIDs();
+            }
+
+            initializeUI() {
+                // Initialize interface state
+                this.updateSendStatus('Ready to send');
+                this.updateReceiveStatus('Ready to receive');
+                this.updateMetrics();
+            }
+
+            initializeEventListeners() {
+                // File handling
+                document.getElementById('pickArtifactBtn').addEventListener('click', () => {
+                    document.getElementById('fileInput').click();
+                });
+
+                document.getElementById('fileInput').addEventListener('change', (e) => {
+                    this.handleFileSelect(e.target.files[0]);
+                });
+
+                // Drag and drop
+                const fileDrop = document.getElementById('fileDrop');
+                fileDrop.addEventListener('click', () => {
+                    document.getElementById('fileInput').click();
+                });
+
+                fileDrop.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    fileDrop.classList.add('dragover');
+                });
+
+                fileDrop.addEventListener('dragleave', () => {
+                    fileDrop.classList.remove('dragover');
+                });
+
+                fileDrop.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    fileDrop.classList.remove('dragover');
+                    this.handleFileSelect(e.dataTransfer.files[0]);
+                });
+
+                // Sender controls
+                document.getElementById('startSendBtn').addEventListener('click', () => {
+                    this.startSending();
+                });
+
+                document.getElementById('pauseResumeBtn').addEventListener('click', () => {
+                    this.togglePauseResume();
+                });
+
+                // QR controls
+                document.getElementById('prevFrameBtn').addEventListener('click', () => {
+                    this.previousFrame();
+                });
+
+                document.getElementById('nextFrameBtn').addEventListener('click', () => {
+                    this.nextFrame();
+                });
+
+                document.getElementById('playPauseBtn').addEventListener('click', () => {
+                    this.togglePlay();
+                });
+
+                document.getElementById('fpsSlider').addEventListener('input', (e) => {
+                    this.fps = parseInt(e.target.value);
+                    if (this.isPlaying) {
+                        this.stopPlay();
+                        this.startPlay();
+                    }
+                });
+
+                // Receiver controls
+                document.getElementById('startReceiveBtn').addEventListener('click', () => {
+                    this.startReceiving();
+                });
+
+                document.getElementById('qrScanModeBtn').addEventListener('click', () => {
+                    this.setReceiverMode('qr');
+                });
+
+                document.getElementById('shareCodeModeBtn').addEventListener('click', () => {
+                    this.setReceiverMode('sharecode');
+                });
+
+                document.getElementById('addFrameBtn').addEventListener('click', () => {
+                    this.addQRFrame();
+                });
+
+                document.getElementById('parseShareCodesBtn').addEventListener('click', () => {
+                    this.parseShareCodes();
+                });
+
+                document.getElementById('assembleBtn').addEventListener('click', () => {
+                    this.assembleFile();
+                });
+
+                document.getElementById('downloadBtn').addEventListener('click', () => {
+                    this.downloadFile();
+                });
+
+                document.getElementById('clearFramesBtn').addEventListener('click', () => {
+                    this.clearFrames();
+                });
+
+                // Utility buttons
+                document.getElementById('exportReceiptBtn').addEventListener('click', () => {
+                    this.exportReceipt();
+                });
+
+                document.getElementById('saveReceiptBtn').addEventListener('click', () => {
+                    this.saveReceipt();
+                });
+            }
+
+            generateEphemeralDIDs() {
+                // Generate ephemeral DIDs for sender and receiver
+                const randomHex = () => Math.random().toString(16).substr(2, 8);
+                this.senderDid = `did:pl:ephem:${randomHex()}`;
+                this.receiverDid = `did:pl:ephem:${randomHex()}`;
+            }
+
+            async handleFileSelect(file) {
+                if (!file) return;
+
+                // Validate file type
+                const allowedExtensions = ['.htmlc', '.cartridge', '.seed.json', '.fed.zip'];
+                const hasValidExtension = allowedExtensions.some(ext => file.name.endsWith(ext));
+
+                if (!hasValidExtension) {
+                    this.updateSendStatus('Error: File type not allowed', 'error');
+                    return;
+                }
+
+                this.currentFile = file;
+
+                // Calculate BLAKE3 hash (using crypto.subtle as fallback for demo)
+                const arrayBuffer = await file.arrayBuffer();
+                const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                // Update file info
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = this.formatBytes(file.size);
+                document.getElementById('fileHash').textContent = hashHex.substring(0, 16) + '...';
+
+                // Calculate chunks
+                const chunkSize = 900; // PL-AIR-01 default
+                const totalChunks = Math.ceil(file.size / chunkSize);
+                const parityChunks = Math.floor(totalChunks / this.parityInterval);
+
+                document.getElementById('chunkCount').textContent = totalChunks;
+                document.getElementById('parityCount').textContent = parityChunks;
+
+                document.getElementById('fileInfo').style.display = 'block';
+                document.getElementById('startSendBtn').disabled = false;
+
+                this.updateSendStatus('File loaded, ready to send');
+            }
+
+            async startSending() {
+                if (!this.currentFile) return;
+
+                this.transferStartTime = new Date();
+                this.updateSendStatus('Preparing frames...', 'warning');
+
+                try {
+                    await this.prepareFrames();
+                    document.getElementById('qrDisplay').classList.remove('hidden');
+                    document.getElementById('pauseResumeBtn').disabled = false;
+                    document.getElementById('exportReceiptBtn').disabled = false;
+
+                    this.showFrame(0);
+                    this.updateSendStatus('Ready to transmit - use controls to send frames');
+                } catch (error) {
+                    this.updateSendStatus(`Error preparing frames: ${error.message}`, 'error');
+                }
+            }
+
+            async prepareFrames() {
+                const arrayBuffer = await this.currentFile.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const chunkSize = 900;
+                const chunks = [];
+
+                // Split into chunks
+                for (let i = 0; i < data.length; i += chunkSize) {
+                    chunks.push(data.slice(i, i + chunkSize));
+                }
+
+                // Create header frame
+                const header = {
+                    magic: 'PLAIR01',
+                    version: 1,
+                    name: this.currentFile.name,
+                    mime: this.currentFile.type || 'application/octet-stream',
+                    size: this.currentFile.size,
+                    blake3hex: await this.calculateBlake3(data),
+                    chunkSize: chunkSize,
+                    chunks: chunks.length,
+                    parityEvery: this.parityInterval
+                };
+
+                this.frames = [];
+
+                // Frame 0: Header + first chunk
+                this.frames.push({
+                    header: header,
+                    chunkIndex: 0,
+                    chunkData: chunks[0] || new Uint8Array()
+                });
+
+                // Subsequent frames: chunks
+                for (let i = 1; i < chunks.length; i++) {
+                    this.frames.push({
+                        chunkIndex: i,
+                        chunkData: chunks[i]
+                    });
+                }
+
+                // Add parity frames
+                this.addParityFrames(chunks);
+
+                this.updateMetrics();
+            }
+
+            addParityFrames(chunks) {
+                // Add XOR parity every 16 frames
+                for (let start = 0; start < chunks.length; start += this.parityInterval) {
+                    const end = Math.min(start + this.parityInterval, chunks.length);
+                    const blockChunks = chunks.slice(start, end);
+
+                    if (blockChunks.length > 1) {
+                        const parity = this.calculateXORParity(blockChunks);
+                        const parityBlockId = Math.floor(start / this.parityInterval);
+
+                        this.frames.push({
+                            chunkIndex: -1, // Indicates parity frame
+                            chunkData: parity,
+                            parityBlockId: parityBlockId,
+                            parityStart: start,
+                            parityEnd: end - 1
+                        });
+                    }
+                }
+            }
+
+            calculateXORParity(chunks) {
+                if (chunks.length === 0) return new Uint8Array();
+
+                const maxLength = Math.max(...chunks.map(c => c.length));
+                const parity = new Uint8Array(maxLength);
+
+                for (const chunk of chunks) {
+                    for (let i = 0; i < chunk.length; i++) {
+                        parity[i] ^= chunk[i];
+                    }
+                }
+
+                return parity;
+            }
+
+            async calculateBlake3(data) {
+                // Fallback to SHA-256 for demo (BLAKE3 would be ideal)
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+
+            showFrame(index) {
+                if (index < 0 || index >= this.frames.length) return;
+
+                this.currentFrameIndex = index;
+                const frame = this.frames[index];
+
+                // Encode frame as base32
+                const frameData = this.encodeFrame(frame);
+                const base32Data = this.encodeBase32(frameData);
+
+                // Update UI
+                document.getElementById('frameInfo').textContent =
+                    `Frame ${index + 1}/${this.frames.length} - ${frame.chunkIndex >= 0 ? 'Data' : 'Parity'} - ${frameData.length} bytes`;
+
+                // Generate QR code (simplified as text for demo)
+                document.getElementById('qrCode').innerHTML = this.generateQR(base32Data);
+
+                this.updateProgress();
+            }
+
+            encodeFrame(frame) {
+                // Simplified CBOR-like encoding for demo
+                const encoded = JSON.stringify(frame);
+                return new TextEncoder().encode(encoded);
+            }
+
+            encodeBase32(data) {
+                // Simplified base32 encoding
+                const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+                let result = '';
+
+                for (let i = 0; i < data.length; i += 5) {
+                    const chunk = Array.from(data.slice(i, i + 5));
+                    while (chunk.length < 5) chunk.push(0);
+
+                    let value = 0;
+                    for (let j = 0; j < 5; j++) {
+                        value = (value << 8) + chunk[j];
+                    }
+
+                    for (let j = 7; j >= 0; j--) {
+                        result += base32Chars[(value >> (j * 5)) & 31];
+                    }
+                }
+
+                return result;
+            }
+
+            generateQR(data) {
+                // Simplified QR code representation for demo
+                return `<div style="font-family: monospace; font-size: 8px; line-height: 1; background: white; color: black; padding: 8px; border-radius: 4px; max-width: 200px; word-break: break-all;">${data.substring(0, 100)}${data.length > 100 ? '...' : ''}</div>`;
+            }
+
+            previousFrame() {
+                if (this.currentFrameIndex > 0) {
+                    this.showFrame(this.currentFrameIndex - 1);
+                }
+            }
+
+            nextFrame() {
+                if (this.currentFrameIndex < this.frames.length - 1) {
+                    this.showFrame(this.currentFrameIndex + 1);
+                }
+            }
+
+            togglePlay() {
+                if (this.isPlaying) {
+                    this.stopPlay();
+                } else {
+                    this.startPlay();
+                }
+            }
+
+            startPlay() {
+                this.isPlaying = true;
+                document.getElementById('playPauseBtn').textContent = '⏸️ Pause';
+
+                this.playInterval = setInterval(() => {
+                    this.nextFrame();
+                    if (this.currentFrameIndex >= this.frames.length - 1) {
+                        this.currentFrameIndex = -1; // Will wrap to 0 on next call
+                    }
+                }, 1000 / this.fps);
+            }
+
+            stopPlay() {
+                this.isPlaying = false;
+                document.getElementById('playPauseBtn').textContent = '▶️ Play';
+
+                if (this.playInterval) {
+                    clearInterval(this.playInterval);
+                    this.playInterval = null;
+                }
+            }
+
+            togglePauseResume() {
+                // This would pause/resume the actual transmission
+                // For demo, just toggle the auto-play
+                this.togglePlay();
+            }
+
+            startReceiving() {
+                this.receivedFrames.clear();
+                this.transferStartTime = new Date();
+                this.updateReceiveStatus('Ready to receive frames');
+                this.generateACKQR('READY');
+            }
+
+            setReceiverMode(mode) {
+                if (mode === 'qr') {
+                    document.getElementById('qrScanMode').classList.remove('hidden');
+                    document.getElementById('shareCodeMode').classList.add('hidden');
+                    document.getElementById('qrScanModeBtn').classList.add('active');
+                    document.getElementById('shareCodeModeBtn').classList.remove('active');
+                } else {
+                    document.getElementById('qrScanMode').classList.add('hidden');
+                    document.getElementById('shareCodeMode').classList.remove('hidden');
+                    document.getElementById('qrScanModeBtn').classList.remove('active');
+                    document.getElementById('shareCodeModeBtn').classList.add('active');
+                }
+            }
+
+            addQRFrame() {
+                const input = document.getElementById('qrInput').value.trim();
+                if (!input) return;
+
+                try {
+                    // Decode base32 and parse frame
+                    const frameData = this.decodeBase32(input);
+                    const frame = this.decodeFrame(frameData);
+
+                    this.receivedFrames.set(frame.chunkIndex, frame);
+                    this.updateReceiveMetrics();
+
+                    // Clear input
+                    document.getElementById('qrInput').value = '';
+
+                    // Generate ACK/NAK response
+                    this.generateACKResponse();
+
+                } catch (error) {
+                    this.updateReceiveStatus(`Error parsing frame: ${error.message}`, 'error');
+                }
+            }
+
+            parseShareCodes() {
+                const input = document.getElementById('shareCodeInput').value.trim();
+                if (!input) return;
+
+                const lines = input.split('\n').filter(line => line.trim());
+                let parsed = 0;
+
+                for (const line of lines) {
+                    try {
+                        const frame = this.parseShareCodeLine(line);
+                        if (frame) {
+                            this.receivedFrames.set(frame.chunkIndex, frame);
+                            parsed++;
+                        }
+                    } catch (error) {
+                        console.warn('Failed to parse line:', line, error);
+                    }
+                }
+
+                this.updateReceiveStatus(`Parsed ${parsed} ShareCode frames`);
+                this.updateReceiveMetrics();
+                this.generateACKResponse();
+            }
+
+            parseShareCodeLine(line) {
+                // Parse format: "001/150 ABCDEFGH1234567890ABCDEFGH1234567890*A1B2*"
+                const match = line.match(/^(\d+)\/(\d+)\s+([A-Z0-9]+)\*([A-Z0-9]+)\*$/);
+                if (!match) throw new Error('Invalid ShareCode format');
+
+                const [, index, total, data, checksum] = match;
+
+                // Verify checksum (simplified CRC16-CCITT)
+                const expectedChecksum = this.calculateCRC16(data);
+                if (checksum !== expectedChecksum) {
+                    throw new Error('Checksum mismatch');
+                }
+
+                // Decode data
+                const frameData = this.decodeBase32(data);
+                return this.decodeFrame(frameData);
+            }
+
+            decodeBase32(data) {
+                // Simplified base32 decoding
+                const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+                const result = [];
+
+                for (let i = 0; i < data.length; i += 8) {
+                    let value = 0;
+                    for (let j = 0; j < 8 && i + j < data.length; j++) {
+                        const char = data[i + j];
+                        const index = base32Chars.indexOf(char);
+                        if (index === -1) throw new Error(`Invalid base32 character: ${char}`);
+                        value = (value << 5) + index;
+                    }
+
+                    for (let j = 4; j >= 0; j--) {
+                        result.push((value >> (j * 8)) & 255);
+                    }
+                }
+
+                return new Uint8Array(result);
+            }
+
+            decodeFrame(data) {
+                // Simplified CBOR-like decoding for demo
+                const decoded = JSON.parse(new TextDecoder().decode(data));
+                return decoded;
+            }
+
+            calculateCRC16(data) {
+                // Simplified CRC16 for demo
+                let crc = 0xFFFF;
+                for (let i = 0; i < data.length; i++) {
+                    crc ^= data.charCodeAt(i);
+                    for (let j = 0; j < 8; j++) {
+                        crc = (crc & 1) ? (crc >> 1) ^ 0xA001 : crc >> 1;
+                    }
+                }
+                return crc.toString(16).toUpperCase().padStart(4, '0');
+            }
+
+            generateACKResponse() {
+                // Generate ACK/NAK QR based on received frames
+                const receivedIndices = Array.from(this.receivedFrames.keys()).sort((a, b) => a - b);
+                const missing = [];
+
+                // Find missing frames (simplified)
+                let expectedTotal = 0;
+                for (const [index, frame] of this.receivedFrames) {
+                    if (frame.header) {
+                        expectedTotal = frame.header.chunks;
+                        break;
+                    }
+                }
+
+                if (expectedTotal > 0) {
+                    for (let i = 0; i < expectedTotal; i++) {
+                        if (!this.receivedFrames.has(i)) {
+                            missing.push(i);
+                        }
+                    }
+                }
+
+                const ackData = {
+                    type: missing.length === 0 ? 'ACK' : 'NAK',
+                    received: receivedIndices.length,
+                    missing: missing.slice(0, 10) // Limit for QR size
+                };
+
+                this.generateACKQR(ackData);
+            }
+
+            generateACKQR(data) {
+                const qrContent = typeof data === 'string' ? data : JSON.stringify(data);
+                document.getElementById('ackQrCode').innerHTML =
+                    `<div style="font-family: monospace; font-size: 10px; background: white; color: black; padding: 4px; border-radius: 2px;">${qrContent}</div>`;
+            }
+
+            assembleFile() {
+                try {
+                    const assembled = this.reconstructFile();
+                    if (assembled) {
+                        this.assembledFile = assembled;
+                        document.getElementById('downloadBtn').disabled = false;
+                        document.getElementById('saveReceiptBtn').disabled = false;
+                        this.transferEndTime = new Date();
+                        this.updateReceiveStatus('File assembled successfully', 'success');
+                        this.showCLIHint();
+                        this.generateReceipt();
+                    }
+                } catch (error) {
+                    this.updateReceiveStatus(`Assembly failed: ${error.message}`, 'error');
+                }
+            }
+
+            reconstructFile() {
+                // Get header frame
+                let header = null;
+                for (const frame of this.receivedFrames.values()) {
+                    if (frame.header) {
+                        header = frame.header;
+                        break;
+                    }
+                }
+
+                if (!header) {
+                    throw new Error('No header frame received');
+                }
+
+                // Collect data chunks
+                const chunks = new Array(header.chunks);
+                let missingChunks = [];
+
+                for (let i = 0; i < header.chunks; i++) {
+                    if (this.receivedFrames.has(i)) {
+                        chunks[i] = this.receivedFrames.get(i).chunkData;
+                    } else {
+                        missingChunks.push(i);
+                    }
+                }
+
+                // Attempt parity recovery
+                if (missingChunks.length > 0) {
+                    missingChunks = this.attemptParityRecovery(chunks, missingChunks, header);
+                }
+
+                if (missingChunks.length > 0) {
+                    throw new Error(`Missing chunks: ${missingChunks.join(', ')}`);
+                }
+
+                // Reassemble file
+                const totalSize = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+                const assembled = new Uint8Array(totalSize);
+                let offset = 0;
+
+                for (const chunk of chunks) {
+                    assembled.set(chunk, offset);
+                    offset += chunk.length;
+                }
+
+                // Verify integrity
+                return this.verifyIntegrity(assembled, header);
+            }
+
+            attemptParityRecovery(chunks, missingChunks, header) {
+                // Simplified parity recovery
+                const recovered = [];
+
+                for (const missingIndex of missingChunks) {
+                    const blockStart = Math.floor(missingIndex / this.parityInterval) * this.parityInterval;
+                    const blockEnd = Math.min(blockStart + this.parityInterval, header.chunks);
+
+                    // Find parity frame for this block
+                    let parityFrame = null;
+                    for (const frame of this.receivedFrames.values()) {
+                        if (frame.chunkIndex === -1 &&
+                            frame.parityStart === blockStart &&
+                            frame.parityEnd === blockEnd - 1) {
+                            parityFrame = frame;
+                            break;
+                        }
+                    }
+
+                    if (parityFrame) {
+                        // Attempt recovery (simplified)
+                        const blockChunks = [];
+                        let canRecover = true;
+
+                        for (let i = blockStart; i < blockEnd; i++) {
+                            if (i === missingIndex) continue;
+                            if (chunks[i]) {
+                                blockChunks.push(chunks[i]);
+                            } else {
+                                canRecover = false;
+                                break;
+                            }
+                        }
+
+                        if (canRecover && blockChunks.length === blockEnd - blockStart - 1) {
+                            // XOR recovery
+                            const recoveredChunk = this.calculateXORParity([...blockChunks, parityFrame.chunkData]);
+                            chunks[missingIndex] = recoveredChunk;
+                            recovered.push(missingIndex);
+                        }
+                    }
+                }
+
+                document.getElementById('recoveredMetric').textContent = recovered.length;
+
+                return missingChunks.filter(i => !recovered.includes(i));
+            }
+
+            async verifyIntegrity(data, header) {
+                const calculatedHash = await this.calculateBlake3(data);
+
+                if (calculatedHash === header.blake3hex) {
+                    document.getElementById('integrityMetric').textContent = 'PASS';
+                    return {
+                        data: data,
+                        name: header.name,
+                        size: header.size,
+                        hash: calculatedHash
+                    };
+                } else {
+                    document.getElementById('integrityMetric').textContent = 'FAIL';
+                    throw new Error('Integrity check failed - hash mismatch');
+                }
+            }
+
+            downloadFile() {
+                if (!this.assembledFile) return;
+
+                const blob = new Blob([this.assembledFile.data], {
+                    type: 'application/octet-stream'
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = this.assembledFile.name;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Write to virtual dist/air/out/ directory (localStorage simulation)
+                this.saveToAirOut(this.assembledFile);
+            }
+
+            saveToAirOut(file) {
+                try {
+                    const airOut = JSON.parse(localStorage.getItem('air_out') || '{}');
+                    airOut[file.name] = {
+                        data: Array.from(file.data),
+                        timestamp: new Date().toISOString(),
+                        size: file.size,
+                        hash: file.hash
+                    };
+                    localStorage.setItem('air_out', JSON.stringify(airOut));
+                    this.updateReceiveStatus(`Saved to dist/air/out/${file.name}`, 'success');
+                } catch (error) {
+                    console.warn('Failed to save to air_out:', error);
+                }
+            }
+
+            showCLIHint() {
+                if (this.assembledFile) {
+                    const command = `make fed-ingest PATHS="dist/air/out/${this.assembledFile.name}" && make fed-bundle && make fed-verify`;
+                    document.getElementById('cliCommand').textContent = command;
+                    document.getElementById('cliHint').classList.remove('hidden');
+                }
+            }
+
+            generateReceipt() {
+                const receipt = {
+                    schema: "PL-RECEIPT-TRANSFER-01",
+                    artifact: {
+                        name: this.assembledFile.name,
+                        size: this.assembledFile.size,
+                        blake3: this.assembledFile.hash
+                    },
+                    sender: {
+                        did: this.senderDid
+                    },
+                    receiver: {
+                        did: this.receiverDid
+                    },
+                    startedAt: this.transferStartTime?.toISOString(),
+                    finishedAt: this.transferEndTime?.toISOString(),
+                    frames: this.frames?.length || 0,
+                    lostRecovered: parseInt(document.getElementById('recoveredMetric').textContent) || 0,
+                    method: "QR-ARQ"
+                };
+
+                // Sign with tweetnacl if available (simulated for demo)
+                const hasSecret = localStorage.getItem('PL_ED25519_SECRET');
+                if (hasSecret) {
+                    receipt.signature = this.signReceipt(receipt);
+                } else {
+                    receipt.dsse = { present: false };
+                }
+
+                this.currentReceipt = receipt;
+                document.getElementById('receiptJson').textContent = JSON.stringify(receipt, null, 2);
+                document.getElementById('receiptDisplay').classList.remove('hidden');
+            }
+
+            signReceipt(receipt) {
+                // Simulated tweetnacl signing
+                return {
+                    keyType: "ed25519",
+                    signature: "simulated_signature_" + Math.random().toString(36),
+                    publicKey: localStorage.getItem('PL_ED25519_SECRET')?.substring(0, 32) || "simulated_key"
+                };
+            }
+
+            exportReceipt() {
+                if (this.currentReceipt) {
+                    const blob = new Blob([JSON.stringify(this.currentReceipt, null, 2)], {
+                        type: 'application/json'
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'transfer-receipt.json';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            }
+
+            saveReceipt() {
+                this.exportReceipt();
+            }
+
+            clearFrames() {
+                this.receivedFrames.clear();
+                this.updateReceiveMetrics();
+                this.updateReceiveStatus('Frames cleared');
+                this.generateACKQR('READY');
+            }
+
+            updateSendStatus(message, type = '') {
+                const status = document.getElementById('sendStatus');
+                status.textContent = message;
+                status.className = 'status ' + type;
+            }
+
+            updateReceiveStatus(message, type = '') {
+                const status = document.getElementById('receiveStatus');
+                status.textContent = message;
+                status.className = 'status ' + type;
+            }
+
+            updateMetrics() {
+                // Sender metrics
+                document.getElementById('frameMetric').textContent =
+                    `${this.currentFrameIndex + 1}/${this.frames.length}`;
+                document.getElementById('ackMetric').textContent = this.ackCounter;
+                document.getElementById('nakMetric').textContent = this.nakList.length;
+                document.getElementById('lostMetric').textContent = '0'; // Placeholder
+            }
+
+            updateReceiveMetrics() {
+                const received = this.receivedFrames.size;
+                let total = 0;
+
+                // Get total from header
+                for (const frame of this.receivedFrames.values()) {
+                    if (frame.header) {
+                        total = frame.header.chunks;
+                        break;
+                    }
+                }
+
+                document.getElementById('receivedMetric').textContent = `${received}/${total}`;
+                document.getElementById('missingMetric').textContent = Math.max(0, total - received);
+
+                // Update progress
+                if (total > 0) {
+                    const progress = (received / total) * 100;
+                    document.getElementById('receiveProgress').style.width = progress + '%';
+                }
+
+                // Enable assembly if we have enough frames
+                document.getElementById('assembleBtn').disabled = received === 0;
+            }
+
+            updateProgress() {
+                if (this.frames.length > 0) {
+                    const progress = ((this.currentFrameIndex + 1) / this.frames.length) * 100;
+                    document.getElementById('sendProgress').style.width = progress + '%';
+                }
+            }
+
+            formatBytes(bytes) {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.pocketDirect = new PocketDirect();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": "v1.0.1",
+  "timestamp": 1757752079,
+  "city": "kyiv-prime",
+  "genesis_cid": "QmGenesis9395c0dabbd092356cad6a824db958bab4041833d5b8",
+  "head_cid": "QmHeadc1b0f7d408508f6656efe986161e6cf07c3ad773790b",
+  "citizens": 6,
+  "contracts": 3,
+  "genes": 12,
+  "integrity": 0.99
+}

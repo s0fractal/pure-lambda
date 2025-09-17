@@ -1,0 +1,38 @@
+{
+  "name": "replication_fork",
+  "phash": "op_eec395c2270b32551c50c240602fbca4c1f54cdbab0e",
+  "structure": {
+    "pattern": "FORK",
+    "graph": "SPLIT ▶ (FOCUS || DELAY→FOCUS) ▶ MERGE",
+    "atoms_used": ["SPLIT", "FOCUS", "DELAY", "MERGE", "THEN"]
+  },
+  "receipt": {
+    "hash": {
+      "algo": "phash-b2-operon",
+      "value": "op_eec395c2270b32551c50c240602fbca4c1f54cdbab0e"
+    },
+    "gate": "G0",
+    "lattice_ref": "Qm62651d02...",
+    "pac_bound": "0.0%",
+    "confidence": "100%",
+    "proofs": [
+      "deterministic",
+      "causal_delay",
+      "no_algebraic_loops"
+    ],
+    "profile": "b2-operon"
+  },
+  "dna_analogy": {
+    "helicase": "SPLIT",
+    "leading_strand": "FOCUS (continuous)",
+    "lagging_strand": "DELAY→FOCUS (Okazaki)",
+    "ligase": "MERGE"
+  },
+  "test_results": {
+    "inputs": 5,
+    "outputs": 6,
+    "errors_detected": 1,
+    "errors_repaired": 1,
+    "causality_preserved": true
+  }
+}

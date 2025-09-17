@@ -1,0 +1,9 @@
+Pure Lambda
+Copyright (c) 2025 Pure Lambda Authors
+
+This project is licensed under the MIT License.
+
+This software includes third-party components with the following licenses:
+Apache-2.0, Apache-2.0 OR MIT, ISC, Unlicense
+
+For full license text and attribution details, see THIRD_PARTY.json.

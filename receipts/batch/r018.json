@@ -1,0 +1,38 @@
+{
+  "id": "r018",
+  "type": "synthetic",
+  "command": "bfs_traverse(10000_nodes)",
+  "timestamp": "2025-09-15T14:38:38.671Z",
+  "execution": {
+    "success": false,
+    "time_ms": 75,
+    "exitCode": 1
+  },
+  "oracle": {
+    "env": true,
+    "fs": false,
+    "rand": false,
+    "time": false,
+    "net": false
+  },
+  "stats": {
+    "cache_rate": 0.4
+  },
+  "attributes": [
+    "cache:medium",
+    "cap:env_mutation",
+    "env:node_20",
+    "exec:failure",
+    "gene:MEMO",
+    "gene:PAR",
+    "lang:rust",
+    "oracle:no_fs",
+    "oracle:no_net",
+    "oracle:no_rand",
+    "oracle:no_time",
+    "size:l_100mb_plus",
+    "speed:slow",
+    "type:graph_algo"
+  ],
+  "cid": "8bc39ad85b83bc2d"
+}

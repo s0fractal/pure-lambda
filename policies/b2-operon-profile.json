@@ -1,0 +1,25 @@
+{
+  "name": "b2-operon",
+  "version": "GENOME@v1",
+  "atoms": 6,
+  "combinators": 2,
+  "activation": {
+    "gate": "G0",
+    "conditions": [
+      "deterministic",
+      "side_effect_free",
+      "causally_sequential"
+    ],
+    "pac_bound": "≤5% @95%"
+  },
+  "optimization": {
+    "strategy": "fold_constant_graphs",
+    "target_speedup": "1.5×",
+    "cache_phashes": true
+  },
+  "gates": {
+    "G0": "deterministic_only",
+    "G1": "allow_io_monad",
+    "G2": "allow_effects"
+  }
+}

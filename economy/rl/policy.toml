@@ -1,0 +1,62 @@
+# ML Auto-tuning Policy for Economic Layer
+# Thompson Sampling / UCB for parameter optimization
+
+[algorithm]
+type = "thompson_sampling"          # Bayesian approach
+exploration_rate = 0.1              # 10% exploration
+learning_rate = 0.01
+discount_factor = 0.95
+update_interval_s = 300             # Update every 5 min
+
+[parameters]
+# What we're optimizing (with bounds)
+speedup_weight = {min = 0.2, max = 0.6, init = 0.4}
+proof_cov_weight = {min = 0.1, max = 0.3, init = 0.2}
+latency_weight = {min = 0.05, max = 0.25, init = 0.15}
+allocs_weight = {min = 0.05, max = 0.2, init = 0.1}
+reputation_weight = {min = 0.1, max = 0.25, init = 0.15}
+
+[objectives]
+# Multi-objective optimization
+maximize = [
+  {metric = "throughput", weight = 0.3},
+  {metric = "fairness", weight = 0.3},
+  {metric = "satisfaction", weight = 0.4}
+]
+
+minimize = [
+  {metric = "sla_breaches", weight = 0.5},
+  {metric = "cost_variance", weight = 0.3},
+  {metric = "wait_time", weight = 0.2}
+]
+
+[thompson_sampling]
+alpha_prior = 1.0                   # Beta distribution params
+beta_prior = 1.0
+confidence_interval = 0.95
+min_samples = 100                   # Before updating
+
+[ucb]
+c_param = 2.0                       # Exploration constant
+decay_rate = 0.995
+
+[features]
+# Context for contextual bandits
+use_time_of_day = true
+use_day_of_week = true
+use_load_level = true
+use_city_state = true
+use_contract_type = true
+
+[memory]
+buffer_size = 10000                 # Experience replay
+batch_size = 32
+prioritized_replay = true
+priority_alpha = 0.6
+priority_beta = 0.4
+
+[monitoring]
+log_actions = true
+log_rewards = true
+export_metrics = true
+dashboard_port = 9093

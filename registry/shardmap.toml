@@ -1,0 +1,41 @@
+# Sharded Registry Configuration
+# Consistent hashing with RF=2
+
+[ring]
+replication_factor = 2
+hash = "blake3"
+virtual_nodes = 128  # Virtual nodes per city for better distribution
+
+[[city]]
+name = "kyiv-prime"
+weight = 1.0
+shards = [0, 1]  # Primary for these shard ranges
+replicas = [2]   # Secondary for these
+
+[[city]]
+name = "lviv-harbor"
+weight = 1.0
+shards = [2]     # Primary
+replicas = [0]   # Secondary
+
+[[city]]
+name = "odesa-port"
+weight = 1.0
+shards = []      # Primary
+replicas = [1, 2] # Secondary for these
+
+[rebalance]
+enabled = true
+trigger = "node_change"  # Auto-rebalance on node addition/removal
+cooldown_s = 300        # Wait 5 minutes between rebalances
+batch_size = 1000       # Move 1000 records at a time
+
+[consistency]
+read_quorum = 1         # Read from any replica
+write_quorum = 2        # Write to all replicas
+repair_on_read = true   # Repair inconsistencies during reads
+
+[failover]
+detection_timeout_ms = 3000
+promote_secondary = true
+auto_restore = true
