@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "pl-seed-01",
+  "type": "object",
+  "required": ["name","pattern","params","version"],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "pattern": {
+      "type": "string",
+      "enum": [
+        "select-focus",
+        "bounded-delay",
+        "route-audit",
+        "partition-rr",
+        "scan-metrics",
+        "split-then-select",
+        "delay-scan-antihysteresis",
+        "merge-proof",
+        "split-metric-select",
+        "delay-scan-smoother",
+        "merge-proof-lite",
+        "bounded-partition",
+        "select-tee"
+      ]
+    },
+    "params": {
+      "type": "object"
+    },
+    "version": {
+      "const": "1"
+    },
+    "attestation": {
+      "type": "object"
+    }
+  }
+}

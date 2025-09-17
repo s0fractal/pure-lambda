@@ -1,0 +1,13 @@
+[council]
+quorum = 3
+threshold = 2   # 2-of-3 DSSE підписів для зміни політик
+
+[votes]
+window_hours = 24
+
+[caps]
+daily_auto_merge = 20
+daily_ingest = 30
+
+[switches]
+llm_habitat = "off"  # "on" лише через tally
