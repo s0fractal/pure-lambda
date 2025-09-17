@@ -1,0 +1,28 @@
+{
+  "name": "metric-select@latency",
+  "pattern": "split-metric-select",
+  "version": 1,
+  "xidv2": "def01234567890123456789012345678901234567",
+  "params": {
+    "metric": "latency_p50",
+    "threshold": 100,
+    "routing": "focus",
+    "window": 10
+  },
+  "nodes": [
+    { "id": 0, "op": "ENTER" },
+    { "id": 1, "op": "SPLIT", "config": { "strategy": "clone" } },
+    { "id": 2, "op": "METRIC", "config": { "type": "latency", "percentile": 50 } },
+    { "id": 3, "op": "SELECT", "config": { "field": "latency", "op": "<", "value": 100 } },
+    { "id": 4, "op": "FOCUS", "config": { "priority": "low_latency" } },
+    { "id": 5, "op": "ROUTE", "config": { "mode": "metric_based" } },
+    { "id": 6, "op": "EXIT" }
+  ],
+  "edges": [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6]],
+  "attestation": {},
+  "metadata": {
+    "novelty": 0.40,
+    "trust": 98,
+    "conformance": 97
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "antihyst@slow-recover",
+  "pattern": "delay-scan-antihysteresis",
+  "version": 1,
+  "xidv2": "abcdef01234567890123456789012345678901234",
+  "params": {
+    "delay_ms": 50,
+    "scan_window": 20,
+    "hysteresis_band": 0.15,
+    "recovery": "slow"
+  },
+  "nodes": [
+    { "id": 0, "op": "ENTER" },
+    { "id": 1, "op": "DELAY", "config": { "ms": 50, "jitter": 0.1 } },
+    { "id": 2, "op": "SCAN", "config": { "window": 20, "overlap": 0.5 } },
+    { "id": 3, "op": "ANTIHYST", "config": { "band": 0.15, "mode": "wide" } },
+    { "id": 4, "op": "DAMPEN", "config": { "factor": 0.7 } },
+    { "id": 5, "op": "STABILIZE", "config": { "iterations": 3 } },
+    { "id": 6, "op": "EXIT" }
+  ],
+  "edges": [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6]],
+  "attestation": {},
+  "metadata": {
+    "novelty": 0.43,
+    "trust": 98,
+    "conformance": 96
+  }
+}

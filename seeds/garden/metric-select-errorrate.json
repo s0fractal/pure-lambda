@@ -1,0 +1,29 @@
+{
+  "name": "metric-select@error-rate",
+  "pattern": "split-metric-select",
+  "version": 1,
+  "xidv2": "ef012345678901234567890123456789012345678",
+  "params": {
+    "metric": "error_rate",
+    "threshold": 0.01,
+    "routing": "scan",
+    "window": 100
+  },
+  "nodes": [
+    { "id": 0, "op": "ENTER" },
+    { "id": 1, "op": "SPLIT", "config": { "fanout": 3 } },
+    { "id": 2, "op": "METRIC", "config": { "type": "errors", "window": 100 } },
+    { "id": 3, "op": "SELECT", "config": { "field": "error_rate", "op": "<=", "value": 0.01 } },
+    { "id": 4, "op": "SCAN", "config": { "window": 100, "slide": 10 } },
+    { "id": 5, "op": "ROUTE", "config": { "strategy": "lowest_error" } },
+    { "id": 6, "op": "AGGREGATE", "config": { "method": "weighted" } },
+    { "id": 7, "op": "EXIT" }
+  ],
+  "edges": [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6], [6,7]],
+  "attestation": {},
+  "metadata": {
+    "novelty": 0.42,
+    "trust": 98,
+    "conformance": 96
+  }
+}

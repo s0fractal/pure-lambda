@@ -747,3 +747,16 @@ evening-ritual: impact graduate hall notary snapshot daily-close
 
 morning-ritual: dashboard expand-check victory-check
 	@echo "☀️ Morning ritual complete!"
+
+# Victory ceremony
+victory:
+	@echo "🏆 Checking for victory..."
+	@if node scripts/victory/status.mjs; then \
+		echo "🎉 VICTORY ACHIEVED! Creating release..."; \
+		git tag v0.1.1-week100 -m "100 Seeds Week Victory ✅"; \
+		echo "✅ Tagged: v0.1.1-week100"; \
+		echo "📦 Ready to push: git push origin v0.1.1-week100"; \
+	else \
+		echo "⏳ Not yet - keep pushing!"; \
+		exit 1; \
+	fi
