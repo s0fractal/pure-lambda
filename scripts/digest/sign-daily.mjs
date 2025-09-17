@@ -53,7 +53,20 @@ async function signDaily() {
       console.log(`🔗 Hash-chain: no previous envelope (${yStr}) - starting chain`);
     }
 
-    // Create DSSE payload with hash-chain
+    // Find today's CAR for heartbeat
+    const today = new Date().toISOString().slice(0, 10);
+    const carPath = `dist/snapshots/${today}.car`;
+    let carCID = null;
+    if (fs.existsSync(carPath)) {
+      try {
+        carCID = (await fileHash(carPath)).slice(0, 16) + '...';
+        console.log(`🔗 Chain heartbeat: CAR ${today} → ${carCID}`);
+      } catch (e) {
+        console.warn(`⚠️ Could not hash CAR file: ${e.message}`);
+      }
+    }
+
+    // Create DSSE payload with hash-chain + heartbeat
     const payload = Buffer.from(JSON.stringify({
       subject: {
         path: PATH,
@@ -64,7 +77,8 @@ async function signDaily() {
       gitRev,
       ts: new Date().toISOString(),
       prevDate: yStr,
-      prevEnvelopeHash
+      prevEnvelopeHash,
+      carCID
     }));
 
     // Get signing key from environment

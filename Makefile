@@ -626,3 +626,17 @@ snapshot-car:
 	@echo "📦 Creating daily CAR snapshot..."
 	node scripts/snapshots/make-car.mjs
 	@echo "✅ Daily snapshot created in dist/snapshots/"
+
+snapshot-offline:
+	@echo "❄️ Creating offline backup package..."
+	mkdir -p dist/offline
+	@echo "📦 Copying latest CAR snapshot..."
+	cp $$(ls -t dist/snapshots/*.car | head -1) dist/offline/ 2>/dev/null || echo "⚠️ No CAR files found"
+	@echo "🔐 Copying latest attestation..."
+	cp $$(ls -t receipts/attest/snapshots/*.envelope.json | head -1) dist/offline/ 2>/dev/null || echo "⚠️ No attestations found"
+	@echo "📊 Copying latest index..."
+	cp dist/snapshots/index.json dist/offline/ 2>/dev/null || echo "⚠️ No index found"
+	@echo "📄 Copying daily digest..."
+	cp docs/status/daily.md dist/offline/ 2>/dev/null || echo "⚠️ No daily digest found"
+	@echo "✅ Offline package ready in dist/offline/"
+	@ls -la dist/offline/
