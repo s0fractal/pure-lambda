@@ -1,6 +1,6 @@
 {
   "trustScore": 0.9626666666666668,
-  "timestamp": "2025-09-17T12:37:12.631Z",
+  "timestamp": "2025-09-17T14:38:11.454Z",
   "components": {
     "dsse": {
       "weight": 0.4,
@@ -26,12 +26,12 @@
       "score": 1,
       "contribution": 0.2,
       "stats": {
-        "ageMedianDays": 0.2520748148148148,
+        "ageMedianDays": 0.012051354166666667,
         "ageRangeDays": [
-          0.25207466435185183,
-          0.2521494675925926
+          0.012051157407407408,
+          0.012051608796296296
         ],
-        "details": "9 seeds, median age 0.3 days"
+        "details": "9 seeds, median age 0.0 days"
       }
     }
   },

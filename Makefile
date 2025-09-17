@@ -14,6 +14,7 @@
  .PHONY: air-pack air-recv air-sender air-receiver air-gap air-garden
  .PHONY: pocket pocket-open pocket-import pocket-direct pocket-direct-open pocket-direct-smoke
  .PHONY: exchange exchange-open
+ .PHONY: signed-digest snapshot-car
 
 help:
 	@echo "🔮 Lambda Control Operations"
@@ -613,3 +614,15 @@ publish:
 release: clean ga docs-build release-local
 	@echo "🎉 Pure Lambda v0.1.0 GA Release Complete!"
 	@echo "Note: Run 'make release-tag' separately to create git tag"
+
+# Reproducibility targets
+signed-digest:
+	@echo "🔐 Signing daily digest..."
+	node scripts/digest/sign-daily.mjs
+	@echo "✅ Verifying DSSE envelope..."
+	node scripts/attest/verify.mjs receipts/attest/daily-*.envelope.json
+
+snapshot-car:
+	@echo "📦 Creating daily CAR snapshot..."
+	node scripts/snapshots/make-car.mjs
+	@echo "✅ Daily snapshot created in dist/snapshots/"
