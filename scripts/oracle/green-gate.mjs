@@ -21,6 +21,30 @@ const now = Date.now();
 const st = readJson(statePath, { epsApplied: 0, lastApply: 0 });
 const lastApply = Date.parse(st.lastApply || 0) || 0;
 
+// Clock anomaly detection - prevent EXPAND on time issues
+const prevEnvelopePath = "receipts/ops/latest-envelope.json";
+if (fs.existsSync(prevEnvelopePath)) {
+  const prevEnvelope = readJson(prevEnvelopePath, {});
+  const prevTs = Date.parse(prevEnvelope.ts || prevEnvelope.timestamp || 0);
+
+  if (prevTs && prevTs > 0) {
+    const timeDiff = now - prevTs;
+    const MAX_TIME_JUMP = 48 * 3600 * 1000; // 48h max
+
+    if (timeDiff < 0) {
+      console.log(`⏸️  HOLD: Clock anomaly detected (time went backwards by ${Math.abs(timeDiff / 1000)}s)`);
+      writeGateStatus("HOLD", "clock anomaly - time backwards");
+      process.exit(0);
+    }
+
+    if (timeDiff > MAX_TIME_JUMP) {
+      console.log(`⏸️  HOLD: Clock anomaly detected (time jump >${MAX_TIME_JUMP / 3600000}h)`);
+      writeGateStatus("HOLD", "clock anomaly - excessive jump");
+      process.exit(0);
+    }
+  }
+}
+
 // Helper function to write gate status
 function writeGateStatus(status, reason, nextEligible = null, applied24h = 0) {
   const gatePath = "reports/dashboard/gate.json";
@@ -132,6 +156,16 @@ if (DRY) {
   console.log("   Would APPLY: +3% epsilon");
   console.log("   New total would be: " + (next * 100).toFixed(1) + "%");
   process.exit(0);
+}
+
+// Check for canary mode
+if (process.env.EXPAND_MODE === "canary") {
+  console.log("\n🐤 Switching to canary expansion...");
+  const canaryCmd = spawnSync("node", ["scripts/oracle/canary-expand.mjs"], {
+    env: { ...process.env },
+    stdio: "inherit"
+  });
+  process.exit(canaryCmd.status);
 }
 
 // Generate plan

@@ -398,6 +398,16 @@ drill-expand:
 	@echo "🎯 Running EXPAND chaos drill"
 	@node scripts/drills/expand-chaos.mjs
 
+# Canary expansion and post-verification
+.PHONY: expand-canary postverify
+expand-canary:
+	@echo "🐤 Canary EXPAND (gradual +1% → +2%)"
+	@EXPAND_MODE=canary node scripts/oracle/green-gate.mjs
+
+postverify:
+	@echo "🔍 Post-EXPAND verification"
+	@node scripts/oracle/postverify.mjs
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:
