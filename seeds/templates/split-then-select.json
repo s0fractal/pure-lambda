@@ -1,0 +1,53 @@
+{
+  "name": "split-then-select",
+  "version": 1,
+  "intent": "Adaptive fork based on local cost profile",
+  "size": "≤10KB",
+  "novelty": 0.62,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "profile": {
+      "op": "PROFILE",
+      "params": {
+        "metric": "cost",
+        "window": 10
+      }
+    },
+    "split": {
+      "op": "SPLIT",
+      "params": {
+        "adaptive": true
+      }
+    },
+    "select": {
+      "op": "SELECT",
+      "params": {
+        "based_on": "${profile.cost}",
+        "threshold": 0.5
+      }
+    },
+    "merge": {
+      "op": "MERGE",
+      "params": {}
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "profile"],
+    ["profile", "split"],
+    ["split", "select"],
+    ["select", "merge"],
+    ["merge", "exit"]
+  ],
+  "fixtures": [
+    {"cost": 0.3, "expected": "low_cost_path"},
+    {"cost": 0.7, "expected": "high_cost_path"}
+  ],
+  "xidv2": "split-then-select-v2-${timestamp}"
+}

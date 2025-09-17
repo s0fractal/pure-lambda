@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Lambda Cartridge</title>
+    <style>
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            background: #0a0a0a;
+            color: #00ff41;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            background: rgba(0, 255, 65, 0.02);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #00ff41;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 5px #00ff41;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            font-size: 12px;
+            color: #666;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 10px;
+            border: 1px solid #333;
+        }
+        .error {
+            color: #ff4444;
+            border-color: #ff4444;
+        }
+        .success {
+            color: #44ff44;
+            border-color: #44ff44;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>λ Pure Lambda Cartridge</h1>
+
+        <div class="button-group">
+            <button onclick="verify()">Verify</button>
+            <button onclick="runAutopilot()">Run Autopilot</button>
+            <button onclick="showRoute()">Show Route</button>
+            <button onclick="openMirrorBench()">Open in MirrorBench</button>
+        </div>
+
+        <div id="status" class="status">Ready to interact</div>
+
+        <div class="info">
+            <h3>Cartridge Information</h3>
+            <div id="cartridge-info">Loading...</div>
+        </div>
+
+        <div class="info">
+            <h3>Output</h3>
+            <pre id="output">Click a button to see output...</pre>
+        </div>
+
+        <div class="footer">
+            Offline • Deterministic • DSSE-Verified
+        </div>
+    </div>
+
+    <script id="pl-cartridge" type="application/json">
+__MANIFEST_PLACEHOLDER__
+    </script>
+
+    <script id="pl-seed" type="text/plain">
+__SEED_PLACEHOLDER__
+    </script>
+
+    <script id="pl-envelope" type="text/plain">
+__ENVELOPE_PLACEHOLDER__
+    </script>
+
+    <script>
+        let cartridgeData = null;
+        let seedData = null;
+        let envelopeData = null;
+
+        function log(message, isError = false) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function setStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status ' + (isError ? 'error' : 'success');
+        }
+
+        function loadCartridgeData() {
+            try {
+                const manifestScript = document.getElementById('pl-cartridge');
+                const seedScript = document.getElementById('pl-seed');
+                const envelopeScript = document.getElementById('pl-envelope');
+
+                if (manifestScript && manifestScript.textContent.trim()) {
+                    cartridgeData = JSON.parse(manifestScript.textContent.trim());
+                }
+
+                if (seedScript && seedScript.textContent.trim()) {
+                    const seedBase64 = seedScript.textContent.trim();
+                    if (seedBase64 !== '__SEED_PLACEHOLDER__') {
+                        const seedJson = atob(seedBase64);
+                        seedData = JSON.parse(seedJson);
+                    }
+                }
+
+                if (envelopeScript && envelopeScript.textContent.trim()) {
+                    const envelopeBase64 = envelopeScript.textContent.trim();
+                    if (envelopeBase64 !== '__ENVELOPE_PLACEHOLDER__') {
+                        const envelopeJson = atob(envelopeBase64);
+                        envelopeData = JSON.parse(envelopeJson);
+                    }
+                }
+
+                // Update cartridge info
+                const info = document.getElementById('cartridge-info');
+                if (cartridgeData && seedData) {
+                    info.innerHTML = `
+                        <strong>Name:</strong> ${seedData.name || 'Unknown'}<br>
+                        <strong>Version:</strong> ${cartridgeData.version}<br>
+                        <strong>Created:</strong> ${new Date(cartridgeData.createdAt).toLocaleString()}<br>
+                        <strong>Size:</strong> ${(cartridgeData.size / 1024).toFixed(1)} KB<br>
+                        <strong>Tiles:</strong> ${seedData.tiles ? seedData.tiles.length : 0}<br>
+                        <strong>Signed:</strong> ${envelopeData ? 'Yes' : 'No'}
+                    `;
+                } else {
+                    info.innerHTML = 'Failed to load cartridge data';
+                }
+            } catch (error) {
+                log('Error loading cartridge data: ' + error.message, true);
+                setStatus('Failed to load cartridge', true);
+            }
+        }
+
+        function verify() {
+            log('Starting verification...');
+            setStatus('Verifying...');
+
+            try {
+                if (!cartridgeData || !seedData) {
+                    throw new Error('Cartridge data not loaded');
+                }
+
+                // Simple hash verification (we don't have BLAKE3 in browser)
+                log('✓ Cartridge manifest loaded');
+                log('✓ Seed data loaded');
+
+                if (envelopeData) {
+                    log('✓ DSSE envelope loaded');
+                    log('⚠ DSSE signature verification requires server-side validation');
+                } else {
+                    log('ℹ No DSSE envelope (unsigned cartridge)');
+                }
+
+                log('✓ Basic structure validation passed');
+                setStatus('Verification completed', false);
+            } catch (error) {
+                log('✗ Verification failed: ' + error.message, true);
+                setStatus('Verification failed', true);
+            }
+        }
+
+        function runAutopilot() {
+            log('Starting autopilot simulation...');
+            setStatus('Running autopilot...');
+
+            try {
+                if (!seedData) {
+                    throw new Error('No seed data available');
+                }
+
+                const tiles = seedData.tiles || [];
+                log(`Found ${tiles.length} tiles to execute`);
+
+                tiles.forEach((tile, index) => {
+                    log(`[${index + 1}] ${tile.op}: ${tile.law} (cost: ${tile.cost})`);
+                });
+
+                const stats = seedData.meta?.stats;
+                if (stats) {
+                    log(`Estimated: ${stats.hops} hops, ${stats.latency}ms latency, ${stats.mem} bytes memory`);
+                }
+
+                log('✓ Autopilot simulation completed');
+                setStatus('Autopilot completed', false);
+            } catch (error) {
+                log('✗ Autopilot failed: ' + error.message, true);
+                setStatus('Autopilot failed', true);
+            }
+        }
+
+        function showRoute() {
+            log('Displaying route information...');
+            setStatus('Showing route...');
+
+            try {
+                if (!seedData) {
+                    throw new Error('No seed data available');
+                }
+
+                const tiles = seedData.tiles || [];
+                log('=== ROUTE MAP ===');
+
+                tiles.forEach((tile, index) => {
+                    const ports = tile.abi?.ports || {};
+                    const portsList = Object.entries(ports).map(([k, v]) => `${k}:${v}`).join(', ');
+                    log(`${index + 1}. ${tile.op} [${portsList}]`);
+                });
+
+                const gidSet = seedData.meta?.gidSet || [];
+                log(`\nGID Set (${gidSet.length} unique operations):`);
+                gidSet.forEach((gid, index) => {
+                    log(`  ${index + 1}. ${gid.substring(0, 16)}...`);
+                });
+
+                log('✓ Route display completed');
+                setStatus('Route displayed', false);
+            } catch (error) {
+                log('✗ Route display failed: ' + error.message, true);
+                setStatus('Route display failed', true);
+            }
+        }
+
+        function openMirrorBench() {
+            log('Opening in MirrorBench...');
+            setStatus('Opening MirrorBench...');
+
+            try {
+                if (!seedData) {
+                    throw new Error('No seed data available');
+                }
+
+                // Create a data URL with the seed data for MirrorBench
+                const seedJson = JSON.stringify(seedData, null, 2);
+                const dataUrl = 'data:application/json;base64,' + btoa(seedJson);
+
+                // Try to open MirrorBench (this would need to be customized for actual MirrorBench URL)
+                const mirrorBenchUrl = `https://mirrorbench.pure-lambda.org?seed=${encodeURIComponent(dataUrl)}`;
+
+                log('Generated MirrorBench URL (would open in production):');
+                log(mirrorBenchUrl.substring(0, 100) + '...');
+                log('⚠ Opening external URLs requires user interaction in browsers');
+
+                setStatus('MirrorBench URL generated', false);
+            } catch (error) {
+                log('✗ MirrorBench open failed: ' + error.message, true);
+                setStatus('MirrorBench open failed', true);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartridgeData();
+            log('Pure Lambda Cartridge Viewer initialized');
+            setStatus('Ready', false);
+        });
+    </script>
+</body>
+</html>

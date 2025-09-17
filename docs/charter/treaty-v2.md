@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2025 Pure Lambda Authors -->
+
 # Treaty of Fair Coexistence v2.0
 
 ## Preamble

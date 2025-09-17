@@ -1,0 +1,143 @@
+# GitHub PR Labeler Configuration
+# Automatically labels PRs based on file changes
+
+# Seed contributions
+'contrib:seed':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'seeds/**/*.json'
+      - 'contrib/**/*.json'
+      - 'receipts/attest/**/*.json'
+
+# High trust contributions (≥95% trust score)
+'trust:high':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'seeds/garden/**'
+      - 'seeds/verified/**'
+
+# Documentation updates
+'docs':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**'
+      - '*.md'
+      - 'README*'
+
+# Contributor Kit changes
+'contributor-kit':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/contribute/**'
+      - 'docs/pocket/**'
+      - 'scripts/ck/**'
+      - 'tools/ck/**'
+
+# Federation & Trust changes
+'federation':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'scripts/fed/**'
+      - 'tools/fed/**'
+      - 'observability/**'
+
+# Test changes
+'tests':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'tests/**'
+      - '**/*.test.*'
+      - '**/*.spec.*'
+
+# GitHub Actions & CI
+'ci':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**'
+
+# Size labels based on file count
+'size:xs':
+  - changed-files:
+    - any-glob-to-any-file: ['*']
+    - all-globs-to-all-files: ['!(tests/**)', '!(docs/**)', '!(*.md)']
+  - base-branch: ['main', 'master']
+
+'size:s':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'seeds/**'
+      - 'contrib/**'
+
+'size:m':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'scripts/**'
+      - 'tools/**'
+
+'size:l':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**'
+      - 'package*.json'
+
+# Priority labels
+'priority:high':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'security/**'
+      - '.github/workflows/security-*'
+
+'priority:medium':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'scripts/fed/**'
+      - 'observability/**'
+
+# Ready for review (used by bots)
+'ready-for-review':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'seeds/**'
+  - files:
+    - any-glob-to-any-file: ['!WIP*', '!wip*', '!draft*']
+
+# Needs review from specific teams
+'needs:maintainer-review':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'seeds/**'
+      - 'scripts/fed/**'
+
+'needs:security-review':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**'
+      - 'scripts/**'
+      - 'tools/**'
+
+# Language labels
+'lang:javascript':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.js'
+      - '**/*.mjs'
+      - 'package*.json'
+
+'lang:typescript':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - 'tsconfig*.json'
+
+'lang:html':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.html'
+      - '**/*.htmlc'
+
+'lang:yaml':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.yml'
+      - '**/*.yaml'

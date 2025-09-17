@@ -1,0 +1,614 @@
+{
+  "tiles": [
+    {
+      "name": "id_basic",
+      "yaml": {
+        "op": "id",
+        "code": "x => x",
+        "ports": {
+          "in": "any",
+          "out": "any"
+        },
+        "law": "identity",
+        "cost": "O(1)"
+      },
+      "variants": [
+        {
+          "reason": "whitespace_changes",
+          "mutate": {
+            "code": "  x =>   x  "
+          }
+        },
+        {
+          "reason": "rename_variable",
+          "mutate": {
+            "code": "input => input"
+          }
+        },
+        {
+          "reason": "different_ports",
+          "mutate": {
+            "ports": {
+              "input": "any",
+              "output": "any"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1, 2],
+        "iid_equal": [0, 1],
+        "xid_diff": [0, 2]
+      }
+    },
+    {
+      "name": "focus_basic",
+      "yaml": {
+        "op": "FOCUS",
+        "code": "x => x.focus",
+        "ports": {
+          "in": "data",
+          "out": "focused"
+        },
+        "abi": {
+          "types": "data -> focused",
+          "effects": []
+        },
+        "law": "projection",
+        "cost": "O(1)"
+      },
+      "variants": [
+        {
+          "reason": "add_comments",
+          "mutate": {
+            "code": "// Focus on data\nx => x.focus"
+          }
+        },
+        {
+          "reason": "change_abi_effects",
+          "mutate": {
+            "abi": {
+              "types": "data -> focused",
+              "effects": ["io"]
+            }
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1, 2],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "scan_filter",
+      "yaml": {
+        "op": "SCAN",
+        "code": "arr => arr.filter(x => x > 0)",
+        "ports": {
+          "in": "array",
+          "out": "filtered"
+        },
+        "law": "filter",
+        "cost": "O(n)"
+      },
+      "variants": [
+        {
+          "reason": "equivalent_logic",
+          "mutate": {
+            "code": "arr => arr.filter(item => item > 0)"
+          }
+        },
+        {
+          "reason": "different_condition",
+          "mutate": {
+            "code": "arr => arr.filter(x => x >= 1)"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1],
+        "iid_equal": [0, 1, 2],
+        "xid_diff": [0, 2]
+      }
+    },
+    {
+      "name": "delay_async",
+      "yaml": {
+        "op": "DELAY",
+        "code": "async x => { await sleep(100); return x; }",
+        "ports": {
+          "in": "any",
+          "out": "any"
+        },
+        "abi": {
+          "types": "any -> any",
+          "effects": ["async", "time"]
+        },
+        "law": "temporal",
+        "cost": "O(1)+T"
+      },
+      "variants": [
+        {
+          "reason": "different_delay",
+          "mutate": {
+            "code": "async x => { await sleep(200); return x; }"
+          }
+        },
+        {
+          "reason": "same_ports_diff_effects",
+          "mutate": {
+            "abi": {
+              "types": "any -> any",
+              "effects": ["async"]
+            }
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [],
+        "iid_equal": [0, 2],
+        "xid_diff": [0, 1]
+      }
+    },
+    {
+      "name": "merge_combine",
+      "yaml": {
+        "op": "MERGE",
+        "code": "(a, b) => ({ ...a, ...b })",
+        "ports": {
+          "in1": "object",
+          "in2": "object",
+          "out": "merged"
+        },
+        "law": "composition",
+        "cost": "O(k)"
+      },
+      "variants": [
+        {
+          "reason": "reorder_params",
+          "mutate": {
+            "code": "(b, a) => ({ ...b, ...a })"
+          }
+        },
+        {
+          "reason": "add_third_input",
+          "mutate": {
+            "ports": {
+              "in1": "object",
+              "in2": "object",
+              "in3": "object",
+              "out": "merged"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [],
+        "iid_equal": [0],
+        "xid_diff": [0, 1, 2]
+      }
+    },
+    {
+      "name": "pair_duplicate",
+      "yaml": {
+        "op": "PAIR",
+        "code": "x => [x, x]",
+        "ports": {
+          "in": "any",
+          "out1": "any",
+          "out2": "any"
+        },
+        "law": "duplication",
+        "cost": "O(1)"
+      },
+      "variants": [
+        {
+          "reason": "array_literal_spacing",
+          "mutate": {
+            "code": "x => [ x , x ]"
+          }
+        },
+        {
+          "reason": "tuple_syntax",
+          "mutate": {
+            "code": "x => [x, x]"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1, 2],
+        "iid_equal": [0, 1, 2],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "split_branch",
+      "yaml": {
+        "op": "SPLIT",
+        "code": "x => x.type === 'A' ? [x, null] : [null, x]",
+        "ports": {
+          "in": "tagged",
+          "out1": "typeA",
+          "out2": "typeB"
+        },
+        "law": "conditional",
+        "cost": "O(1)"
+      },
+      "variants": [
+        {
+          "reason": "equivalent_ternary",
+          "mutate": {
+            "code": "x => x.type === 'A' ? [x, null] : [null, x]"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "map_transform",
+      "yaml": {
+        "op": "MAP",
+        "code": "arr => arr.map(x => x * 2)",
+        "ports": {
+          "in": "array",
+          "out": "transformed"
+        },
+        "law": "functor",
+        "cost": "O(n)"
+      },
+      "variants": [
+        {
+          "reason": "different_transform",
+          "mutate": {
+            "code": "arr => arr.map(x => x + x)"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "reduce_aggregate",
+      "yaml": {
+        "op": "REDUCE",
+        "code": "(acc, x) => acc + x",
+        "ports": {
+          "in": "array",
+          "init": "number",
+          "out": "sum"
+        },
+        "law": "fold",
+        "cost": "O(n)"
+      },
+      "variants": [
+        {
+          "reason": "inline_function",
+          "mutate": {
+            "code": "(accumulator, item) => accumulator + item"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "filter_predicate",
+      "yaml": {
+        "op": "FILTER",
+        "code": "arr => arr.filter(x => x.active)",
+        "ports": {
+          "in": "items",
+          "out": "active_items"
+        },
+        "law": "selection",
+        "cost": "O(n)"
+      },
+      "variants": [
+        {
+          "reason": "boolean_property",
+          "mutate": {
+            "code": "arr => arr.filter(item => item.active)"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "compose_chain",
+      "yaml": {
+        "op": "COMPOSE",
+        "code": "(f, g) => x => f(g(x))",
+        "ports": {
+          "f": "function",
+          "g": "function",
+          "out": "composed"
+        },
+        "law": "composition",
+        "cost": "O(1)"
+      },
+      "variants": [
+        {
+          "reason": "reverse_composition",
+          "mutate": {
+            "code": "(f, g) => x => g(f(x))"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "constant_value",
+      "yaml": {
+        "op": "CONST",
+        "code": "() => 42",
+        "ports": {
+          "out": "number"
+        },
+        "law": "constant",
+        "cost": "O(1)"
+      },
+      "variants": [
+        {
+          "reason": "different_constant",
+          "mutate": {
+            "code": "() => 24"
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    }
+  ],
+  "operons": [
+    {
+      "name": "split_merge_operon",
+      "yaml": {
+        "tiles": [
+          {
+            "name": "s1",
+            "op": "SPLIT",
+            "code": "x => [x.left, x.right]",
+            "ports": {
+              "in": "pair",
+              "out1": "left",
+              "out2": "right"
+            }
+          },
+          {
+            "name": "id1",
+            "op": "id",
+            "code": "x => x",
+            "ports": {
+              "in": "left",
+              "out": "left"
+            }
+          },
+          {
+            "name": "scan1",
+            "op": "SCAN",
+            "code": "x => x.filter(v => v)",
+            "ports": {
+              "in": "right",
+              "out": "filtered"
+            }
+          },
+          {
+            "name": "m1",
+            "op": "MERGE",
+            "code": "(l, r) => ({ left: l, right: r })",
+            "ports": {
+              "in1": "left",
+              "in2": "filtered",
+              "out": "merged"
+            }
+          }
+        ],
+        "connections": [
+          { "from": "s1.out1", "to": "id1.in" },
+          { "from": "s1.out2", "to": "scan1.in" },
+          { "from": "id1.out", "to": "m1.in1" },
+          { "from": "scan1.out", "to": "m1.in2" }
+        ]
+      },
+      "variants": [
+        {
+          "reason": "change_neighbor_iid",
+          "mutate": {
+            "tiles": [
+              {
+                "name": "id1",
+                "ports": {
+                  "input": "left",
+                  "output": "left"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1],
+        "iid_equal": [0],
+        "xid_diff": [0, 1]
+      }
+    },
+    {
+      "name": "focus_delay_operon",
+      "yaml": {
+        "tiles": [
+          {
+            "name": "f1",
+            "op": "FOCUS",
+            "code": "x => x.data",
+            "ports": {
+              "in": "wrapped",
+              "out": "data"
+            }
+          },
+          {
+            "name": "d1",
+            "op": "DELAY",
+            "code": "async x => { await sleep(50); return x; }",
+            "ports": {
+              "in": "data",
+              "out": "delayed"
+            }
+          }
+        ],
+        "connections": [
+          { "from": "f1.out", "to": "d1.in" }
+        ]
+      },
+      "variants": [
+        {
+          "reason": "change_delay_time",
+          "mutate": {
+            "tiles": [
+              {
+                "name": "d1",
+                "code": "async x => { await sleep(100); return x; }"
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0],
+        "iid_equal": [0, 1],
+        "xid_diff": [0, 1]
+      }
+    },
+    {
+      "name": "pair_identity_operon",
+      "yaml": {
+        "tiles": [
+          {
+            "name": "p1",
+            "op": "PAIR",
+            "code": "x => [x, x]",
+            "ports": {
+              "in": "any",
+              "out1": "copy1",
+              "out2": "copy2"
+            }
+          },
+          {
+            "name": "id_a",
+            "op": "id",
+            "code": "x => x",
+            "ports": {
+              "in": "copy1",
+              "out": "result1"
+            }
+          },
+          {
+            "name": "id_b",
+            "op": "id",
+            "code": "x => x",
+            "ports": {
+              "in": "copy2",
+              "out": "result2"
+            }
+          }
+        ],
+        "connections": [
+          { "from": "p1.out1", "to": "id_a.in" },
+          { "from": "p1.out2", "to": "id_b.in" }
+        ]
+      },
+      "variants": [
+        {
+          "reason": "swap_identical_neighbors",
+          "mutate": {
+            "connections": [
+              { "from": "p1.out1", "to": "id_b.in" },
+              { "from": "p1.out2", "to": "id_a.in" }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0, 1],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    },
+    {
+      "name": "isolated_tile_operon",
+      "yaml": {
+        "tiles": [
+          {
+            "name": "connected1",
+            "op": "FOCUS",
+            "code": "x => x.field",
+            "ports": {
+              "in": "object",
+              "out": "field"
+            }
+          },
+          {
+            "name": "connected2",
+            "op": "DELAY",
+            "code": "async x => { await sleep(10); return x; }",
+            "ports": {
+              "in": "field",
+              "out": "delayed"
+            }
+          },
+          {
+            "name": "isolated",
+            "op": "id",
+            "code": "x => x",
+            "ports": {
+              "in": "orphan",
+              "out": "orphan"
+            }
+          }
+        ],
+        "connections": [
+          { "from": "connected1.out", "to": "connected2.in" }
+        ]
+      },
+      "variants": [
+        {
+          "reason": "change_isolated_code",
+          "mutate": {
+            "tiles": [
+              {
+                "name": "isolated",
+                "code": "input => input"
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "gid_equal": [0],
+        "iid_equal": [0, 1],
+        "xid_diff": []
+      }
+    }
+  ]
+}

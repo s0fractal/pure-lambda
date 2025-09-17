@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Pure Lambda Authors
+
 /**
  * Breathing System Orchestrator
  * SLO checking, reporting, and drill coordination

@@ -205,6 +205,9 @@
             <span class="badge g0">Gate G0</span>
             <span class="badge pac">PAC ≤2.22% @95%</span>
             <span class="badge profile">b2-operon</span>
+            <div id="cartridge-loader" style="display: none;">
+                <button onclick="loadFromCartridge()" style="background: #7c3aed; border: 1px solid #7c3aed; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; margin-left: 10px;">Load from Cartridge</button>
+            </div>
         </div>
         <div>
             GENOME@v1 | 6 atoms | 2 combinators | ∞ evolution
@@ -212,6 +215,82 @@
     </div>
 
     <script>
+        // Cartridge loading functionality
+        let cartridgeManifest = null;
+
+        // Check for cartridge loading capability on page load
+        function checkCartridgeAvailability() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasSeed = urlParams.has('seed') || window.location.hash.includes('seed');
+
+            // If no seed in URL, check if opener has cartridge manifest
+            if (!hasSeed && window.opener) {
+                // Request cartridge manifest from opener
+                window.opener.postMessage({ type: 'REQUEST_CARTRIDGE_MANIFEST' }, '*');
+
+                // Show loader button
+                document.getElementById('cartridge-loader').style.display = 'block';
+            }
+        }
+
+        // Listen for cartridge manifest from opener
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'CARTRIDGE_MANIFEST') {
+                cartridgeManifest = event.data.manifest;
+                addTraceEntry('Cartridge available from opener', 'some');
+            } else if (event.data && event.data.type === 'CARTRIDGE_SEED_DATA') {
+                // Load seed data into MirrorBench
+                loadSeedData(event.data.seedData, event.data.envelopeData);
+            }
+        });
+
+        function loadFromCartridge() {
+            if (!window.opener) {
+                addTraceEntry('No opener window available', 'none');
+                return;
+            }
+
+            if (!cartridgeManifest) {
+                addTraceEntry('No cartridge manifest available', 'none');
+                return;
+            }
+
+            // Request seed and envelope data from cartridge
+            window.opener.postMessage({ type: 'REQUEST_CARTRIDGE_DATA' }, '*');
+            addTraceEntry('Requesting cartridge data...', 'some');
+        }
+
+        function loadSeedData(seedData, envelopeData) {
+            try {
+                addTraceEntry('Loading seed data from cartridge...', 'some');
+
+                if (seedData && seedData.tiles) {
+                    addTraceEntry(`Loaded ${seedData.tiles.length} tiles from cartridge`, 'some');
+
+                    // Update URL to include seed parameter for future reference
+                    const seedJson = JSON.stringify(seedData);
+                    const dataUrl = 'data:application/json;base64,' + btoa(seedJson);
+                    const newUrl = window.location.pathname + '?seed=' + encodeURIComponent(dataUrl);
+                    window.history.replaceState({}, '', newUrl);
+
+                    // Hide cartridge loader
+                    document.getElementById('cartridge-loader').style.display = 'none';
+
+                    if (envelopeData) {
+                        addTraceEntry('Cartridge includes DSSE signature', 'some');
+                    } else {
+                        addTraceEntry('Unsigned cartridge loaded', 'none');
+                    }
+
+                    addTraceEntry('Cartridge seed loaded successfully', 'some');
+                } else {
+                    addTraceEntry('Invalid seed data in cartridge', 'none');
+                }
+            } catch (error) {
+                addTraceEntry('Error loading cartridge data: ' + error.message, 'none');
+            }
+        }
+
         function foldGraph() {
             const phashEl = document.querySelector('.phash');
             phashEl.textContent = 'computing...';
@@ -268,6 +347,9 @@
                 addTraceEntry(`${atom} → None`, type);
             }
         }, 3000);
+
+        // Initialize cartridge check on page load
+        document.addEventListener('DOMContentLoaded', checkCartridgeAvailability);
     </script>
 </body>
 </html>

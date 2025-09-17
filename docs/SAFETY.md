@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2025 Pure Lambda Authors -->
+
 # 🛡️ Pure Lambda Safety Guarantees
 
 Pure Lambda PCTA (Proof-Carrying Test Acceleration) is designed with multiple layers of safety to ensure **zero impact** on test correctness while providing significant speedups.

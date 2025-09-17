@@ -1,0 +1,87 @@
+{
+  "createdAt": "2025-09-17T09:20:38.802Z",
+  "meta": {
+    "gidSet": [
+      "526d782a797f5328a0d19c35bb1777fcc41b45c2d57667292801e460111820f1",
+      "29cd6e394edf03b926f4466eec5536a8256a3677ec84c24ca469cb8e2f998d36",
+      "29cd6e394edf03b926f4466eec5536a8256a3677ec84c24ca469cb8e2f998d36",
+      "6aed56b78f7f1e2a40dee0e50104c46f76bbc5eee206289875f99fbaa10153d4"
+    ],
+    "iidSet": [
+      "49050deb10d82fcf4796d66aa57e1ac1e4a4edab99532a61af5659f1a43f7253",
+      "a9dca8e9941e811641c247d037155cfb83ce3789e9911a75aeb3ba47ad16c156",
+      "da9da8038af8eb4e77bd6b47e11d0737c82df3f13d24396f881cb45eeaf0c254",
+      "7a01ae524da91cdb22499dd677d8093339b9ff830abd473a3a839915e5856ff1"
+    ],
+    "stats": {
+      "hops": 3,
+      "latency": 0,
+      "mem": 4
+    },
+    "xidSet": [
+      "a9d1b81b749979d866357bd05f295fe16dc807952bcb706b4d4a2af30d05502c",
+      "3b823d54f7e688f39e25628ba59dee822af8aba37b85271c00e1064b2b015912",
+      "3b823d54f7e688f39e25628ba59dee822af8aba37b85271c00e1064b2b015912",
+      "7f9e6c40e9f81bf8f02dc89bdb2375b1a34481afc2d83fdc45ddcad2e0da0f9f"
+    ]
+  },
+  "name": "partition-merge",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "false": "falsy",
+          "in": "data",
+          "true": "truthy"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(log n)",
+      "law": "decision",
+      "op": "SPLIT"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "truthy",
+          "out": "processed_true"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "transformation",
+      "op": "MAP"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "falsy",
+          "out": "processed_false"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "transformation",
+      "op": "MAP"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "false_in": "processed_false",
+          "out": "combined",
+          "true_in": "processed_true"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "convergence",
+      "op": "MERGE"
+    }
+  ],
+  "version": 1
+}

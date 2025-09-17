@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "createdAt": "2025-09-17T08:11:59.792Z",
+  "keys": [
+    {
+      "publicKey": "6a6602fde1892ccd081f3564dec5506628949eb9a76d0c09765d980414acbdc5",
+      "algorithm": "ed25519"
+    }
+  ],
+  "updatedAt": "2025-09-17T08:11:59.794Z"
+}

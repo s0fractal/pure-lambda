@@ -1,0 +1,57 @@
+{
+  "name": "merge-proof-lite",
+  "version": 1,
+  "intent": "Minimal receipt on path convergence",
+  "size": "≤10KB",
+  "novelty": 0.64,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "fork1": {
+      "op": "FORK",
+      "params": {
+        "id": "alpha",
+        "lightweight": true
+      }
+    },
+    "fork2": {
+      "op": "FORK",
+      "params": {
+        "id": "beta",
+        "lightweight": true
+      }
+    },
+    "converge": {
+      "op": "MERGE",
+      "params": {
+        "proof": "minimal",
+        "emit_receipt": true
+      }
+    },
+    "receipt": {
+      "op": "EMIT",
+      "params": {
+        "type": "convergence-receipt",
+        "size": "micro"
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "fork1"],
+    ["entry", "fork2"],
+    ["fork1", "converge"],
+    ["fork2", "converge"],
+    ["converge", "receipt"],
+    ["receipt", "exit"]
+  ],
+  "fixtures": [
+    {"paths": 2, "expected": {"converged": true, "receipt": "micro"}}
+  ],
+  "xidv2": "merge-proof-lite-v2-${timestamp}"
+}

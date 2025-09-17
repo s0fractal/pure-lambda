@@ -1,0 +1,36 @@
+{
+  "seeds": {
+    "valid": 0,
+    "total": 0,
+    "target": 100,
+    "dailyTarget": 15,
+    "progress": 0
+  },
+  "trust": {
+    "current": 96.3,
+    "target": 95,
+    "status": "✅"
+  },
+  "dsse": {
+    "current": 100,
+    "target": 98,
+    "status": "✅"
+  },
+  "sla": {
+    "p95Response": 12,
+    "target": 24,
+    "status": "✅"
+  },
+  "novelty": {
+    "median": 0.35,
+    "target": 0.3,
+    "status": "✅"
+  },
+  "field": {
+    "receipts": 5,
+    "runs": 11
+  },
+  "risks": [
+    "📉 Seed velocity below 50% target"
+  ]
+}

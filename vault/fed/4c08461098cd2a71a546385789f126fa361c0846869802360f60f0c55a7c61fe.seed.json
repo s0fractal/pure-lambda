@@ -1,0 +1,53 @@
+{
+  "createdAt": "2025-09-17T09:20:38.806Z",
+  "meta": {
+    "gidSet": [
+      "e49a300ce3a418f12ccd8c0dab1962b86741b57939b26ce4ee5fc24339833793",
+      "9209a70ac357b654e647d850f8a2090a2279949b10244a9e97235c09d2e4b05f"
+    ],
+    "iidSet": [
+      "e544cd3421de68cea972024a5409b0fa13b933fdcb25823804aba25f68d26b0d",
+      "d90ba65d3c93029e5099ffe509ecd97711bf59bd8ec3734796aa0a26a1bad726"
+    ],
+    "stats": {
+      "hops": 2,
+      "latency": 0,
+      "mem": 2
+    },
+    "xidSet": [
+      "1f7048cfcf25a9996bd095c05d8070e6bfa6619f2483a84254a498bab86b3ae7",
+      "850bac6dfd184f0eaa2b508f4b9ce33c67cff55b2af478d9e9bc3e7e0d5bbbaf"
+    ]
+  },
+  "name": "scan-focus",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "stream",
+          "out": "aggregated"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(n)",
+      "law": "aggregation",
+      "op": "SCAN"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "aggregated",
+          "out": "picked"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(log n)",
+      "law": "selection",
+      "op": "FOCUS"
+    }
+  ],
+  "version": 1
+}

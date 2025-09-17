@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2025 Pure Lambda Authors -->
+
 # Memory v0 - Immutable Persistent Memory
 
 ## Overview

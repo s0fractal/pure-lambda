@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-Tap Mirrors - Dev Harness</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-btn:hover {
+            background: #5568d3;
+        }
+        .test-payload {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background: #e8f4fd;
+            color: #0366d6;
+            font-size: 14px;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 One-Tap Mirrors - Development Harness</h1>
+
+    <div class="test-section">
+        <h2>Test Payload</h2>
+        <p>Edit this JSON payload to test different scenarios:</p>
+        <textarea id="test-payload" class="test-payload">{
+  "pl_seed": "PL-TEST-01",
+  "version": 1,
+  "name": "test-mirror-seed",
+  "subjectHash": "a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+  "gid": "test_gid_123456789",
+  "xidv2": "test_xid_987654321",
+  "nodes": {
+    "node1": {
+      "op": "COMPUTE",
+      "desc": "Test computation"
+    },
+    "node2": {
+      "op": "TRANSFORM",
+      "desc": "Test transformation"
+    }
+  }
+}</textarea>
+        <div class="test-buttons">
+            <button class="test-btn" onclick="loadPayload()">Load Payload</button>
+            <button class="test-btn" onclick="clearPayload()">Clear</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>OTM Actions</h2>
+        <p>Test the three main OTM functions:</p>
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testVerify()">Test Verify</button>
+            <button class="test-btn" onclick="testBench()">Test Bench</button>
+            <button class="test-btn" onclick="testContribute()">Test Contribute</button>
+        </div>
+        <div id="action-status" class="status">Ready for testing...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Mount Options</h2>
+        <p>Test different mounting configurations:</p>
+        <div class="test-buttons">
+            <button class="test-btn" onclick="mountFloating()">Mount Floating</button>
+            <button class="test-btn" onclick="mountInline()">Mount Inline</button>
+            <button class="test-btn" onclick="unmount()">Unmount</button>
+        </div>
+        <div id="inline-mount"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Integration Status</h2>
+        <ul>
+            <li>✅ OTM Core Module Loaded</li>
+            <li id="size-check">⏳ Size: Checking...</li>
+            <li id="pocket-check">⏳ Pocket Embassy: Not tested</li>
+            <li id="mirror-check">⏳ MirrorBench: Not tested</li>
+        </ul>
+    </div>
+
+    <!-- Load OTM script (development version) -->
+    <script type="module">
+        import { OTM } from './otm.js';
+        window.OTM = OTM;
+
+        // Auto-mount on load
+        document.addEventListener('DOMContentLoaded', () => {
+            OTM.mount({ mode: 'floating' });
+            updateStatus('OTM mounted in floating mode');
+            checkSize();
+        });
+
+        // Test functions
+        window.loadPayload = function() {
+            const payload = document.getElementById('test-payload').value;
+            try {
+                const parsed = JSON.parse(payload);
+                if (OTM.load(parsed)) {
+                    updateStatus('✅ Payload loaded successfully');
+                } else {
+                    updateStatus('❌ Failed to load payload');
+                }
+            } catch (e) {
+                updateStatus('❌ Invalid JSON: ' + e.message);
+            }
+        };
+
+        window.clearPayload = function() {
+            document.getElementById('test-payload').value = '{}';
+            OTM.state.payload = null;
+            updateStatus('Payload cleared');
+        };
+
+        window.testVerify = async function() {
+            updateStatus('Running verify test...');
+            loadPayload(); // Ensure payload is loaded
+            await OTM.verify();
+        };
+
+        window.testBench = function() {
+            updateStatus('Running bench test...');
+            loadPayload();
+            OTM.bench();
+        };
+
+        window.testContribute = function() {
+            updateStatus('Running contribute test...');
+            loadPayload();
+            OTM.contribute();
+        };
+
+        window.mountFloating = function() {
+            unmount();
+            OTM.mount({ mode: 'floating' });
+            updateStatus('Mounted in floating mode');
+        };
+
+        window.mountInline = function() {
+            unmount();
+            OTM.mount({
+                target: document.getElementById('inline-mount'),
+                mode: 'inline'
+            });
+            updateStatus('Mounted in inline mode');
+        };
+
+        window.unmount = function() {
+            // Manual unmount logic
+            if (OTM.state.button) {
+                OTM.state.button.remove();
+                OTM.state.button = null;
+            }
+            if (OTM.state.panel) {
+                OTM.state.panel.remove();
+                OTM.state.panel = null;
+            }
+            OTM.state.mounted = false;
+            updateStatus('Unmounted');
+        };
+
+        window.updateStatus = function(message) {
+            document.getElementById('action-status').textContent = message;
+        };
+
+        window.checkSize = async function() {
+            // In production, check minified size
+            const sizeEl = document.getElementById('size-check');
+            try {
+                const response = await fetch('./otm.ts');
+                const text = await response.text();
+                const sizeKB = (text.length / 1024).toFixed(2);
+                sizeEl.innerHTML = `📦 Size: ${sizeKB}KB (uncompressed TypeScript)`;
+            } catch (e) {
+                sizeEl.innerHTML = '❌ Size: Could not determine';
+            }
+        };
+
+        // Listen for postMessage events
+        window.addEventListener('message', (event) => {
+            console.log('Received message:', event.data);
+
+            if (event.data.type === 'otm:verify:result') {
+                document.getElementById('pocket-check').innerHTML = '✅ Pocket Embassy: Connected';
+                updateStatus('Verify result received: ' + JSON.stringify(event.data.result));
+            }
+
+            if (event.data.type === 'otm:bench:result') {
+                document.getElementById('mirror-check').innerHTML = '✅ MirrorBench: Connected';
+            }
+        });
+    </script>
+</body>
+</html>

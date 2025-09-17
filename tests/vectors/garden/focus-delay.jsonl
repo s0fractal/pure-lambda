@@ -1,0 +1,3 @@
+{"name": "focus_delay_gid_invariant", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/focus-delay.json", "expect": {"gidStable": true, "iidStable": true, "minRouteLen": 2, "pattern": "sensor_smoothing"}}
+{"name": "focus_delay_temporal_law", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/focus-delay.json", "expect": {"lawTypes": ["identity", "temporal"], "opSequence": ["FOCUS", "DELAY"], "gidStable": true}}
+{"name": "focus_delay_route_length", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/focus-delay.json", "expect": {"minRouteLen": 2, "maxRouteLen": 2, "linearChain": true}}

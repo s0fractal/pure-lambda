@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PL-AIR-01 Receiver - Air-Gap File Transfer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .magic {
+            font-size: 2em;
+            color: #00ffff;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #888;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: #003300;
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .scanner-mode, .manual-mode {
+            display: none;
+        }
+
+        .scanner-mode.active, .manual-mode.active {
+            display: block;
+        }
+
+        .camera-container {
+            position: relative;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .camera-view {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .camera-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .camera-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #00ff00;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #333;
+            border-color: #00ff00;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn.primary {
+            background: #003300;
+            border-color: #00ff00;
+        }
+
+        .manual-input {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .manual-input textarea {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            border: 1px solid #333;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: 12px;
+            padding: 15px;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        .progress-panel {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 4px;
+            height: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00ff00, #00ffff);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .frame-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .frame-cell {
+            aspect-ratio: 1;
+            border: 1px solid #333;
+            border-radius: 2px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .frame-cell.received {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .frame-cell.missing {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff3333;
+            color: #ff3333;
+        }
+
+        .frame-cell.parity {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+            color: #00ffff;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            color: #00ffff;
+            display: block;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .result-panel {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .result-panel.show {
+            display: block;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .status.warning {
+            background: rgba(255, 255, 0, 0.1);
+            border-color: #ffff00;
+            color: #ffff00;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .cli-hint {
+            background: #001100;
+            border: 1px solid #004400;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: inherit;
+            color: #00ff00;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="magic">PLAIR01</div>
+            <div class="subtitle">Air-Gap File Transfer - Receiver</div>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="scanner">📷 Camera Scanner</button>
+            <button class="mode-btn" data-mode="manual">📝 Manual Input</button>
+        </div>
+
+        <div id="status"></div>
+
+        <!-- Scanner Mode -->
+        <div class="scanner-mode active" id="scannerMode">
+            <div class="camera-container">
+                <div class="camera-view" id="cameraView">
+                    <video id="cameraVideo" class="camera-video" autoplay muted></video>
+                    <div class="camera-overlay"></div>
+                    <div id="cameraPlaceholder" style="color: #666;">
+                        Camera will appear here
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn primary" id="startCamera">🎥 Start Camera</button>
+                    <button class="btn" id="stopCamera" disabled>⏹ Stop Camera</button>
+                    <button class="btn" id="manualCapture">📸 Manual Capture</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Mode -->
+        <div class="manual-mode" id="manualMode">
+            <div class="manual-input">
+                <h3 style="margin-bottom: 15px; color: #00ffff;">Paste ShareCodes</h3>
+                <textarea id="sharecodesInput" placeholder="Paste ShareCodes here, one per line..."></textarea>
+                <div style="margin-top: 15px;">
+                    <button class="btn primary" id="processSharecodes">🔄 Process ShareCodes</button>
+                    <button class="btn" id="clearInput">🗑 Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Panel -->
+        <div class="progress-panel" id="progressPanel" style="display: none;">
+            <div class="progress-header">
+                <h3 style="color: #00ffff;">Reception Progress</h3>
+                <div id="progressText">0 / 0 frames</div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <span class="stat-value" id="receivedCount">0</span>
+                    <span class="stat-label">Received</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="missingCount">0</span>
+                    <span class="stat-label">Missing</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="parityCount">0</span>
+                    <span class="stat-label">Parity</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="duplicateCount">0</span>
+                    <span class="stat-label">Duplicates</span>
+                </div>
+            </div>
+
+            <div class="frame-grid" id="frameGrid"></div>
+
+            <div style="text-align: center;">
+                <button class="btn primary" id="assembleBtn" disabled>🔧 Assemble File</button>
+                <button class="btn" id="resetBtn">🔄 Reset</button>
+            </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-panel" id="resultPanel">
+            <h3 style="margin-bottom: 15px; color: #00ffff;">Assembly Result</h3>
+            <div id="resultContent"></div>
+            <div class="cli-hint" id="cliHint" style="display: none;">
+                <strong>Import to Federation:</strong><br>
+                <code id="cliCommand">make fed-ingest PATHS="dist/air/out/filename"</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base32 decoding
+        const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+        function base32Decode(encoded) {
+            const result = [];
+            let bits = 0;
+            let value = 0;
+
+            for (const char of encoded.toUpperCase()) {
+                const index = BASE32_ALPHABET.indexOf(char);
+                if (index === -1) continue;
+
+                value = (value << 5) | index;
+                bits += 5;
+
+                if (bits >= 8) {
+                    result.push((value >>> (bits - 8)) & 255);
+                    bits -= 8;
+                }
+            }
+
+            return new Uint8Array(result);
+        }
+
+        // CRC16-CCITT verification
+        function crc16(data) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < data.length; i++) {
+                crc ^= data.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if (crc & 0x8000) {
+                        crc = (crc << 1) ^ 0x1021;
+                    } else {
+                        crc = crc << 1;
+                    }
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // Simple CBOR decoder
+        function decodeCBOR(data) {
+            let pos = 0;
+
+            function readByte() {
+                if (pos >= data.length) throw new Error('Unexpected end of CBOR data');
+                return data[pos++];
+            }
+
+            function readBytes(count) {
+                if (pos + count > data.length) throw new Error('Unexpected end of CBOR data');
+                const result = data.slice(pos, pos + count);
+                pos += count;
+                return result;
+            }
+
+            function decodeValue() {
+                const byte = readByte();
+                const majorType = byte >>> 5;
+                const additionalInfo = byte & 0x1F;
+
+                switch (majorType) {
+                    case 0: // Positive integer
+                        if (additionalInfo < 24) return additionalInfo;
+                        if (additionalInfo === 24) return readByte();
+                        if (additionalInfo === 25) {
+                            const high = readByte();
+                            const low = readByte();
+                            return (high << 8) | low;
+                        }
+                        throw new Error('Unsupported integer encoding');
+
+                    case 2: // Byte string
+                        let byteLength = additionalInfo;
+                        if (additionalInfo === 24) byteLength = readByte();
+                        return readBytes(byteLength);
+
+                    case 3: // Text string
+                        let textLength = additionalInfo;
+                        if (additionalInfo === 24) textLength = readByte();
+                        const textBytes = readBytes(textLength);
+                        return new TextDecoder().decode(textBytes);
+
+                    case 5: // Map
+                        let mapLength = additionalInfo;
+                        if (additionalInfo === 24) mapLength = readByte();
+                        const result = {};
+                        for (let i = 0; i < mapLength; i++) {
+                            const key = decodeValue();
+                            const value = decodeValue();
+                            result[key] = value;
+                        }
+                        return result;
+
+                    default:
+                        throw new Error(`Unsupported CBOR major type: ${majorType}`);
+                }
+            }
+
+            return decodeValue();
+        }
+
+        // BLAKE3 placeholder (using SHA-256)
+        async function blake3(buffer) {
+            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Simple QR decoder (placeholder - in production would use jsQR)
+        function decodeQR(imageData) {
+            // This is a placeholder - real implementation would decode QR from image
+            // For demo purposes, we'll return null to indicate no QR found
+            return null;
+        }
+
+        // Application state
+        let currentMode = 'scanner';
+        let cameraStream = null;
+        let frames = new Map();
+        let header = null;
+        let totalFrames = 0;
+        let receivedFrames = 0;
+        let duplicateFrames = 0;
+
+        // DOM elements
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        const scannerMode = document.getElementById('scannerMode');
+        const manualMode = document.getElementById('manualMode');
+        const status = document.getElementById('status');
+        const cameraVideo = document.getElementById('cameraVideo');
+        const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+        const progressPanel = document.getElementById('progressPanel');
+        const resultPanel = document.getElementById('resultPanel');
+
+        // Event listeners
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+        });
+
+        document.getElementById('startCamera').addEventListener('click', startCamera);
+        document.getElementById('stopCamera').addEventListener('click', stopCamera);
+        document.getElementById('manualCapture').addEventListener('click', captureFrame);
+        document.getElementById('processSharecodes').addEventListener('click', processSharecodes);
+        document.getElementById('clearInput').addEventListener('click', clearInput);
+        document.getElementById('assembleBtn').addEventListener('click', assembleFile);
+        document.getElementById('resetBtn').addEventListener('click', resetSession);
+
+        function showStatus(message, type = 'success') {
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+
+            modeButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            scannerMode.classList.toggle('active', mode === 'scanner');
+            manualMode.classList.toggle('active', mode === 'manual');
+
+            if (mode === 'manual' && cameraStream) {
+                stopCamera();
+            }
+        }
+
+        async function startCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' }
+                });
+
+                cameraVideo.srcObject = cameraStream;
+                cameraPlaceholder.style.display = 'none';
+                cameraVideo.style.display = 'block';
+
+                document.getElementById('startCamera').disabled = true;
+                document.getElementById('stopCamera').disabled = false;
+
+                showStatus('📷 Camera started - position QR codes in the green box', 'success');
+
+                // Start automatic scanning
+                startAutoScan();
+
+            } catch (error) {
+                showStatus(`❌ Camera access failed: ${error.message}`, 'error');
+            }
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+
+            cameraVideo.style.display = 'none';
+            cameraPlaceholder.style.display = 'flex';
+
+            document.getElementById('startCamera').disabled = false;
+            document.getElementById('stopCamera').disabled = true;
+
+            showStatus('📷 Camera stopped', 'warning');
+        }
+
+        function startAutoScan() {
+            if (!cameraStream) return;
+
+            // Scan every 500ms
+            const scanInterval = setInterval(() => {
+                if (!cameraStream) {
+                    clearInterval(scanInterval);
+                    return;
+                }
+
+                captureFrame();
+            }, 500);
+        }
+
+        function captureFrame() {
+            if (!cameraStream) return;
+
+            // Create canvas to capture frame
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = cameraVideo.videoWidth;
+            canvas.height = cameraVideo.videoHeight;
+
+            ctx.drawImage(cameraVideo, 0, 0);
+
+            // Try to decode QR (placeholder implementation)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const qrData = decodeQR(imageData);
+
+            if (qrData) {
+                processQRData(qrData);
+            }
+        }
+
+        function processQRData(qrData) {
+            try {
+                // Decode base32 -> CBOR -> Frame
+                const cborData = base32Decode(qrData);
+                const frame = decodeCBOR(cborData);
+
+                processFrame(frame);
+            } catch (error) {
+                console.warn('Failed to process QR data:', error);
+            }
+        }
+
+        function processSharecodes() {
+            const input = document.getElementById('sharecodesInput').value.trim();
+            if (!input) {
+                showStatus('❌ Please paste ShareCodes first', 'error');
+                return;
+            }
+
+            const lines = input.split('\\n').filter(line => line.trim());
+            let processed = 0;
+            let errors = 0;
+
+            for (const line of lines) {
+                try {
+                    const match = line.match(/^(\\d+)\\/(\\d+)\\s+(.+)\\*([A-F0-9]{4})\\*$/);
+                    if (!match) {
+                        errors++;
+                        continue;
+                    }
+
+                    const [, indexStr, totalStr, shareCodeData, expectedCrc] = match;
+
+                    // Verify CRC
+                    const actualCrc = crc16(shareCodeData);
+                    if (actualCrc !== expectedCrc) {
+                        errors++;
+                        continue;
+                    }
+
+                    // Decode frame
+                    const cborData = base32Decode(shareCodeData);
+                    const frame = decodeCBOR(cborData);
+
+                    processFrame(frame);
+                    processed++;
+
+                } catch (error) {
+                    errors++;
+                }
+            }
+
+            showStatus(`✅ Processed ${processed} ShareCodes, ${errors} errors`, 'success');
+        }
+
+        function processFrame(frame) {
+            const frameIndex = frame.chunkIndex;
+
+            // Check if this is the header frame
+            if (frame.header) {
+                if (!header) {
+                    header = frame.header;
+                    totalFrames = header.chunks + (header.parityEvery ? Math.ceil(header.chunks / header.parityEvery) : 0);
+                    initializeProgress();
+                    showStatus(`📋 Header received: ${header.name} (${header.size} bytes)`, 'success');
+                } else if (JSON.stringify(header) !== JSON.stringify(frame.header)) {
+                    showStatus('❌ Header mismatch - mixed file transfers?', 'error');
+                    return;
+                }
+            }
+
+            // Check for duplicates
+            if (frames.has(frameIndex)) {
+                duplicateFrames++;
+                updateStats();
+                return;
+            }
+
+            // Store frame
+            frames.set(frameIndex, frame);
+            receivedFrames++;
+
+            updateProgress();
+            updateStats();
+
+            // Check if we can assemble
+            if (header && canAssemble()) {
+                document.getElementById('assembleBtn').disabled = false;
+                showStatus('✅ All required frames received - ready to assemble!', 'success');
+            }
+        }
+
+        function initializeProgress() {
+            progressPanel.style.display = 'block';
+            updateFrameGrid();
+        }
+
+        function updateProgress() {
+            if (!header) return;
+
+            const progress = (receivedFrames / totalFrames) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${receivedFrames} / ${totalFrames} frames`;
+
+            updateFrameGrid();
+        }
+
+        function updateStats() {
+            document.getElementById('receivedCount').textContent = receivedFrames;
+            document.getElementById('duplicateCount').textContent = duplicateFrames;
+
+            if (header) {
+                const missing = totalFrames - receivedFrames;
+                const parityFrames = Array.from(frames.keys()).filter(i => i >= header.chunks).length;
+
+                document.getElementById('missingCount').textContent = missing;
+                document.getElementById('parityCount').textContent = parityFrames;
+            }
+        }
+
+        function updateFrameGrid() {
+            if (!header) return;
+
+            const grid = document.getElementById('frameGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < totalFrames; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'frame-cell';
+                cell.textContent = i + 1;
+
+                if (frames.has(i)) {
+                    if (i >= header.chunks) {
+                        cell.classList.add('parity');
+                    } else {
+                        cell.classList.add('received');
+                    }
+                } else {
+                    cell.classList.add('missing');
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function canAssemble() {
+            if (!header) return false;
+
+            // Check if we have all data frames or can recover missing ones
+            const dataFrames = new Set();
+            for (let i = 0; i < header.chunks; i++) {
+                if (frames.has(i)) {
+                    dataFrames.add(i);
+                }
+            }
+
+            const missingData = header.chunks - dataFrames.size;
+
+            // If no missing data, we can assemble
+            if (missingData === 0) return true;
+
+            // Check if we can recover with parity
+            if (header.parityEvery) {
+                // For simplicity, assume we can recover if we have parity frames
+                const parityFrames = Array.from(frames.keys()).filter(i => i >= header.chunks);
+                return parityFrames.length > 0;
+            }
+
+            return false;
+        }
+
+        async function assembleFile() {
+            if (!header || !canAssemble()) {
+                showStatus('❌ Cannot assemble - missing required frames', 'error');
+                return;
+            }
+
+            try {
+                // Collect data frames
+                const dataChunks = [];
+
+                for (let i = 0; i < header.chunks; i++) {
+                    if (frames.has(i)) {
+                        dataChunks[i] = frames.get(i).chunkData;
+                    } else {
+                        // Attempt parity recovery (simplified)
+                        dataChunks[i] = new Uint8Array(header.chunkSize);
+                        showStatus('🔧 Using parity recovery (simplified)', 'warning');
+                    }
+                }
+
+                // Reconstruct file
+                const chunks = dataChunks.map(chunk => new Uint8Array(chunk));
+                const fullData = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+
+                let offset = 0;
+                for (const chunk of chunks) {
+                    fullData.set(chunk, offset);
+                    offset += chunk.length;
+                }
+
+                const reconstructed = fullData.slice(0, header.size);
+
+                // Verify BLAKE3
+                const actualHash = await blake3(reconstructed.buffer);
+
+                if (actualHash !== header.blake3hex) {
+                    throw new Error(`BLAKE3 verification failed: expected ${header.blake3hex}, got ${actualHash}`);
+                }
+
+                // Success!
+                displayResult(reconstructed, header);
+                showStatus('✅ PASS - File reconstructed successfully!', 'success');
+
+            } catch (error) {
+                showStatus(`❌ FAIL - Assembly failed: ${error.message}`, 'error');
+            }
+        }
+
+        function displayResult(data, header) {
+            const resultContent = document.getElementById('resultContent');
+            const cliHint = document.getElementById('cliHint');
+            const cliCommand = document.getElementById('cliCommand');
+
+            resultContent.innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">File:</span>
+                    <span class="info-value">${header.name}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Size:</span>
+                    <span class="info-value">${data.length} bytes</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Hash:</span>
+                    <span class="info-value">${header.blake3hex.substring(0, 16)}...</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn primary" onclick="downloadReconstructed()">💾 Download Reconstructed</button>
+                </div>
+            `;
+
+            // Update CLI hint
+            cliCommand.textContent = `make fed-ingest PATHS="dist/air/out/${header.name}"`;
+            cliHint.style.display = 'block';
+
+            resultPanel.classList.add('show');
+
+            // Store reconstructed data for download
+            window.reconstructedData = data;
+            window.reconstructedFilename = header.name;
+        }
+
+        function downloadReconstructed() {
+            if (!window.reconstructedData) return;
+
+            const blob = new Blob([window.reconstructedData], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = window.reconstructedFilename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            URL.revokeObjectURL(url);
+
+            showStatus('💾 File downloaded successfully', 'success');
+        }
+
+        function clearInput() {
+            document.getElementById('sharecodesInput').value = '';
+        }
+
+        function resetSession() {
+            frames.clear();
+            header = null;
+            totalFrames = 0;
+            receivedFrames = 0;
+            duplicateFrames = 0;
+
+            progressPanel.style.display = 'none';
+            resultPanel.classList.remove('show');
+            document.getElementById('assembleBtn').disabled = true;
+
+            updateStats();
+            showStatus('🔄 Session reset', 'warning');
+        }
+    </script>
+</body>
+</html>

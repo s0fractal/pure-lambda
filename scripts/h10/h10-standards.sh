@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # H10: Planetary Standards & Stewardship
 # Making civilization reproducible and self-sustaining
 

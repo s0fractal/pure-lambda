@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # KPI Gate - Enforces performance requirements
 # Usage: ./kpi_gate.sh bench.out
 # Fails if KPIs are not met

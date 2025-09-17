@@ -1,0 +1,64 @@
+<!-- One-Tap Mirrors Integration Snippet -->
+<!-- Size: 2.73KB gzipped | No dependencies | Offline-first -->
+
+<!-- Minimal Integration (Recommended) -->
+<script src="/docs/otm/otm.min.js"></script>
+<script>OTM.mount();</script>
+
+<!-- Advanced Integration with Auto-Load -->
+<script src="/docs/otm/otm.min.js"></script>
+<script>
+// Initialize OTM with configuration
+OTM.mount({
+  mode: 'floating',
+  theme: 'auto'
+});
+
+// Auto-load seed from URL parameter
+const params = new URLSearchParams(window.location.search);
+const seedParam = params.get('seed');
+
+if (seedParam) {
+  try {
+    // Decode from base64url
+    const decoded = atob(seedParam.replace(/-/g, '+').replace(/_/g, '/'));
+    const seed = JSON.parse(decoded);
+    OTM.load(seed);
+    console.log('OTM: Loaded seed from URL:', seed.name);
+  } catch (error) {
+    console.error('OTM: Failed to load seed from URL');
+  }
+}
+
+// Listen for verification results
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'otm:verify:result') {
+    const { valid, error } = event.data.result;
+
+    if (valid) {
+      console.log('OTM: Verification successful');
+      // Optional: Show success notification
+    } else {
+      console.error('OTM: Verification failed:', error);
+      // Optional: Show error notification
+    }
+  }
+});
+
+// Example: Programmatic seed loading
+function loadExampleSeed() {
+  OTM.load({
+    name: "hello-city",
+    subjectHash: "2e188742fa9ec3aa09974dc1819316f99ad436775c162718956a6a740525e887",
+    nodes: {
+      // ... seed content
+    }
+  });
+}
+</script>
+
+<!-- CDN Version (for public sites) -->
+<!--
+<script src="https://pure-lambda.org/otm/otm.min.js"></script>
+<script>OTM.mount();</script>
+-->

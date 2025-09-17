@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # H7 Quick Start - Deploy tri-city mesh with economic layer
 
 set -e

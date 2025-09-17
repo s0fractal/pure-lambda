@@ -1,0 +1,45 @@
+{
+  "nodes": {
+    "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd": {
+      "cost": "O(1)",
+      "gid": "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "iid": "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "law": "identity",
+      "links": {},
+      "op": "FOCUS",
+      "ports": {
+        "in": "data",
+        "out": "result"
+      },
+      "receipt": null,
+      "xid": "506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+    },
+    "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c": {
+      "oids": [
+        "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd"
+      ],
+      "root": "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd"
+    }
+  },
+  "root": "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c",
+  "name": "hello-world",
+  "abi": {
+    "ports": {
+      "in": "data",
+      "out": "result"
+    }
+  },
+  "gidSet": [
+    "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602"
+  ],
+  "iidSet": [
+    "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b"
+  ],
+  "expected": {
+    "minRouteLen": 1,
+    "invariants": [
+      "GID independent of ports",
+      "IID equal for abi-equal"
+    ]
+  }
+}

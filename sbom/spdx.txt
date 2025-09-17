@@ -1,0 +1,86 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: pure-lambda-release
+DocumentNamespace: https://github.com/s0fractal/pure-lambda
+Creator: Tool: pure-lambda-release-pipeline
+
+FileName: dist/operon.json
+Checksum: SHA256:600c6bf011673933ea51a4807370ccf3a461a37066af66790ccd52b6da311b1a
+LicenseID: NOASSERTION
+
+FileName: dist/operon.nf.json
+Checksum: SHA256:7c4fee6e883840a9dc8bf720e4dd9bbc1d1447f7404932aca46eed3734544106
+LicenseID: NOASSERTION
+
+FileName: receipts/last.json
+Checksum: SHA256:965597abb88fc68cdb1c5e148e5c92c409c053821405a24c2b0191e396f85195
+LicenseID: NOASSERTION
+
+FileName: receipts/attest/provenance.json
+Checksum: SHA256:fe369d972608a5031e9c37b46ff2ad977b43dc583716c4bf35cbfd0ee4d9c6f3
+LicenseID: NOASSERTION
+
+FileName: receipts/attest/envelope.json
+Checksum: SHA256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+LicenseID: NOASSERTION
+
+FileName: embassy/index.html
+Checksum: SHA256:1b312f4b2f6b8f4a2ce0e593e65cca21b610bae96f7586fcef66676fe09c7ce3
+LicenseID: NOASSERTION
+
+FileName: docs/EMBASSY.md
+Checksum: SHA256:efeff981900d0df520f09716b60249be42523b83574a911222d1d18d245895e4
+LicenseID: NOASSERTION
+
+FileName: docs/TRUST-MODEL.md
+Checksum: SHA256:9d0b26f93ab37ea5a46b61ea9450858ae59bf52dc75b65ebb2c80ecd86117355
+LicenseID: NOASSERTION
+
+FileName: docs/POCKET-EMBASSY.md
+Checksum: SHA256:9c47de6d0d7fcd32a7caff77c030ea8b2a9f558cdf825aa1b13094a2fd060e4b
+LicenseID: NOASSERTION
+
+FileName: docs/pocket/index.htmlc
+Checksum: SHA256:cf84f257cb41a46381c0ecd0627d2c543ca6e770c79d59090eac5993f1d2e092
+LicenseID: NOASSERTION
+
+FileName: docs/demo/index.html
+Checksum: SHA256:5ce6485475c301816e2597c475f2ee9abfe239c2368f80414e27d0d2dfe374ec
+LicenseID: NOASSERTION
+
+FileName: reports/conformance/summary.md
+Checksum: SHA256:e2ac6c1c47129ad0763d1d28ae5340f960aff5f4dca22ee048452baab60d816d
+LicenseID: NOASSERTION
+
+FileName: licenses/NOTICE.txt
+Checksum: SHA256:f5b6f7dcc1b586a4d946967f9dca7a06f263dbcf35b46d37bda008db4a797cc7
+LicenseID: NOASSERTION
+
+FileName: sbom/spdx.txt
+Checksum: SHA256:3ea61caec94c55cbda6256d18215f33022862e72986ef68d7a113ba5cc62e963
+LicenseID: NOASSERTION
+
+FileName: docs/PL-CARTRIDGE-01.md
+Checksum: SHA256:3ef5223d1bdbed2d5fedee5bcd4d611c62c55057bb907ecebeb650cbb4258aab
+LicenseID: NOASSERTION
+
+FileName: seeds/focus-delay.json
+Checksum: SHA256:160dbcbc0b4494980325ecdbbe73cb7b07eb5849378435f27788125928c48ed9
+LicenseID: NOASSERTION
+
+FileName: seeds/index.json
+Checksum: SHA256:6ed6ec0146e3aedd6b3e93b2c7551377707b002624c36ed1d603de7a7fe855ee
+LicenseID: NOASSERTION
+
+FileName: seeds/scan-focus.json
+Checksum: SHA256:5babdfdb070c41f4dc35be4ce122c97c83c67654b577f31915f19852f0d65953
+LicenseID: NOASSERTION
+
+FileName: seeds/split-merge-min.json
+Checksum: SHA256:77737e7548952203c9bce8622141da1d23a53e726add6926d7e812a726a957b4
+LicenseID: NOASSERTION
+
+FileName: reports/weekly/2025-09-16.md
+Checksum: SHA256:12010876ba7f0689ee8da384b01e77d4b3dba10a5751b514342788d0810dbc4c
+LicenseID: NOASSERTION

@@ -1,7 +1,9 @@
 # 🚀 Pure Lambda - Autonomous Control System
 
 [![CI](https://github.com/s0fractal/pure-lambda/actions/workflows/ci.yml/badge.svg)](https://github.com/s0fractal/pure-lambda/actions/workflows/ci.yml)
-![PAC Badge](fractal-lattice/pac-badge.svg) ![Autopilot](https://img.shields.io/badge/autopilot-STABLE-brightgreen?style=flat-square) ![Speedup](https://img.shields.io/badge/speedup-1.61×-blue?style=flat-square) ![Proofs](https://img.shields.io/badge/proofs-✓-success?style=flat-square)
+![PAC Badge](fractal-lattice/pac-badge.svg) ![Autopilot](https://img.shields.io/badge/autopilot-STABLE-brightgreen?style=flat-square) ![Speedup](https://img.shields.io/badge/speedup-1.61×-blue?style=flat-square) ![Proofs](https://img.shields.io/badge/proofs-✓-success?style=flat-square) ![100 Seeds Week](https://img.shields.io/badge/100_Seeds_Week-LIVE-4CAF50?style=flat-square)
+
+> **🌱 100 Seeds Week is LIVE! Submit your computational seeds and help grow the ecosystem. [Learn more →](docs/100-SEEDS-WEEK.md)**
 
 > **Автопілот на стабільній ґратці: 1.61× швидше, PAC ≤ 2.22% @95%, нуль побічних ефектів (Gate G0). Embassy Pack — офлайн, read-only, з криптоперевіркою. Запустіть локально. Решта — ваша справа.**
 

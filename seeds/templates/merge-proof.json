@@ -1,0 +1,55 @@
+{
+  "name": "merge-proof",
+  "version": 1,
+  "intent": "Emit Church-Rosser confluence proof on merge",
+  "size": "≤10KB",
+  "novelty": 0.71,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "branch1": {
+      "op": "BRANCH",
+      "params": {
+        "id": "alpha"
+      }
+    },
+    "branch2": {
+      "op": "BRANCH",
+      "params": {
+        "id": "beta"
+      }
+    },
+    "confluence": {
+      "op": "MERGE",
+      "params": {
+        "verify": "church-rosser",
+        "emit_proof": true
+      }
+    },
+    "proof": {
+      "op": "EMIT",
+      "params": {
+        "type": "confluence-proof",
+        "hash": true
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    ["entry", "branch1"],
+    ["entry", "branch2"],
+    ["branch1", "confluence"],
+    ["branch2", "confluence"],
+    ["confluence", "proof"],
+    ["proof", "exit"]
+  ],
+  "fixtures": [
+    {"branches": ["alpha", "beta"], "expected": {"confluent": true, "proof": "hash"}}
+  ],
+  "xidv2": "merge-proof-v2-${timestamp}"
+}

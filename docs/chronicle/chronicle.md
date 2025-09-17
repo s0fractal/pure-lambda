@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2025 Pure Lambda Authors -->
+
 # Chronicle of Pure Lambda
 
 *A living record of our civilization's journey*

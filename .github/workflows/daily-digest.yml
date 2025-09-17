@@ -1,0 +1,25 @@
+name: Daily Digest
+
+on:
+  schedule:
+    - cron: "5 21 * * *"   # одразу після вечірнього автопілота (20:00 UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: npm ci || true
+      - run: node scripts/daily-digest.mjs
+      - name: Commit & push
+        run: |
+          git config user.name "pl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/status/daily.md dist/badges/*.svg || true
+          git diff --cached --quiet || (git commit -m "chore(digest): update $(date -u +%F)" && git push)

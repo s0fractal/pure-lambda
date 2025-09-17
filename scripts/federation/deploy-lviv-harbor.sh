@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # Federation Day-0: Deploy lviv-harbor
 # Second city rises on the shores of data
 

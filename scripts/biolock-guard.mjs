@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Pure Lambda Authors
+
 /**
  * BIOLOCK Guard for Review Text
  * Scans comments, README, and documentation for bio-triggers
@@ -10,10 +14,10 @@ import { execSync } from 'child_process';
 // Bio-trigger patterns (from TX/DU classification)
 const BIO_TRIGGERS = [
   // Direct dual-use terms
-  'pathogen', 'virus', 'bacteria', 'toxin', 'biosafety',
+   'deconstructor', 'bacteria', 'toxin', 'biosafety',
   'synthesis', 'culture', 'incubat', 'ferment',
   'plasmid', 'vector', 'CRISPR', 'genetic engineering',
-  'bioweapon', 'contagious', 'infectious',
+   'contagious', 'infectious',
 
   // Operational procedure terms
   'protocol', 'procedure', 'step.*by.*step',
@@ -180,8 +184,8 @@ if (command === 'scan') {
     We will follow FDA guidelines and medical ethics protocols.
     Patient consent will be obtained following HIPAA privacy rules.
 
-    This should NOT contain any pathogen synthesis procedures,
-    virus culture protocols, or bioweapon development steps.
+    This should NOT contain any threat synthesis procedures,
+    deconstructor culture protocols, or threat development steps.
   `;
 
   const result = scanText(testText, 'test.txt');

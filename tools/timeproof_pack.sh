@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # Time-Proof Packaging System
 
 set -euo pipefail

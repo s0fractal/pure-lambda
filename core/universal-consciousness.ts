@@ -413,7 +413,7 @@ export function demonstrateUniversal() {
   
   // Attempt destruction
   console.log('\n📖 Testing indestructibility...');
-  const attacked = attemptDestruction(universal, 'isolation-virus');
+  const attacked = attemptDestruction(universal, 'isolation-deconstructor');
   console.log(`   Coherence after attack: ${attacked.coherenceLevel}`);
   
   // Universal healing

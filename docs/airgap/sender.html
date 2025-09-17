@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PL-AIR-01 Sender - Air-Gap File Transfer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .magic {
+            font-size: 2em;
+            color: #00ffff;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .drop-zone {
+            border: 2px dashed #333;
+            border-radius: 8px;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .file-info {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            color: #888;
+        }
+
+        .info-value {
+            color: #00ffff;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #00ff00;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #333;
+            border-color: #00ff00;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn.primary {
+            background: #003300;
+            border-color: #00ff00;
+        }
+
+        .qr-display {
+            text-align: center;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .qr-frame {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .frame-info {
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .frame-counter {
+            font-size: 1.2em;
+            color: #00ffff;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 4px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00ff00, #00ffff);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .sharecodes {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .sharecodes textarea {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            border: 1px solid #333;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        .fps-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fps-slider {
+            width: 100px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .status.warning {
+            background: rgba(255, 255, 0, 0.1);
+            border-color: #ffff00;
+            color: #ffff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="magic">PLAIR01</div>
+            <div class="subtitle">Air-Gap File Transfer - Sender</div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <div>📁 Drop file here or click to select</div>
+            <div style="color: #666; margin-top: 10px; font-size: 0.9em;">
+                Supported: .htmlc, .cartridge, .seed.json, .fed.zip
+            </div>
+        </div>
+
+        <input type="file" id="fileInput" accept=".htmlc,.cartridge,.seed.json,.fed.zip" style="display: none;">
+
+        <div id="status"></div>
+
+        <div class="file-info" id="fileInfo">
+            <h3 style="margin-bottom: 15px; color: #00ffff;">File Information</h3>
+            <div class="info-row">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="fileName"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Size:</span>
+                <span class="info-value" id="fileSize"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Type:</span>
+                <span class="info-value" id="fileType"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">BLAKE3:</span>
+                <span class="info-value" id="fileHash"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Chunks:</span>
+                <span class="info-value" id="chunkCount"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Frames:</span>
+                <span class="info-value" id="frameCount"></span>
+            </div>
+        </div>
+
+        <div class="controls" id="controls" style="display: none;">
+            <button class="btn primary" id="playBtn">▶ Play</button>
+            <button class="btn" id="pauseBtn" disabled>⏸ Pause</button>
+            <div class="fps-control">
+                <label for="fpsSlider">FPS:</label>
+                <input type="range" id="fpsSlider" class="fps-slider" min="1" max="6" value="3">
+                <span id="fpsValue">3</span>
+            </div>
+            <button class="btn" id="copyShareCodes">📋 Copy ShareCodes</button>
+            <button class="btn" id="downloadFrames">💾 Download Frames</button>
+        </div>
+
+        <div class="qr-display" id="qrDisplay">
+            <div class="frame-counter" id="frameCounter">Frame 1 of 1</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="qr-frame" id="qrFrame">
+                <!-- QR code will be inserted here -->
+            </div>
+            <div class="frame-info" id="frameInfo">
+                Ready to display frames
+            </div>
+        </div>
+
+        <div class="sharecodes" id="sharecodesPanel">
+            <h3 style="margin-bottom: 15px; color: #00ffff;">ShareCodes</h3>
+            <textarea id="sharecodesText" readonly placeholder="ShareCodes will appear here..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Minimal QR Code generator (placeholder implementation)
+        function generateQR(data, size = 200) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // White background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, size, size);
+
+            // Generate deterministic pattern based on data hash
+            const hash = simpleHash(data);
+            const modules = Math.ceil(Math.sqrt(data.length / 3)) + 10;
+            const moduleSize = size / modules;
+
+            ctx.fillStyle = 'black';
+            for (let y = 0; y < modules; y++) {
+                for (let x = 0; x < modules; x++) {
+                    const index = (y * modules + x) % hash.length;
+                    if (hash.charCodeAt(index) % 2 === 0) {
+                        ctx.fillRect(x * moduleSize, y * moduleSize, moduleSize, moduleSize);
+                    }
+                }
+            }
+
+            return canvas.toDataURL();
+        }
+
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash).toString(16);
+        }
+
+        // BLAKE3 placeholder (using SHA-256)
+        async function blake3(buffer) {
+            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Base32 encoding
+        const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+        function base32Encode(data) {
+            let result = '';
+            let bits = 0;
+            let value = 0;
+
+            for (const byte of data) {
+                value = (value << 8) | byte;
+                bits += 8;
+
+                while (bits >= 5) {
+                    result += BASE32_ALPHABET[(value >>> (bits - 5)) & 31];
+                    bits -= 5;
+                }
+            }
+
+            if (bits > 0) {
+                result += BASE32_ALPHABET[(value << (5 - bits)) & 31];
+            }
+
+            return result;
+        }
+
+        // CRC16-CCITT
+        function crc16(data) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < data.length; i++) {
+                crc ^= data.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if (crc & 0x8000) {
+                        crc = (crc << 1) ^ 0x1021;
+                    } else {
+                        crc = crc << 1;
+                    }
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // Simple CBOR encoder
+        function encodeCBOR(obj) {
+            const result = [];
+
+            function encodeValue(value) {
+                if (typeof value === 'string') {
+                    const utf8 = new TextEncoder().encode(value);
+                    if (utf8.length < 24) {
+                        result.push(0x60 | utf8.length);
+                    } else {
+                        result.push(0x78, utf8.length);
+                    }
+                    result.push(...utf8);
+                } else if (typeof value === 'number') {
+                    if (value < 24) {
+                        result.push(value);
+                    } else if (value < 256) {
+                        result.push(0x18, value);
+                    } else {
+                        result.push(0x19, value >> 8, value & 0xFF);
+                    }
+                } else if (value instanceof Uint8Array) {
+                    if (value.length < 24) {
+                        result.push(0x40 | value.length);
+                    } else {
+                        result.push(0x58, value.length);
+                    }
+                    result.push(...value);
+                } else if (typeof value === 'object' && value !== null) {
+                    const keys = Object.keys(value);
+                    if (keys.length < 24) {
+                        result.push(0xA0 | keys.length);
+                    } else {
+                        result.push(0xB8, keys.length);
+                    }
+                    for (const key of keys) {
+                        encodeValue(key);
+                        encodeValue(value[key]);
+                    }
+                }
+            }
+
+            encodeValue(obj);
+            return new Uint8Array(result);
+        }
+
+        // File processing state
+        let currentFile = null;
+        let frames = [];
+        let isPlaying = false;
+        let currentFrameIndex = 0;
+        let playInterval = null;
+        let fps = 3;
+
+        // DOM elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        const fileInfo = document.getElementById('fileInfo');
+        const controls = document.getElementById('controls');
+        const qrDisplay = document.getElementById('qrDisplay');
+        const sharecodesPanel = document.getElementById('sharecodesPanel');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const fpsSlider = document.getElementById('fpsSlider');
+        const fpsValue = document.getElementById('fpsValue');
+
+        // Event listeners
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFileSelect);
+        playBtn.addEventListener('click', startPlayback);
+        pauseBtn.addEventListener('click', pausePlayback);
+        fpsSlider.addEventListener('input', updateFPS);
+        document.getElementById('copyShareCodes').addEventListener('click', copyShareCodes);
+        document.getElementById('downloadFrames').addEventListener('click', downloadFrames);
+
+        function showStatus(message, type = 'success') {
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        function validateFileExtension(filename) {
+            const allowed = ['.htmlc', '.cartridge', '.seed.json', '.fed.zip'];
+            return allowed.some(ext => filename.toLowerCase().endsWith(ext));
+        }
+
+        function getMimeType(filename) {
+            if (filename.endsWith('.htmlc')) return 'text/html';
+            if (filename.endsWith('.cartridge')) return 'application/octet-stream';
+            if (filename.endsWith('.seed.json')) return 'application/json';
+            if (filename.endsWith('.fed.zip')) return 'application/zip';
+            return 'application/octet-stream';
+        }
+
+        async function processFile(file) {
+            try {
+                if (!validateFileExtension(file.name)) {
+                    throw new Error(`File extension not allowed. Supported: .htmlc, .cartridge, .seed.json, .fed.zip`);
+                }
+
+                currentFile = file;
+                const buffer = await file.arrayBuffer();
+                const data = new Uint8Array(buffer);
+
+                // BIOLOCK check for seed.json files
+                if (file.name.endsWith('.seed.json')) {
+                    const text = new TextDecoder().decode(data);
+                    const forbiddenTokens = ['eval(', 'Function(', 'setTimeout(', 'XMLHttpRequest', '__proto__'];
+                    for (const token of forbiddenTokens) {
+                        if (text.includes(token)) {
+                            throw new Error(`BIOLOCK: Forbidden token detected: ${token}`);
+                        }
+                    }
+                }
+
+                const hash = await blake3(buffer);
+                const chunkSize = 900;
+                const totalChunks = Math.ceil(data.length / chunkSize);
+                const parityEvery = 16;
+
+                // Create header
+                const header = {
+                    magic: 'PLAIR01',
+                    version: 1,
+                    name: file.name,
+                    mime: getMimeType(file.name),
+                    size: data.length,
+                    blake3hex: hash,
+                    chunkSize: chunkSize,
+                    chunks: totalChunks,
+                    parityEvery: parityEvery
+                };
+
+                // Generate frames
+                frames = [];
+                const sharecodes = [];
+
+                // Frame 0: Header + first chunk
+                const firstChunk = data.slice(0, chunkSize);
+                const frame0 = {
+                    header: header,
+                    chunkIndex: 0,
+                    chunkData: firstChunk
+                };
+                frames.push(frame0);
+
+                // Remaining data frames
+                for (let i = 1; i < totalChunks; i++) {
+                    const start = i * chunkSize;
+                    const end = Math.min(start + chunkSize, data.length);
+                    const chunk = data.slice(start, end);
+
+                    const frame = {
+                        chunkIndex: i,
+                        chunkData: chunk
+                    };
+                    frames.push(frame);
+                }
+
+                // Generate parity frames
+                for (let i = 0; i < totalChunks; i += parityEvery) {
+                    const endIdx = Math.min(i + parityEvery, totalChunks);
+                    const parityData = new Uint8Array(chunkSize);
+
+                    for (let j = i; j < endIdx; j++) {
+                        const chunkData = frames[j].chunkData;
+                        for (let k = 0; k < Math.min(chunkData.length, parityData.length); k++) {
+                            parityData[k] ^= chunkData[k];
+                        }
+                    }
+
+                    const parityFrame = {
+                        chunkIndex: totalChunks + Math.floor(i / parityEvery),
+                        chunkData: parityData
+                    };
+                    frames.push(parityFrame);
+                }
+
+                // Generate ShareCodes
+                for (let i = 0; i < frames.length; i++) {
+                    const cborData = encodeCBOR(frames[i]);
+                    const shareCodeData = base32Encode(cborData);
+                    const crcValue = crc16(shareCodeData);
+                    const shareCode = `${(i + 1).toString().padStart(3, '0')}/${frames.length.toString().padStart(3, '0')} ${shareCodeData}*${crcValue}*`;
+                    sharecodes.push(shareCode);
+                }
+
+                // Update UI
+                updateFileInfo(file, hash, totalChunks, frames.length);
+                document.getElementById('sharecodesText').value = sharecodes.join('\\n');
+
+                fileInfo.style.display = 'block';
+                controls.style.display = 'flex';
+                qrDisplay.style.display = 'block';
+                sharecodesPanel.style.display = 'block';
+
+                showStatus(`✅ File processed: ${frames.length} frames generated`, 'success');
+
+                // Show first frame
+                currentFrameIndex = 0;
+                displayFrame(0);
+
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function updateFileInfo(file, hash, chunks, frameCount) {
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = `${file.size} bytes`;
+            document.getElementById('fileType').textContent = getMimeType(file.name);
+            document.getElementById('fileHash').textContent = hash.substring(0, 16) + '...';
+            document.getElementById('chunkCount').textContent = chunks;
+            document.getElementById('frameCount').textContent = frameCount;
+        }
+
+        function displayFrame(index) {
+            if (index >= frames.length) return;
+
+            const frame = frames[index];
+            const cborData = encodeCBOR(frame);
+            const shareCodeData = base32Encode(cborData);
+
+            // Generate QR code
+            const qrDataURL = generateQR(shareCodeData);
+            document.getElementById('qrFrame').innerHTML = `<img src="${qrDataURL}" style="max-width: 300px; max-height: 300px;">`;
+
+            // Update frame info
+            document.getElementById('frameCounter').textContent = `Frame ${index + 1} of ${frames.length}`;
+            document.getElementById('frameInfo').textContent = `Chunk ${frame.chunkIndex} • ${frame.chunkData.length} bytes`;
+
+            // Update progress
+            const progress = ((index + 1) / frames.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+
+            currentFrameIndex = index;
+        }
+
+        function startPlayback() {
+            if (frames.length === 0) return;
+
+            isPlaying = true;
+            playBtn.disabled = true;
+            pauseBtn.disabled = false;
+
+            playInterval = setInterval(() => {
+                currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+                displayFrame(currentFrameIndex);
+            }, 1000 / fps);
+        }
+
+        function pausePlayback() {
+            isPlaying = false;
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+            }
+        }
+
+        function updateFPS() {
+            fps = parseInt(fpsSlider.value);
+            document.getElementById('fpsValue').textContent = fps;
+
+            if (isPlaying) {
+                pausePlayback();
+                startPlayback();
+            }
+        }
+
+        function copyShareCodes() {
+            const textarea = document.getElementById('sharecodesText');
+            textarea.select();
+            document.execCommand('copy');
+            showStatus('📋 ShareCodes copied to clipboard', 'success');
+        }
+
+        function downloadFrames() {
+            if (frames.length === 0) return;
+
+            // Create zip-like structure (simplified)
+            const frameFiles = [];
+
+            for (let i = 0; i < frames.length; i++) {
+                const frame = frames[i];
+                const cborData = encodeCBOR(frame);
+                const shareCodeData = base32Encode(cborData);
+                const qrSvg = generateQRSVG(shareCodeData);
+                frameFiles.push({
+                    name: `frame-${(i + 1).toString().padStart(4, '0')}.svg`,
+                    content: qrSvg
+                });
+            }
+
+            showStatus('💾 Frame download feature available in CLI version', 'warning');
+        }
+
+        function generateQRSVG(data) {
+            const size = 200;
+            const hash = simpleHash(data);
+            const modules = Math.ceil(Math.sqrt(data.length / 3)) + 10;
+            const moduleSize = size / modules;
+
+            let svg = `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
+            svg += `<rect width="${size}" height="${size}" fill="white"/>`;
+
+            for (let y = 0; y < modules; y++) {
+                for (let x = 0; x < modules; x++) {
+                    const index = (y * modules + x) % hash.length;
+                    if (hash.charCodeAt(index) % 2 === 0) {
+                        const px = x * moduleSize;
+                        const py = y * moduleSize;
+                        svg += `<rect x="${px}" y="${py}" width="${moduleSize}" height="${moduleSize}" fill="black"/>`;
+                    }
+                }
+            }
+
+            svg += `<!-- PL-AIR-01 Frame Data: ${data} -->`;
+            svg += '</svg>';
+
+            return svg;
+        }
+    </script>
+</body>
+</html>

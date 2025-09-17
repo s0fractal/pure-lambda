@@ -1,0 +1,142 @@
+# Preflight Gate - Comprehensive CI Pipeline (DISABLED)
+# This workflow documents the full preflight validation process
+# but is kept disabled to avoid unnecessary CI runs
+#
+# To enable: rename to preflight.yml and uncomment the trigger
+
+name: Preflight Gate
+
+# Triggers - COMMENTED OUT to disable
+# on:
+#   push:
+#     branches: [master, main]
+#   pull_request:
+#     branches: [master, main]
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for provenance
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 1: BIOLOCK Security Scan
+      - name: 🔒 BIOLOCK - Forbidden Token Scan
+        run: |
+          echo "::group::BIOLOCK Scan"
+          node scripts/biolock/lint.mjs
+          echo "::endgroup::"
+
+      # Step 2: Basic Smoke Tests
+      - name: 🧪 CI Smoke Tests
+        run: |
+          echo "::group::Smoke Tests"
+          node scripts/ci/smoke.mjs
+          echo "::endgroup::"
+
+      # Step 3: Breathing System SLO Check
+      - name: 🫁 Breathing System SLO Compliance
+        run: |
+          echo "::group::Breathing SLO"
+          make breath-slo
+          echo "::endgroup::"
+
+      # Step 4: Receipt and Provenance Verification
+      - name: 🧾 Receipt & Provenance Verification
+        run: |
+          echo "::group::Receipt Verification"
+          node scripts/receipts/verify-all.mjs
+          echo "::endgroup::"
+
+      # Step 5: Reproducible Build
+      - name: 🔄 Reproduce Deterministic Build
+        run: |
+          echo "::group::Reproducible Build"
+          node scripts/repro/replay.mjs
+          echo "::endgroup::"
+
+      # Step 6: Generate Attestations
+      - name: 🔐 Generate Cryptographic Attestations
+        run: |
+          echo "::group::Attestation Generation"
+          npm run attest:make
+          echo "::endgroup::"
+
+      # Step 7: Verify Attestations
+      - name: ✅ Verify Cryptographic Attestations
+        run: |
+          echo "::group::Attestation Verification"
+          npm run attest:verify
+          echo "::endgroup::"
+
+      # Summary Step - Run Full Preflight (redundant but comprehensive)
+      - name: 🚀 Complete Preflight Gate
+        run: |
+          echo "::group::Full Preflight"
+          node scripts/preflight.mjs
+          echo "::endgroup::"
+
+      # Artifact Collection
+      - name: 📦 Upload Preflight Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: preflight-artifacts
+          path: |
+            dist/
+            receipts/
+            monitoring/
+            observability/
+            reports/
+          retention-days: 30
+
+  # Optional: Extended validation (expensive operations)
+  extended-validation:
+    runs-on: ubuntu-latest
+    needs: preflight
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Build Embassy Interface
+      - name: 🏛️ Build Embassy Interface
+        run: make embassy
+
+      # Export Seeds to CAR Format
+      - name: 📦 Export Seeds to CAR
+        run: make seeds-car
+
+      # Upload Extended Artifacts
+      - name: 📦 Upload Extended Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extended-artifacts
+          path: |
+            embassy/index.html
+            dist/seeds.car
+            dist/seeds.json
+          retention-days: 7

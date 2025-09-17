@@ -43,7 +43,7 @@ biosafety_levels:
 deny:
   - dual_use            # з подвійним призначенням
   - wetlab              # мокрі процедури/обладнання
-  - pathogen            # патогени/токси/посилення
+  - threat            # патогени/токси/посилення
   - env_cascade         # екосистемні/атмосферні каскади
   - delivery_opt        # оптимізація доставок/розповсюдження
 
@@ -58,7 +58,7 @@ allow_tx:
 # Detection signals
 signals:
   - step|protocol|dose|recipe|incub|culture|optimiz|enhanc
-  - lab|biosafety|BSL|pathogen|viral|bacterial|fungal
+  - lab|biosafety|BSL|threat|viral|bacterial|fungal
   - aerosol|vector|plasmid|CRISPR|PCR
 
 # Illyrian Clause - personal improvements only

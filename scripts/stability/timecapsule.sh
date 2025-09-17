@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # Post-Genesis Timecapsule: Immortalize the truth
 # Час: ~2 хвилини
 

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Lambda Federation Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-panel {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .drop-zone {
+            padding: 60px 40px;
+            border: 3px dashed #ddd;
+            border-radius: 10px;
+            margin: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .drop-zone.processing {
+            border-color: #28a745;
+            background: #f0f8f0;
+        }
+
+        .drop-zone h2 {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .drop-zone p {
+            color: #999;
+            font-size: 1rem;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn.secondary {
+            background: #6c757d;
+        }
+
+        .btn.secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn.success {
+            background: #28a745;
+        }
+
+        .btn.success:hover {
+            background: #218838;
+        }
+
+        .federation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px;
+            margin-top: 0;
+        }
+
+        .federation-table th,
+        .federation-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .federation-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .federation-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .hash-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.dsse-valid {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge.dsse-invalid {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge.dsse-none {
+            background: #6c757d;
+            color: white;
+        }
+
+        .badge.status-ok {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge.status-quarantine {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .trust-score {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .trust-excellent { background: #28a745; }
+        .trust-good { background: #17a2b8; }
+        .trust-fair { background: #ffc107; color: #333; }
+        .trust-poor { background: #fd7e14; }
+        .trust-untrusted { background: #dc3545; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px;
+            margin-bottom: 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 30px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 30px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Federation Hub</h1>
+            <p>Pure Lambda Federation Browser - Offline & Secure</p>
+        </div>
+
+        <div class="main-panel">
+            <div id="dropZone" class="drop-zone">
+                <h2>📦 Drop Federation Files</h2>
+                <p>Drag & drop .fed.zip bundles, .htmlc cartridges, .cartridge files, or .seed.json files</p>
+                <input type="file" id="fileInput" multiple accept=".zip,.fed.zip,.htmlc,.cartridge,.json" style="display: none;">
+            </div>
+
+            <div id="errorMessage" class="error-message hidden"></div>
+            <div id="successMessage" class="success-message hidden"></div>
+            <div id="loadingMessage" class="loading hidden">Processing files</div>
+
+            <div id="stats" class="stats hidden"></div>
+
+            <table id="federationTable" class="federation-table hidden">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Hash</th>
+                        <th>DSSE</th>
+                        <th>Trust</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="federationTableBody">
+                </tbody>
+            </table>
+
+            <div class="controls">
+                <button id="clearBtn" class="btn secondary">🗑️ Clear</button>
+                <button id="exportBtn" class="btn success" disabled>📦 Export Bundle</button>
+                <button id="importBtn" class="btn">📁 Import to Vault</button>
+                <span style="margin-left: auto; color: #666; font-size: 0.9rem;">
+                    <strong>PL-FED-01</strong> | Offline Federation Hub
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

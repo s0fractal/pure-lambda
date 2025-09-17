@@ -1,0 +1,66 @@
+{
+  "version": "1.0",
+  "generated": "2025-09-17T08:27:10.624Z",
+  "artifacts": [
+    {
+      "name": "federation.fed.zip",
+      "kind": "federation",
+      "size": 2663,
+      "blake3": "4a5a8a79467420da48e4f8a90574f9c495ac4466906e5ac37a8ae898b0a7a054",
+      "dsse": false,
+      "conformance": {
+        "passed": 27,
+        "total": 27
+      },
+      "trustScore": 1,
+      "freshnessDays": 0.0783632175925926
+    },
+    {
+      "name": "hello-city.cartridge",
+      "kind": "cartridge",
+      "size": 4702,
+      "blake3": "2ea6d5e3a79b661e05b17b0021abcce9bcdd03541b016fc917dd0f68f72b0b2f",
+      "dsse": false,
+      "conformance": {
+        "passed": 3,
+        "total": 3
+      },
+      "trustScore": 1,
+      "freshnessDays": 0.0783632175925926
+    },
+    {
+      "name": "hello-city.htmlc",
+      "kind": "htmlc",
+      "size": 14242,
+      "blake3": "ae8e316fbc04ff165067f357e3447b19dbcc3fcade7a306143d4bec0cb6f21d0",
+      "dsse": false,
+      "conformance": {
+        "passed": 3,
+        "total": 3
+      },
+      "trustScore": 1,
+      "freshnessDays": 0.0783632175925926
+    }
+  ],
+  "trust": {
+    "overall": {
+      "score": 1,
+      "grade": "excellent",
+      "ready": false
+    },
+    "components": {
+      "dsse": {
+        "present": 11,
+        "valid": 11,
+        "total": 11
+      },
+      "conformance": {
+        "passed": 27,
+        "total": 27
+      },
+      "freshness": {
+        "ageMedianDays": 0.0783632175925926
+      }
+    }
+  }
+}

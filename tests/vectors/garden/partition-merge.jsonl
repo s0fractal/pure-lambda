@@ -1,0 +1,3 @@
+{"name": "partition_merge_split_pattern", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/partition-merge.json", "expect": {"gidStable": true, "iidStable": true, "minRouteLen": 3, "pattern": "split_by_predicate_merge"}}
+{"name": "partition_merge_laws", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/partition-merge.json", "expect": {"lawTypes": ["decision", "transformation", "convergence"], "opSequence": ["SPLIT", "MAP", "MERGE"], "parallelPaths": 2}}
+{"name": "partition_merge_convergence", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/partition-merge.json", "expect": {"splitNodes": 1, "mergeNodes": 1, "processNodes": 2, "minRouteLen": 3}}

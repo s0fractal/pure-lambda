@@ -1,0 +1,167 @@
+{
+  "manifest": {
+    "schema": "PL-CARTRIDGE-01",
+    "name": "hello-city",
+    "gid": "",
+    "iidSet": [],
+    "xidSet": [],
+    "xidV2": "935723212fe52ddbfdb6ca169fec4f4707e6e6be4ce2ef7a2b75a06709a13c5d",
+    "size": {
+      "seed": 5150,
+      "envelope": 0,
+      "total": 5150
+    },
+    "integrity": {
+      "seedHash": "19ec19dee1ee566d0b05b3b37f82ecf227057f175036e823372f3406d71ed8ee",
+      "envelopeHash": null
+    },
+    "metadata": {
+      "version": 1,
+      "profile": "universal",
+      "nodeCount": 0,
+      "edgeCount": 0
+    },
+    "provenance": {
+      "bundledAt": "2025-09-17T11:15:59.293Z",
+      "bundledBy": "pure-lambda/contributor-kit",
+      "gitRev": "873a585bafdafa41413675f8ae9b4a30884ffa36",
+      "source": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/hello-city.json"
+    }
+  },
+  "seed": {
+    "pl_seed": "PL-SEED-01",
+    "version": 1,
+    "createdAt": "2025-09-17T09:00:00.000Z",
+    "nodes": {
+      "baf1111111111111111111111111111111111111111111111111111111111": {
+        "cost": "O(1)",
+        "gid": "city_gate_8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+        "iid": "entry_90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+        "law": "entrance",
+        "links": {
+          "next": "baf2222222222222222222222222222222222222222222222222222222222"
+        },
+        "op": "ENTER",
+        "ports": {
+          "in": "visitor",
+          "out": "citizen"
+        },
+        "receipt": null,
+        "xid": "gate_506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+      },
+      "baf2222222222222222222222222222222222222222222222222222222222": {
+        "cost": "O(log n)",
+        "gid": "main_street_c2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+        "iid": "navigate_a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+        "law": "pathfinding",
+        "links": {
+          "market": "baf3333333333333333333333333333333333333333333333333333333333",
+          "park": "baf4444444444444444444444444444444444444444444444444444444444"
+        },
+        "op": "ROUTE",
+        "ports": {
+          "in": "citizen",
+          "market": "to_market",
+          "park": "to_park"
+        },
+        "receipt": null,
+        "xid": "street_d1e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i2"
+      },
+      "baf3333333333333333333333333333333333333333333333333333333333": {
+        "cost": "O(n)",
+        "gid": "market_square_e3f2d1c0b9a8778695847362514039f2e1d0c9b8a77685949372615049382716",
+        "iid": "trade_b2c3d4e5f6g7890123456789012345678901234567890123456789012345678901",
+        "law": "exchange",
+        "links": {
+          "out": "baf5555555555555555555555555555555555555555555555555555555555"
+        },
+        "op": "TRADE",
+        "ports": {
+          "in": "to_market",
+          "out": "with_goods"
+        },
+        "receipt": null,
+        "xid": "market_e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i3"
+      },
+      "baf4444444444444444444444444444444444444444444444444444444444": {
+        "cost": "O(1)",
+        "gid": "central_park_f4e3d2c1b0a9887776655443322110f9e8d7c6b5a49382716055944938271605",
+        "iid": "rest_c3d4e5f6g7h8901234567890123456789012345678901234567890123456789012",
+        "law": "restoration",
+        "links": {
+          "out": "baf5555555555555555555555555555555555555555555555555555555555"
+        },
+        "op": "REST",
+        "ports": {
+          "in": "to_park",
+          "out": "refreshed"
+        },
+        "receipt": null,
+        "xid": "park_f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i4"
+      },
+      "baf5555555555555555555555555555555555555555555555555555555555": {
+        "cost": "O(1)",
+        "gid": "city_hall_g5f4e3d2c1b0998877665544332211g0f9e8d7c6b5a493827160559449382716",
+        "iid": "unite_d4e5f6g7h8i9012345678901234567890123456789012345678901234567890123",
+        "law": "convergence",
+        "links": {},
+        "op": "GATHER",
+        "ports": {
+          "goods": "with_goods",
+          "energy": "refreshed",
+          "out": "hello_city"
+        },
+        "receipt": null,
+        "xid": "hall_g4h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7e8f9g0h1i5"
+      },
+      "baf9999999999999999999999999999999999999999999999999999999999": {
+        "oids": [
+          "baf1111111111111111111111111111111111111111111111111111111111",
+          "baf2222222222222222222222222222222222222222222222222222222222",
+          "baf3333333333333333333333333333333333333333333333333333333333",
+          "baf4444444444444444444444444444444444444444444444444444444444",
+          "baf5555555555555555555555555555555555555555555555555555555555"
+        ],
+        "root": "baf1111111111111111111111111111111111111111111111111111111111"
+      }
+    },
+    "root": "baf9999999999999999999999999999999999999999999999999999999999",
+    "name": "hello-city",
+    "abi": {
+      "ports": {
+        "in": "visitor",
+        "out": "hello_city"
+      },
+      "patterns": [
+        "JOURNEY",
+        "CHOICE",
+        "CONVERGENCE"
+      ]
+    },
+    "gidSet": [
+      "city_gate_8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "main_street_c2f1e0d9b8a7968574635241f0e9d8c7b6a59483726150a9b8c7d6e5f493a2b1",
+      "market_square_e3f2d1c0b9a8778695847362514039f2e1d0c9b8a77685949372615049382716",
+      "central_park_f4e3d2c1b0a9887776655443322110f9e8d7c6b5a49382716055944938271605",
+      "city_hall_g5f4e3d2c1b0998877665544332211g0f9e8d7c6b5a493827160559449382716"
+    ],
+    "iidSet": [
+      "entry_90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "navigate_a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+      "trade_b2c3d4e5f6g7890123456789012345678901234567890123456789012345678901",
+      "rest_c3d4e5f6g7h8901234567890123456789012345678901234567890123456789012",
+      "unite_d4e5f6g7h8i9012345678901234567890123456789012345678901234567890123"
+    ],
+    "expected": {
+      "minRouteLen": 4,
+      "invariants": [
+        "GID independent of ports",
+        "IID equal for abi-equal",
+        "Journey through city",
+        "Choice between market and park",
+        "Convergence at city hall"
+      ]
+    }
+  },
+  "envelope": null
+}

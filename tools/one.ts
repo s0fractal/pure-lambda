@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Pure Lambda Authors
+
 
 /**
  * λ one - The only command you need

@@ -1,0 +1,66 @@
+{
+  "name": "select-focus-0.7-right",
+  "version": 1,
+  "intent": "Conditional routing with branch highlighting",
+  "size": "≤10KB",
+  "novelty": 0.58,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "selector": {
+      "op": "SELECT",
+      "params": {
+        "condition": "${branch}",
+        "default": "main"
+      }
+    },
+    "focus": {
+      "op": "FOCUS",
+      "params": {
+        "target": "${selector.output}",
+        "highlight": true
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    [
+      "entry",
+      "selector"
+    ],
+    [
+      "selector",
+      "focus"
+    ],
+    [
+      "focus",
+      "exit"
+    ]
+  ],
+  "fixtures": [
+    {
+      "branch": "main",
+      "expected": "main"
+    },
+    {
+      "branch": "alt",
+      "expected": "alt"
+    },
+    {
+      "branch": null,
+      "expected": "main"
+    },
+    {
+      "branch": "other",
+      "expected": "main"
+    }
+  ],
+  "xidv2": "select-focus-0.7-right-v2-fa44aaefe6e88f48-1758113998431",
+  "generated": "2025-09-17T12:59:58.431Z",
+  "sweep": true
+}

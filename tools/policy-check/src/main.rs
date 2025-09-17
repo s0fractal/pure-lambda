@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Pure Lambda Authors
+
 //! Policy Check - Verifies agent behavior against formal rules
 //! 
 //! Usage: policy-check run <policy.yaml> <trace.json>

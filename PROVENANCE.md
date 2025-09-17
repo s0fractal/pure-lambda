@@ -62,7 +62,7 @@ Every gene must have clear provenance to maintain legal and ethical integrity.
 - **Source**: Internal project
 - **License**: MIT
 - **Components**:
-  - Virus Deconstructor
+  - Deconstructor Deconstructor
   - Signal Mesh (432Hz)
 - **Absorption Date**: 2024-01-XX
 - **Compatibility**: ✓ Full

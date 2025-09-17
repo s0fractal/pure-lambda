@@ -1,0 +1,62 @@
+{
+  "name": "bounded-delay-8-eco",
+  "version": 1,
+  "intent": "Energy-saving debounce with guaranteed max delay",
+  "size": "≤10KB",
+  "novelty": 0.58,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "focus": {
+      "op": "FOCUS",
+      "params": {
+        "filter": "spikes"
+      }
+    },
+    "delay": {
+      "op": "BOUNDED_DELAY",
+      "params": {
+        "min": 10,
+        "max": 100,
+        "unit": "ms"
+      }
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    [
+      "entry",
+      "focus"
+    ],
+    [
+      "focus",
+      "delay"
+    ],
+    [
+      "delay",
+      "exit"
+    ]
+  ],
+  "fixtures": [
+    {
+      "interval": 5,
+      "expected": "skip"
+    },
+    {
+      "interval": 50,
+      "expected": "pass"
+    },
+    {
+      "interval": 150,
+      "expected": "bounded"
+    }
+  ],
+  "xidv2": "bounded-delay-8-eco-v2-01350eae4c2dbab4-1758113998434",
+  "generated": "2025-09-17T12:59:58.434Z",
+  "sweep": true
+}

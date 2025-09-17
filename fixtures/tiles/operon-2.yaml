@@ -1,0 +1,26 @@
+op: SPLIT
+code: |
+  // Split operation with merge skeleton
+  (input) => {
+    const [left, right] = split(input);
+    return merge(process(left), process(right));
+  }
+abi:
+  types: "T -> (T, T) -> T"
+  effects: ["split", "merge"]
+  ports:
+    in: "stream"
+    left: "branch_a"
+    right: "branch_b"
+    out: "merged"
+ports:
+  in: "stream"
+  left: "branch_a"
+  right: "branch_b"
+  out: "merged"
+law: "associative"
+cost: "O(log n)"
+neighborIIDs:
+  left: "iid_fake_branch_a_processor"
+  right: "iid_fake_branch_b_processor"
+  out: "iid_fake_merge_combinator"

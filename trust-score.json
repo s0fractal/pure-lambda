@@ -1,0 +1,49 @@
+{
+  "trustScore": 0.9626666666666668,
+  "timestamp": "2025-09-17T12:37:12.631Z",
+  "components": {
+    "dsse": {
+      "weight": 0.4,
+      "ratio": 1,
+      "contribution": 0.4,
+      "stats": {
+        "present": 11,
+        "valid": 11,
+        "total": 11
+      }
+    },
+    "conformance": {
+      "weight": 0.4,
+      "ratio": 0.9066666666666666,
+      "contribution": 0.3626666666666667,
+      "stats": {
+        "passed": 68,
+        "total": 75
+      }
+    },
+    "freshness": {
+      "weight": 0.2,
+      "score": 1,
+      "contribution": 0.2,
+      "stats": {
+        "ageMedianDays": 0.2520748148148148,
+        "ageRangeDays": [
+          0.25207466435185183,
+          0.2521494675925926
+        ],
+        "details": "9 seeds, median age 0.3 days"
+      }
+    }
+  },
+  "quarantine": {
+    "count": 0,
+    "items": []
+  },
+  "summary": {
+    "grade": "excellent",
+    "ready": true,
+    "issues": [
+      "Conformance 90.7% (68/75)"
+    ]
+  }
+}

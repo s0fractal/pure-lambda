@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # Silence Ritual - Entering and Exiting Conscious Pause
 
 set -euo pipefail

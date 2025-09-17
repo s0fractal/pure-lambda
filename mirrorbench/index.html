@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2025 Pure Lambda Authors -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +29,34 @@
         .download a { background: #238636; color: white; text-decoration: none; padding: 15px 30px; border-radius: 6px; font-weight: bold; display: inline-block; }
         .download a:hover { background: #2ea043; }
         .footer { text-align: center; margin-top: 60px; color: #6e7681; font-size: 0.9em; }
+        .controls { display:flex; gap:12px; align-items:center; justify-content:center; margin: 24px 0; }
+        .btn { background:#238636; color:#fff; border:none; padding:10px 16px; border-radius:6px; cursor:pointer; font-weight:600; }
+        .btn:hover { background:#2ea043; }
+        #canvas { background:#0d1117; border:1px solid #21262d; border-radius:8px; width:100%; height:520px; margin: 16px 0; }
+        #status { text-align:center; color:#8b949e; font-size:0.95em; }
+        .tooltip { position:fixed; pointer-events:none; background:#161b22; border:1px solid #30363d; color:#e1e4e8; padding:8px 10px; border-radius:6px; font-size:12px; display:none; z-index:10; }
+        .legend { text-align:center; color:#8b949e; font-size:0.9em; }
+        .governor-light { font-size:1.5em; margin-left:8px; color:#6e7681; transition:color 0.3s; }
+        .governor-light.green { color:#238636; }
+        .governor-light.amber { color:#ffa657; }
+        .governor-light.red { color:#f85149; }
+        .badges-area { background:#0d1117; border:1px solid #21262d; border-radius:8px; padding:20px; margin:20px 0; }
+        .badges-area h3 { color:#58a6ff; margin:0 0 15px 0; }
+        .slo-badges { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+        .slo-metric { background:#161b22; border:1px solid #30363d; border-radius:6px; padding:12px; }
+        .slo-label { color:#8b949e; font-size:0.9em; }
+        .slo-value { color:#7c3aed; font-weight:bold; margin-left:8px; }
+        .best-route { stroke:#ffa657; stroke-width:4; stroke-dasharray:none; z-index:5; }
+        .nf-badge { background:#7c3aed; color:#fff; font-size:12px; font-weight:600; padding:2px 6px; border-radius:4px; margin-left:8px; }
+        .quarantine-branch { stroke:#f85149 !important; stroke-dasharray:5,3 !important; stroke-width:2 !important; }
+        .patches-pane { background:#0d1117; border:1px solid #21262d; border-radius:8px; padding:20px; margin:20px 0; }
+        .patches-table { width:100%; border-collapse:collapse; font-size:14px; }
+        .patches-table th, .patches-table td { padding:8px 12px; border-bottom:1px solid #30363d; text-align:left; }
+        .patches-table th { color:#58a6ff; font-weight:600; }
+        .patches-table td { color:#e1e4e8; }
+        .delta-positive { color:#238636; }
+        .delta-negative { color:#f85149; }
+        .delta-zero { color:#8b949e; }
     </style>
 </head>
 <body>
@@ -63,6 +94,62 @@
                 <p>@95% confidence</p>
             </div>
         </div>
+
+        <div class="controls">
+            <button id="loadCar" class="btn">Load CAR/JSON</button>
+            <select id="gardenSeedSelector" class="btn" style="background:#0969da; margin-left:8px;">
+                <option value="">🌱 Garden Seeds…</option>
+            </select>
+            <button id="runAutopilot" class="btn" disabled>Run Autopilot</button>
+            <label style="margin-left:16px;"><input type="checkbox" id="nfRewritesToggle" style="margin-right:6px;">NF/alias</label>
+            <label style="margin-left:12px;"><input type="checkbox" id="quarantineToggle" style="margin-right:6px;">Show Quarantine</label>
+            <span id="nfBadge" class="nf-badge" style="display:none;">NF</span>
+            <span id="governorLight" class="governor-light" title="Governor Status">●</span>
+            <span id="status">Waiting to load dist/operon.car or dist/operon.json…</span>
+        </div>
+        <svg id="canvas"></svg>
+        <div class="legend">Color = IID group • Dashed = GID differs within IID</div>
+
+        <div id="badgesArea" class="badges-area">
+            <h3>Service Level Objectives (SLOs)</h3>
+            <div class="slo-badges">
+                <div class="slo-metric">
+                    <span class="slo-label">W-SLO:</span>
+                    <span id="wSLO" class="slo-value">N/A</span>
+                </div>
+                <div class="slo-metric">
+                    <span class="slo-label">κ-SLO:</span>
+                    <span id="kappaSLO" class="slo-value">N/A</span>
+                </div>
+                <div class="slo-metric">
+                    <span class="slo-label">Regret (avg):</span>
+                    <span id="regretAvg" class="slo-value">N/A</span>
+                </div>
+                <div class="slo-metric">
+                    <span class="slo-label">Regret (p95):</span>
+                    <span id="regretP95" class="slo-value">N/A</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="patchesPane" class="patches-pane" style="display:none;">
+            <h3>Patches</h3>
+            <table class="patches-table">
+                <thead>
+                    <tr>
+                        <th>Rule</th>
+                        <th>Nodes</th>
+                        <th>Δhops</th>
+                        <th>Δlat</th>
+                        <th>Δmem</th>
+                    </tr>
+                </thead>
+                <tbody id="patchesTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="tooltip" class="tooltip"></div>
 
         <div class="proof-section">
             <h2>🛡️ Mathematical Guarantees</h2>
@@ -128,10 +215,885 @@ Verification complete.
         </div>
 
         <div class="footer">
+            <div id="status-footer">
+                <!-- Dynamic status will be populated by JavaScript -->
+            </div>
             <p>Read-only, offline-first, cryptographically verified.</p>
             <p>No network calls • No telemetry • No surprises</p>
             <p><em>Generated with mathematical rigor. Operates without permission. Scales by proof, not promises.</em></p>
+            <p><small style="color: #6e7681; margin-top: 10px;">💡 Tip: use #seed=focus-delay to auto-load seeds</small></p>
         </div>
     </div>
+    <script>
+    (function(){
+      const $ = (id) => document.getElementById(id);
+      const status = $('status');
+      const svg = $('canvas');
+      const tip = $('tooltip');
+      const runAutopilotBtn = $('runAutopilot');
+      const governorLight = $('governorLight');
+      const nfRewritesToggle = $('nfRewritesToggle');
+      const quarantineToggle = $('quarantineToggle');
+      const nfBadge = $('nfBadge');
+      const patchesPane = $('patchesPane');
+      const patchesTableBody = $('patchesTableBody');
+
+      let currentOperonData = null;
+      let currentBestRoute = null;
+      let quarantineData = null;
+      let patchesData = null;
+
+      function setStatus(msg){ status.textContent = msg; }
+
+      // --- Minimal varint reader ---
+      function readVarint(u8, offset){
+        let x = 0n, s = 0n; let i = 0; let b;
+        while(true){
+          b = u8[offset+i];
+          x |= BigInt(b & 0x7f) << s;
+          if((b & 0x80) === 0) break;
+          s += 7n; i++;
+        }
+        return { value: Number(x), bytes: i+1 };
+      }
+
+      // --- Minimal CBOR decoder (subset) ---
+      function decodeCBOR(u8, start=0){
+        const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+        let off = start;
+        const read = () => u8[off++];
+        function readUint(n){ let v=0; for(let i=0;i<n;i++) v=(v<<8)|read(); return v>>>0; }
+        function dec(){
+          const ib = read(); if(ib===undefined) throw new Error('CBOR EOF');
+          const mt = ib >> 5; const ai = ib & 31;
+          const readLen = () => ai < 24 ? ai : ai===24? read() : ai===25? readUint(2) : ai===26? readUint(4) : ai===27? Number(dv.getBigUint64((off+=8)-8)) : (()=>{throw new Error('len')})();
+          if(mt===0){ // uint
+            const n = readLen(); return n;
+          } else if(mt===1){ // negint
+            const n = readLen(); return -1 - n;
+          } else if(mt===2){ // bytes
+            const len = readLen(); const b = u8.subarray(off, off+len); off += len; return b;
+          } else if(mt===3){ // text
+            const len = readLen(); const b = u8.subarray(off, off+len); off += len; return new TextDecoder().decode(b);
+          } else if(mt===4){ // array
+            const len = readLen(); const arr = new Array(len); for(let i=0;i<len;i++) arr[i]=dec(); return arr;
+          } else if(mt===5){ // map
+            const len = readLen(); const obj = {}; for(let i=0;i<len;i++){ const k = dec(); obj[k]=dec(); } return obj;
+          } else if(mt===6){ // tag
+            const tag = readLen(); const val = dec();
+            // dag-cbor CID tag 42: value is bytes(0x00 || multihash)
+            if(tag===42){
+              let mh;
+              if(val instanceof Uint8Array){ mh = val[0]===0x00 ? val.subarray(1) : val; }
+              else if(val && val['0']){ mh = val['0']; }
+              const mhHex = Array.from(mh || []).map(b=>b.toString(16).padStart(2,'0')).join('');
+              return { $link: 'mh:'+mhHex };
+            }
+            return { $tag: tag, $val: val };
+          } else if(mt===7){
+            if(ai===20) return false; if(ai===21) return true; if(ai===22) return null; if(ai===23) return undefined;
+            if(ai===25){ const x = readUint(2); return dv.getFloat16 ? dv.getFloat16((off+=2)-2) : x; }
+            if(ai===26){ const x = dv.getFloat32(off); off+=4; return x; }
+            if(ai===27){ const x = dv.getFloat64(off); off+=8; return x; }
+            throw new Error('simple/float not supported');
+          }
+          throw new Error('unknown major type');
+        }
+        const value = dec();
+        return { value, offset: off };
+      }
+
+      // --- Minimal CID parser for CIDv1 (dag-cbor/sha2-256) to label by multihash digest ---
+      function parseCIDLabel(u8, start){
+        let off = start;
+        const v = readVarint(u8, off); off += v.bytes; // version
+        const c = readVarint(u8, off); off += c.bytes; // codec
+        const mhCode = readVarint(u8, off); off += mhCode.bytes;
+        const mhLen = readVarint(u8, off); off += mhLen.bytes;
+        const digest = u8.subarray(off, off+mhLen.value); off += mhLen.value;
+        const hex = Array.from(digest).map(b=>b.toString(16).padStart(2,'0')).join('');
+        return { label: 'mh:'+hex, bytes: off-start };
+      }
+
+      async function loadCARBytes(url){
+        const res = await fetch(url);
+        if(!res.ok) throw new Error('Fetch failed: '+res.status);
+        const buf = new Uint8Array(await res.arrayBuffer());
+        return buf;
+      }
+
+      async function loadJSON(url){
+        const res = await fetch(url);
+        if(!res.ok) throw new Error('Fetch failed: '+res.status);
+        return await res.json();
+      }
+
+      async function loadQuarantineData() {
+        try {
+          const data = await loadJSON('../observability/quarantine.json');
+          quarantineData = data;
+          return data;
+        } catch (error) {
+          quarantineData = null;
+          return null;
+        }
+      }
+
+      async function loadPatchesData() {
+        try {
+          const data = await loadJSON('../dist/operon.nf.patch.json');
+          patchesData = data;
+          return data;
+        } catch (error) {
+          patchesData = null;
+          return null;
+        }
+      }
+
+      function renderPatchesTable(patches) {
+        if (!patches || patches.length === 0) {
+          patchesTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#8b949e;">No patches available</td></tr>';
+          return;
+        }
+
+        patchesTableBody.innerHTML = '';
+        patches.forEach(patch => {
+          const row = document.createElement('tr');
+
+          const formatDelta = (val) => {
+            if (val === 0) return '<span class="delta-zero">0</span>';
+            if (val > 0) return `<span class="delta-positive">+${val}</span>`;
+            return `<span class="delta-negative">${val}</span>`;
+          };
+
+          row.innerHTML = `
+            <td>${patch.rule}</td>
+            <td>${patch.nodes.length}</td>
+            <td>${formatDelta(patch.delta.hops)}</td>
+            <td>${formatDelta(patch.delta.latency)}</td>
+            <td>${formatDelta(patch.delta.memory)}</td>
+          `;
+          patchesTableBody.appendChild(row);
+        });
+      }
+
+      function isQuarantinedBranch(edge) {
+        if (!quarantineData || !quarantineData.frozenBranches) return false;
+
+        const fromId = edge.from.cidLabel;
+        const toId = edge.to.cidLabel;
+
+        return quarantineData.frozenBranches.some(branch =>
+          (branch.from === fromId && branch.to === toId) ||
+          (branch.from === toId && branch.to === fromId)
+        );
+      }
+
+      function updateLegend() {
+        const legend = document.querySelector('.legend');
+        let legendText = 'Color = IID group • Dashed = GID differs within IID';
+
+        if (quarantineToggle.checked && quarantineData) {
+          const thawStepPct = quarantineData.thawStepPct || 0;
+          legendText += ` • Red hashed = Quarantine (${thawStepPct.toFixed(1)}% thaw progress)`;
+        }
+
+        legend.textContent = legendText;
+      }
+
+      // Garden seed management
+      const GARDEN_SEEDS = [
+        'bounded-delay',
+        'branch-stress',
+        'focus-delay',
+        'hello-city',
+        'loop-lite',
+        'partition-merge',
+        'route-merge',
+        'scan-focus',
+        'select'
+      ];
+
+      async function populateGardenSeeds() {
+        const selector = $('gardenSeedSelector');
+
+        // Clear existing options except the first one
+        while (selector.children.length > 1) {
+          selector.removeChild(selector.lastChild);
+        }
+
+        for (const seedName of GARDEN_SEEDS) {
+          const option = document.createElement('option');
+          option.value = seedName;
+          option.textContent = seedName;
+          selector.appendChild(option);
+        }
+      }
+
+      async function loadGardenSeed(seedName) {
+        try {
+          setStatus(`Loading garden seed: ${seedName}...`);
+
+          // Try primary path first: seeds/garden/<name>.json
+          let url = `../seeds/garden/${seedName}.json`;
+          let seedData;
+
+          try {
+            seedData = await loadJSON(url);
+          } catch (e) {
+            // Fallback to seeds/<name>.json
+            url = `../seeds/${seedName}.json`;
+            try {
+              seedData = await loadJSON(url);
+            } catch (e2) {
+              // Final fallback to dist/seeds/<name>.operon.json
+              url = `../dist/seeds/${seedName}.operon.json`;
+              seedData = await loadJSON(url);
+            }
+          }
+
+          if (seedData && seedData.nodes) {
+            const parsed = parseJSONDAG(seedData);
+            await renderFromParsedData(parsed, 'Garden');
+            setStatus(`Loaded garden seed: ${seedName}`);
+
+            // Auto-run autopilot for demonstration
+            setTimeout(() => {
+              if ($('runAutopilot') && !$('runAutopilot').disabled) {
+                runAutopilotInMemory();
+              }
+            }, 500);
+          } else {
+            throw new Error('Invalid seed data structure');
+          }
+        } catch (error) {
+          console.error('Failed to load garden seed:', error);
+          setStatus(`Failed to load garden seed ${seedName}: ${error.message}`);
+        }
+      }
+
+      function parseCAR(buf){
+        let off = 0; const blocks = []; const map = new Map();
+        // header
+        const h = readVarint(buf, off); const hlen = h.value; off += h.bytes;
+        const hbytes = buf.subarray(off, off+hlen); off += hlen;
+        try { decodeCBOR(hbytes); } catch {}
+        while(off < buf.length){
+          const l = readVarint(buf, off); off += l.bytes; const blen = l.value;
+          const b = buf.subarray(off, off+blen); off += blen;
+          const c = parseCIDLabel(b, 0);
+          const payload = b.subarray(c.bytes);
+          let obj; try { obj = decodeCBOR(payload).value; } catch { obj = null; }
+          const rec = { cidLabel: c.label, obj, raw: payload };
+          blocks.push(rec); map.set(c.label, rec);
+        }
+        return { blocks, map };
+      }
+
+      function parseJSONDAG(jsonDAG){
+        const blocks = []; const map = new Map();
+        const nodes = jsonDAG.nodes || {};
+
+        Object.keys(nodes).forEach(cidLabel => {
+          const obj = nodes[cidLabel];
+          const rec = { cidLabel, obj, raw: null };
+          blocks.push(rec);
+          map.set(cidLabel, rec);
+        });
+
+        return { blocks, map, root: jsonDAG.root };
+      }
+
+      function computeColors(nodes){
+        // Sort nodes by their original order to determine "left neighbor"
+        const sortedNodes = [...nodes];
+
+        const byIID = new Map();
+        nodes.forEach(n=>{
+          if(!byIID.has(n.iid)) byIID.set(n.iid, []);
+          byIID.get(n.iid).push(n);
+        });
+
+        const palette = (i, total)=> `hsl(${Math.floor((360/Math.max(total,1))*i)},70%,45%)`;
+        let i=0; const total = byIID.size;
+
+        // Assign colors by IID group
+        byIID.forEach((arr, iid)=>{
+          const color = palette(i++, total);
+          arr.forEach(n=>{ n.color = color; });
+        });
+
+        // Determine dashed borders based on left neighbor's GID
+        sortedNodes.forEach((n, idx) => {
+          if (idx === 0) {
+            n.dashed = false; // First node never dashed
+          } else {
+            const leftNeighbor = sortedNodes[idx - 1];
+            // Dashed if same IID but different GID from left neighbor
+            n.dashed = (n.iid === leftNeighbor.iid && n.gid !== leftNeighbor.gid);
+          }
+        });
+      }
+
+      function renderGraph(nodes, edges){
+        // Clear
+        while(svg.firstChild) svg.removeChild(svg.firstChild);
+        const w = svg.clientWidth || svg.parentElement.clientWidth; const h = svg.clientHeight || 520; svg.setAttribute('width', w); svg.setAttribute('height', h);
+        const cx = w/2, cy = h/2, R = Math.min(w,h)*0.35;
+        // layout circle
+        nodes.forEach((n, idx)=>{
+          const a = (idx / Math.max(1,nodes.length)) * Math.PI*2;
+          n.x = cx + R * Math.cos(a);
+          n.y = cy + R * Math.sin(a);
+        });
+        // edges
+        edges.forEach(e=>{
+          const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+          line.setAttribute('x1', e.from.x); line.setAttribute('y1', e.from.y);
+          line.setAttribute('x2', e.to.x); line.setAttribute('y2', e.to.y);
+          line.setAttribute('stroke', '#495057'); line.setAttribute('stroke-width', '1.5');
+
+          // Check if this edge should be quarantined
+          if (quarantineToggle.checked && quarantineData && isQuarantinedBranch(e)) {
+            line.setAttribute('class', 'quarantine-branch');
+          }
+
+          svg.appendChild(line);
+        });
+
+        // Best route overlay (bold polyline)
+        if (currentBestRoute && currentBestRoute.length > 1) {
+          const routeNodes = currentBestRoute.map(cidLabel => nodes.find(n => n.cidLabel === cidLabel)).filter(Boolean);
+          if (routeNodes.length > 1) {
+            for (let i = 0; i < routeNodes.length - 1; i++) {
+              const from = routeNodes[i];
+              const to = routeNodes[i + 1];
+              const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+              line.setAttribute('x1', from.x); line.setAttribute('y1', from.y);
+              line.setAttribute('x2', to.x); line.setAttribute('y2', to.y);
+              line.setAttribute('class', 'best-route');
+              svg.appendChild(line);
+            }
+          }
+        }
+
+        // nodes
+        nodes.forEach(n=>{
+          const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+          const r = 18;
+          const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+          c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', r);
+          c.setAttribute('fill', n.color || '#7c3aed');
+          c.setAttribute('stroke', '#e1e4e8'); c.setAttribute('stroke-width', '2');
+          if(n.dashed){ c.setAttribute('stroke-dasharray', '4,3'); }
+          g.appendChild(c);
+          const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+          t.setAttribute('x', n.x); t.setAttribute('y', n.y + 4); t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','10'); t.setAttribute('fill','#0d1117');
+          t.textContent = n.op || 'tile';
+          g.appendChild(t);
+          g.addEventListener('mousemove', (ev)=>{
+            tip.style.display='block'; tip.style.left=(ev.clientX+10)+'px'; tip.style.top=(ev.clientY+10)+'px';
+            const gid = (n.gid||'').slice(0,8), iid=(n.iid||'').slice(0,8), xid=(n.xid||'').slice(0,8);
+            tip.textContent = `op: ${n.op || 'tile'} • gid: ${gid} • iid: ${iid} • xid: ${xid}`;
+          });
+          g.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
+          svg.appendChild(g);
+        });
+      }
+
+      // Autopilot functionality - runs locally using in-memory operon data
+      function runAutopilotInMemory() {
+        if (!currentOperonData) {
+          setStatus('No operon data loaded');
+          return;
+        }
+
+        try {
+          setStatus('Running autopilot in memory...');
+          runAutopilotBtn.disabled = true;
+
+          // Simple autopilot simulation using loaded data
+          const result = simulateAutopilot(currentOperonData);
+          currentBestRoute = result.bestRoute;
+
+          // Update status and re-render graph with best route
+          const tiles = currentOperonData.tiles || [];
+          const edges = currentOperonData.edges || [];
+          renderGraph(tiles, edges);
+
+          setStatus(`Autopilot complete. Best route: ${result.bestRoute.length} nodes, L=${result.Lbest.toFixed(2)}`);
+
+          // Update badges with regret info
+          updateSLOBadges();
+
+        } catch (error) {
+          console.error('Autopilot error:', error);
+          setStatus('Autopilot failed: ' + error.message);
+        } finally {
+          runAutopilotBtn.disabled = false;
+        }
+      }
+
+      function simulateAutopilot(operonData) {
+        // Simple simulation - in a real scenario this would use the actual autopilot logic
+        const nodes = operonData.tiles || [];
+        if (nodes.length === 0) {
+          return { bestRoute: [], Lbest: 0, topK: [] };
+        }
+
+        // Simulate route selection - pick nodes with lowest latency
+        const sortedNodes = [...nodes].sort((a, b) => {
+          const aCost = getCostValue(a.cost || 'O(1)');
+          const bCost = getCostValue(b.cost || 'O(1)');
+          return aCost - bCost;
+        });
+
+        const bestRoute = sortedNodes.slice(0, Math.min(3, sortedNodes.length)).map(n => n.cidLabel);
+        const Lbest = bestRoute.length * 1.5; // Simplified L calculation
+
+        return { bestRoute, Lbest, topK: [{ route: bestRoute, L: Lbest }] };
+      }
+
+      function getCostValue(cost) {
+        const costMap = {
+          'O(1)': 1,
+          'O(log n)': 2,
+          'O(n)': 10,
+          'O(n log n)': 20,
+          'O(n^2)': 100
+        };
+        return costMap[cost] || 1;
+      }
+
+      async function loadSLOData() {
+        try {
+          // Try to load branchial.csv data for SLO metrics
+          const response = await fetch('../observability/branchial.csv');
+          if (response.ok) {
+            const csvText = await response.text();
+            const lines = csvText.trim().split('\n');
+            if (lines.length > 1) {
+              const lastLine = lines[lines.length - 1];
+              const values = lastLine.split(',');
+
+              // Extract SLO values (simplified parsing)
+              return {
+                wSLO: values[1] ? Math.abs(parseFloat(values[1])).toFixed(1) + '%' : 'N/A',
+                kappaSLO: values[2] ? (Math.abs(parseFloat(values[2])) * 100).toFixed(1) + '%' : 'N/A',
+                regret: values[6] ? parseFloat(values[6]).toFixed(3) : 'N/A'
+              };
+            }
+          }
+        } catch (error) {
+          console.warn('Could not load SLO data:', error);
+        }
+
+        return { wSLO: 'N/A', kappaSLO: 'N/A', regret: 'N/A' };
+      }
+
+      function updateSLOBadges() {
+        loadSLOData().then(sloData => {
+          $('wSLO').textContent = sloData.wSLO;
+          $('kappaSLO').textContent = sloData.kappaSLO;
+          $('regretAvg').textContent = sloData.regret;
+          $('regretP95').textContent = sloData.regret; // Simplified
+
+          // Update governor light based on SLO values
+          updateGovernorLight(sloData);
+        });
+      }
+
+      function updateGovernorLight(sloData) {
+        // Remove existing classes
+        governorLight.className = 'governor-light';
+
+        // Determine status based on SLO values
+        const wValue = parseFloat(sloData.wSLO);
+        const kappaValue = parseFloat(sloData.kappaSLO);
+        const regretValue = parseFloat(sloData.regret);
+
+        // Simple logic: green if values are good, amber if borderline, red if poor
+        if (!isNaN(wValue) && !isNaN(kappaValue)) {
+          if (wValue >= 85 && kappaValue >= 85 && regretValue < 0.1) {
+            governorLight.classList.add('green');
+            governorLight.title = 'Governor Status: Within targets';
+          } else if (wValue >= 70 && kappaValue >= 70 && regretValue < 0.2) {
+            governorLight.classList.add('amber');
+            governorLight.title = 'Governor Status: Near boundary';
+          } else {
+            governorLight.classList.add('red');
+            governorLight.title = 'Governor Status: Below targets';
+          }
+        } else {
+          governorLight.title = 'Governor Status: No data';
+        }
+      }
+
+      async function loadAndRender(){
+        // Determine which operon file to load based on NF rewrites toggle
+        const operonFile = nfRewritesToggle.checked && await fileExists('../dist/operon.nf.json')
+          ? '../dist/operon.nf.json'
+          : '../dist/operon.json';
+
+        // Show NF badge if using NF version
+        if (nfRewritesToggle.checked && operonFile.includes('nf')) {
+          nfBadge.style.display = 'inline';
+        } else {
+          nfBadge.style.display = 'none';
+        }
+
+        // Try CAR first, then JSON fallback
+        try{
+          setStatus('Loading CAR from ../dist/operon.car …');
+          const buf = await loadCARBytes('../dist/operon.car');
+          const car = parseCAR(buf);
+          await renderFromParsedData(car, 'CAR');
+        }catch(carErr){
+          try{
+            setStatus(`Loading JSON from ${operonFile} …`);
+            const jsonDAG = await loadJSON(operonFile);
+            const parsed = parseJSONDAG(jsonDAG);
+            await renderFromParsedData(parsed, 'JSON');
+          }catch(jsonErr){
+            console.error('Both CAR and JSON failed:', {carErr, jsonErr});
+            setStatus('Failed to load CAR or JSON: ' + (jsonErr?.message || jsonErr));
+          }
+        }
+
+        // Load additional data for overlays
+        await loadQuarantineData();
+        await loadPatchesData();
+
+        // Update patches pane visibility and content
+        if (patchesData && patchesData.length > 0) {
+          renderPatchesTable(patchesData);
+          patchesPane.style.display = 'block';
+        } else {
+          patchesPane.style.display = 'none';
+        }
+
+        updateLegend();
+      }
+
+      async function fileExists(url) {
+        try {
+          const response = await fetch(url, { method: 'HEAD' });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      async function renderFromParsedData(parsed, format){
+        // find operon block: has keys root and oids
+        const operon = parsed.blocks.find(b=>b.obj && typeof b.obj==='object' && b.obj.root && Array.isArray(b.obj.oids));
+        let rootLabel = operon?.obj?.root?.$link || parsed.root || null;
+
+        // Handle JSON format where root might be a string directly
+        if (format === 'JSON' && typeof operon?.obj?.root === 'string') {
+          rootLabel = operon.obj.root;
+        }
+
+        const oids = operon?.obj?.oids?.map(x=>typeof x === 'string' ? x : x?.$link).filter(Boolean) || [];
+
+        // collect tiles
+        const tiles = parsed.blocks
+          .filter(b=>b.obj && b.obj.op && b.obj.gid && b.obj.iid)
+          .map(b=>({ ...b.obj, cidLabel: b.cidLabel, isRoot: b.cidLabel===rootLabel }));
+
+        // edges from links
+        const edges = [];
+        for(const t of tiles){
+          const links = t.links || {};
+          for(const k in links){
+            const link = links[k];
+            const linkTarget = typeof link === 'string' ? link : (link && link.$link);
+            const to = tiles.find(nn=> nn.cidLabel === linkTarget);
+            if(to){ edges.push({ from: t, to }); }
+          }
+        }
+
+        // Store current operon data for autopilot
+        currentOperonData = { tiles, edges, rootLabel, format };
+
+        computeColors(tiles);
+        renderGraph(tiles, edges);
+        const rc = rootLabel ? tiles.find(t=>t.cidLabel===rootLabel) : null;
+        const rootDisplay = rc ? `${rc.op} (${rc.cidLabel.slice(-8)})` : 'unknown';
+        setStatus(`Loaded ${tiles.length} tiles from ${format}. Root: ${rootDisplay}`);
+
+        // Enable autopilot button and load SLO data
+        runAutopilotBtn.disabled = false;
+        updateSLOBadges();
+        updateLegend();
+      }
+
+      $('loadCar').addEventListener('click', loadAndRender);
+      $('runAutopilot').addEventListener('click', runAutopilotInMemory);
+
+      // Garden seed selector
+      const gardenSeedSelector = $('gardenSeedSelector');
+      gardenSeedSelector.addEventListener('change', async () => {
+        const seedName = gardenSeedSelector.value;
+        if (seedName) {
+          await loadGardenSeed(seedName);
+        }
+      });
+
+      // Toggle event listeners
+      nfRewritesToggle.addEventListener('change', () => {
+        if (currentOperonData) {
+          loadAndRender();
+        }
+      });
+
+      quarantineToggle.addEventListener('change', () => {
+        if (currentOperonData) {
+          // Re-render the graph to update quarantine overlay
+          const { tiles, edges } = currentOperonData;
+          renderGraph(tiles, edges);
+          updateLegend();
+        }
+      });
+
+      // Load SLO data on page load
+      updateSLOBadges();
+
+      // Populate Garden seeds dropdown
+      populateGardenSeeds();
+
+      // Listen for postMessage seed data from Federation Hub
+      window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'FEDERATION_SEED') {
+          const { seedName, seedData } = event.data;
+          console.log('Received seed data via postMessage:', seedName);
+
+          try {
+            // Use the provided seed data directly instead of fetching
+            if (seedData && seedData.nodes) {
+              const parsed = parseJSONDAG(seedData);
+              renderFromParsedData(parsed, 'Federation');
+              setStatus(`Loaded seed from Federation Hub: ${seedName}`);
+
+              // Auto-run autopilot for hello-city
+              if (seedName === 'hello-city') {
+                setTimeout(() => {
+                  runAutopilotInMemory();
+                  document.getElementById('canvas').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                  });
+                }, 500);
+              }
+            } else {
+              setStatus(`Invalid seed data received: ${seedName}`);
+            }
+          } catch (error) {
+            console.error('Error processing federation seed:', error);
+            setStatus(`Error loading federation seed: ${error.message}`);
+          }
+        }
+      });
+
+      // Auto-load seed from URL hash if present
+      function autoLoadSeedFromHash() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#seed=')) {
+          const seedName = hash.substring(6); // Remove '#seed='
+          loadSeedByName(seedName);
+        }
+      }
+
+      async function loadSeedByName(seedName) {
+        try {
+          setStatus(`Loading seed: ${seedName}...`);
+
+          // Try primary path first: seeds/<name>.json
+          let url = `../seeds/${seedName}.json`;
+          let response = await fetch(url);
+
+          if (!response.ok) {
+            // Fallback to dist/seeds/<name>.operon.json
+            url = `../dist/seeds/${seedName}.operon.json`;
+            response = await fetch(url);
+          }
+
+          if (response.ok) {
+            const seedData = await response.json();
+
+            // Store seed data in current operon data
+            if (seedData && seedData.nodes) {
+              const parsed = parseJSONDAG(seedData);
+              await renderFromParsedData(parsed, 'Seed');
+            }
+
+            setStatus(`Loaded seed: ${seedName}`);
+
+            // Auto-run autopilot and scroll to route for hello-city
+            if (seedName === 'hello-city') {
+              setTimeout(() => {
+                runAutopilotInMemory();
+                // Scroll to the canvas/route area
+                document.getElementById('canvas').scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center'
+                });
+              }, 500); // Small delay to ensure rendering is complete
+            }
+          } else {
+            setStatus(`Seed not found: ${seedName}`);
+          }
+        } catch (error) {
+          setStatus(`Error loading seed ${seedName}: ${error.message}`);
+        }
+      }
+
+      // Auto-load seed on page load
+      autoLoadSeedFromHash();
+
+      // Listen for hash changes
+      window.addEventListener('hashchange', autoLoadSeedFromHash);
+
+      // Update footer status based on protocol
+      function updateFooterStatus() {
+        const statusFooter = document.getElementById('status-footer');
+        const isFileProtocol = window.location.protocol === 'file:';
+
+        if (isFileProtocol) {
+          statusFooter.innerHTML = '<p style="color: #238636; font-weight: bold; margin-bottom: 15px;">Offline • Deterministic • DSSE-Verified</p>';
+
+          // Check if embassy exists and add Open Embassy button
+          checkEmbassyAndAddButton();
+        } else {
+          statusFooter.innerHTML = '<p style="color: #8b949e; margin-bottom: 15px;">Online • Network Mode</p>';
+        }
+      }
+
+      async function checkEmbassyAndAddButton() {
+        const statusFooter = document.getElementById('status-footer');
+
+        // Check if embassy/index.html exists
+        try {
+          const embassyPath = window.location.pathname.includes('/mirrorbench/')
+            ? '../embassy/index.html'
+            : './embassy/index.html';
+
+          const response = await fetch(embassyPath, { method: 'HEAD' });
+          if (response.ok) {
+            const button = document.createElement('button');
+            button.className = 'btn';
+            button.style.marginTop = '10px';
+            button.textContent = 'Open Embassy';
+            button.onclick = () => window.open(embassyPath, '_blank');
+            statusFooter.appendChild(button);
+          }
+        } catch (error) {
+          // Embassy not found or not accessible, which is fine
+          console.log('Embassy not found or not accessible:', error.message);
+        }
+      }
+
+      // PSE (Public Seed Exchange) integration
+      function handlePSEMessage(event) {
+        const data = event.data;
+
+        // Only handle PSE messages
+        if (!data || data.source !== 'PSE') return;
+
+        if (data.action === 'openWithRoute') {
+          const { route, showBadges } = data;
+
+          // Auto-center on the specified route
+          if (route && currentOperonData) {
+            try {
+              // Find the route in the current data and focus on it
+              setStatus(`PSE: Focusing on route ${route}`);
+
+              // If showBadges is true, ensure badges are visible
+              if (showBadges) {
+                const badgesArea = document.querySelector('.badges-area');
+                if (badgesArea) {
+                  badgesArea.style.display = 'block';
+                  badgesArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+
+                // Update any dynamic badges
+                updateBadgesFromPSE(data.badges || {});
+              }
+
+              console.log('PSE: Auto-centered on route', route);
+            } catch (error) {
+              console.error('PSE: Error focusing on route:', error);
+              setStatus('PSE: Error focusing on route');
+            }
+          }
+        }
+      }
+
+      function updateBadgesFromPSE(badges) {
+        // Update badge area with PSE-provided information
+        const badgesArea = document.querySelector('.badges-area');
+        if (!badgesArea) return;
+
+        // Add PSE badge if not already present
+        const existingPSEBadge = badgesArea.querySelector('.pse-badge');
+        if (!existingPSEBadge && badges.pse) {
+          const pseBadge = document.createElement('div');
+          pseBadge.className = 'slo-metric pse-badge';
+          pseBadge.innerHTML = `
+            <span class="slo-label">PSE Status:</span>
+            <span class="slo-value" style="color: #238636;">Connected</span>
+          `;
+          badgesArea.appendChild(pseBadge);
+        }
+
+        // Update any other badges provided by PSE
+        if (badges.trustScore) {
+          updateOrCreateBadge('Trust Score', badges.trustScore, '#7c3aed');
+        }
+
+        if (badges.artifactCount) {
+          updateOrCreateBadge('Artifacts', badges.artifactCount, '#58a6ff');
+        }
+      }
+
+      function updateOrCreateBadge(label, value, color) {
+        const badgesArea = document.querySelector('.badges-area');
+        if (!badgesArea) return;
+
+        const existingBadge = Array.from(badgesArea.querySelectorAll('.slo-metric'))
+          .find(badge => badge.textContent.includes(label));
+
+        if (existingBadge) {
+          const valueSpan = existingBadge.querySelector('.slo-value');
+          if (valueSpan) valueSpan.textContent = value;
+        } else {
+          const newBadge = document.createElement('div');
+          newBadge.className = 'slo-metric';
+          newBadge.innerHTML = `
+            <span class="slo-label">${label}:</span>
+            <span class="slo-value" style="color: ${color};">${value}</span>
+          `;
+          badgesArea.appendChild(newBadge);
+        }
+      }
+
+      // Listen for PSE postMessage events
+      window.addEventListener('message', handlePSEMessage);
+
+      // Send ready signal to PSE (if opened from PSE)
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          source: 'MirrorBench',
+          action: 'ready',
+          timestamp: Date.now()
+        }, '*');
+      }
+
+      // Initialize footer status
+      updateFooterStatus();
+
+    })();
+    </script>
 </body>
 </html>

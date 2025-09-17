@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # Establish peering between kyiv-prime and lviv-harbor
 # Connect the cities, sync the registries
 

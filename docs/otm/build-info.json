@@ -1,0 +1,10 @@
+{
+  "built": "2025-09-17T11:49:17.012Z",
+  "sizes": {
+    "development": 11196,
+    "minified": 8327,
+    "gzipped": 2800
+  },
+  "target": "7KB gzipped",
+  "status": "PASS"
+}

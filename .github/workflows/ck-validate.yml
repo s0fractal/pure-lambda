@@ -1,0 +1,278 @@
+name: Contributor Kit Validation
+
+on:
+  pull_request:
+    paths:
+      - 'seeds/**'
+      - 'contrib/**'
+      - 'receipts/attest/**'
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run validation'
+        required: false
+        default: 'false'
+
+jobs:
+  validate-contribution:
+    name: Validate Seed Contribution
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.title, '[seed]')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Detect contributed seeds
+        id: detect-seeds
+        run: |
+          echo "🔍 Detecting seed contributions..."
+
+          # Use our specialized detection script
+          DETECTED_SEED=$(node scripts/ck/detect-pr-seed.mjs 2>/dev/null || echo "")
+
+          if [ -z "$DETECTED_SEED" ]; then
+            echo "No seed files detected in this PR"
+            echo "has_seeds=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "✅ Detected seed: $DETECTED_SEED"
+          echo "has_seeds=true" >> $GITHUB_OUTPUT
+          echo "primary_seed=$DETECTED_SEED" >> $GITHUB_OUTPUT
+
+      - name: Policy enforcement (BIOLOCK)
+        if: steps.detect-seeds.outputs.has_seeds == 'true'
+        id: policy
+        run: |
+          SEED_FILE="${{ steps.detect-seeds.outputs.primary_seed }}"
+          echo "🔒 Checking BIOLOCK policy: $SEED_FILE"
+
+          # Run policy enforcement
+          if node scripts/policy/enforce.mjs "$SEED_FILE" > policy-result.json; then
+            echo "✅ Policy check passed"
+            echo "policy_status=passed" >> $GITHUB_OUTPUT
+          else
+            echo "❌ BIOLOCK policy violation detected"
+            cat policy-result.json
+            echo "policy_status=blocked" >> $GITHUB_OUTPUT
+            echo "policy_reason=BIOLOCK" >> $GITHUB_OUTPUT
+
+            # Extract violation details
+            VIOLATIONS=$(jq -r '.results[0].violations' policy-result.json)
+            echo "policy_violations=$VIOLATIONS" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate seed
+        if: steps.detect-seeds.outputs.has_seeds == 'true' && steps.policy.outputs.policy_status != 'blocked'
+        id: validation
+        run: |
+          SEED_FILE="${{ steps.detect-seeds.outputs.primary_seed }}"
+          echo "🔍 Validating seed: $SEED_FILE"
+
+          # Create output directory
+          mkdir -p validation-results
+
+          # Run validation with PR mode for JSON output
+          if node scripts/ck/validate.mjs "$SEED_FILE" --pr; then
+            echo "✅ Validation passed"
+            OVERALL_STATUS="success"
+
+            # Get validation results
+            TRUST_SCORE=$(jq -r '.trust.trustScore * 100 | floor' out/ck/validate.json)
+            READY=$(jq -r '.ready' out/ck/validate.json)
+
+            echo "Trust score: ${TRUST_SCORE}%"
+            echo "Ready for merge: $READY"
+
+            # Copy validation results
+            cp out/ck/validate.json validation-results/validation.json
+
+            echo "trust_score=$TRUST_SCORE" >> $GITHUB_OUTPUT
+            echo "ready=$READY" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Validation failed"
+            OVERALL_STATUS="failure"
+
+            # Copy partial results if available
+            if [ -f "out/ck/validate.json" ]; then
+              cp out/ck/validate.json validation-results/validation.json
+            fi
+          fi
+
+          echo "overall_status=$OVERALL_STATUS" >> $GITHUB_OUTPUT
+
+      - name: Run conformance tests
+        if: steps.detect-seeds.outputs.has_seeds == 'true'
+        run: |
+          echo "🧪 Running conformance tests..."
+          npm test || echo "Some tests failed"
+
+      - name: Generate badges
+        if: steps.detect-seeds.outputs.has_seeds == 'true'
+        run: |
+          echo "📊 Generating trust badges..."
+
+          if [ -f "validation-results/validation.json" ]; then
+            # Use our badges script to generate SVG badges
+            node scripts/badges.mjs validation-results/validation.json validation-results/badges/
+
+            # Also create shields.io URLs for GitHub
+            TRUST_SCORE="${{ steps.validation.outputs.trust_score }}"
+            READY="${{ steps.validation.outputs.ready }}"
+
+            # Determine colors
+            if [ "$TRUST_SCORE" -ge 95 ]; then
+              TRUST_COLOR="brightgreen"
+            elif [ "$TRUST_SCORE" -ge 80 ]; then
+              TRUST_COLOR="yellow"
+            else
+              TRUST_COLOR="red"
+            fi
+
+            READY_COLOR=$([ "$READY" = "true" ] && echo "brightgreen" || echo "red")
+            READY_TEXT=$([ "$READY" = "true" ] && echo "yes" || echo "no")
+
+            # Create badge URLs
+            echo "![Trust Score](https://img.shields.io/badge/Trust-${TRUST_SCORE}%25-${TRUST_COLOR})" > validation-results/badges.md
+            echo "![Ready](https://img.shields.io/badge/Ready-${READY_TEXT}-${READY_COLOR})" >> validation-results/badges.md
+          fi
+
+      - name: Apply policy labels
+        if: steps.policy.outputs.policy_status == 'blocked'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = ['policy:biolock', 'needs:steward-review', 'safety:dual-use'];
+
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: labels
+            });
+
+            const body = `## 🔒 BIOLOCK Policy Violation
+
+            This PR has been flagged by our dual-use safety policy.
+
+            **Reason:** Content contains restricted tokens that could enable harmful applications.
+
+            **Next Steps:**
+            1. A steward will review this submission
+            2. If legitimate, exemption may be granted with proper context
+            3. Consider removing or replacing the flagged content
+
+            For more information, see our [Safety Policy](https://github.com/s0fractal/pure-lambda/blob/main/policies/biolock-v2.yaml).
+
+            ---
+            *This is an automated safety check. False positives are reviewed manually.*`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Post validation results
+        if: steps.detect-seeds.outputs.has_seeds == 'true' && steps.policy.outputs.policy_status != 'blocked'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Read validation summary
+            let summary = '';
+            if (fs.existsSync('validation-results/summary.md')) {
+              summary = fs.readFileSync('validation-results/summary.md', 'utf8');
+            }
+
+            // Read badges
+            let badges = '';
+            if (fs.existsSync('validation-results/badges.md')) {
+              badges = fs.readFileSync('validation-results/badges.md', 'utf8');
+            }
+
+            const overallStatus = '${{ steps.validation.outputs.overall_status }}';
+            const statusIcon = overallStatus === 'success' ? '✅' : '❌';
+            const statusText = overallStatus === 'success' ? 'PASSED' : 'FAILED';
+
+            const trustScore = '${{ steps.validation.outputs.trust_score }}';
+            const ready = '${{ steps.validation.outputs.ready }}';
+            const seedFile = '${{ steps.detect-seeds.outputs.primary_seed }}';
+
+            const body = `## ${statusIcon} Contributor Kit Validation ${statusText}
+
+            **Seed:** \`${seedFile}\`
+            **Trust Score:** ${trustScore}%
+            **Ready for Merge:** ${ready}
+
+            ### Validation Summary
+            ${summary || (overallStatus === 'success' ? `✅ **${seedFile}**: Trust ${trustScore}%` : `❌ **${seedFile}**: Validation failed`)}
+
+            ### Trust Badges
+            ${badges || 'No badges available'}
+
+            ### Next Steps
+            ${overallStatus === 'success'
+              ? ready === 'true'
+                ? '🎉 **Ready for merge!** This seed meets all quality gates and is ready for maintainer review.'
+                : '⚠️ **Needs attention:** While validation passed, some quality criteria need improvement before merge.'
+              : '❌ **Validation failed.** Please use the [Contributor Kit](https://pure-lambda.org/contribute) to fix issues and resubmit.'}
+
+            ${overallStatus === 'success' ? `
+            ### Maintainer Review
+            - [ ] Code quality check
+            - [ ] Security review
+            - [ ] Integration tests
+            - [ ] Documentation updated
+            ` : ''}
+
+            ---
+            *Validation completed: ${new Date().toISOString()}*`;
+
+            // Post comment on PR
+            if (context.eventName === 'pull_request') {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            } else {
+              console.log('Validation Summary:');
+              console.log(body);
+            }
+
+      - name: Upload validation artifacts
+        if: steps.detect-seeds.outputs.has_seeds == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-results
+          path: validation-results/
+          retention-days: 30
+
+      - name: Fail if validation failed
+        if: steps.validation.outputs.overall_status == 'failure'
+        run: |
+          echo "❌ One or more seed validations failed"
+          echo "Please use the Contributor Kit to fix issues and resubmit"
+          exit 1
+
+      - name: Success summary
+        if: steps.validation.outputs.overall_status == 'success'
+        run: |
+          echo "✅ All validations passed!"
+          echo "🎉 This contribution is ready for maintainer review"

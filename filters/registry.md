@@ -133,7 +133,7 @@ Each filter has detection criteria, response protocols, and regular drills.
 **Timeline**: 10-30 years
 
 **Detection Signals**:
-- Novel pathogen emergence
+- Novel threat emergence
 - R0 > 10
 - Infrastructure breakdown
 

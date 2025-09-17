@@ -1,0 +1,1006 @@
+{
+  "description": "NF Design of Experiments - 18 test cases for normal form transformations",
+  "version": "1.0",
+  "test_cases": [
+    {
+      "name": "THEN_ID_basic",
+      "description": "THEN(id,f) → f - Basic identity elimination",
+      "operonJson": {
+        "nodes": {
+          "node_001": {
+            "cost": "O(1)",
+            "gid": "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456",
+            "iid": "identity_basic_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "any",
+              "out": "any"
+            },
+            "receipt": null,
+            "xid": "x001_identity"
+          },
+          "node_002": {
+            "cost": "O(1)",
+            "gid": "b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456a1",
+            "iid": "focus_basic_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "any",
+              "out": "focused"
+            },
+            "receipt": null,
+            "xid": "x002_focus"
+          },
+          "node_003": {
+            "cost": "O(2)",
+            "gid": "c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456a1b2",
+            "iid": "then_basic_001",
+            "law": "composition",
+            "links": {},
+            "op": "THEN",
+            "ports": {
+              "left": "any",
+              "right": "focused",
+              "out": "result"
+            },
+            "receipt": null,
+            "xid": "x003_then"
+          }
+        },
+        "root": "node_003"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "THEN_ID_nested",
+      "description": "THEN(id,f) → f - Nested in complex graph",
+      "operonJson": {
+        "nodes": {
+          "node_011": {
+            "cost": "O(1)",
+            "gid": "d4e5f6789012345678901234567890abcdef1234567890abcdef123456a1b2c3",
+            "iid": "identity_nested_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "data",
+              "out": "data"
+            },
+            "receipt": null,
+            "xid": "x011_identity"
+          },
+          "node_012": {
+            "cost": "O(n)",
+            "gid": "e5f6789012345678901234567890abcdef1234567890abcdef123456a1b2c3d4",
+            "iid": "scan_nested_001",
+            "law": "filter",
+            "links": {},
+            "op": "SCAN",
+            "ports": {
+              "in": "data",
+              "out": "filtered"
+            },
+            "receipt": null,
+            "xid": "x012_scan"
+          },
+          "node_013": {
+            "cost": "O(n+1)",
+            "gid": "f6789012345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5",
+            "iid": "then_nested_001",
+            "law": "composition",
+            "links": {},
+            "op": "THEN",
+            "ports": {
+              "left": "data",
+              "right": "filtered",
+              "out": "result"
+            },
+            "receipt": null,
+            "xid": "x013_then"
+          }
+        },
+        "root": "node_013"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "THEN_ID_chained",
+      "description": "THEN(id,f) → f - Multiple THEN chains",
+      "operonJson": {
+        "nodes": {
+          "node_021": {
+            "cost": "O(1)",
+            "gid": "789012345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f6",
+            "iid": "identity_chained_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "input",
+              "out": "input"
+            },
+            "receipt": null,
+            "xid": "x021_identity"
+          },
+          "node_022": {
+            "cost": "O(1)",
+            "gid": "89012345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f678",
+            "iid": "map_chained_001",
+            "law": "functor",
+            "links": {},
+            "op": "MAP",
+            "ports": {
+              "in": "input",
+              "out": "mapped"
+            },
+            "receipt": null,
+            "xid": "x022_map"
+          },
+          "node_023": {
+            "cost": "O(2)",
+            "gid": "9012345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f67890",
+            "iid": "then_chained_001",
+            "law": "composition",
+            "links": {},
+            "op": "THEN",
+            "ports": {
+              "left": "input",
+              "right": "mapped",
+              "out": "result"
+            },
+            "receipt": null,
+            "xid": "x023_then"
+          },
+          "node_024": {
+            "cost": "O(1)",
+            "gid": "012345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f678901",
+            "iid": "reduce_chained_001",
+            "law": "fold",
+            "links": {},
+            "op": "REDUCE",
+            "ports": {
+              "in": "result",
+              "out": "reduced"
+            },
+            "receipt": null,
+            "xid": "x024_reduce"
+          }
+        },
+        "root": "node_024"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "THEN_ID_async",
+      "description": "THEN(id,f) → f - With async operations",
+      "operonJson": {
+        "nodes": {
+          "node_031": {
+            "cost": "O(1)",
+            "gid": "12345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f6789012",
+            "iid": "identity_async_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "async_data",
+              "out": "async_data"
+            },
+            "receipt": null,
+            "xid": "x031_identity"
+          },
+          "node_032": {
+            "cost": "O(1)+T",
+            "gid": "2345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f678901234",
+            "iid": "delay_async_001",
+            "law": "temporal",
+            "links": {},
+            "op": "DELAY",
+            "ports": {
+              "in": "async_data",
+              "out": "delayed"
+            },
+            "receipt": null,
+            "xid": "x032_delay"
+          },
+          "node_033": {
+            "cost": "O(2)+T",
+            "gid": "345678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f6789012345",
+            "iid": "then_async_001",
+            "law": "composition",
+            "links": {},
+            "op": "THEN",
+            "ports": {
+              "left": "async_data",
+              "right": "delayed",
+              "out": "result"
+            },
+            "receipt": null,
+            "xid": "x033_then"
+          }
+        },
+        "root": "node_033"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "THEN_ID_port_variants",
+      "description": "THEN(id,f) → f - Different port configurations",
+      "operonJson": {
+        "nodes": {
+          "node_041": {
+            "cost": "O(1)",
+            "gid": "45678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f6789012345678",
+            "iid": "identity_port_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "input": "stream",
+              "output": "stream"
+            },
+            "receipt": null,
+            "xid": "x041_identity"
+          },
+          "node_042": {
+            "cost": "O(1)",
+            "gid": "5678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f67890123456789",
+            "iid": "filter_port_001",
+            "law": "selection",
+            "links": {},
+            "op": "FILTER",
+            "ports": {
+              "input": "stream",
+              "output": "filtered_stream"
+            },
+            "receipt": null,
+            "xid": "x042_filter"
+          },
+          "node_043": {
+            "cost": "O(2)",
+            "gid": "678901234567890abcdef1234567890abcdef123456a1b2c3d4e5f678901234567890",
+            "iid": "then_port_001",
+            "law": "composition",
+            "links": {},
+            "op": "THEN",
+            "ports": {
+              "left_input": "stream",
+              "right_input": "filtered_stream",
+              "output": "result"
+            },
+            "receipt": null,
+            "xid": "x043_then"
+          }
+        },
+        "root": "node_043"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "THEN_ID_effects",
+      "description": "THEN(id,f) → f - With side effects (should NOT apply)",
+      "operonJson": {
+        "nodes": {
+          "node_051": {
+            "cost": "O(1)",
+            "gid": "78901234567890abcdef1234567890abcdef123456a1b2c3d4e5f6789012345678901",
+            "iid": "identity_effects_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "data",
+              "out": "data",
+              "side_effect": "log"
+            },
+            "receipt": null,
+            "xid": "x051_identity"
+          },
+          "node_052": {
+            "cost": "O(1)",
+            "gid": "8901234567890abcdef1234567890abcdef123456a1b2c3d4e5f67890123456789012",
+            "iid": "focus_effects_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "data",
+              "out": "focused"
+            },
+            "receipt": null,
+            "xid": "x052_focus"
+          },
+          "node_053": {
+            "cost": "O(2)",
+            "gid": "901234567890abcdef1234567890abcdef123456a1b2c3d4e5f678901234567890123",
+            "iid": "then_effects_001",
+            "law": "composition",
+            "links": {},
+            "op": "THEN",
+            "ports": {
+              "left": "data",
+              "right": "focused",
+              "out": "result"
+            },
+            "receipt": null,
+            "xid": "x053_then"
+          }
+        },
+        "root": "node_053"
+      },
+      "expect": {
+        "delta": {
+          "hops": 0,
+          "lat": 0,
+          "mem": 0
+        },
+        "gid_invariance": "no transformation applied - effects present"
+      }
+    },
+
+    {
+      "name": "SPLIT_MERGE_basic",
+      "description": "SPLIT▶MERGE(id,id) → id - Basic redundant split-merge",
+      "operonJson": {
+        "nodes": {
+          "node_101": {
+            "cost": "O(1)",
+            "gid": "01234567890abcdef1234567890abcdef123456a1b2c3d4e5f6789012345678901234",
+            "iid": "split_basic_001",
+            "law": "conditional",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {
+              "in": "data",
+              "out1": "branch_a",
+              "out2": "branch_b"
+            },
+            "receipt": null,
+            "xid": "x101_split"
+          },
+          "node_102": {
+            "cost": "O(1)",
+            "gid": "1234567890abcdef1234567890abcdef123456a1b2c3d4e5f67890123456789012345",
+            "iid": "merge_basic_001",
+            "law": "composition",
+            "links": {},
+            "op": "MERGE",
+            "ports": {
+              "in1": "branch_a",
+              "in2": "branch_b",
+              "out": "merged"
+            },
+            "receipt": null,
+            "xid": "x102_merge"
+          }
+        },
+        "root": "node_102"
+      },
+      "expect": {
+        "delta": {
+          "hops": -2,
+          "lat": -2,
+          "mem": -1
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "SPLIT_MERGE_complex",
+      "description": "SPLIT▶MERGE(id,id) → id - In complex dataflow",
+      "operonJson": {
+        "nodes": {
+          "node_111": {
+            "cost": "O(1)",
+            "gid": "234567890abcdef1234567890abcdef123456a1b2c3d4e5f678901234567890123456",
+            "iid": "split_complex_001",
+            "law": "conditional",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {
+              "in": "stream",
+              "left": "stream_a",
+              "right": "stream_b"
+            },
+            "receipt": null,
+            "xid": "x111_split"
+          },
+          "node_112": {
+            "cost": "O(1)",
+            "gid": "34567890abcdef1234567890abcdef123456a1b2c3d4e5f6789012345678901234567",
+            "iid": "identity_left_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "stream_a",
+              "out": "stream_a"
+            },
+            "receipt": null,
+            "xid": "x112_identity_left"
+          },
+          "node_113": {
+            "cost": "O(1)",
+            "gid": "4567890abcdef1234567890abcdef123456a1b2c3d4e5f67890123456789012345678",
+            "iid": "identity_right_001",
+            "law": "identity",
+            "links": {},
+            "op": "IDENTITY",
+            "ports": {
+              "in": "stream_b",
+              "out": "stream_b"
+            },
+            "receipt": null,
+            "xid": "x113_identity_right"
+          },
+          "node_114": {
+            "cost": "O(1)",
+            "gid": "567890abcdef1234567890abcdef123456a1b2c3d4e5f678901234567890123456789",
+            "iid": "merge_complex_001",
+            "law": "composition",
+            "links": {},
+            "op": "MERGE",
+            "ports": {
+              "left": "stream_a",
+              "right": "stream_b",
+              "out": "merged_stream"
+            },
+            "receipt": null,
+            "xid": "x114_merge"
+          }
+        },
+        "root": "node_114"
+      },
+      "expect": {
+        "delta": {
+          "hops": -2,
+          "lat": -2,
+          "mem": -1
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "SPLIT_MERGE_typed",
+      "description": "SPLIT▶MERGE(id,id) → id - With strong typing",
+      "operonJson": {
+        "nodes": {
+          "node_121": {
+            "cost": "O(1)",
+            "gid": "67890abcdef1234567890abcdef123456a1b2c3d4e5f67890123456789012345678901",
+            "iid": "split_typed_001",
+            "law": "conditional",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {
+              "in": "Either<A,B>",
+              "left": "A",
+              "right": "B"
+            },
+            "receipt": null,
+            "xid": "x121_split"
+          },
+          "node_122": {
+            "cost": "O(1)",
+            "gid": "7890abcdef1234567890abcdef123456a1b2c3d4e5f678901234567890123456789012",
+            "iid": "merge_typed_001",
+            "law": "composition",
+            "links": {},
+            "op": "MERGE",
+            "ports": {
+              "left": "A",
+              "right": "B",
+              "out": "Either<A,B>"
+            },
+            "receipt": null,
+            "xid": "x122_merge"
+          }
+        },
+        "root": "node_122"
+      },
+      "expect": {
+        "delta": {
+          "hops": -2,
+          "lat": -2,
+          "mem": -1
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "SPLIT_MERGE_async",
+      "description": "SPLIT▶MERGE(id,id) → id - With async branches",
+      "operonJson": {
+        "nodes": {
+          "node_131": {
+            "cost": "O(1)",
+            "gid": "890abcdef1234567890abcdef123456a1b2c3d4e5f6789012345678901234567890123",
+            "iid": "split_async_001",
+            "law": "conditional",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {
+              "in": "async_stream",
+              "async_left": "promise_a",
+              "async_right": "promise_b"
+            },
+            "receipt": null,
+            "xid": "x131_split"
+          },
+          "node_132": {
+            "cost": "O(1)+T",
+            "gid": "90abcdef1234567890abcdef123456a1b2c3d4e5f67890123456789012345678901234",
+            "iid": "merge_async_001",
+            "law": "composition",
+            "links": {},
+            "op": "MERGE",
+            "ports": {
+              "async_left": "promise_a",
+              "async_right": "promise_b",
+              "out": "resolved_stream"
+            },
+            "receipt": null,
+            "xid": "x132_merge"
+          }
+        },
+        "root": "node_132"
+      },
+      "expect": {
+        "delta": {
+          "hops": -2,
+          "lat": -2,
+          "mem": -1
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "SPLIT_MERGE_branch_filter",
+      "description": "SPLIT▶MERGE(id,id) → id - With branch filtering",
+      "operonJson": {
+        "nodes": {
+          "node_141": {
+            "cost": "O(1)",
+            "gid": "0abcdef1234567890abcdef123456a1b2c3d4e5f678901234567890123456789012345",
+            "iid": "split_filter_001",
+            "law": "conditional",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {
+              "in": "dataset",
+              "positive": "pos_items",
+              "negative": "neg_items"
+            },
+            "receipt": null,
+            "xid": "x141_split"
+          },
+          "node_142": {
+            "cost": "O(n)",
+            "gid": "abcdef1234567890abcdef123456a1b2c3d4e5f6789012345678901234567890123456",
+            "iid": "filter_pos_001",
+            "law": "selection",
+            "links": {},
+            "op": "FILTER",
+            "ports": {
+              "in": "pos_items",
+              "out": "pos_items"
+            },
+            "receipt": null,
+            "xid": "x142_filter_pos"
+          },
+          "node_143": {
+            "cost": "O(n)",
+            "gid": "bcdef1234567890abcdef123456a1b2c3d4e5f67890123456789012345678901234567",
+            "iid": "filter_neg_001",
+            "law": "selection",
+            "links": {},
+            "op": "FILTER",
+            "ports": {
+              "in": "neg_items",
+              "out": "neg_items"
+            },
+            "receipt": null,
+            "xid": "x143_filter_neg"
+          },
+          "node_144": {
+            "cost": "O(2n+1)",
+            "gid": "cdef1234567890abcdef123456a1b2c3d4e5f678901234567890123456789012345678",
+            "iid": "merge_filter_001",
+            "law": "composition",
+            "links": {},
+            "op": "MERGE",
+            "ports": {
+              "positive": "pos_items",
+              "negative": "neg_items",
+              "out": "filtered_dataset"
+            },
+            "receipt": null,
+            "xid": "x144_merge"
+          }
+        },
+        "root": "node_144"
+      },
+      "expect": {
+        "delta": {
+          "hops": 0,
+          "lat": 0,
+          "mem": 0
+        },
+        "gid_invariance": "no transformation applied - non-identity branches"
+      }
+    },
+    {
+      "name": "SPLIT_MERGE_law_mismatch",
+      "description": "SPLIT▶MERGE(id,id) → id - Law incompatibility (should NOT apply)",
+      "operonJson": {
+        "nodes": {
+          "node_151": {
+            "cost": "O(1)",
+            "gid": "def1234567890abcdef123456a1b2c3d4e5f6789012345678901234567890123456789",
+            "iid": "split_law_001",
+            "law": "non_associative",
+            "links": {},
+            "op": "SPLIT",
+            "ports": {
+              "in": "data",
+              "out1": "branch_a",
+              "out2": "branch_b"
+            },
+            "receipt": null,
+            "xid": "x151_split"
+          },
+          "node_152": {
+            "cost": "O(1)",
+            "gid": "ef1234567890abcdef123456a1b2c3d4e5f678901234567890123456789012345678901",
+            "iid": "merge_law_001",
+            "law": "composition",
+            "links": {},
+            "op": "MERGE",
+            "ports": {
+              "in1": "branch_a",
+              "in2": "branch_b",
+              "out": "merged"
+            },
+            "receipt": null,
+            "xid": "x152_merge"
+          }
+        },
+        "root": "node_152"
+      },
+      "expect": {
+        "delta": {
+          "hops": 0,
+          "lat": 0,
+          "mem": 0
+        },
+        "gid_invariance": "no transformation applied - law incompatibility"
+      }
+    },
+
+    {
+      "name": "FOCUS_COMPOSE_basic",
+      "description": "FOCUS∘FOCUS → FOCUS' - Basic focus composition",
+      "operonJson": {
+        "nodes": {
+          "node_201": {
+            "cost": "O(1)",
+            "gid": "f1234567890abcdef123456a1b2c3d4e5f67890123456789012345678901234567890",
+            "iid": "focus_basic_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "object",
+              "out": "field"
+            },
+            "receipt": null,
+            "xid": "x201_focus_first"
+          },
+          "node_202": {
+            "cost": "O(1)",
+            "gid": "1234567890abcdef123456a1b2c3d4e5f678901234567890123456789012345678901",
+            "iid": "focus_basic_002",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "field",
+              "out": "subfield"
+            },
+            "receipt": null,
+            "xid": "x202_focus_second"
+          }
+        },
+        "root": "node_202"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "FOCUS_COMPOSE_chained",
+      "description": "FOCUS∘FOCUS → FOCUS' - Multiple chained focuses",
+      "operonJson": {
+        "nodes": {
+          "node_211": {
+            "cost": "O(1)",
+            "gid": "234567890abcdef123456a1b2c3d4e5f6789012345678901234567890123456789012",
+            "iid": "focus_chained_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "data_structure",
+              "out": "level1"
+            },
+            "receipt": null,
+            "xid": "x211_focus_l1"
+          },
+          "node_212": {
+            "cost": "O(1)",
+            "gid": "34567890abcdef123456a1b2c3d4e5f67890123456789012345678901234567890123",
+            "iid": "focus_chained_002",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "level1",
+              "out": "level2"
+            },
+            "receipt": null,
+            "xid": "x212_focus_l2"
+          },
+          "node_213": {
+            "cost": "O(1)",
+            "gid": "4567890abcdef123456a1b2c3d4e5f678901234567890123456789012345678901234",
+            "iid": "focus_chained_003",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "level2",
+              "out": "level3"
+            },
+            "receipt": null,
+            "xid": "x213_focus_l3"
+          }
+        },
+        "root": "node_213"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "FOCUS_COMPOSE_typed",
+      "description": "FOCUS∘FOCUS → FOCUS' - With type constraints",
+      "operonJson": {
+        "nodes": {
+          "node_221": {
+            "cost": "O(1)",
+            "gid": "567890abcdef123456a1b2c3d4e5f6789012345678901234567890123456789012345",
+            "iid": "focus_typed_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "Record<string, any>",
+              "out": "string"
+            },
+            "receipt": null,
+            "xid": "x221_focus_typed"
+          },
+          "node_222": {
+            "cost": "O(1)",
+            "gid": "67890abcdef123456a1b2c3d4e5f67890123456789012345678901234567890123456",
+            "iid": "focus_typed_002",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "string",
+              "out": "char"
+            },
+            "receipt": null,
+            "xid": "x222_focus_typed"
+          }
+        },
+        "root": "node_222"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "FOCUS_COMPOSE_async",
+      "description": "FOCUS∘FOCUS → FOCUS' - With async data access",
+      "operonJson": {
+        "nodes": {
+          "node_231": {
+            "cost": "O(1)+T",
+            "gid": "7890abcdef123456a1b2c3d4e5f678901234567890123456789012345678901234567",
+            "iid": "focus_async_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "async_object",
+              "out": "promise_field"
+            },
+            "receipt": null,
+            "xid": "x231_focus_async"
+          },
+          "node_232": {
+            "cost": "O(1)+T",
+            "gid": "890abcdef123456a1b2c3d4e5f6789012345678901234567890123456789012345678",
+            "iid": "focus_async_002",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "promise_field",
+              "out": "resolved_value"
+            },
+            "receipt": null,
+            "xid": "x232_focus_async"
+          }
+        },
+        "root": "node_232"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "FOCUS_COMPOSE_parallel",
+      "description": "FOCUS∘FOCUS → FOCUS' - In parallel execution",
+      "operonJson": {
+        "nodes": {
+          "node_241": {
+            "cost": "O(1)",
+            "gid": "90abcdef123456a1b2c3d4e5f67890123456789012345678901234567890123456789",
+            "iid": "focus_parallel_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "parallel_data",
+              "out": "extracted_data"
+            },
+            "receipt": null,
+            "xid": "x241_focus_parallel"
+          },
+          "node_242": {
+            "cost": "O(1)",
+            "gid": "0abcdef123456a1b2c3d4e5f678901234567890123456789012345678901234567890",
+            "iid": "focus_parallel_002",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "extracted_data",
+              "out": "refined_data"
+            },
+            "receipt": null,
+            "xid": "x242_focus_parallel"
+          }
+        },
+        "root": "node_242"
+      },
+      "expect": {
+        "delta": {
+          "hops": -1,
+          "lat": -1,
+          "mem": 0
+        },
+        "gid_invariance": "route-level output unchanged"
+      }
+    },
+    {
+      "name": "FOCUS_COMPOSE_effects",
+      "description": "FOCUS∘FOCUS → FOCUS' - With side effects (should NOT apply)",
+      "operonJson": {
+        "nodes": {
+          "node_251": {
+            "cost": "O(1)",
+            "gid": "abcdef123456a1b2c3d4e5f6789012345678901234567890123456789012345678901",
+            "iid": "focus_effects_001",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "data",
+              "out": "focused",
+              "effect": "log_access"
+            },
+            "receipt": null,
+            "xid": "x251_focus_effects"
+          },
+          "node_252": {
+            "cost": "O(1)",
+            "gid": "bcdef123456a1b2c3d4e5f67890123456789012345678901234567890123456789012",
+            "iid": "focus_effects_002",
+            "law": "projection",
+            "links": {},
+            "op": "FOCUS",
+            "ports": {
+              "in": "focused",
+              "out": "subfocused"
+            },
+            "receipt": null,
+            "xid": "x252_focus_clean"
+          }
+        },
+        "root": "node_252"
+      },
+      "expect": {
+        "delta": {
+          "hops": 0,
+          "lat": 0,
+          "mem": 0
+        },
+        "gid_invariance": "no transformation applied - effects present"
+      }
+    }
+  ]
+}

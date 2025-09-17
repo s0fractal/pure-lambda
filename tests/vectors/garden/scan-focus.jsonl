@@ -1,0 +1,3 @@
+{"name": "scan_focus_aggregation", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/scan-focus.json", "expect": {"gidStable": true, "iidStable": true, "minRouteLen": 2, "pattern": "rolling_agg_pick"}}
+{"name": "scan_focus_laws", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/scan-focus.json", "expect": {"lawTypes": ["aggregation", "selection"], "opSequence": ["SCAN", "FOCUS"], "gidStable": true}}
+{"name": "scan_focus_complexity", "seedJson": "/Users/chaoshex/Projects/pure-lambda/seeds/garden/scan-focus.json", "expect": {"costs": ["O(n)", "O(log n)"], "minRouteLen": 2, "linearChain": true}}

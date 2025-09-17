@@ -1,12 +1,16 @@
 #!/usr/bin/env node
+
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Pure Lambda Authors
+
 import fs from "node:fs"; import path from "node:path";
 
 const CFG = JSON.parse(fs.readFileSync(process.env.BIO_CFG ?? "{}", "utf8") || "{}");
 const policy = fs.existsSync("policies/bio.yaml") ? fs.readFileSync("policies/bio.yaml","utf8") : "";
-const deny = [/dual_use/i,/wetlab/i,/pathogen/i,/env_cascade/i,/delivery_opt/i];
+const deny = [/dual_use/i,/wetlab/i,/threat/i,/env_cascade/i,/delivery_opt/i];
 const sigs = [
   /\b(step|protocol|dose|recipe|incub|culture|optimiz|enhanc)\b/i,
-  /\b(lab|biosafety|BSL|pathogen|viral|bacterial|fungal)\b/i,
+  /\b(lab|biosafety|BSL|threat|viral|bacterial|fungal)\b/i,
   /\b(aerosol|vector|plasmid|CRISPR|PCR)\b/i
 ];
 

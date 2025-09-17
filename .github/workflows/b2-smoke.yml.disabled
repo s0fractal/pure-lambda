@@ -1,0 +1,79 @@
+# B2 Smoke Test CI
+# Disabled - uncomment 'name' line to enable
+
+# name: B2 Smoke Tests
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'tools/gid.ts'
+      - 'tools/ipld-export.ts'
+      - 'fixtures/tiles/**'
+      - 'scripts/ci/smoke.mjs'
+      - 'package.json'
+      - 'tsconfig.json'
+  pull_request:
+    branches: [ master, main ]
+    paths:
+      - 'tools/gid.ts'
+      - 'tools/ipld-export.ts'
+      - 'fixtures/tiles/**'
+      - 'scripts/ci/smoke.mjs'
+      - 'package.json'
+      - 'tsconfig.json'
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        # Install TypeScript globally for ts-node
+        npm install -g typescript ts-node
+
+    - name: Create dist directory
+      run: mkdir -p dist
+
+    - name: Run smoke tests
+      run: |
+        node scripts/ci/smoke.mjs
+
+    - name: Upload artifacts on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: b2-smoke-artifacts
+        path: |
+          dist/
+          logs/
+        retention-days: 7
+
+    - name: Verify outputs exist
+      run: |
+        echo "📦 Generated files:"
+        ls -la dist/ || echo "No dist/ directory"
+        if [ -f "dist/operon.car" ]; then
+          echo "✅ operon.car: $(wc -c < dist/operon.car) bytes"
+        else
+          echo "❌ operon.car missing"
+          exit 1
+        fi
+        if [ -f "dist/operon.json" ]; then
+          echo "✅ operon.json: $(wc -c < dist/operon.json) bytes"
+        else
+          echo "❌ operon.json missing"
+          exit 1
+        fi

@@ -1,0 +1,91 @@
+{
+  "nodes": {
+    "baf26ea126bb5b3d09847d543bcfa793a21521fc9dcfa6fba3f8743bb86": {
+      "cost": "O(log n)",
+      "gid": "f5a4991646772b3129c8c8abe20d6e3b5e7ca7540f90eb30ee66521622a306b0",
+      "iid": "0e591762d4761574096a65dbdf3d77e1c5bd22fabcbc20b1f9b0eff8de9795bd",
+      "law": "associative",
+      "links": {
+        "left": "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd",
+        "right": "bafb2b3a7c4d5e6f890123456789abcdef0123456789abcdef0123456789"
+      },
+      "op": "SPLIT",
+      "ports": {
+        "in": "stream",
+        "left": "branch_a",
+        "right": "branch_b"
+      },
+      "receipt": null,
+      "xid": "ba20656bcf93cd7ff56f6003276a0d473da8139b1731e60f10f1f454075ebd6d"
+    },
+    "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd": {
+      "cost": "O(1)",
+      "gid": "f5a4991646772b3129c8c8abe20d6e3b5e7ca7540f90eb30ee66521622a306b0",
+      "iid": "0e591762d4761574096a65dbdf3d77e1c5bd22fabcbc20b1f9b0eff8de9795bd",
+      "law": "identity",
+      "links": {},
+      "op": "ID",
+      "ports": {
+        "in": "data",
+        "out": "data"
+      },
+      "receipt": null,
+      "xid": "506bf04529922981c8e224ee125e181147e58ccffe2ffead16fafa650e5b04ea"
+    },
+    "bafb2b3a7c4d5e6f890123456789abcdef0123456789abcdef0123456789": {
+      "cost": "O(1)",
+      "gid": "f5a4991646772b3129c8c8abe20d6e3b5e7ca7540f90eb30ee66521622a306b0",
+      "iid": "0e591762d4761574096a65dbdf3d77e1c5bd22fabcbc20b1f9b0eff8de9795bd",
+      "law": "identity",
+      "links": {},
+      "op": "ID",
+      "ports": {
+        "in": "data",
+        "out": "data"
+      },
+      "receipt": null,
+      "xid": "a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1p2q3r4s5t6u7v8w9x0y1z2a3b4c5d6e7f8"
+    },
+    "bafc3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e": {
+      "cost": "O(log n)",
+      "gid": "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602",
+      "iid": "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b",
+      "law": "associative",
+      "links": {},
+      "op": "MERGE",
+      "ports": {
+        "left": "branch_a",
+        "right": "branch_b",
+        "out": "merged"
+      },
+      "receipt": null,
+      "xid": "c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e2f3g4h5"
+    },
+    "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c": {
+      "oids": [
+        "baf26ea126bb5b3d09847d543bcfa793a21521fc9dcfa6fba3f8743bb86",
+        "baf7288ce2a2562f73440d77b52c918593568ac709b605d74479a0222fd",
+        "bafb2b3a7c4d5e6f890123456789abcdef0123456789abcdef0123456789",
+        "bafc3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e"
+      ],
+      "root": "baf26ea126bb5b3d09847d543bcfa793a21521fc9dcfa6fba3f8743bb86"
+    }
+  },
+  "root": "baf419f4ede606c767f05699fd83a536ef0c3463c431ad022cf1088e75c",
+  "name": "split-merge-min",
+  "gidSet": [
+    "f5a4991646772b3129c8c8abe20d6e3b5e7ca7540f90eb30ee66521622a306b0",
+    "8a7ea8476e1b730e84f17885c08eaacf1a40c3572d709bdb30e88fff154f1602"
+  ],
+  "iidSet": [
+    "0e591762d4761574096a65dbdf3d77e1c5bd22fabcbc20b1f9b0eff8de9795bd",
+    "90fb5efc9fe440fd0d0e197cb3b5ae1f9d18aed0b6f659b63ea222674d9afd6b"
+  ],
+  "expected": {
+    "minRouteLen": 2,
+    "invariants": [
+      "GID independent of ports",
+      "IID equal for abi-equal"
+    ]
+  }
+}

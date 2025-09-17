@@ -1,0 +1,7 @@
+{"name":"negative_gid_code_change","check":"gid_iid_xid","why":"Expected failure but test passed","got":"test failed","want":"test to pass","hint":"Check hash invariants and mutation expectations"}
+{"name":"negative_iid_abi_type_change","check":"gid_iid_xid","why":"Expected failure but test passed","got":"test failed","want":"test to pass","hint":"Check hash invariants and mutation expectations"}
+{"name":"negative_iid_effect_change","check":"gid_iid_xid","why":"Expected failure but test passed","got":"test failed","want":"test to pass","hint":"Check hash invariants and mutation expectations"}
+{"name":"negative_iid_port_name_change","check":"gid_iid_xid","why":"Expected failure but test passed","got":"test failed","want":"test to pass","hint":"Check hash invariants and mutation expectations"}
+{"name":"negative_xid_same_gid_same_neighbors","check":"gid_iid_xid","why":"Expected failure but test passed","got":"test failed","want":"test to pass","hint":"Check hash invariants and mutation expectations"}
+{"name":"negative_all_equal_but_should_fail","check":"gid_iid_xid","why":"Expected failure but test passed","got":"test failed","want":"test to pass","hint":"Check hash invariants and mutation expectations"}
+{"name":"tie_parallel_paths","check":"autopilot","why":"Regret exceeds tie bound: 3.7417879417879423 > 0.01","got":"regret: undefined","want":"regret within bounds for tie","hint":"Check regret calculation and bounds"}

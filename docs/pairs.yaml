@@ -1,0 +1,112 @@
+# Pure Lambda Pair-Lexicon
+# Aliases for common 2-gram operations
+# These are documentation/UI helpers only - NOT used in core NF
+
+pairs:
+  # Map-Filter Pattern
+  - pattern: "map▶filter"
+    nf: "FOCUS(p∘f,f)"
+    alias: "SELECT"
+    description: "Select elements matching predicate after transformation"
+    external:
+      sql: "SELECT f(x) FROM table WHERE p(f(x))"
+      rxjs: "map(f).filter(p)"
+
+  # Filter-Map Pattern
+  - pattern: "filter▶map"
+    nf: "FOCUS(f,p)"
+    alias: "TRANSFORM_IF"
+    description: "Transform elements that match predicate"
+    external:
+      sql: "SELECT f(x) FROM table WHERE p(x)"
+      rxjs: "filter(p).map(f)"
+
+  # Split-Merge Pattern
+  - pattern: "split▶merge"
+    nf: "PARTITION(λx.p(x), λy.¬p(y))"
+    alias: "BIFURCATE"
+    description: "Separate into two streams then recombine"
+    external:
+      sql: "CASE WHEN p(x) THEN f1(x) ELSE f2(x) END"
+      rxjs: "partition(p).mergeMap([f1, f2])"
+
+  # Scan-Reduce Pattern
+  - pattern: "scan▶reduce"
+    nf: "ACCUMULATE(⊕, ε)"
+    alias: "AGGREGATE"
+    description: "Accumulate values with final reduction"
+    external:
+      sql: "SUM(x) OVER (ORDER BY t)"
+      rxjs: "scan(op, initial).reduce(final)"
+
+  # Delay-Timeout Pattern
+  - pattern: "delay▶timeout"
+    nf: "TEMPORAL(δt, τmax)"
+    alias: "BOUNDED_DELAY"
+    description: "Delay with maximum time limit"
+    external:
+      sql: "WAIT FOR DELAY δt TIMEOUT τmax"
+      rxjs: "delay(dt).timeout(tmax)"
+
+  # Group-Sort Pattern
+  - pattern: "group▶sort"
+    nf: "CLUSTER(≡, ≤)"
+    alias: "ORDERED_GROUPS"
+    description: "Group by equivalence then sort within groups"
+    external:
+      sql: "ORDER BY key, value"
+      rxjs: "groupBy(key).map(g => g.sort(compare))"
+
+  # Take-Drop Pattern
+  - pattern: "take▶drop"
+    nf: "WINDOW(n, m)"
+    alias: "SLICE"
+    description: "Take n elements, skip m elements"
+    external:
+      sql: "OFFSET m LIMIT n"
+      rxjs: "skip(m).take(n)"
+
+  # Flatten-Distinct Pattern
+  - pattern: "flatten▶distinct"
+    nf: "UNIQUE(⊔)"
+    alias: "DEDUPE_FLATTEN"
+    description: "Flatten nested structures and remove duplicates"
+    external:
+      sql: "SELECT DISTINCT x FROM table, UNNEST(array_col) AS x"
+      rxjs: "flatMap(identity).distinct()"
+
+  # Switch-Merge Pattern
+  - pattern: "switch▶merge"
+    nf: "MULTIPLEX(σ, ⊔)"
+    alias: "ROUTE_MERGE"
+    description: "Route based on selector then merge results"
+    external:
+      sql: "UNION ALL SELECT * FROM table1 WHERE p UNION ALL SELECT * FROM table2 WHERE NOT p"
+      rxjs: "switchMap(selector).merge()"
+
+  # Zip-Map Pattern
+  - pattern: "zip▶map"
+    nf: "COMBINE(⊗, f)"
+    alias: "PAIRED_TRANSFORM"
+    description: "Combine paired elements with transformation"
+    external:
+      sql: "SELECT f(a.x, b.y) FROM tableA a JOIN tableB b ON a.id = b.id"
+      rxjs: "zip(streamA, streamB).map(([a, b]) => f(a, b))"
+
+  # Buffer-Batch Pattern
+  - pattern: "buffer▶batch"
+    nf: "SEGMENT(n, τ)"
+    alias: "WINDOWED_BATCH"
+    description: "Buffer elements into batches by count or time"
+    external:
+      sql: "SELECT ARRAY_AGG(x) FROM table GROUP BY FLOOR(row_number()/n)"
+      rxjs: "buffer(timer(dt)).filter(b => b.length > 0)"
+
+  # Retry-Fallback Pattern
+  - pattern: "retry▶fallback"
+    nf: "RESILIENT(n, φ)"
+    alias: "FAULT_TOLERANT"
+    description: "Retry operation n times then use fallback"
+    external:
+      sql: "TRY_CONVERT(type, value) ?? default_value"
+      rxjs: "retry(n).catchError(() => of(fallback))"

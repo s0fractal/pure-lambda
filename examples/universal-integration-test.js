@@ -159,7 +159,7 @@ async function testCategoryTheory() {
   console.log(`      Consensus: ${consensus.toFixed(3)}`);
   
   // FNPM/Chimera adaptation
-  console.log('   🦠 Virus deconstruction...');
+  console.log('   🦠 Deconstructor deconstruction...');
   console.log('      All viruses neutralized');
   console.log('      Code adapted for: node, browser, wasm, native');
   

@@ -1,0 +1,121 @@
+{
+  "createdAt": "2025-09-17T10:02:44.346Z",
+  "meta": {
+    "gidSet": [
+      "526d782a797f5328a0d19c35bb1777fcc41b45c2d57667292801e460111820f1",
+      "a59289a058a8db89462e361fe7f9ae2bbdd2be18dfecfe170f8f66b9ca62485c",
+      "a59289a058a8db89462e361fe7f9ae2bbdd2be18dfecfe170f8f66b9ca62485c",
+      "a59289a058a8db89462e361fe7f9ae2bbdd2be18dfecfe170f8f66b9ca62485c",
+      "a59289a058a8db89462e361fe7f9ae2bbdd2be18dfecfe170f8f66b9ca62485c",
+      "a59289a058a8db89462e361fe7f9ae2bbdd2be18dfecfe170f8f66b9ca62485c"
+    ],
+    "iidSet": [
+      "0c3e04238ccd7792d1b48ecd69dc908e77f38355e16f304f8320e26ac952a8b4",
+      "16be0dad70341975853a6bf8d9aa3b9e7d1c6d24255807d8139a9d114fc82f37",
+      "571f3b6ce1eaa12d7d0642b5f9d2120f8836a4043dc1aa39b3c56a94765071bd",
+      "bfafd43dfd45d79ebffab73ce6227a6eacd6396eae2633fe8e412fee780ed47c",
+      "7b246b156d4058e57a4164042309bebbef5ae873bac7390e20c02c24b06c33c8",
+      "e14873b927b32c07c3fa9da02b4d23b36ce2daa1c82c72e437b76627e1792540"
+    ],
+    "stats": {
+      "hops": 2,
+      "latency": 0,
+      "mem": 6
+    },
+    "xidSet": [
+      "a9d1b81b749979d866357bd05f295fe16dc807952bcb706b4d4a2af30d05502c",
+      "b848d7f5aaf52a36e2e0bd17cdf3aa368934adabe3b8a88130548718991b6c3b",
+      "b848d7f5aaf52a36e2e0bd17cdf3aa368934adabe3b8a88130548718991b6c3b",
+      "b848d7f5aaf52a36e2e0bd17cdf3aa368934adabe3b8a88130548718991b6c3b",
+      "b848d7f5aaf52a36e2e0bd17cdf3aa368934adabe3b8a88130548718991b6c3b",
+      "b848d7f5aaf52a36e2e0bd17cdf3aa368934adabe3b8a88130548718991b6c3b"
+    ]
+  },
+  "name": "branch-stress",
+  "pl_seed": "PL-SEED-01",
+  "tiles": [
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "data",
+          "path1": "branch1",
+          "path2": "branch2",
+          "path3": "branch3",
+          "path4": "branch4",
+          "path5": "branch5"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(log n)",
+      "law": "distribution",
+      "op": "SPLIT"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "branch1",
+          "out": "result1"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "identity",
+      "op": "ID"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "branch2",
+          "out": "result2"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "identity",
+      "op": "ID"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "branch3",
+          "out": "result3"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "identity",
+      "op": "ID"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "branch4",
+          "out": "result4"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "identity",
+      "op": "ID"
+    },
+    {
+      "abi": {
+        "effects": [],
+        "ports": {
+          "in": "branch5",
+          "out": "result5"
+        },
+        "types": "unknown -> unknown"
+      },
+      "cost": "O(1)",
+      "law": "identity",
+      "op": "ID"
+    }
+  ],
+  "version": 1
+}

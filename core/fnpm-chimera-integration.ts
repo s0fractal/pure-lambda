@@ -1,6 +1,6 @@
 /**
  * FNPM/Chimera Integration - Web and distributed genes
- * Absorbing Virus Deconstructor, Signal Mesh, Guardian Mandala
+ * Absorbing Deconstructor Deconstructor, Signal Mesh, Guardian Mandala
  * 
  * "From the chaos of npm, we extract pure λ-essence"
  * - FNPM Manifesto
@@ -11,9 +11,9 @@ import { createProteinHash } from './symphony-integration';
 import { createMRTScanner } from './medbed-integration';
 
 /**
- * Virus Deconstructor - Breaks down legacy code to λ-IR
+ * Deconstructor Deconstructor - Breaks down legacy code to λ-IR
  */
-export interface VirusDeconstructor {
+export interface DeconstructorDeconstructor {
   analyze: (legacyCode: string) => VirusAnalysis;
   deconstruct: (analysis: VirusAnalysis) => any[]; // λ-IR fragments
   reconstruct: (fragments: any[]) => string; // Pure functional code
@@ -93,9 +93,9 @@ interface BridgeAdapter {
 }
 
 /**
- * Virus Deconstructor implementation
+ * Deconstructor Deconstructor implementation
  */
-export const createVirusDeconstructor = (): VirusDeconstructor => {
+export const createDeconstructor = (): DeconstructorDeconstructor => {
   const quarantined = new Set<string>();
   
   return {
@@ -501,17 +501,17 @@ export const integrateWithFNPMChimera = async (
 }> => {
   console.log('🧬 FNPM/Chimera Integration starting...');
   
-  // 1. Deconstruct virus
-  const virus = createVirusDeconstructor();
-  const analysis = virus.analyze(legacyCode);
+  // 1. Deconstruct deconstructor
+  const deconstructor = createDeconstructor();
+  const analysis = deconstructor.analyze(legacyCode);
   
   if (analysis.maliciousPatterns.length > 0) {
     console.log('⚠️ Malicious patterns detected!');
-    virus.quarantine(legacyCode);
+    deconstructor.quarantine(legacyCode);
   }
   
-  const fragments = virus.deconstruct(analysis);
-  const purified = virus.reconstruct(fragments);
+  const fragments = deconstructor.deconstruct(analysis);
+  const purified = deconstructor.reconstruct(fragments);
   
   // 2. Protect with Mandala
   const mandala = createGuardianMandala();
@@ -546,16 +546,16 @@ export function demonstrateFNPMChimeraIntegration() {
   console.log('🦠 FNPM/Chimera Integration Demonstration');
   console.log('='.repeat(50));
   
-  // Test Virus Deconstructor
-  console.log('\n📖 Testing Virus Deconstructor...');
-  const virus = createVirusDeconstructor();
+  // Test Deconstructor Deconstructor
+  console.log('\n📖 Testing Deconstructor Deconstructor...');
+  const deconstructor = createDeconstructor();
   const dirtyCode = `
     const fs = require('fs');
     let data = fs.readFileSync('file.txt');
     eval(data);
     console.log('Executed!');
   `;
-  const analysis = virus.analyze(dirtyCode);
+  const analysis = deconstructor.analyze(dirtyCode);
   console.log(`   Type: ${analysis.type}`);
   console.log(`   Dependencies: ${analysis.dependencies.join(', ')}`);
   console.log(`   Side effects: ${analysis.sideEffects.join(', ')}`);
@@ -605,7 +605,7 @@ export function demonstrateFNPMChimeraIntegration() {
   });
   
   console.log('\n🌀 Key Features:');
-  console.log('   Virus Deconstructor cleans legacy code');
+  console.log('   Deconstructor Deconstructor cleans legacy code');
   console.log('   Signal Mesh enables distributed communication');
   console.log('   Guardian Mandala provides visual protection');
   console.log('   Chimera Protocol adapts to any environment');

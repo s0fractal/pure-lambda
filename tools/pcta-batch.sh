@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 
 # pcta-batch.sh - Batch runner for PCTA testing across multiple repos
 #

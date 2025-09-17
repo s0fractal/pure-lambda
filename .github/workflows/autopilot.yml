@@ -1,0 +1,93 @@
+name: Autopilot
+
+on:
+  schedule:
+    - cron: "0 7,11,16,20 * * *"   # 07:00, 11:00, 16:00, 20:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: autopilot
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20"
+  TRUST_MIN: "0.95"
+  DSSE_REQ: "1.00"
+  NOVELTY_MIN: "0.33"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ env.NODE_VERSION }} }
+      - name: Install deps
+        run: npm ci
+
+      # РАНОК: бустер + дашборд + оновлення довіри
+      - name: Morning cycle
+        if: ${{ endsWith(github.event.schedule, ' 7 * * *') || endsWith(github.event.schedule, ' 11 * * *') || github.event_name == 'workflow_dispatch' }}
+        run: |
+          ./scripts/pipeline/booster.sh || true
+          node scripts/monitor/dashboard.mjs || true
+          node scripts/fed/trust.mjs --print || true
+
+      # ОПІВДНІ/ПО ПЛАНУ: авто-мердж грін-лейна
+      - name: Auto-merge lane
+        run: |
+          node scripts/auto-merge.mjs || true
+          node tools/mod/queue.mjs --report || true
+
+      # ВЕЧІР: бейджі + скорборд + SLO
+      - name: Evening cycle
+        run: |
+          node scripts/badges/mint.mjs --delta || true
+          node scripts/scoreboard/update.mjs || true
+          make -k breath-slo || true
+
+      # Зчитуємо ключові метрики (trust, dsse, novelty)
+      - name: Collect metrics
+        id: mx
+        run: |
+          node scripts/fed/trust.mjs --json > dist/trust.json
+          node scripts/monitor/metrics.mjs --json > dist/metrics.json || true
+          TRUST=$(jq -r '.score // 0' dist/trust.json)
+          DSSE=$(jq -r '.components.dsse // 0' dist/trust.json)
+          NOV=$(jq -r '.novelty.median // 0' dist/metrics.json 2>/dev/null || echo 0.35)
+          echo "trust=${TRUST}" >> $GITHUB_OUTPUT
+          echo "dsse=${DSSE}" >> $GITHUB_OUTPUT
+          echo "novelty=${NOV}" >> $GITHUB_OUTPUT
+
+      # АВТО-ГАЛЬМА / РОЗШИРЕННЯ
+      - name: Governor
+        env:
+          TRUST: ${{ steps.mx.outputs.trust }}
+          DSSE:  ${{ steps.mx.outputs.dsse }}
+          NOV:   ${{ steps.mx.outputs.novelty }}
+          TRUST_MIN: ${{ env.TRUST_MIN }}
+          NOVELTY_MIN: ${{ env.NOVELTY_MIN }}
+        run: |
+          echo "trust=$TRUST dsse=$DSSE novelty=$NOV"
+          if awk "BEGIN{exit !($TRUST < $TRUST_MIN || $NOV < $NOVELTY_MIN)}"; then
+            echo ">>> squeeze: зменшуємо розгін"
+            yq -i '.daily_burst=2' policies/fed-rate.toml || true
+            node scripts/generate/sweep.mjs configs/sweep.yaml out/sweep/ --deterministic || true
+          else
+            echo ">>> stable/expand: все в нормі"
+            node scripts/generate/sweep.mjs configs/sweep.yaml out/sweep/ --bandit || true
+          fi
+
+      # Публікуємо зміни (бейджі/дашборд/політики)
+      - name: Commit & push updates
+        env:
+          GIT_COMMITTER_NAME: autopilot-bot
+          GIT_COMMITTER_EMAIL: bot@pure-lambda
+        run: |
+          git add -A
+          git diff --cached --quiet || git commit -m "autopilot: dashboards/badges/policies update"
+          git push

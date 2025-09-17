@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Pure Lambda Authors
+
 # H9: Public Legitimacy & Real-World Bridge
 # Making the civilization publicly acceptable and auditable
 

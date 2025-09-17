@@ -1,0 +1,36 @@
+{
+  "seed": {
+    "name": "bounded-delay-16-eco",
+    "path": "out/sweep/bounded-delay-16-eco-1758113998434.json",
+    "sizeKB": 0.9765625,
+    "canonicalHash": "e84bb84b5382f28ef508eed1a4f445fc258cf21e6920c28e4044fd69ba4698ed",
+    "xidV2": "ccb206b2c80d3ecc691fb4456073d159e024d730f7fc067357893d3f0125c284"
+  },
+  "conformance": {
+    "score": 100,
+    "issues": []
+  },
+  "dsse": {
+    "valid": false,
+    "reason": "No envelope provided"
+  },
+  "trust": {
+    "trustScore": 0.6,
+    "components": {
+      "dsse": {
+        "score": 0,
+        "weight": 0.4
+      },
+      "conformance": {
+        "score": 100,
+        "weight": 0.4
+      },
+      "freshness": {
+        "score": 100,
+        "weight": 0.2
+      }
+    }
+  },
+  "timestamp": "2025-09-17T13:01:34.141Z",
+  "ready": false
+}

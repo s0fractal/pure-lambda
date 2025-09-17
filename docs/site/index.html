@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Lambda Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 100 Seeds Week Banner -->
+        <div style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 12px 20px; text-align: center; font-weight: 600; box-shadow: 0 2px 8px rgba(76,175,80,0.3);">
+            🌱 100 Seeds Week is LIVE!
+            <a href="../exchange/index.html" style="color: white; margin-left: 20px;">Exchange →</a>
+            <a href="../contribute.htmlc" style="color: white; margin-left: 10px;">Contribute →</a>
+            <a href="../pocket/index.htmlc" style="color: white; margin-left: 10px;">Pocket →</a>
+            <button onclick="window.open('../pocket/index.htmlc')" style="background: white; color: #4CAF50; border: none; padding: 4px 12px; border-radius: 4px; margin-left: 10px; cursor: pointer; font-weight: 600;">Open Pocket Embassy</button>
+            <button onclick="OTM && OTM.mount()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 4px 12px; border-radius: 4px; margin-left: 10px; cursor: pointer;">Contribute (OTM)</button>
+        </div>
+
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>Pure Lambda</h1>
+                <span class="version">v0.1.0-rc1+ga-pre</span>
+                <div class="trust-banner" style="margin-top: 8px; margin-bottom: 6px;">
+                    <a href="../TRUST.md" style="display: inline-block; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 4px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);">
+                        Trust: Excellent
+                    </a>
+                </div>
+                <div class="trust-badges" style="margin-top: 4px; display: flex; gap: 4px; flex-wrap: wrap;">
+                    <img src="../badges/trust.svg" alt="Trust Score" style="height: 18px;" />
+                    <img src="../badges/conformance.svg" alt="Conformance" style="height: 18px;" />
+                    <img src="../badges/dsse.svg" alt="DSSE" style="height: 18px;" />
+                    <img src="../badges/freshness.svg" alt="Freshness" style="height: 18px;" />
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="#quickstart" class="nav-link active" data-section="quickstart">Quickstart</a></li>
+                <li><a href="#hello-city" class="nav-link" data-section="hello-city">Hello-City</a></li>
+                <li><a href="#city-cartridge" class="nav-link" data-section="city-cartridge">City-Cartridge</a></li>
+                <li><a href="../embassy/index.html" class="nav-link external">Embassy</a></li>
+                <li><a href="../pocket/index.html" class="nav-link external">Pocket Embassy</a></li>
+                <li><a href="../POCKET-DIRECT.md" class="nav-link external">Pocket↔Pocket</a></li>
+                <li><a href="../pocket/direct.htmlc" class="nav-link external">Direct Transfer Tool</a></li>
+                <li><a href="../mirrorbench/index.html" class="nav-link external">MirrorBench</a></li>
+                <li><a href="../SEED-GARDEN.md" class="nav-link external">Seed Garden</a></li>
+                <li><a href="../gallery/index.html" class="nav-link external">Seed Gallery</a></li>
+                <li><a href="../federation/index.html" class="nav-link external">Federation Hub</a></li>
+                <li><a href="../exchange/index.html" class="nav-link external">Public Exchange</a></li>
+                <li><a href="#public-exchange" class="nav-link" data-section="public-exchange">Public Exchange Guide</a></li>
+                <li><a href="#air-gap" class="nav-link" data-section="air-gap">Air-Gap Exchange</a></li>
+                <li><a href="../airgap/sender.html" class="nav-link external">QR Sender</a></li>
+                <li><a href="../airgap/receiver.html" class="nav-link external">QR Receiver</a></li>
+                <li><a href="../otm/kiosk.html" class="nav-link external">Field Kiosk</a></li>
+                <li><a href="#field-trials" class="nav-link" data-section="field-trials">Field Trials</a></li>
+                <li><a href="#examples-gallery" class="nav-link" data-section="examples-gallery">Examples Gallery</a></li>
+                <li><a href="#pair-lexicon" class="nav-link" data-section="pair-lexicon">Pair-Lexicon</a></li>
+                <li><a href="#trust-model" class="nav-link" data-section="trust-model">Trust Model</a></li>
+                <li><a href="../TRUST.md" class="nav-link external">Trust System</a></li>
+                <li><a href="#conformance" class="nav-link" data-section="conformance">Conformance</a></li>
+                <li><a href="#pl-seed-01" class="nav-link" data-section="pl-seed-01">PL-SEED-01</a></li>
+                <li><a href="#pl-fed-01" class="nav-link" data-section="pl-fed-01">PL-FED-01</a></li>
+                <li><a href="#sdk-quickstart" class="nav-link" data-section="sdk-quickstart">SDK Quickstart</a></li>
+                <li><a href="#seed-workflows" class="nav-link" data-section="seed-workflows">Seed Workflows</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="quickstart" class="doc-section active">
+                <h2>Quickstart</h2>
+
+                <details open>
+                    <summary>Installation</summary>
+                    <pre><code># Clone repository
+git clone https://github.com/chaoshex/pure-lambda.git
+cd pure-lambda
+
+# Install dependencies
+npm install
+
+# Run basic verification
+make verify</code></pre>
+                </details>
+
+                <details>
+                    <summary>Basic Usage</summary>
+                    <pre><code># Pack a seed
+./cli/pack-seed.js --input data.json --output seed.car
+
+# Verify a seed
+./cli/verify-seed.js --seed seed.car
+
+# Extract seed contents
+./cli/unpack-seed.js --seed seed.car --output extracted/</code></pre>
+                </details>
+
+                <details>
+                    <summary>Quick Examples</summary>
+                    <pre><code># Create a simple seed
+echo '{"hello": "world"}' | ./cli/pack-seed.js --stdin --output hello.car
+
+# Verify offline
+./cli/verify-seed.js --seed hello.car --offline
+
+# Round-trip test
+./cli/test-roundtrip.js --seed hello.car</code></pre>
+                </details>
+            </section>
+
+            <section id="air-gap" class="doc-section">
+                <h2>Air-Gap Exchange</h2>
+
+                <details open>
+                    <summary>Secure Offline Transfer</summary>
+                    <p>Transfer cartridges and federation bundles across isolated networks using QR codes or ShareCodes.</p>
+
+                    <div class="steps">
+                        <div class="step">
+                            <h3>1. Pack</h3>
+                            <pre><code>make air-pack</code></pre>
+                            <p>Creates QR frames and ShareCodes from your file</p>
+                        </div>
+
+                        <div class="step">
+                            <h3>2. Send</h3>
+                            <pre><code>make air-sender</code></pre>
+                            <p>Opens sender.html → Click "Play" for QR animation</p>
+                        </div>
+
+                        <div class="step">
+                            <h3>3. Receive</h3>
+                            <pre><code>make air-receiver</code></pre>
+                            <p>Opens receiver.html → "Scan" or paste ShareCodes</p>
+                        </div>
+
+                        <div class="step">
+                            <h3>4. Ingest</h3>
+                            <pre><code>make fed-ingest PATHS="dist/air/out/&lt;name&gt;"</code></pre>
+                            <p>Validates and imports into federation</p>
+                        </div>
+                    </div>
+
+                    <p><strong>SLOs:</strong> ≥99% success without parity, tolerates 1 lost per 16 frames with parity</p>
+                    <p><strong>Troubleshooting:</strong> Use chunk=700B for low-res screens, lower fps, or ShareCodes for reliability</p>
+                </details>
+
+                <details>
+                    <summary>Quick Links</summary>
+                    <ul>
+                        <li><a href="../AIR-GAP.md">Complete Documentation</a></li>
+                        <li><a href="../airgap/sender.html">QR Sender Interface</a></li>
+                        <li><a href="../airgap/receiver.html">QR Receiver Interface</a></li>
+                    </ul>
+                </details>
+            </section>
+
+            <section id="public-exchange" class="doc-section">
+                <h2>Public Exchange</h2>
+
+                <details open>
+                    <summary>Verified Seed Marketplace</summary>
+                    <p>Static page for sharing signed cartridges and seeds offline with cryptographic verification.</p>
+
+                    <div class="steps">
+                        <div class="step">
+                            <h3>1. Browse</h3>
+                            <p>Visit the <a href="../exchange/index.html">Public Exchange</a> to see available components</p>
+                        </div>
+
+                        <div class="step">
+                            <h3>2. Verify</h3>
+                            <p>Green badges indicate DSSE signatures and BLAKE3 hash validation</p>
+                        </div>
+
+                        <div class="step">
+                            <h3>3. Import</h3>
+                            <p>Use Pocket Embassy, Federation ingest, or Air-Gap transfer</p>
+                        </div>
+                    </div>
+
+                    <p><strong>BIOLOCK Protected:</strong> All content passes safety classification</p>
+                    <p><strong>Offline-First:</strong> Zero network dependencies after download</p>
+                </details>
+
+                <details>
+                    <summary>Quick Links</summary>
+                    <ul>
+                        <li><a href="../PUBLIC-SEED-EXCHANGE.md">Complete Documentation</a></li>
+                        <li><a href="../exchange/index.html">Browse Exchange</a></li>
+                        <li><a href="../exchange/publisher.html">Publish Components</a></li>
+                    </ul>
+                </details>
+            </section>
+
+            <section id="examples-gallery" class="doc-section">
+                <h2>Examples Gallery</h2>
+
+                <details open>
+                    <summary>Canonical Seed Patterns</summary>
+                    <p>Explore 6 canonical examples that demonstrate Pure Lambda's core patterns and operators.</p>
+
+                    <div class="example-grid">
+                        <div class="example-card">
+                            <h3>🌱 Hello World</h3>
+                            <p>Single FOCUS operator - the simplest possible seed</p>
+                            <code>FOCUS(identity, data → result)</code>
+                            <div class="example-meta">
+                                <span class="tiles">1 tile</span>
+                                <span class="complexity">O(1)</span>
+                            </div>
+                            <a href="../../seeds/examples/hello-world.json" class="example-link">View JSON</a>
+                        </div>
+
+                        <div class="example-card">
+                            <h3>🔍 Map-Filter (SELECT)</h3>
+                            <p>Classic functional pattern with Pair-Lexicon alias</p>
+                            <code>map▶filter → SELECT</code>
+                            <div class="example-meta">
+                                <span class="tiles">2 tiles</span>
+                                <span class="complexity">O(n)</span>
+                                <span class="pattern">SELECT</span>
+                            </div>
+                            <a href="../../seeds/examples/map-filter.json" class="example-link">View JSON</a>
+                        </div>
+
+                        <div class="example-card">
+                            <h3>🍴 Fork-Join (BIFURCATE)</h3>
+                            <p>Parallel branch processing pattern</p>
+                            <code>split▶merge → BIFURCATE</code>
+                            <div class="example-meta">
+                                <span class="tiles">4 tiles</span>
+                                <span class="complexity">O(log n)</span>
+                                <span class="pattern">BIFURCATE</span>
+                            </div>
+                            <a href="../../seeds/examples/fork-join.json" class="example-link">View JSON</a>
+                        </div>
+
+                        <div class="example-card">
+                            <h3>🏭 Pipeline Processing</h3>
+                            <p>5-stage linear processing pipeline</p>
+                            <code>MAP → FILTER → REDUCE → TRANSFORM → FOCUS</code>
+                            <div class="example-meta">
+                                <span class="tiles">5 tiles</span>
+                                <span class="complexity">O(n)</span>
+                            </div>
+                            <a href="../../seeds/examples/pipeline.json" class="example-link">View JSON</a>
+                        </div>
+
+                        <div class="example-card">
+                            <h3>🔄 Recursive (BOUNDED_DELAY)</h3>
+                            <p>Self-referencing with temporal feedback</p>
+                            <code>delay▶timeout → BOUNDED_DELAY</code>
+                            <div class="example-meta">
+                                <span class="tiles">4 tiles</span>
+                                <span class="complexity">O(1) per iteration</span>
+                                <span class="pattern">BOUNDED_DELAY</span>
+                            </div>
+                            <a href="../../seeds/examples/recursive.json" class="example-link">View JSON</a>
+                        </div>
+
+                        <div class="example-card">
+                            <h3>🌐 Distributed (ROUTE_MERGE)</h3>
+                            <p>Multi-branch parallel processing</p>
+                            <code>switch▶merge → ROUTE_MERGE</code>
+                            <div class="example-meta">
+                                <span class="tiles">6 tiles</span>
+                                <span class="complexity">O(n) parallel</span>
+                                <span class="pattern">ROUTE_MERGE</span>
+                            </div>
+                            <a href="../../seeds/examples/distributed.json" class="example-link">View JSON</a>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>NF Viewer Widget</summary>
+                    <div class="nf-viewer">
+                        <label for="seed-selector">Select Example:</label>
+                        <select id="seed-selector">
+                            <option value="hello-world">Hello World</option>
+                            <option value="map-filter">Map-Filter (SELECT)</option>
+                            <option value="fork-join">Fork-Join (BIFURCATE)</option>
+                            <option value="pipeline">Pipeline Processing</option>
+                            <option value="recursive">Recursive (BOUNDED_DELAY)</option>
+                            <option value="distributed">Distributed (ROUTE_MERGE)</option>
+                        </select>
+                        <button onclick="generateNF()">Generate NF</button>
+                        <pre id="nf-output">Select an example and click "Generate NF" to see the Normal Form representation.</pre>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Field Translator Widget</summary>
+                    <div class="field-translator">
+                        <h4>GID → IID → XID Explainer</h4>
+                        <table class="genetics-table">
+                            <tr>
+                                <th>Level</th>
+                                <th>Description</th>
+                                <th>Stability</th>
+                                <th>Example</th>
+                            </tr>
+                            <tr>
+                                <td><strong>GID</strong><br><small>Genotype</small></td>
+                                <td>Immutable operator DNA, independent of context</td>
+                                <td>♾️ Eternal</td>
+                                <td><code>8a7ea8...</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>IID</strong><br><small>Interface</small></td>
+                                <td>Stable signature for equivalent ABIs</td>
+                                <td>🔒 Stable</td>
+                                <td><code>90fb5e...</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>XID</strong><br><small>Execution</small></td>
+                                <td>Runtime context and state</td>
+                                <td>⚡ Dynamic</td>
+                                <td><code>506bf0...</code></td>
+                            </tr>
+                        </table>
+
+                        <div class="translator-input">
+                            <label for="gid-input">Enter GID:</label>
+                            <input type="text" id="gid-input" placeholder="8a7ea8476e1b730e..." />
+                            <button onclick="translateGID()">Translate</button>
+                            <div id="translation-result"></div>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Autopilot Demo</summary>
+                    <pre><code># Run autopilot on examples
+./tools/autopilot.ts seeds/examples/pipeline.json --lambda 0.2 --mu 0.001
+
+# Compare optimization across examples
+for example in seeds/examples/*.json; do
+    echo "=== $(basename $example) ==="
+    ./tools/autopilot.ts $example --k 3
+done</code></pre>
+                </details>
+
+                <div class="cta-section">
+                    <h3>Build Your Own</h3>
+                    <p>Use these examples as templates for creating custom operons. Each example demonstrates different aspects of the genetics metaphor and functional composition.</p>
+                    <a href="../EXAMPLES.md" class="cta-button">Full Documentation →</a>
+                </div>
+            </section>
+
+            <section id="pair-lexicon" class="doc-section">
+                <h2>Pair-Lexicon Reference</h2>
+
+                <div class="pair-lexicon-tips">
+                    <h3>🔧 Quick Tips</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <strong>SELECT</strong>
+                            <code>map▶filter</code>
+                            <span>Transform then filter</span>
+                        </div>
+                        <div class="tip-card">
+                            <strong>BIFURCATE</strong>
+                            <code>split▶merge</code>
+                            <span>Parallel processing</span>
+                        </div>
+                        <div class="tip-card">
+                            <strong>BOUNDED_DELAY</strong>
+                            <code>delay▶timeout</code>
+                            <span>Time-limited operations</span>
+                        </div>
+                        <div class="tip-card">
+                            <strong>ROUTE_MERGE</strong>
+                            <code>switch▶merge</code>
+                            <span>Conditional routing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <details open>
+                    <summary>2-Gram Pattern Aliases</summary>
+                    <p>The Pair-Lexicon provides semantic aliases for common operator sequences, making functional patterns more human-readable.</p>
+
+                    <table class="pair-lexicon-table">
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>NF</th>
+                                <th>Alias</th>
+                                <th>Description</th>
+                                <th>SQL Equivalent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>map▶filter</code></td>
+                                <td><code>FOCUS(p∘f,f)</code></td>
+                                <td><strong>SELECT</strong></td>
+                                <td>Select elements matching predicate after transformation</td>
+                                <td><code>SELECT f(x) FROM table WHERE p(f(x))</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>filter▶map</code></td>
+                                <td><code>FOCUS(f,p)</code></td>
+                                <td><strong>TRANSFORM_IF</strong></td>
+                                <td>Transform elements that match predicate</td>
+                                <td><code>SELECT f(x) FROM table WHERE p(x)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>split▶merge</code></td>
+                                <td><code>PARTITION(λx.p(x), λy.¬p(y))</code></td>
+                                <td><strong>BIFURCATE</strong></td>
+                                <td>Separate into two streams then recombine</td>
+                                <td><code>CASE WHEN p(x) THEN f1(x) ELSE f2(x) END</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>scan▶reduce</code></td>
+                                <td><code>ACCUMULATE(⊕, ε)</code></td>
+                                <td><strong>AGGREGATE</strong></td>
+                                <td>Accumulate values with final reduction</td>
+                                <td><code>SUM(x) OVER (ORDER BY t)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>delay▶timeout</code></td>
+                                <td><code>TEMPORAL(δt, τmax)</code></td>
+                                <td><strong>BOUNDED_DELAY</strong></td>
+                                <td>Delay with maximum time limit</td>
+                                <td><code>WAIT FOR DELAY δt TIMEOUT τmax</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>switch▶merge</code></td>
+                                <td><code>MULTIPLEX(σ, ⊔)</code></td>
+                                <td><strong>ROUTE_MERGE</strong></td>
+                                <td>Route based on selector then merge results</td>
+                                <td><code>UNION ALL SELECT ...</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><em>Showing 6 of 12 patterns. <a href="../PAIR-LEXICON.md">View complete reference →</a></em></p>
+                </details>
+
+                <details>
+                    <summary>Pattern Categories</summary>
+                    <div class="pattern-categories">
+                        <div class="category">
+                            <h4>🔍 Data Selection & Filtering</h4>
+                            <ul>
+                                <li><strong>SELECT</strong> - Transform then filter</li>
+                                <li><strong>TRANSFORM_IF</strong> - Filter then transform</li>
+                                <li><strong>SLICE</strong> - Window-based selection</li>
+                                <li><strong>DEDUPE_FLATTEN</strong> - Flatten and deduplicate</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h4>🔀 Flow Control & Routing</h4>
+                            <ul>
+                                <li><strong>BIFURCATE</strong> - Parallel branch processing</li>
+                                <li><strong>ROUTE_MERGE</strong> - Conditional routing</li>
+                                <li><strong>MULTIPLEX</strong> - Advanced routing patterns</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h4>📊 Aggregation & Reduction</h4>
+                            <ul>
+                                <li><strong>AGGREGATE</strong> - Incremental aggregation</li>
+                                <li><strong>PAIRED_TRANSFORM</strong> - Combine pairs</li>
+                                <li><strong>WINDOWED_BATCH</strong> - Temporal batching</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h4>⏱️ Temporal & Resilience</h4>
+                            <ul>
+                                <li><strong>BOUNDED_DELAY</strong> - Time-limited delays</li>
+                                <li><strong>FAULT_TOLERANT</strong> - Error handling</li>
+                                <li><strong>ORDERED_GROUPS</strong> - Temporal ordering</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Usage in SDKs</summary>
+                    <pre><code># TypeScript - Pattern detection
+import { detectPairPatterns } from '../tools/pairs/translate';
+const patterns = detectPairPatterns(operon);
+// Returns: ["SELECT", "AGGREGATE"]
+
+# Automatic optimization
+const optimized = runAutopilot(operon, {
+    lambda: 0.2,    // Weight for hop count
+    mu: 0.001,      // Weight for memory usage
+    patterns: true  // Enable pattern-aware optimization
+});</code></pre>
+                </details>
+
+                <div class="cta-section">
+                    <h3>Pattern-Driven Development</h3>
+                    <p>Use Pair-Lexicon patterns to build more readable and maintainable functional programs. Patterns are automatically detected and can guide optimization.</p>
+                    <a href="../PAIR-LEXICON.md" class="cta-button">Complete Reference →</a>
+                </div>
+            </section>
+
+            <section id="trust-model" class="doc-section">
+                <h2>Trust Model</h2>
+
+                <details>
+                    <summary>Overview</summary>
+                    <p>Pure Lambda implements a multi-layer trust model based on cryptographic attestation and deterministic verification.</p>
+
+                    <h3>Core Principles</h3>
+                    <ul>
+                        <li><strong>Deterministic Processing</strong> - All operations produce identical results across environments</li>
+                        <li><strong>Cryptographic Attestation</strong> - DSSE signatures provide provenance tracking</li>
+                        <li><strong>Offline Verification</strong> - Complete trust validation without network dependencies</li>
+                        <li><strong>Fail-Safe Operation</strong> - Graceful degradation to secure JSON mode</li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Verification Chain</summary>
+                    <pre><code>1. BIOLOCK Gate Validation
+   ↓
+2. DSSE Signature Check
+   ↓
+3. Hash Integrity Verification
+   ↓
+4. Schema Conformance Test
+   ↓
+5. Round-trip Validation</code></pre>
+                </details>
+
+                <details>
+                    <summary>Security Guarantees</summary>
+                    <ul>
+                        <li>SHA-256 + BLAKE3 hash verification</li>
+                        <li>Ed25519 signature validation</li>
+                        <li>Runtime integrity protection</li>
+                        <li>Zero-network operation capability</li>
+                    </ul>
+                </details>
+            </section>
+
+            <section id="conformance" class="doc-section">
+                <h2>Conformance</h2>
+
+                <details>
+                    <summary>Standards Compliance</summary>
+                    <p>Pure Lambda adheres to multiple industry standards for interoperability and security.</p>
+
+                    <h3>Supported Standards</h3>
+                    <ul>
+                        <li><strong>IPLD</strong> - InterPlanetary Linked Data for content addressing</li>
+                        <li><strong>CAR</strong> - Content Addressable aRchives format</li>
+                        <li><strong>DSSE</strong> - Dead Simple Signing Envelope</li>
+                        <li><strong>RFC 7515</strong> - JSON Web Signature (JWS)</li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Test Suite</summary>
+                    <pre><code># Run conformance tests
+make test-conformance
+
+# Validate against reference implementations
+make test-interop
+
+# Check standard compliance
+make validate-standards</code></pre>
+                </details>
+
+                <details>
+                    <summary>Certification Status</summary>
+                    <table>
+                        <tr><th>Standard</th><th>Status</th><th>Version</th></tr>
+                        <tr><td>IPLD</td><td>✅ Certified</td><td>v2.0</td></tr>
+                        <tr><td>CAR</td><td>✅ Certified</td><td>v1.0</td></tr>
+                        <tr><td>DSSE</td><td>✅ Certified</td><td>v1.0</td></tr>
+                        <tr><td>JWS</td><td>⚠️ Partial</td><td>RFC 7515</td></tr>
+                    </table>
+                </details>
+            </section>
+
+            <section id="pl-seed-01" class="doc-section">
+                <h2>PL-SEED-01 Specification</h2>
+
+                <details>
+                    <summary>Format Overview</summary>
+                    <p>PL-SEED-01 defines the canonical format for Pure Lambda seed packages.</p>
+
+                    <h3>Core Fields</h3>
+                    <ul>
+                        <li><strong>gid</strong> - Global Identifier (content hash)</li>
+                        <li><strong>iid</strong> - Implementation Identifier</li>
+                        <li><strong>xid</strong> - Execution Identifier</li>
+                        <li><strong>payload</strong> - Primary data content</li>
+                        <li><strong>metadata</strong> - Descriptive information</li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Hashing Algorithm</summary>
+                    <pre><code>GID = BLAKE3(
+    canonical_json(payload) +
+    canonical_json(metadata) +
+    schema_version
+)</code></pre>
+                </details>
+
+                <details>
+                    <summary>DSSE Integration</summary>
+                    <pre><code># Sign a seed
+./cli/sign-seed.js --seed input.car --key private.pem --output signed.car
+
+# Verify signature
+./cli/verify-signature.js --seed signed.car --pubkey public.pem</code></pre>
+                </details>
+
+                <details>
+                    <summary>Round-trip Law</summary>
+                    <p><strong>Invariant:</strong> pack(unpack(seed)) === seed</p>
+                    <p>All PL-SEED-01 implementations must preserve this property for deterministic operation.</p>
+                </details>
+            </section>
+
+            <section id="pl-fed-01" class="doc-section">
+                <h2>PL-FED-01 Federation Protocol</h2>
+
+                <details open>
+                    <summary>Overview</summary>
+                    <p>PL-FED-01 defines a standardized format for packaging, distributing, and verifying collections of Pure Lambda seeds as federation bundles with trust scoring and quarantine mechanisms.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>Offline Operation</strong> - Zero network dependencies after download</li>
+                        <li><strong>Trust Scoring</strong> - Algorithmic assessment based on signatures and conformance</li>
+                        <li><strong>Automatic Quarantine</strong> - Conflict detection for GID clashes</li>
+                        <li><strong>Deterministic Processing</strong> - Reproducible results across environments</li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Quick Usage</summary>
+                    <pre><code># Create federation from seeds
+make fed-ingest PATHS="hello-city.htmlc example.cartridge"
+
+# Open federation hub (drag & drop interface)
+open docs/federation/index.html
+
+# Create distributable bundle
+make fed-bundle && make fed-verify</code></pre>
+                </details>
+
+                <details>
+                    <summary>Trust Score Formula</summary>
+                    <pre><code>score = 0.4 × dsse_ratio + 0.4 × conformance_ratio + 0.2 × freshness
+
+Where:
+- dsse_ratio = dsseValid / total_seeds
+- conformance_ratio = conformant / total_seeds
+- freshness = clamp(1 - ageMedian/365, 0, 1)</code></pre>
+
+                    <table>
+                        <tr><th>Score Range</th><th>Level</th><th>Description</th></tr>
+                        <tr><td>0.9 - 1.0</td><td>Excellent</td><td>Fully signed, conformant, fresh</td></tr>
+                        <tr><td>0.7 - 0.89</td><td>Good</td><td>Mostly signed/conformant</td></tr>
+                        <tr><td>0.5 - 0.69</td><td>Fair</td><td>Mixed trust indicators</td></tr>
+                        <tr><td>0.3 - 0.49</td><td>Poor</td><td>Limited verification</td></tr>
+                        <tr><td>0.0 - 0.29</td><td>Untrusted</td><td>Unsigned/non-conformant</td></tr>
+                    </table>
+                </details>
+
+                <details>
+                    <summary>SLOs for Production</summary>
+                    <ul>
+                        <li><strong>Quarantine Count:</strong> 0 (zero quarantined seeds)</li>
+                        <li><strong>Trust Score:</strong> ≥ 0.8 recommended</li>
+                        <li><strong>Bundle Size:</strong> ≤ 80KB maximum</li>
+                        <li><strong>DSSE Coverage:</strong> ≥ 80% for "Good" rating</li>
+                    </ul>
+                </details>
+
+                <div class="cta-section">
+                    <h3>Federation Documentation</h3>
+                    <p>Complete protocol specification and usage guide for offline seed exchange.</p>
+                    <a href="../PL-FED-01.md" class="cta-button">PL-FED-01 Spec →</a>
+                    <a href="../FEDERATION.md" class="cta-button">Federation Guide →</a>
+                </div>
+            </section>
+
+            <section id="sdk-quickstart" class="doc-section">
+                <h2>SDK Quickstart</h2>
+
+                <details open>
+                    <summary>TypeScript</summary>
+                    <pre><code>import { loadSeed, toOperon, runAutopilot } from './sdks/typescript';
+
+// Load and verify a seed
+const seed = await loadSeed('path/to/seed.car');
+
+// Convert to operon for execution
+const operon = toOperon(seed);
+
+// Run with autopilot
+const result = await runAutopilot(operon, {
+    timeout: 30000,
+    sandbox: true
+});</code></pre>
+                </details>
+
+                <details>
+                    <summary>Python</summary>
+                    <pre><code>from pl_sdk import load_seed, to_operon, run_autopilot
+
+# Load and verify a seed
+seed = load_seed('path/to/seed.car')
+
+# Convert to operon for execution
+operon = to_operon(seed)
+
+# Run with autopilot
+result = run_autopilot(operon,
+    timeout=30.0,
+    sandbox=True
+)</code></pre>
+                </details>
+
+                <details>
+                    <summary>Rust</summary>
+                    <pre><code>use pure_lambda_sdk::{load_seed, to_operon, run_autopilot};
+
+// Add to Cargo.toml:
+// pure_lambda_sdk = { path = "../../sdks/rust" }
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Load and verify a seed
+    let seed = load_seed("path/to/seed.car")?;
+
+    // Convert to operon for execution
+    let operon = to_operon(seed)?;
+
+    // Run with autopilot
+    let result = run_autopilot(operon, 30000, true)?;
+
+    Ok(())
+}</code></pre>
+                </details>
+            </section>
+
+            <section id="hello-city" class="doc-section">
+                <h2>Hello-City Demo</h2>
+
+                <details open>
+                    <summary>What it is</summary>
+                    <p>A one-click local demonstration of Pure Lambda's core capabilities. Hello-City is a complete functional program packaged as a PL-SEED-01 seed that simulates a journey through a virtual city.</p>
+                    <p>The demo runs entirely offline in your browser - no external dependencies, no network calls, no cloud services. Just pure deterministic computation.</p>
+                </details>
+
+                <details>
+                    <summary>What it proves</summary>
+                    <div class="example-grid">
+                        <div class="example-card">
+                            <h3>📦 PL-SEED-01 Format</h3>
+                            <p>Deterministic packaging and unpacking with BLAKE3 hash verification</p>
+                            <div class="example-meta">
+                                <span class="pattern">Round-trip law</span>
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <h3>🔐 DSSE Integration</h3>
+                            <p>Dead Simple Signing Envelope with Ed25519 signatures</p>
+                            <div class="example-meta">
+                                <span class="pattern">Offline-first trust</span>
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <h3>🚀 Autopilot Optimization</h3>
+                            <p>Automated route finding with ~1.6× speedup over naive execution</p>
+                            <div class="example-meta">
+                                <span class="pattern">Zero violations</span>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>How to run</summary>
+                    <pre><code># Step 1: Build the demo
+make demo
+
+# Step 2: Open in browser
+make demo-open
+
+# Step 3: Interact
+# - Click "🔍 Verify" to check cryptographic signatures
+# - Click "🚀 Run Autopilot" to find optimal execution path
+# - Click "🗺️ Show Route" to visualize the operon structure</code></pre>
+                </details>
+
+                <details>
+                    <summary>Expected output</summary>
+                    <ul>
+                        <li><strong>Lbest Value:</strong> ~2.20× improvement over baseline</li>
+                        <li><strong>Route Length:</strong> 4-5 hops depending on path choice</li>
+                        <li><strong>Status Badges:</strong>
+                            <ul>
+                                <li>✅ <strong>Valid PL-SEED-01:</strong> Format compliance verified</li>
+                                <li>✅ <strong>DSSE signature valid:</strong> Cryptographic integrity confirmed</li>
+                                <li>⚠️ <strong>No DSSE signature:</strong> Unsigned version (still deterministic)</li>
+                                <li>🏙️ <strong>Hello-City complete:</strong> Journey successfully executed</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </details>
+
+                <div class="cta-section">
+                    <h3>Try it now</h3>
+                    <p>Experience the full Pure Lambda stack in one self-contained demo. No installation, no configuration - just mathematical precision in action.</p>
+                    <a href="../demo/index.html" class="cta-button">Launch Demo →</a>
+                </div>
+            </section>
+
+            <section id="city-cartridge" class="doc-section">
+                <h2>City-Cartridge: Portable Offline Packages</h2>
+
+                <details open>
+                    <summary>What is Cartridge</summary>
+                    <p>Cartridge is Pure Lambda's <strong>portable, verifiable, offline</strong> packaging format for distributing and executing seeds without network dependencies. Each cartridge contains a complete functional program with cryptographic signatures, manifest metadata, and an interactive viewer - all bundled for standalone operation.</p>
+
+                    <h3>Key Properties</h3>
+                    <ul>
+                        <li><strong>Portable</strong> - Runs anywhere: browser, CLI, embedded systems</li>
+                        <li><strong>Verifiable</strong> - BLAKE3 + DSSE signatures ensure integrity</li>
+                        <li><strong>Offline</strong> - Zero network dependencies after download</li>
+                        <li><strong>Deterministic</strong> - Identical execution across all environments</li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Two Encoding Formats</summary>
+                    <div class="example-grid">
+                        <div class="example-card">
+                            <h3>📄 Single-HTML (.htmlc)</h3>
+                            <p>Self-contained HTML file with embedded cartridge data</p>
+                            <div class="example-meta">
+                                <span class="tiles">≤ 40KB target</span>
+                                <span class="complexity">Embedded viewer</span>
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <h3>📦 Zip Archive (.cartridge)</h3>
+                            <p>Structured archive with discrete components</p>
+                            <div class="example-meta">
+                                <span class="tiles">≤ 80KB maximum</span>
+                                <span class="complexity">Multi-file structure</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <pre><code># Single-HTML structure
+&lt;script id="pl-cartridge" type="application/json"&gt;
+  {MANIFEST_JSON}
+&lt;/script&gt;
+&lt;script id="pl-seed" type="text/plain"&gt;
+  {BASE64_ENCODED_SEED}
+&lt;/script&gt;
+
+# Zip Archive structure
+hello-city.cartridge
+├── index.html         # Interactive viewer
+├── seed.json         # PL-SEED-01 format
+├── envelope.json     # DSSE signature (optional)
+└── manifest.json     # Cartridge metadata</code></pre>
+                </details>
+
+                <details>
+                    <summary>Verify Locally (3 Steps)</summary>
+                    <div class="verification-steps">
+                        <div class="step">
+                            <h4>Step 1: Hash Integrity</h4>
+                            <pre><code>npm run cartridge:verify -- path/to/cartridge</code></pre>
+                        </div>
+                        <div class="step">
+                            <h4>Step 2: DSSE Signature (if present)</h4>
+                            <pre><code># Automatic verification with PL_ED25519_SECRET
+make cartridge-verify</code></pre>
+                        </div>
+                        <div class="step">
+                            <h4>Step 3: Round-trip Law</h4>
+                            <pre><code># Verify pack(unpack(cartridge)) === cartridge
+./cli/test-roundtrip.js --seed cartridge.htmlc</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Quick Commands</summary>
+                    <pre><code># Create both formats
+make cartridge
+
+# Open cartridge in browser
+make cartridge-open
+
+# Verify integrity
+make cartridge-verify
+
+# Pack from seed
+npm run cartridge:htmlc -- --input seed.json
+npm run cartridge:zip -- --input seed.json
+
+# Extract from cartridge
+npm run cartridge:extract -- --input hello.cartridge</code></pre>
+                </details>
+
+                <details>
+                    <summary>Size Limits & DSSE Notes</summary>
+                    <ul>
+                        <li><strong>Single-HTML (.htmlc):</strong> ≤ 40KB target size</li>
+                        <li><strong>Zip Archive (.cartridge):</strong> ≤ 80KB maximum size</li>
+                        <li><strong>DSSE Note:</strong> Cartridges MAY include Dead Simple Signing Envelope signatures using Ed25519 keys</li>
+                        <li><strong>Payload Type:</strong> <code>application/vnd.pure-lambda.seed+json</code></li>
+                        <li><strong>MirrorBench Hash (#seed=hello-city):</strong> Provides deterministic test data for verification</li>
+                    </ul>
+                </details>
+
+                <div class="cta-section">
+                    <h3>Technical Specification</h3>
+                    <p>Complete cartridge format specification with manifest schema, hash computation, and digital signature integration.</p>
+                    <a href="../PL-CARTRIDGE-01.md" class="cta-button">PL-CARTRIDGE-01 Spec →</a>
+                </div>
+            </section>
+
+            <section id="seed-workflows" class="doc-section">
+                <h2>Seed Workflows</h2>
+
+                <details open>
+                    <summary>Pack/Unpack CLI</summary>
+                    <pre><code># Pack from directory
+./cli/pack-seed.js --input ./data/ --output package.car
+
+# Pack from JSON with metadata
+./cli/pack-seed.js \
+    --input data.json \
+    --metadata meta.json \
+    --output package.car
+
+# Unpack to directory
+./cli/unpack-seed.js --seed package.car --output ./extracted/
+
+# Unpack with verification
+./cli/unpack-seed.js \
+    --seed package.car \
+    --output ./extracted/ \
+    --verify \
+    --strict</code></pre>
+                </details>
+
+                <details>
+                    <summary>DSSE Sign/Verify</summary>
+                    <pre><code># Generate key pair
+./cli/keygen.js --output keypair.json
+
+# Sign a seed package
+./cli/sign-seed.js \
+    --seed package.car \
+    --key keypair.json \
+    --output signed.car
+
+# Verify signature
+./cli/verify-signature.js \
+    --seed signed.car \
+    --pubkey keypair.json \
+    --verbose
+
+# Batch verify multiple seeds
+./cli/batch-verify.js \
+    --seeds *.car \
+    --pubkey keypair.json \
+    --parallel 4</code></pre>
+                </details>
+
+                <details>
+                    <summary>Round-trip Testing</summary>
+                    <pre><code># Basic round-trip test
+./cli/test-roundtrip.js --seed package.car
+
+# Full integrity test with timing
+./cli/test-roundtrip.js \
+    --seed package.car \
+    --iterations 100 \
+    --timing \
+    --memory-check
+
+# Batch round-trip test
+./cli/batch-roundtrip.js \
+    --directory ./seeds/ \
+    --output results.json \
+    --parallel 8</code></pre>
+                </details>
+
+                <details>
+                    <summary>Advanced Workflows</summary>
+                    <pre><code># Create seed with custom schema
+./cli/pack-seed.js \
+    --input data.json \
+    --schema custom-schema.json \
+    --output custom.car
+
+# Multi-format export
+./cli/export-seed.js \
+    --seed package.car \
+    --formats car,json,yaml \
+    --output ./exports/
+
+# Diff two seeds
+./cli/diff-seeds.js \
+    --seed1 old.car \
+    --seed2 new.car \
+    --output diff.json</code></pre>
+                </details>
+            </section>
+
+            <section id="field-trials" class="doc-section">
+                <h2>Field Trials</h2>
+
+                <div class="info-box">
+                    <strong>Privacy-First Field Testing</strong>
+                    <p>Test seeds in real-world conditions with opt-in, anonymous metrics. No personal data collected.</p>
+                </div>
+
+                <details open>
+                    <summary>Quick Start</summary>
+                    <pre><code># Generate a poster for a seed
+node scripts/posters/make.mjs seeds/garden/hello-city.json dist/posters/hello-city.html
+
+# Open kiosk mode locally
+open docs/otm/kiosk.html
+
+# Process field receipts
+node scripts/field/ingest.mjs field-receipts/ --date 2025-09-17</code></pre>
+                </details>
+
+                <details>
+                    <summary>Kiosk Mode</summary>
+                    <p>Interactive field trial interface for testing seeds:</p>
+                    <ul>
+                        <li><strong>Actions:</strong> Verify, Bench, Contribute</li>
+                        <li><strong>Privacy:</strong> Ephemeral keys per session</li>
+                        <li><strong>Consent:</strong> Opt-in counting (OFF by default)</li>
+                        <li><strong>Export:</strong> PL-FIELD-01 compliant receipts</li>
+                    </ul>
+                    <pre><code># Launch kiosk with seed
+open "docs/otm/kiosk.html?seed=BASE64_ENCODED_SEED"
+
+# Or visit the live kiosk
+<a href="../otm/kiosk.html">Open Field Kiosk →</a></code></pre>
+                </details>
+
+                <details>
+                    <summary>Poster Generation</summary>
+                    <p>Create printable A4/A3 posters with embedded QR codes:</p>
+                    <pre><code># Generate poster
+node scripts/posters/make.mjs \
+    seeds/garden/hello-city.json \
+    dist/posters/hello-city.html
+
+# Batch generate posters
+for seed in seeds/garden/*.json; do
+    name=$(basename "$seed" .json)
+    node scripts/posters/make.mjs \
+        "$seed" \
+        "dist/posters/$name.html"
+done
+
+# Print poster (opens print dialog)
+open dist/posters/hello-city.html && window.print()</code></pre>
+                </details>
+
+                <details>
+                    <summary>Receipt Processing</summary>
+                    <p>Ingest and aggregate field trial receipts:</p>
+                    <pre><code># Process single receipt
+node scripts/field/ingest.mjs receipt.json
+
+# Process directory of receipts
+node scripts/field/ingest.mjs field-receipts/
+
+# Generate daily report
+node scripts/field/ingest.mjs receipts/ --date 2025-09-17
+
+# View aggregated stats
+cat dist/field/summary.json | jq
+
+# View daily report
+cat reports/field/2025-09-17.md</code></pre>
+                </details>
+
+                <details>
+                    <summary>Privacy Guarantees</summary>
+                    <ul>
+                        <li>✅ No IP addresses collected</li>
+                        <li>✅ No user agent strings</li>
+                        <li>✅ No browser fingerprinting</li>
+                        <li>✅ No persistent identifiers</li>
+                        <li>✅ Ephemeral keys per session</li>
+                        <li>✅ Consent defaults to OFF</li>
+                        <li>✅ Local-first storage</li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>PL-FIELD-01 Specification</summary>
+                    <pre><code>{
+  "schema": "PL-FIELD-01",
+  "version": "1.0.0",
+  "ts": "2025-09-17T12:00:00.000Z",
+  "seedGID": "gid_hash_64chars",
+  "seedXIDv2": "xidv2_hash_64chars",
+  "action": "verify|bench|contribute",
+  "runs": 1,
+  "deviceHint": "browser|mobile|kiosk",
+  "subjectHash": "blake3_hash_64chars",
+  "signer": {
+    "did": "did:plc:ephemeral-field-key",
+    "pub": "ed25519:base64:..."
+  },
+  "sig": "ed25519_signature_base64"
+}</code></pre>
+                    <a href="../specs/PL-FIELD-01.md">Full Specification →</a>
+                </details>
+
+                <details>
+                    <summary>One-Tap Mirrors Integration</summary>
+                    <p>Embed the OTM widget for quick field testing:</p>
+                    <pre><code>&lt;!-- Add to any page --&gt;
+&lt;script src="/docs/otm/otm.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  OTM.mount({ mode: 'floating' });
+  OTM.load(seedData);
+&lt;/script&gt;</code></pre>
+                    <p>Features:</p>
+                    <ul>
+                        <li>2.8KB gzipped</li>
+                        <li>Zero dependencies</li>
+                        <li>Offline-first</li>
+                        <li>Auto-verification</li>
+                    </ul>
+                </details>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <span>Offline • Deterministic • DSSE-Verified</span>
+        <span style="margin-left: 20px; background: #667eea; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px;">
+            On-call: steward:intake
+        </span>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

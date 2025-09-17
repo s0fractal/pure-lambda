@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Lambda Kiosk - Field Trial</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e8e8e8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .kiosk-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        .seed-info {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .seed-name {
+            font-size: 1.5rem;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        .seed-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .meta-item {
+            text-align: center;
+        }
+        .meta-label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .meta-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .action-buttons {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .action-btn {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+        }
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .action-icon {
+            font-size: 1.5rem;
+        }
+        .consent-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(74,175,80,0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .consent-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .consent-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .consent-text {
+            flex: 1;
+        }
+        .privacy-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .privacy-link:hover {
+            text-decoration: underline;
+        }
+        .export-section {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .export-btn {
+            padding: 12px 30px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .export-btn:hover {
+            background: #45a049;
+        }
+        .export-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+        }
+        .status-message.success {
+            background: rgba(76,175,80,0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            display: block;
+        }
+        .status-message.error {
+            background: rgba(244,67,54,0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
+            display: block;
+        }
+        .receipt-preview {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="kiosk-container">
+        <h1>🌱 Pure Lambda Kiosk</h1>
+        <p class="subtitle">Field Trial Station • Privacy-First • Offline-Ready</p>
+
+        <div class="seed-info">
+            <div class="seed-name" id="seedName">Loading seed...</div>
+            <div class="seed-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Nodes</div>
+                    <div class="meta-value" id="nodeCount">-</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Size</div>
+                    <div class="meta-value" id="seedSize">-</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Version</div>
+                    <div class="meta-value" id="seedVersion">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="performAction('verify')">
+                <span class="action-icon">✓</span>
+                <span>Verify Seed</span>
+            </button>
+            <button class="action-btn" onclick="performAction('bench')">
+                <span class="action-icon">⚡</span>
+                <span>Run Benchmark</span>
+            </button>
+            <button class="action-btn" onclick="performAction('contribute')">
+                <span class="action-icon">🎁</span>
+                <span>Contribute</span>
+            </button>
+        </div>
+
+        <div class="consent-section">
+            <label class="consent-label">
+                <input type="checkbox" id="consentCount" class="consent-checkbox">
+                <span class="consent-text">
+                    Count this run (anonymous metrics, no tracking)
+                </span>
+            </label>
+            <a href="#privacy" class="privacy-link" onclick="showPrivacy(); return false;">
+                Privacy Policy →
+            </a>
+        </div>
+
+        <div class="export-section">
+            <button class="export-btn" id="exportBtn" onclick="exportReceipt()" disabled>
+                📄 Export Field Receipt
+            </button>
+            <div class="receipt-preview" id="receiptPreview"></div>
+        </div>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="actionCount">0</div>
+                <div class="stat-label">Actions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="runCount">0</div>
+                <div class="stat-label">Runs</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="sessionTime">0:00</div>
+                <div class="stat-label">Session</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/docs/otm/otm.min.js"></script>
+    <script>
+        // Kiosk state
+        let currentSeed = null;
+        let ephemeralKeyPair = null;
+        let actions = [];
+        let sessionStart = Date.now();
+        let actionCount = 0;
+        let runCount = 0;
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Generate ephemeral key pair
+            ephemeralKeyPair = await generateEphemeralKey();
+
+            // Load seed from URL or use default
+            await loadSeedFromURL();
+
+            // Mount OTM
+            if (typeof OTM !== 'undefined') {
+                OTM.mount({ mode: 'floating' });
+                if (currentSeed) {
+                    OTM.load(currentSeed);
+                }
+            }
+
+            // Update session timer
+            setInterval(updateSessionTime, 1000);
+        });
+
+        // Generate ephemeral Ed25519 key pair
+        async function generateEphemeralKey() {
+            // Using Web Crypto API for key generation
+            // In production, would use nacl or similar
+            const keyPair = {
+                did: `did:plc:ephemeral-${Date.now().toString(36)}`,
+                pub: btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
+            };
+            console.log('Generated ephemeral DID:', keyPair.did);
+            return keyPair;
+        }
+
+        // Load seed from URL parameter or embedded data
+        async function loadSeedFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const seedParam = params.get('seed');
+
+            if (seedParam) {
+                try {
+                    // Decode from base64
+                    const decoded = atob(seedParam);
+                    currentSeed = JSON.parse(decoded);
+                } catch (error) {
+                    console.error('Failed to load seed from URL:', error);
+                }
+            }
+
+            // Fallback to hello-city
+            if (!currentSeed) {
+                currentSeed = {
+                    name: "hello-city",
+                    version: 1,
+                    nodes: {
+                        "node1": { op: "ENTER" },
+                        "node2": { op: "ROUTE" },
+                        "node3": { op: "TRADE" },
+                        "node4": { op: "REST" },
+                        "node5": { op: "GATHER" }
+                    }
+                };
+            }
+
+            updateSeedDisplay();
+        }
+
+        // Update seed information display
+        function updateSeedDisplay() {
+            document.getElementById('seedName').textContent = currentSeed.name || 'Unknown Seed';
+            document.getElementById('nodeCount').textContent =
+                currentSeed.nodes ? Object.keys(currentSeed.nodes).length : 0;
+            document.getElementById('seedSize').textContent =
+                `${(JSON.stringify(currentSeed).length / 1024).toFixed(1)}KB`;
+            document.getElementById('seedVersion').textContent = currentSeed.version || 1;
+        }
+
+        // Perform action (verify/bench/contribute)
+        function performAction(action) {
+            actionCount++;
+            runCount++;
+
+            // Record action
+            const actionRecord = {
+                action: action,
+                timestamp: new Date().toISOString(),
+                consent: document.getElementById('consentCount').checked
+            };
+            actions.push(actionRecord);
+
+            // Update UI
+            updateStats();
+            showStatus(`Performing ${action}...`, 'success');
+
+            // If OTM is available, trigger action
+            if (typeof OTM !== 'undefined') {
+                switch (action) {
+                    case 'verify':
+                        OTM.verify();
+                        break;
+                    case 'bench':
+                        OTM.bench();
+                        break;
+                    case 'contribute':
+                        OTM.contribute();
+                        break;
+                }
+            }
+
+            // Enable export if consent given
+            if (document.getElementById('consentCount').checked) {
+                document.getElementById('exportBtn').disabled = false;
+                generateReceiptPreview();
+            }
+        }
+
+        // Generate field receipt
+        function generateFieldReceipt() {
+            if (!currentSeed) return null;
+
+            const receipt = {
+                schema: "PL-FIELD-01",
+                version: "1.0.0",
+                ts: new Date().toISOString(),
+                seedGID: currentSeed.gid || generateHash(currentSeed.name),
+                seedXIDv2: currentSeed.xidv2 || generateHash(JSON.stringify(currentSeed)),
+                action: actions.length > 0 ? actions[actions.length - 1].action : "view",
+                runs: runCount,
+                deviceHint: detectDevice(),
+                subjectHash: generateHash(JSON.stringify(currentSeed)),
+                signer: {
+                    did: ephemeralKeyPair.did,
+                    pub: `ed25519:base64:${ephemeralKeyPair.pub}`
+                },
+                sig: generateSignature(currentSeed)
+            };
+
+            return receipt;
+        }
+
+        // Generate simple hash (placeholder)
+        function generateHash(data) {
+            let hash = 0;
+            for (let i = 0; i < data.length; i++) {
+                hash = ((hash << 5) - hash) + data.charCodeAt(i);
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(16).padStart(64, '0');
+        }
+
+        // Generate signature (placeholder)
+        function generateSignature(data) {
+            return btoa(generateHash(JSON.stringify(data)).substring(0, 32));
+        }
+
+        // Detect device type
+        function detectDevice() {
+            if (/Mobile|Android|iPhone/i.test(navigator.userAgent)) {
+                return 'mobile';
+            }
+            if (window.location.search.includes('kiosk=true')) {
+                return 'kiosk';
+            }
+            return 'browser';
+        }
+
+        // Export receipt
+        function exportReceipt() {
+            const receipt = generateFieldReceipt();
+            if (!receipt) {
+                showStatus('No receipt to export', 'error');
+                return;
+            }
+
+            // Create filename
+            const filename = `field-${receipt.seedGID.substring(0, 8)}-${Date.now()}.json`;
+
+            // Create download link
+            const blob = new Blob([JSON.stringify(receipt, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+
+            showStatus(`Receipt exported: ${filename}`, 'success');
+        }
+
+        // Generate receipt preview
+        function generateReceiptPreview() {
+            const receipt = generateFieldReceipt();
+            if (receipt) {
+                const preview = document.getElementById('receiptPreview');
+                preview.textContent = JSON.stringify(receipt, null, 2);
+                preview.style.display = 'block';
+            }
+        }
+
+        // Show privacy policy
+        function showPrivacy() {
+            alert(`Privacy Policy:
+
+• No personal information collected
+• Ephemeral keys generated per session
+• Data stays local unless you export
+• Consent defaults to OFF
+• Anonymous counting only
+• No tracking across sessions`);
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('actionCount').textContent = actionCount;
+            document.getElementById('runCount').textContent = runCount;
+        }
+
+        // Update session time
+        function updateSessionTime() {
+            const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('sessionTime').textContent =
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            setTimeout(() => {
+                statusEl.className = 'status-message';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

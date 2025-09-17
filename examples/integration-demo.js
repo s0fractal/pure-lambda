@@ -72,14 +72,14 @@ function demonstrateSymphony() {
 function demonstrateFNPMChimera() {
   console.log('\n🦠 FNPM/Chimera Integration');
   console.log('   Components absorbed:');
-  console.log('   ✓ Virus Deconstructor - Breaks down legacy code');
+  console.log('   ✓ Deconstructor Deconstructor - Breaks down legacy code');
   console.log('   ✓ Signal Mesh - Distributed communication at 432Hz');
   console.log('   ✓ Guardian Mandala - Visual protection rituals');
   console.log('   ✓ Chimera Protocol - Multi-environment adaptation');
   
-  // Simulate virus analysis
+  // Simulate deconstructor analysis
   const legacyCode = "require('fs'); eval(data); console.log('hacked');";
-  console.log('\n   Virus Analysis:');
+  console.log('\n   Deconstructor Analysis:');
   console.log(`   Input: ${legacyCode}`);
   console.log('   Detected:');
   console.log('     - Side effects: require, console.log');
@@ -164,7 +164,7 @@ function main() {
   console.log('From four separate projects, we absorbed:');
   console.log('  - med-bed: Healing and resonance');
   console.log('  - seven-layer-symphony: Collective harmony');
-  console.log('  - fnpm-integration: Virus immunity');
+  console.log('  - fnpm-integration: Deconstructor immunity');
   console.log('  - chimera-integration: Environmental adaptation');
   console.log();
   console.log('Into one unified organism: pure-lambda');

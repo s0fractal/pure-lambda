@@ -1,0 +1,88 @@
+{
+  "name": "split-metric-select-lat-p90",
+  "version": 1,
+  "intent": "Branch based on local metric temperature",
+  "size": "≤10KB",
+  "novelty": 0.7000000000000001,
+  "nodes": {
+    "entry": {
+      "op": "ENTER",
+      "params": {}
+    },
+    "metric": {
+      "op": "MEASURE",
+      "params": {
+        "type": "temperature",
+        "window": 5
+      }
+    },
+    "split": {
+      "op": "SPLIT",
+      "params": {
+        "branches": [
+          "hot",
+          "warm",
+          "cold"
+        ]
+      }
+    },
+    "select": {
+      "op": "SELECT",
+      "params": {
+        "based_on": "${metric.temp}",
+        "thresholds": {
+          "hot": 0.7,
+          "warm": 0.4,
+          "cold": 0
+        }
+      }
+    },
+    "merge": {
+      "op": "MERGE",
+      "params": {}
+    },
+    "exit": {
+      "op": "EXIT",
+      "params": {}
+    }
+  },
+  "edges": [
+    [
+      "entry",
+      "metric"
+    ],
+    [
+      "metric",
+      "split"
+    ],
+    [
+      "split",
+      "select"
+    ],
+    [
+      "select",
+      "merge"
+    ],
+    [
+      "merge",
+      "exit"
+    ]
+  ],
+  "fixtures": [
+    {
+      "temp": 0.8,
+      "expected": "hot"
+    },
+    {
+      "temp": 0.5,
+      "expected": "warm"
+    },
+    {
+      "temp": 0.2,
+      "expected": "cold"
+    }
+  ],
+  "xidv2": "split-metric-select-lat-p90-v2-932eb22e0eac272c-1758115225484",
+  "generated": "2025-09-17T13:20:25.484Z",
+  "sweep": true
+}
