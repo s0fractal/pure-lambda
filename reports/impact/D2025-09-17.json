@@ -1,0 +1,25 @@
+{
+  "date": "2025-09-17",
+  "timestamp": "2025-09-17T16:55:13.778Z",
+  "period": "24h",
+  "seeds": {
+    "valid": 0,
+    "total": 0
+  },
+  "L_summed": 0,
+  "cpu_saved_h": "0.0",
+  "co2_saved_kg": "0.00",
+  "auto_merge_rate": 0,
+  "projections": {
+    "weekly": {
+      "L": 0,
+      "cpu_h": "0",
+      "co2_kg": "0.0"
+    },
+    "monthly": {
+      "L": 0,
+      "cpu_h": "0",
+      "co2_kg": "0.0"
+    }
+  }
+}

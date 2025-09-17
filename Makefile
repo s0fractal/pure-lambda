@@ -665,3 +665,42 @@ expand-check:
 dashboard:
 	@echo "📊 D2→D7 Dashboard Update"
 	@node scripts/monitor/dashboard.mjs
+
+# Impact & Quality Lifecycle
+impact:
+	@echo "🌱 Calculating impact metrics..."
+	@node scripts/metrics/impact.mjs --since=24h --out=reports/impact
+	@node scripts/badges/make-impact.mjs
+
+graduate:
+	@echo "🎓 Checking graduation eligibility..."
+	@node scripts/ops/graduation.mjs --trust=98 --conf=95 --novelty=0.40 --window=72h
+
+notary:
+	@echo "🔏 Generating public verifier notary..."
+	@node scripts/notary/write.mjs --pub keys/current.pub --out docs/NOTARY.md
+
+notary-verify:
+	@echo "✅ Verifying notary chain..."
+	@if [ -f docs/NOTARY.md ]; then \
+		echo "  Notary document exists"; \
+		grep -q "Public Key Fingerprint" docs/NOTARY.md && echo "  ✓ Public key present" || echo "  ✗ Missing public key"; \
+		grep -q "Signature Chain" docs/NOTARY.md && echo "  ✓ Chain present" || echo "  ✗ Missing chain"; \
+	else \
+		echo "  ❌ Notary document not found"; \
+		exit 1; \
+	fi
+
+hall:
+	@echo "🏛️ Building Hall of Seeds..."
+	@node scripts/hall/build.mjs --src seeds/garden --out docs/hall
+
+hall-open: hall
+	@echo "🌐 Opening Hall of Seeds..."
+	@if command -v open >/dev/null 2>&1; then \
+		open docs/hall/index.html; \
+	elif command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open docs/hall/index.html; \
+	else \
+		echo "📁 Hall available at: file://$(PWD)/docs/hall/index.html"; \
+	fi

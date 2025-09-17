@@ -1,0 +1,39 @@
+{
+  "patterns": [
+    "select-focus",
+    "scan-metrics",
+    "bounded-delay",
+    "partition-rr",
+    "route-audit",
+    "split-metric-select",
+    "delay-scan-smoother",
+    "select-tee",
+    "bounded-partition",
+    "merge-proof-lite",
+    "merge-proof",
+    "branch-stress"
+  ],
+  "seeds": [
+    {
+      "name": "bounded-delay",
+      "file": "bounded-delay.json",
+      "trust": 98.79990568818098,
+      "novelty": 0.3078377187546662,
+      "size": 1860,
+      "nodes": 0,
+      "edges": 0,
+      "pattern": "bounded-delay"
+    },
+    {
+      "name": "branch-stress",
+      "file": "branch-stress.json",
+      "trust": 96.1197091924383,
+      "novelty": 0.32867434988217215,
+      "size": 4675,
+      "nodes": 0,
+      "edges": 0,
+      "pattern": "branch-stress"
+    }
+  ],
+  "generated": "2025-09-17T16:55:29.849Z"
+}
