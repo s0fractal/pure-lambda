@@ -760,3 +760,28 @@ victory:
 		echo "⏳ Not yet - keep pushing!"; \
 		exit 1; \
 	fi
+
+# Autonomy & governance targets
+.PHONY: autonomy-check oracle-plan oracle-apply seed-lint gov-tally
+
+autonomy-check:
+	@echo "📊 Checking autonomy level (LoA)..."
+	@node scripts/dashboard/autonomy.mjs
+
+oracle-plan:
+	@echo "🔮 Generating Oracle plan..."
+	@node scripts/dashboard/autonomy.mjs
+	@node scripts/oracle/plan.mjs
+
+oracle-apply:
+	@echo "✨ Applying Oracle plan (if approved)..."
+	@node scripts/gov/tally.mjs
+	@node scripts/oracle/apply.mjs
+
+seed-lint:
+	@echo "🌱 Linting seed..."
+	@node scripts/seed/lint.mjs $(FILE)
+
+gov-tally:
+	@echo "🗳️ Tallying governance votes..."
+	@node scripts/gov/tally.mjs
