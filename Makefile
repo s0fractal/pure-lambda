@@ -356,6 +356,20 @@ contributors:
 ui-all: showcase-build contributors
 	@echo "✨ All UI targets built"
 
+# Go-Live Monitoring
+.PHONY: go-live shadow-monitor loa3-check
+go-live:
+	@echo "🚀 Pure Lambda Go-Live Dashboard"
+	@node scripts/monitor/go-live.mjs
+
+shadow-monitor:
+	@echo "👤 Shadow mode monitoring..."
+	@node scripts/autonomy/shadow.mjs
+
+loa3-check:
+	@echo "🎯 Checking LoA3 readiness..."
+	@node scripts/autonomy/promote.mjs
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:
@@ -787,7 +801,7 @@ victory:
 	fi
 
 # Autonomy & governance targets
-.PHONY: autonomy-check oracle-plan oracle-apply seed-lint gov-tally
+.PHONY: autonomy-check oracle-plan oracle-apply seed-lint gov-tally shadow-monitor loa3-check promote-check
 
 autonomy-check:
 	@echo "📊 Checking autonomy level (LoA)..."
@@ -810,3 +824,16 @@ seed-lint:
 gov-tally:
 	@echo "🗳️ Tallying governance votes..."
 	@node scripts/gov/tally.mjs
+
+# Shadow monitoring and LoA3 promotion
+.PHONY: shadow-monitor loa3-check promote-check
+
+shadow-monitor:
+	@echo "👥 Running shadow-mode monitoring..."
+	@node scripts/autonomy/shadow.mjs
+
+loa3-check:
+	@echo "🔍 Checking LoA3 promotion eligibility..."
+	@node scripts/autonomy/promote.mjs
+
+promote-check: loa3-check
