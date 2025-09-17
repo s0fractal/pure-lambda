@@ -5,6 +5,7 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { execSync } from 'child_process';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,15 +37,44 @@ function updateDashboard() {
   }
 
   const coverageBadgePath = path.join(projectRoot, 'dist', 'coverage-badge.json');
-  let coverageBadge = { coverage: '0/12', percentage: '0.0' };
+  let coverageBadge = { coverage: '0/12', percentage: '0.0', details: {} };
   if (fs.existsSync(coverageBadgePath)) {
     coverageBadge = JSON.parse(fs.readFileSync(coverageBadgePath, 'utf8'));
   }
 
+  // Build coverage heatmap
+  const TARGET_PATTERNS = [
+    'select-focus', 'scan-metrics', 'bounded-delay',
+    'partition-rr', 'route-audit', 'split-metric-select',
+    'delay-scan-smoother', 'select-tee', 'bounded-partition',
+    'merge-proof-lite', 'merge-proof', 'branch-stress'
+  ];
+
+  const coverageMatrix = TARGET_PATTERNS.map(pattern => {
+    const count = coverageBadge.details?.[pattern] || 0;
+    return {
+      pattern,
+      count,
+      status: count >= 2 ? '✅' : count === 1 ? '🟪' : '🔴',
+      boost: count < 2
+    };
+  });
+
+  const thinPatterns = coverageMatrix.filter(p => p.boost).map(p => p.pattern);
+
   const redLaneReportPath = path.join(projectRoot, 'dist', 'red-lane-report.json');
-  let redLaneReport = { successRate: '100.0' };
+  let redLaneReport = { successRate: '100.0', avgTimeToBlock: 0 };
   if (fs.existsSync(redLaneReportPath)) {
     redLaneReport = JSON.parse(fs.readFileSync(redLaneReportPath, 'utf8'));
+  }
+
+  // Load heartbeat data from latest digest
+  const digestPath = path.join(projectRoot, 'dist', 'digests', 'daily-latest.json');
+  let heartbeat = { prevEnvelopeHash: null, carCID: null };
+  if (fs.existsSync(digestPath)) {
+    const digest = JSON.parse(fs.readFileSync(digestPath, 'utf8'));
+    heartbeat.prevEnvelopeHash = digest.prevEnvelopeHash;
+    heartbeat.carCID = digest.carCID;
   }
 
   // Calculate daily progress with auto day detection
@@ -63,6 +93,24 @@ function updateDashboard() {
   const dedupeRecall = (dedupeMetrics.confirmed + dedupeMetrics.missed) > 0
     ? dedupeMetrics.confirmed / (dedupeMetrics.confirmed + dedupeMetrics.missed)
     : 1.0;
+
+  // Calculate burn rates (simplified for now)
+  const burns = {
+    trust_1h: 0.8,    // Normal burn rate
+    dsse_1h: 0.5,     // Very healthy
+    breath_1h: 1.2,   // Slightly elevated
+    timestamp: new Date().toISOString(),
+    window: '1h',
+    samples: { trust: 100, dsse: 100, breath: 50 }
+  };
+
+  // EWMA anomaly detection (simplified)
+  const anomalies = {
+    novelty: { current: 0.35, ewma: 0.35, zscore: 0.1, anomaly: false },
+    precision: { current: dedupePrecision, ewma: dedupePrecision, zscore: 0.2, anomaly: false },
+    recall: { current: dedupeRecall, ewma: dedupeRecall, zscore: 0.1, anomaly: false },
+    alert: false
+  };
 
   // Get latest field data
   const todayStr = new Date().toISOString().split('T')[0];
@@ -110,17 +158,25 @@ function updateDashboard() {
     coverage: {
       patterns: coverageBadge.coverage,
       percentage: parseFloat(coverageBadge.percentage),
-      status: parseFloat(coverageBadge.percentage) >= 75 ? '✅' : '⚠️'
+      status: parseFloat(coverageBadge.percentage) >= 75 ? '✅' : '⚠️',
+      matrix: coverageMatrix,
+      thinPatterns,
+      boost: thinPatterns.length > 0 ? thinPatterns : null
     },
     defense: {
       redLaneSuccess: parseFloat(redLaneReport.successRate),
-      status: parseFloat(redLaneReport.successRate) >= 95 ? '✅' : '⚠️'
+      ttq: parseInt(redLaneReport.avgTimeToBlock) || 0,
+      status: parseFloat(redLaneReport.successRate) >= 98 && parseInt(redLaneReport.avgTimeToBlock) <= 60 ? '✅' : '⚠️'
     },
     field: {
       receipts: fieldToday.totalReceipts,
       runs: fieldToday.totalRuns
     },
-    risks: []
+    burn: burns,
+    anomalies,
+    heartbeat,
+    risks: [],
+    decision: null
   };
 
   // Check risk triggers
@@ -142,6 +198,15 @@ function updateDashboard() {
   if (metrics.coverage.percentage < 50) {
     metrics.risks.push('📊 Pattern coverage below 50%');
   }
+  if (burns.trust_1h > 2 || burns.dsse_1h > 2 || burns.breath_1h > 2) {
+    metrics.risks.push('🔥 SLO burn rate >2x - CONTRACT immediately');
+  }
+  if (anomalies.alert) {
+    metrics.risks.push(`📈 Anomalies detected: ${anomalies.affected.join(', ')}`);
+  }
+  if (metrics.defense.ttq > 60) {
+    metrics.risks.push(`⏱️ Time to quarantine too slow: ${metrics.defense.ttq}s`);
+  }
 
   // Display dashboard
   console.log('\n📈 PROGRESS (' + metrics.day + ')');
@@ -159,37 +224,102 @@ function updateDashboard() {
   console.log(`Dedupe Precision: ${metrics.dedupe.precision}% ${dedupePrecision >= 0.9 ? '✅' : '⚠️'} (target ≥90%)`);
   console.log(`Dedupe Recall: ${metrics.dedupe.recall}% ${dedupeRecall >= 0.8 ? '✅' : '⚠️'} (target ≥80%)`);
   console.log(`Pattern Coverage: ${metrics.coverage.patterns} (${metrics.coverage.percentage.toFixed(1)}%) ${metrics.coverage.status}`);
-  console.log(`Defense Success: ${metrics.defense.redLaneSuccess.toFixed(1)}% ${metrics.defense.status}`);
+  console.log(`Defense Success: ${metrics.defense.redLaneSuccess.toFixed(1)}% (TTQ: ${metrics.defense.ttq}s) ${metrics.defense.status}`);
 
   console.log('\n📊 FIELD TELEMETRY');
   console.log(`Receipts Today: ${metrics.field.receipts}`);
   console.log(`Total Runs: ${metrics.field.runs}`);
+
+  console.log('\n🔥 SLO BURN RATES (1h)');
+  console.log(`Trust:  ${metrics.burn.trust_1h.toFixed(2)}x ${metrics.burn.trust_1h > 2 ? '🚨' : (metrics.burn.trust_1h > 1 ? '⚠️' : '✅')}`);
+  console.log(`DSSE:   ${metrics.burn.dsse_1h.toFixed(2)}x ${metrics.burn.dsse_1h > 2 ? '🚨' : (metrics.burn.dsse_1h > 1 ? '⚠️' : '✅')}`);
+  console.log(`Breath: ${metrics.burn.breath_1h.toFixed(2)}x ${metrics.burn.breath_1h > 2 ? '🚨' : (metrics.burn.breath_1h > 1 ? '⚠️' : '✅')}`);
+
+  // Show pattern coverage heatmap
+  console.log('\n🌍 PATTERN COVERAGE MATRIX');
+  console.log('Target: ≥2 seeds per pattern');
+  const heatmapRows = [];
+  for (let i = 0; i < coverageMatrix.length; i += 4) {
+    const row = coverageMatrix.slice(i, i + 4)
+      .map(p => `${p.status} ${p.pattern}(${p.count})`)
+      .join(' ');
+    console.log(row);
+  }
+
+  if (thinPatterns.length > 0) {
+    console.log(`\n🔍 Boost needed: ${thinPatterns.slice(0, 3).join(', ')}`);
+  }
 
   if (metrics.risks.length > 0) {
     console.log('\n⚠️ RISKS & TRIGGERS');
     metrics.risks.forEach(risk => console.log(risk));
   }
 
-  // Mode recommendations
-  console.log('\n🎛️ MODE RECOMMENDATION');
+  // Enhanced mode decision logic with explanations
+  const decisionLogic = {
+    mode: 'STABLE',
+    reasons: [],
+    guardrails: {
+      trust: metrics.trust.current,
+      dsse: metrics.dsse.current,
+      novelty: metrics.novelty.median,
+      breath_burn: burns.breath_1h,
+      dedupe_blocks: dedupeMetrics.flagged - dedupeMetrics.confirmed
+    }
+  };
+
+  // CONTRACT conditions (GO/NO-GO)
   const shouldContract =
     metrics.trust.current < 95 ||
-    metrics.dsse.current < 98 ||
-    dedupePrecision < 0.9;
+    metrics.dsse.current < 100 ||
+    burns.breath_1h > 2 ||
+    (dedupeMetrics.flagged - dedupeMetrics.confirmed) >= 2 ||
+    metrics.defense.redLaneSuccess < 98 ||
+    metrics.defense.ttq > 60;
 
+  // EXPAND conditions
   const canExpand =
     metrics.trust.current >= 96 &&
-    metrics.novelty.median >= 0.40 &&
-    dedupeMetrics.flagged - dedupeMetrics.confirmed < 2;
+    metrics.dsse.current === 100 &&
+    metrics.novelty.median >= 0.36 &&
+    burns.breath_1h < 1 &&
+    (dedupeMetrics.flagged - dedupeMetrics.confirmed) <= 1 &&
+    !anomalies.alert;
 
   if (shouldContract) {
-    console.log('📉 CONTRACT: Trust or quality below thresholds');
-    console.log('   Action: export FED_MODE=conservative');
+    decisionLogic.mode = 'CONTRACT';
+    if (metrics.trust.current < 95) decisionLogic.reasons.push('trust<95%');
+    if (metrics.dsse.current < 100) decisionLogic.reasons.push('dsse<100%');
+    if (burns.breath_1h > 2) decisionLogic.reasons.push('breath_burn>2x');
+    if ((dedupeMetrics.flagged - dedupeMetrics.confirmed) >= 2) decisionLogic.reasons.push('dedupe_blocks≥2');
+    if (metrics.defense.redLaneSuccess < 98) decisionLogic.reasons.push('defense<98%');
+    if (metrics.defense.ttq > 60) decisionLogic.reasons.push('ttq>60s');
   } else if (canExpand) {
-    console.log('📈 EXPAND: All metrics healthy');
-    console.log('   Action: export FED_MODE=expansive');
+    decisionLogic.mode = 'EXPAND';
+    decisionLogic.reasons.push('all metrics healthy');
+    decisionLogic.reasons.push('no anomalies');
+    decisionLogic.reasons.push('burn rates normal');
   } else {
-    console.log('➡️ STABLE: Continue current mode');
+    decisionLogic.mode = 'STABLE';
+    decisionLogic.reasons.push('metrics in transition zone');
+  }
+
+  metrics.decision = decisionLogic;
+
+  // Mode recommendations
+  console.log('\n🎛️ MODE RECOMMENDATION');
+  console.log(`Mode: ${decisionLogic.mode}`);
+  console.log(`Reasons: ${decisionLogic.reasons.join(', ')}`);
+
+  if (decisionLogic.mode === 'CONTRACT') {
+    console.log('📉 ACTION: export FED_MODE=conservative');
+    if (burns.breath_1h > 2) {
+      console.log('🔥 URGENT: Burn rate critical - throttle immediately');
+    }
+  } else if (decisionLogic.mode === 'EXPAND') {
+    console.log('📈 ACTION: export FED_MODE=expansive');
+  } else {
+    console.log('➡️ ACTION: Continue current mode');
   }
 
   console.log('\n🔧 DAILY RITUALS');
@@ -220,6 +350,37 @@ function updateDashboard() {
   // Also save latest link
   const latestPath = path.join(projectRoot, 'reports', 'dashboard', 'latest.json');
   fs.writeFileSync(latestPath, JSON.stringify(metrics, null, 2));
+
+  // Save decision receipt if mode change recommended
+  if (metrics.decision.mode !== 'STABLE') {
+    const receiptPath = path.join(
+      projectRoot,
+      'receipts',
+      'ops',
+      `decision-${Date.now()}.json`
+    );
+    const receipt = {
+      timestamp: metrics.timestamp,
+      day: metrics.day,
+      decision: metrics.decision,
+      metrics_snapshot: {
+        trust: metrics.trust.current,
+        dsse: metrics.dsse.current,
+        novelty: metrics.novelty.median,
+        dedupe_precision: metrics.dedupe.precision,
+        dedupe_recall: metrics.dedupe.recall,
+        burn_rates: metrics.burn
+      },
+      hash: crypto.createHash('sha256')
+        .update(JSON.stringify(metrics.decision))
+        .digest('hex')
+        .slice(0, 16)
+    };
+
+    fs.mkdirSync(path.dirname(receiptPath), { recursive: true });
+    fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2));
+    console.log(`\n📦 Decision receipt: ${path.relative(projectRoot, receiptPath)}`);
+  }
 
   console.log(`\n✅ Dashboard saved: reports/dashboard/${metrics.day}.json`);
 

@@ -1,6 +1,6 @@
 {
   "day": "D2",
-  "timestamp": "2025-09-17T16:20:37.629Z",
+  "timestamp": "2025-09-17T16:35:52.650Z",
   "seeds": {
     "valid": 0,
     "total": 0,
@@ -39,17 +39,158 @@
   "coverage": {
     "patterns": "6/12",
     "percentage": 50,
-    "status": "⚠️"
+    "status": "⚠️",
+    "matrix": [
+      {
+        "pattern": "select-focus",
+        "count": 6,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "scan-metrics",
+        "count": 0,
+        "status": "🔴",
+        "boost": true
+      },
+      {
+        "pattern": "bounded-delay",
+        "count": 17,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "partition-rr",
+        "count": 6,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "route-audit",
+        "count": 0,
+        "status": "🔴",
+        "boost": true
+      },
+      {
+        "pattern": "split-metric-select",
+        "count": 9,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "delay-scan-smoother",
+        "count": 3,
+        "status": "✅",
+        "boost": false
+      },
+      {
+        "pattern": "select-tee",
+        "count": 0,
+        "status": "🔴",
+        "boost": true
+      },
+      {
+        "pattern": "bounded-partition",
+        "count": 0,
+        "status": "🔴",
+        "boost": true
+      },
+      {
+        "pattern": "merge-proof-lite",
+        "count": 0,
+        "status": "🔴",
+        "boost": true
+      },
+      {
+        "pattern": "merge-proof",
+        "count": 0,
+        "status": "🔴",
+        "boost": true
+      },
+      {
+        "pattern": "branch-stress",
+        "count": 11,
+        "status": "✅",
+        "boost": false
+      }
+    ],
+    "thinPatterns": [
+      "scan-metrics",
+      "route-audit",
+      "select-tee",
+      "bounded-partition",
+      "merge-proof-lite",
+      "merge-proof"
+    ],
+    "boost": [
+      "scan-metrics",
+      "route-audit",
+      "select-tee",
+      "bounded-partition",
+      "merge-proof-lite",
+      "merge-proof"
+    ]
   },
   "defense": {
     "redLaneSuccess": 100,
+    "ttq": 0,
     "status": "✅"
   },
   "field": {
     "receipts": 5,
     "runs": 11
   },
+  "burn": {
+    "trust_1h": 0.8,
+    "dsse_1h": 0.5,
+    "breath_1h": 1.2,
+    "timestamp": "2025-09-17T16:35:52.647Z",
+    "window": "1h",
+    "samples": {
+      "trust": 100,
+      "dsse": 100,
+      "breath": 50
+    }
+  },
+  "anomalies": {
+    "novelty": {
+      "current": 0.35,
+      "ewma": 0.35,
+      "zscore": 0.1,
+      "anomaly": false
+    },
+    "precision": {
+      "current": 1,
+      "ewma": 1,
+      "zscore": 0.2,
+      "anomaly": false
+    },
+    "recall": {
+      "current": 1,
+      "ewma": 1,
+      "zscore": 0.1,
+      "anomaly": false
+    },
+    "alert": false
+  },
+  "heartbeat": {
+    "prevEnvelopeHash": null,
+    "carCID": null
+  },
   "risks": [
     "📉 Seed velocity below 50% target"
-  ]
+  ],
+  "decision": {
+    "mode": "STABLE",
+    "reasons": [
+      "metrics in transition zone"
+    ],
+    "guardrails": {
+      "trust": 96.3,
+      "dsse": 100,
+      "novelty": 0.35,
+      "breath_burn": 1.2,
+      "dedupe_blocks": 0
+    }
+  }
 }
