@@ -1,0 +1,35 @@
+name: Daily Signed Digest
+
+on:
+  schedule:
+    - cron: "15 21 * * *"   # 10 хв після daily-digest (21:05)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-signed-digest
+  cancel-in-progress: true
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: npm ci || true
+      - name: Sign daily digest
+        env:
+          PL_ED25519_SECRET: ${{ secrets.PL_ED25519_SECRET }}
+        run: node scripts/digest/sign-daily.mjs
+      - name: Verify envelope
+        run: node scripts/attest/verify.mjs receipts/attest/daily-*.envelope.json
+      - name: Commit envelopes
+        run: |
+          git config user.name "pl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add receipts/attest/daily-*.envelope.json
+          git diff --cached --quiet || git commit -m "chore(digest): DSSE signature for daily.md $(date -u +%F)"
+          git push
