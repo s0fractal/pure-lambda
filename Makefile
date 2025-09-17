@@ -392,6 +392,12 @@ metrics-refresh:
 	@echo "🔄 One-shot metrics refresh"
 	@node scripts/ops/refresh.mjs
 
+# Chaos drill for testing expand/rollback
+.PHONY: drill-expand
+drill-expand:
+	@echo "🎯 Running EXPAND chaos drill"
+	@node scripts/drills/expand-chaos.mjs
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:
