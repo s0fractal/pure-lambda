@@ -1,6 +1,6 @@
 {
   "day": "D2",
-  "timestamp": "2025-09-17T16:35:52.650Z",
+  "timestamp": "2025-09-17T18:43:57.486Z",
   "seeds": {
     "valid": 0,
     "total": 0,
@@ -37,9 +37,9 @@
     "status": "✅"
   },
   "coverage": {
-    "patterns": "6/12",
-    "percentage": 50,
-    "status": "⚠️",
+    "patterns": "11/12",
+    "percentage": 91.7,
+    "status": "✅",
     "matrix": [
       {
         "pattern": "select-focus",
@@ -49,9 +49,9 @@
       },
       {
         "pattern": "scan-metrics",
-        "count": 0,
-        "status": "🔴",
-        "boost": true
+        "count": 2,
+        "status": "✅",
+        "boost": false
       },
       {
         "pattern": "bounded-delay",
@@ -67,9 +67,9 @@
       },
       {
         "pattern": "route-audit",
-        "count": 0,
-        "status": "🔴",
-        "boost": true
+        "count": 2,
+        "status": "✅",
+        "boost": false
       },
       {
         "pattern": "split-metric-select",
@@ -85,21 +85,21 @@
       },
       {
         "pattern": "select-tee",
-        "count": 0,
-        "status": "🔴",
-        "boost": true
+        "count": 2,
+        "status": "✅",
+        "boost": false
       },
       {
         "pattern": "bounded-partition",
-        "count": 0,
-        "status": "🔴",
-        "boost": true
+        "count": 2,
+        "status": "✅",
+        "boost": false
       },
       {
         "pattern": "merge-proof-lite",
-        "count": 0,
-        "status": "🔴",
-        "boost": true
+        "count": 2,
+        "status": "✅",
+        "boost": false
       },
       {
         "pattern": "merge-proof",
@@ -115,19 +115,9 @@
       }
     ],
     "thinPatterns": [
-      "scan-metrics",
-      "route-audit",
-      "select-tee",
-      "bounded-partition",
-      "merge-proof-lite",
       "merge-proof"
     ],
     "boost": [
-      "scan-metrics",
-      "route-audit",
-      "select-tee",
-      "bounded-partition",
-      "merge-proof-lite",
       "merge-proof"
     ]
   },
@@ -144,7 +134,7 @@
     "trust_1h": 0.8,
     "dsse_1h": 0.5,
     "breath_1h": 1.2,
-    "timestamp": "2025-09-17T16:35:52.647Z",
+    "timestamp": "2025-09-17T18:43:57.485Z",
     "window": "1h",
     "samples": {
       "trust": 100,

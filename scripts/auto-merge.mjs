@@ -58,7 +58,7 @@ async function checkAutoMerge(pr) {
     conformance: pr.conformance >= 0.95,
     biolock: pr.biolock === 0,
     sizeOk: pr.size <= 80000,
-    novelty: pr.novelty >= 0.35
+    novelty: pr.novelty >= 0.36  // Temporary boost to reach median ≥0.38
   };
 
   const scores = {
@@ -76,7 +76,7 @@ async function checkAutoMerge(pr) {
   console.log(`   Conformance: ${scores.conformance.toFixed(1)}% ${criteria.conformance ? '✅' : '❌'} (≥95%)`);
   console.log(`   BIOLOCK: ${scores.biolock} ${criteria.biolock ? '✅' : '❌'} (=0)`);
   console.log(`   Size: ${(scores.size / 1024).toFixed(1)}KB ${criteria.sizeOk ? '✅' : '❌'} (≤80KB)`);
-  console.log(`   Novelty: ${scores.novelty.toFixed(0)}% ${criteria.novelty ? '✅' : '❌'} (≥35%)`);
+  console.log(`   Novelty: ${scores.novelty.toFixed(0)}% ${criteria.novelty ? '✅' : '❌'} (≥36%)`);
 
   // Check for near-duplicates if all other criteria pass
   let noveltyCheck = { isDuplicate: false, duplicates: [] };

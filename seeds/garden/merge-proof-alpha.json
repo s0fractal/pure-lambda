@@ -1,0 +1,22 @@
+{
+  "name": "merge-proof-alpha",
+  "pattern": "merge-proof",
+  "version": "1",
+  "xidv2": "xid2:mp-alpha-9k3j7h2m4x",
+  "params": {
+    "merge_strategy": "consensus",
+    "proof_threshold": 0.85,
+    "validators": 3,
+    "timeout_ms": 2000,
+    "retry_on_conflict": true
+  },
+  "metadata": {
+    "novelty": 0.41,
+    "author": {
+      "name": "snap-fill",
+      "did": "did:pl:snapfill"
+    },
+    "created_at": "2025-09-17T18:40:00Z",
+    "tags": ["coverage", "merge", "proof"]
+  }
+}

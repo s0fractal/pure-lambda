@@ -1,0 +1,23 @@
+{
+  "name": "merge-proof-beta",
+  "pattern": "merge-proof",
+  "version": "1",
+  "xidv2": "xid2:mp-beta-7f8n2p5q1w",
+  "params": {
+    "merge_strategy": "quorum",
+    "proof_threshold": 0.90,
+    "validators": 5,
+    "timeout_ms": 3000,
+    "retry_on_conflict": false,
+    "verification_depth": 2
+  },
+  "metadata": {
+    "novelty": 0.43,
+    "author": {
+      "name": "snap-fill",
+      "did": "did:pl:snapfill"
+    },
+    "created_at": "2025-09-17T18:40:01Z",
+    "tags": ["coverage", "merge", "proof", "quorum"]
+  }
+}
