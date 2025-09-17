@@ -4,6 +4,18 @@ import fs from "fs";
 import { blake3 } from "blake3-wasm";
 import nacl from "tweetnacl";
 import { execSync } from "node:child_process";
+import { createHash } from "crypto";
+
+async function fileHash(p) {
+  try {
+    const buf = fs.readFileSync(p);
+    return Buffer.from(await blake3(buf)).toString("hex");
+  } catch (e) {
+    // Fallback to SHA256 if blake3 fails
+    const buf = fs.readFileSync(p);
+    return createHash('sha256').update(buf).digest('hex');
+  }
+}
 
 const PATH = "docs/status/daily.md";
 const outDir = "receipts/attest";
@@ -24,7 +36,24 @@ async function signDaily() {
     const b3 = Buffer.from(await blake3(bytes)).toString("hex");
     const gitRev = execSync("git rev-parse HEAD").toString().trim();
 
-    // Create DSSE payload
+    // Check for previous day's envelope for hash-chain
+    const yesterday = new Date(Date.now() - 24 * 3600 * 1000);
+    const yStr = yesterday.toISOString().slice(0, 10);
+    const prevPath = `${outDir}/daily-${yStr}.envelope.json`;
+
+    let prevEnvelopeHash = null;
+    if (fs.existsSync(prevPath)) {
+      try {
+        prevEnvelopeHash = await fileHash(prevPath);
+        console.log(`🔗 Hash-chain: previous envelope ${yStr} → ${prevEnvelopeHash.slice(0, 12)}...`);
+      } catch (e) {
+        console.warn(`⚠️ Could not hash previous envelope: ${e.message}`);
+      }
+    } else {
+      console.log(`🔗 Hash-chain: no previous envelope (${yStr}) - starting chain`);
+    }
+
+    // Create DSSE payload with hash-chain
     const payload = Buffer.from(JSON.stringify({
       subject: {
         path: PATH,
@@ -33,7 +62,9 @@ async function signDaily() {
       },
       kind: "pl/daily-digest@v1",
       gitRev,
-      ts: new Date().toISOString()
+      ts: new Date().toISOString(),
+      prevDate: yStr,
+      prevEnvelopeHash
     }));
 
     // Get signing key from environment

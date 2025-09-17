@@ -26,6 +26,8 @@ jobs:
         run: node scripts/digest/sign-daily.mjs
       - name: Verify envelope
         run: node scripts/attest/verify.mjs receipts/attest/daily-*.envelope.json
+      - name: Guard digest (auto-freeze on anomaly)
+        run: node scripts/ops/guard-digest.mjs
       - name: Commit envelopes
         run: |
           git config user.name "pl-bot"

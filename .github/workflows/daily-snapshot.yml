@@ -28,10 +28,18 @@ jobs:
       - name: Create CAR snapshot
         run: node scripts/snapshots/make-car.mjs
 
+      - name: Attest CAR snapshot
+        env:
+          PL_ED25519_SECRET: ${{ secrets.PL_ED25519_SECRET }}
+        run: node scripts/snapshots/attest-car.mjs
+
+      - name: Update snapshot index
+        run: node scripts/snapshots/update-index.mjs
+
       - name: Commit CAR snapshot
         run: |
           git config user.name "pl-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add dist/snapshots/*.car dist/snapshots/*/MANIFEST.json || true
-          git diff --cached --quiet || git commit -m "chore(snapshot): daily CAR archive $(date -u +%F) [${GITHUB_RUN_ID}]"
+          git add dist/snapshots/*.car dist/snapshots/*/MANIFEST.json dist/snapshots/index.json receipts/attest/snapshots/*.envelope.json || true
+          git diff --cached --quiet || git commit -m "chore(snapshot): daily CAR + attestation + index $(date -u +%F) [${GITHUB_RUN_ID}]"
           git push
