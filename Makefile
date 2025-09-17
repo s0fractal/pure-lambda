@@ -661,3 +661,7 @@ expand-check:
 	@node scripts/monitor/coverage-badge.mjs | grep "Coverage Summary" -A1
 	@echo ""
 	@echo "✅ Ready for EXPAND if all metrics green"
+
+dashboard:
+	@echo "📊 D2→D7 Dashboard Update"
+	@node scripts/monitor/dashboard.mjs
