@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-digest
+  cancel-in-progress: true
+
 jobs:
   digest:
     runs-on: ubuntu-latest
@@ -16,6 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "20" }
       - run: npm ci || true
+      - run: node scripts/fed/trust.mjs --json > dist/trust.json
+      - run: node scripts/scoreboard/update.mjs --quiet
       - run: node scripts/daily-digest.mjs
       - name: Commit & push
         run: |

@@ -17,13 +17,21 @@ async function generateDigest() {
       console.warn('⚠️ Trust metrics not available');
     }
 
-    // Read novelty
+    // Read novelty from trust.json or fallback to metrics.json
     let novelty = 'н/д';
     try {
-      const metricsData = JSON.parse(fs.readFileSync('dist/metrics.json', 'utf8'));
-      novelty = (metricsData.novelty?.median || 0.35).toFixed(2);
+      const trustData = JSON.parse(fs.readFileSync('dist/trust.json', 'utf8'));
+      if (trustData.novelty?.median !== undefined) {
+        novelty = trustData.novelty.median.toFixed(2);
+      }
     } catch (e) {
-      console.warn('⚠️ Novelty metrics not available');
+      // Fallback to metrics.json
+      try {
+        const metricsData = JSON.parse(fs.readFileSync('dist/metrics.json', 'utf8'));
+        novelty = (metricsData.novelty?.median || 0.35).toFixed(2);
+      } catch (e2) {
+        console.warn('⚠️ Novelty metrics not available');
+      }
     }
 
     // Count seeds
@@ -64,12 +72,45 @@ async function generateDigest() {
       console.warn('⚠️ Pattern distribution not available');
     }
 
-    // Format top patterns
-    const topPatterns = Object.entries(patterns)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 5)
-      .map(([name, count]) => `${name}(${count})`)
-      .join(', ');
+    // Try to read scoreboard data first, fallback to pattern counting
+    let topPatterns = 'н/д';
+    let scoreboardSeeds = null;
+
+    try {
+      // Try docs/scoreboard/index.json first
+      let scoreboardData;
+      try {
+        scoreboardData = JSON.parse(fs.readFileSync('docs/scoreboard/index.json', 'utf8'));
+      } catch (e) {
+        // Fallback to dist/scoreboard.json
+        scoreboardData = JSON.parse(fs.readFileSync('dist/scoreboard.json', 'utf8'));
+      }
+
+      if (scoreboardData.topPatterns) {
+        topPatterns = scoreboardData.topPatterns
+          .slice(0, 5)
+          .map(p => `${p.name}(${p.count})`)
+          .join(', ');
+      }
+
+      if (scoreboardData.seedsToday !== undefined) {
+        scoreboardSeeds = scoreboardData.seedsToday;
+      }
+    } catch (e) {
+      // Fallback to manual pattern counting
+      const patternEntries = Object.entries(patterns)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 5);
+
+      if (patternEntries.length > 0) {
+        topPatterns = patternEntries
+          .map(([name, count]) => `${name}(${count})`)
+          .join(', ');
+      }
+    }
+
+    // Use scoreboard seeds if available, otherwise use counted seeds
+    const finalSeedCount = scoreboardSeeds !== null ? scoreboardSeeds : seedCount;
 
     // Generate digest
     const date = new Date().toISOString().split('T')[0];
@@ -77,11 +118,11 @@ async function generateDigest() {
 
 **Метрики:**
 - Trust: ${trust} | DSSE: ${dsse} | Novelty: ${novelty}
-- Seeds: ${seedCount} | Risks: ${risks}
+- Seeds: ${finalSeedCount} | Risks: ${risks}
 
-**Top patterns:** ${topPatterns || 'н/д'}
+**Top patterns:** ${topPatterns}
 
-**Статус:** ${risks > 0 ? '🔴 QUARANTINE' : trust.includes('н/д') ? '🟡 PARTIAL' : '🟢 HEALTHY'}
+**Статус:** ${risks > 0 ? '🔴 QUARANTINE' : (trust.includes('н/д') || dsse.includes('н/д')) ? '🟡 PARTIAL' : '🟢 HEALTHY'}
 
 ---
 *Автогенерація: ${new Date().toISOString()}*
@@ -95,7 +136,7 @@ async function generateDigest() {
 
     console.log('✅ Daily digest generated:', DIGEST_PATH);
     console.log(`📊 Trust: ${trust}, DSSE: ${dsse}, Novelty: ${novelty}`);
-    console.log(`🌱 Seeds: ${seedCount}, Risks: ${risks}`);
+    console.log(`🌱 Seeds: ${finalSeedCount}, Risks: ${risks}`);
 
   } catch (error) {
     console.error('❌ Failed to generate digest:', error.message);
