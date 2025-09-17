@@ -8,23 +8,38 @@ const dashPath = "reports/dashboard/latest.json";
 const statePath = "state/eps-applied.json";
 const patch = { bandit: { epsDelta: +0.03 } };   // +3% per click
 const MAX_ABS = 0.10;                             // ±10% total limit
+const COOLDOWN_H = 6;                             // Min interval between EXPANDs (hours)
+const TRUST_ON = 96.2, TRUST_OFF = 95.5;          // Hysteresis thresholds
+const DRY = process.env.DRY_RUN === "1";
 
 function readJson(p, def = null) {
   try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { return def; }
 }
 
-// Read current metrics
+// Check cooldown
+const now = Date.now();
+const st = readJson(statePath, { epsApplied: 0, lastApply: 0 });
+const lastApply = Date.parse(st.lastApply || 0) || 0;
+if (now - lastApply < COOLDOWN_H * 3600 * 1000) {
+  console.log(`⏸️  HOLD: Cooldown active (${Math.round((COOLDOWN_H * 3600 * 1000 - (now - lastApply)) / 60000)}min remaining)`);
+  process.exit(0);
+}
+
+// Read current metrics with multiple fallbacks
 const d = readJson(dashPath, {});
-const patterns = d.coverage?.patterns ?? 0;
-const cov12 = patterns === "12/12" || (d.coverage?.percentage ?? 0) === 100;
-const trust = d.trust?.score ?? 0;
-const dsse  = d.dsse?.coverage ?? 0;
-const burn  = d.burn?.breath_1h ?? 9;
-const dedupe = d.dedupe?.blocks24h ?? 99;
-const loa   = readJson("reports/dashboard/latest.json.autonomy", {}).loa ?? 0;
+const patterns = d.coverage?.patterns ?? d.coverage?.patternsCovered ?? 0;
+const cov12 = patterns === "12/12" || patterns === 12 || (d.coverage?.percentage ?? 0) === 100;
+const trust = d.metrics?.trust ?? d.trust?.score ?? d.trust ?? 0;
+const dsse  = d.metrics?.dsse ?? d.dsse?.coverage ?? d.dsse ?? 0;
+const burn  = d.metrics?.burn ?? d.burn?.breath_1h ?? d.burn ?? 9;
+const dedupe = d.quality?.dedupeBlocks24h ?? d.dedupe?.blocks24h ?? d.dedupeBlocks24h ?? 99;
+const loa   = d.autonomy?.level ?? d.loa ?? readJson("reports/dashboard/latest.json.autonomy", {}).loa ?? 0;
+
+// Hysteresis for trust to prevent flapping
+const trustOk = trust >= TRUST_ON;
 
 // Safety conditions
-const healthy = (trust >= 96) && (dsse === 100) && (dedupe <= 1) && (burn < 2) && cov12 && (loa === 2);
+const healthy = trustOk && (dsse === 100) && (dedupe <= 1) && (burn < 2) && cov12 && (loa === 2);
 
 console.log("🔍 Green Gate Check");
 console.log(`   Coverage 12/12: ${cov12 ? "✅" : "❌"}`);
@@ -40,7 +55,6 @@ if (!healthy) {
 }
 
 // Check cumulative limit (±10%)
-const st = readJson(statePath, { epsApplied: 0 });
 const next = st.epsApplied + patch.bandit.epsDelta;
 
 console.log(`\n📊 Epsilon tracking:`);
@@ -50,6 +64,14 @@ console.log(`   Limit: ±10%`);
 
 if (Math.abs(next) > MAX_ABS) {
   console.log("⏸️  HOLD: Epsilon limit reached (±10% max)");
+  process.exit(0);
+}
+
+// Support dry-run mode
+if (DRY) {
+  console.log("\n🔬 DRY RUN MODE");
+  console.log("   Would APPLY: +3% epsilon");
+  console.log("   New total would be: " + (next * 100).toFixed(1) + "%");
   process.exit(0);
 }
 

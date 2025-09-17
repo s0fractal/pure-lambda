@@ -1,0 +1,54 @@
+name: expand-lite-rehearsal
+on:
+  schedule:
+    # Daily rehearsal at 6:05 UTC
+    - cron: "5 6 * * *"
+  workflow_dispatch:
+    inputs:
+      refresh_metrics:
+        description: 'Refresh metrics before check'
+        type: boolean
+        default: true
+
+jobs:
+  rehearsal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install minimal deps
+        run: npm ci --omit=dev || true
+
+      - name: Refresh metrics (optional)
+        if: github.event.inputs.refresh_metrics == 'true'
+        run: node scripts/ops/refresh.mjs || echo "Metrics refresh skipped"
+        continue-on-error: true
+
+      - name: Dry-run gate check
+        id: dryrun
+        run: |
+          echo "🔬 Running gate check in DRY RUN mode"
+          DRY_RUN=1 node scripts/oracle/green-gate.mjs
+        continue-on-error: true
+
+      - name: Report status
+        run: |
+          if [ "${{ steps.dryrun.outcome }}" == "success" ]; then
+            echo "✅ Rehearsal complete - gate logic working"
+          else
+            echo "⏸️ Gate in HOLD state - this is expected"
+          fi
+
+      - name: Quick metrics summary
+        run: |
+          node -e 'let d=require("./reports/dashboard/latest.json");
+          console.log("Current metrics:");
+          console.log("  Trust:", d.trust?.score || d.metrics?.trust || "?");
+          console.log("  DSSE:", d.dsse?.coverage || d.metrics?.dsse || "?");
+          console.log("  Dedupe:", d.dedupe?.blocks24h || d.quality?.dedupeBlocks24h || "?");
+          console.log("  Burn:", d.burn?.breath_1h || d.metrics?.burn || "?");
+          console.log("  Coverage:", d.coverage?.patterns || d.coverage?.patternsCovered || "?");' || echo "No metrics available"

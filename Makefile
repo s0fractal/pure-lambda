@@ -386,6 +386,12 @@ contract-lite:
 	@echo '{"bandit":{"epsDelta":-0.03}}' | node scripts/oracle/plan.mjs --stdin
 	@node scripts/oracle/apply.mjs
 
+# Metrics refresh for gate decisions
+.PHONY: metrics-refresh
+metrics-refresh:
+	@echo "🔄 One-shot metrics refresh"
+	@node scripts/ops/refresh.mjs
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:
