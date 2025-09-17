@@ -4,15 +4,51 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { findNearDuplicates } from './novelty/dedupe.mjs';
+import { glob } from 'glob';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = path.join(__dirname, '..');
 
 /**
+ * Check for near-duplicates in existing corpus
+ */
+async function checkNovelty(seedPath) {
+  try {
+    // Build corpus of existing seeds
+    const corpus = await glob([
+      'seeds/**/*.json',
+      'out/sweep/**/*.json',
+      'out/sweep-final/**/*.json',
+      'vault/fed/**/*.json'
+    ], { cwd: projectRoot });
+
+    console.log(`🔍 Checking novelty against ${corpus.length} existing seeds...`);
+
+    const fullCorpus = corpus.map(p => path.join(projectRoot, p));
+    const nearDuplicates = findNearDuplicates(seedPath, fullCorpus);
+
+    if (nearDuplicates.length > 0) {
+      console.log(`⚠️ Found ${nearDuplicates.length} near-duplicate(s):`);
+      nearDuplicates.slice(0, 3).forEach(nd => {
+        console.log(`   - ${nd.name || path.basename(nd.path)} (similarity: ${(nd.sim * 100).toFixed(1)}%)`);
+      });
+      return { isDuplicate: true, duplicates: nearDuplicates };
+    }
+
+    console.log('✅ Novelty check passed - no near-duplicates found');
+    return { isDuplicate: false, duplicates: [] };
+  } catch (error) {
+    console.warn(`⚠️ Novelty check failed: ${error.message}`);
+    return { isDuplicate: false, duplicates: [], error: error.message };
+  }
+}
+
+/**
  * Auto-merge lane for high-quality seeds
  */
-function checkAutoMerge(pr) {
+async function checkAutoMerge(pr) {
   console.log('🚦 Auto-Merge Lane Check');
   console.log('=' .repeat(40));
 
@@ -42,7 +78,14 @@ function checkAutoMerge(pr) {
   console.log(`   Size: ${(scores.size / 1024).toFixed(1)}KB ${criteria.sizeOk ? '✅' : '❌'} (≤80KB)`);
   console.log(`   Novelty: ${scores.novelty.toFixed(0)}% ${criteria.novelty ? '✅' : '❌'} (≥35%)`);
 
-  const allGreen = Object.values(criteria).every(v => v === true);
+  // Check for near-duplicates if all other criteria pass
+  let noveltyCheck = { isDuplicate: false, duplicates: [] };
+  if (Object.values(criteria).every(v => v === true) && pr.seedPath) {
+    console.log('\n🔍 Running novelty de-duplication check...');
+    noveltyCheck = await checkNovelty(pr.seedPath);
+  }
+
+  const allGreen = Object.values(criteria).every(v => v === true) && !noveltyCheck.isDuplicate;
 
   if (allGreen) {
     console.log('\n✅ AUTO-MERGE: GREEN LANE');
@@ -65,16 +108,37 @@ All criteria met:
 Ready for steward 👍 → auto-merge`
     };
   } else {
+    let failedReasons = [];
+
+    // Check standard criteria
     const failedCriteria = Object.entries(criteria)
       .filter(([_, passed]) => !passed)
       .map(([name, _]) => name);
 
+    if (failedCriteria.length > 0) {
+      failedReasons.push(`criteria: ${failedCriteria.join(', ')}`);
+    }
+
+    // Check novelty
+    if (noveltyCheck.isDuplicate) {
+      failedReasons.push(`near-duplicate (${noveltyCheck.duplicates.length} similar)`);
+    }
+
     console.log('\n⚠️ AUTO-MERGE: NOT ELIGIBLE');
-    console.log(`   Failed: ${failedCriteria.join(', ')}`);
+    console.log(`   Failed: ${failedReasons.join('; ')}`);
+
+    if (noveltyCheck.isDuplicate) {
+      console.log('\n🔍 Near-duplicates detected:');
+      noveltyCheck.duplicates.slice(0, 3).forEach(nd => {
+        console.log(`   - ${nd.name || path.basename(nd.path)} (${(nd.sim * 100).toFixed(1)}% similar)`);
+      });
+    }
 
     // Determine triage action
     let action = '';
-    if (!criteria.biolock) {
+    if (noveltyCheck.isDuplicate) {
+      action = 'dedupe-review';
+    } else if (!criteria.biolock) {
       action = 'quarantine';
     } else if (pr.trust < 0.80) {
       action = 'reject';
@@ -86,8 +150,10 @@ Ready for steward 👍 → auto-merge`
 
     return {
       autoMerge: false,
-      label: `triage:${action}`,
-      message: `Does not meet auto-merge criteria. Failed: ${failedCriteria.join(', ')}`
+      label: noveltyCheck.isDuplicate ? 'novelty:low' : `triage:${action}`,
+      message: noveltyCheck.isDuplicate
+        ? `🔍 Near-duplicate detected. Similar to: ${noveltyCheck.duplicates.slice(0, 2).map(d => d.name || path.basename(d.path)).join(', ')}. Please differentiate or withdraw.`
+        : `Does not meet auto-merge criteria. Failed: ${failedReasons.join('; ')}`
     };
   }
 }

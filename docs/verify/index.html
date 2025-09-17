@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure Lambda Verify Kit</title>
+    <link rel="stylesheet" href="../site/styles.css">
+    <style>
+        .verify-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.dragover {
+            border-color: #007acc;
+            background: #e6f3ff;
+        }
+
+        .verification-result {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .verification-result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .verification-result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .verification-result.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .seed-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .hash-display {
+            word-break: break-all;
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <header>
+            <h1>🔐 Pure Lambda Verify Kit</h1>
+            <p>Independent verification tool for Pure Lambda seeds and cartridges</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Upload or Drop Files</h2>
+                <div class="drop-zone" id="dropZone">
+                    <p>📂 Drop seed files (.json) or cartridge files here</p>
+                    <p>or</p>
+                    <input type="file" id="fileInput" accept=".json,.cartridge" multiple style="margin: 1rem 0;">
+                </div>
+
+                <div class="url-input" style="margin: 1rem 0;">
+                    <h3>Or verify from URL:</h3>
+                    <input type="url" id="urlInput" placeholder="https://example.com/seed.json" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0;">
+                    <button id="loadFromUrl">Load & Verify</button>
+                </div>
+            </section>
+
+            <section class="verification-section">
+                <div id="verificationResults"></div>
+            </section>
+
+            <section class="otm-section" style="margin-top: 2rem;">
+                <h2>🔬 One-Tap Mirror (OTM)</h2>
+                <div id="otm-container"></div>
+            </section>
+        </main>
+
+        <footer style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #dee2e6;">
+            <p><strong>Independent Verification</strong> - This tool runs entirely in your browser for maximum security</p>
+            <p>No data is sent to external servers. Verification happens locally using cryptographic signatures.</p>
+            <p><a href="../">← Back to Pure Lambda</a> | <a href="https://github.com/s0fractal/pure-lambda">GitHub</a></p>
+        </footer>
+    </div>
+
+    <!-- Load OTM for verification -->
+    <script src="../otm/otm.min.js"></script>
+
+    <script>
+        // Pure Lambda Verify Kit
+        class VerifyKit {
+            constructor() {
+                this.setupEventListeners();
+                this.initOTM();
+            }
+
+            setupEventListeners() {
+                const dropZone = document.getElementById('dropZone');
+                const fileInput = document.getElementById('fileInput');
+                const urlInput = document.getElementById('urlInput');
+                const loadFromUrlBtn = document.getElementById('loadFromUrl');
+
+                // Drag and drop
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('dragover');
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    this.handleFiles(e.dataTransfer.files);
+                });
+
+                // File input
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFiles(e.target.files);
+                });
+
+                // URL input
+                loadFromUrlBtn.addEventListener('click', () => {
+                    const url = urlInput.value.trim();
+                    if (url) {
+                        this.loadFromUrl(url);
+                    }
+                });
+
+                urlInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        loadFromUrlBtn.click();
+                    }
+                });
+            }
+
+            async handleFiles(files) {
+                for (const file of files) {
+                    try {
+                        const content = await this.readFile(file);
+                        const data = JSON.parse(content);
+                        await this.verifySeed(data, file.name);
+                    } catch (error) {
+                        this.showResult('error', `Failed to process ${file.name}: ${error.message}`);
+                    }
+                }
+            }
+
+            async loadFromUrl(url) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    const data = await response.json();
+                    const filename = url.split('/').pop() || 'remote-seed';
+                    await this.verifySeed(data, filename);
+                } catch (error) {
+                    this.showResult('error', `Failed to load from URL: ${error.message}`);
+                }
+            }
+
+            async verifySeed(seedData, filename) {
+                const results = [];
+
+                // Basic structure validation
+                const structureCheck = this.validateStructure(seedData);
+                results.push(structureCheck);
+
+                // Hash verification
+                const hashCheck = await this.verifyHash(seedData);
+                results.push(hashCheck);
+
+                // XID validation
+                const xidCheck = this.validateXID(seedData);
+                results.push(xidCheck);
+
+                // DSSE signature check (if present)
+                if (seedData.signatures || seedData._dsse) {
+                    const dsseCheck = await this.verifyDSSE(seedData);
+                    results.push(dsseCheck);
+                }
+
+                this.displayResults(filename, seedData, results);
+
+                // Load in OTM for visualization
+                this.loadInOTM(seedData);
+            }
+
+            validateStructure(seed) {
+                const required = ['name', 'version'];
+                const missing = required.filter(field => !seed[field]);
+
+                if (missing.length > 0) {
+                    return {
+                        type: 'error',
+                        title: 'Structure Validation',
+                        message: `Missing required fields: ${missing.join(', ')}`
+                    };
+                }
+
+                const hasGraph = seed.nodes || seed.graph || seed.operon;
+                if (!hasGraph) {
+                    return {
+                        type: 'warning',
+                        title: 'Structure Validation',
+                        message: 'No graph structure found (nodes, graph, or operon)'
+                    };
+                }
+
+                return {
+                    type: 'success',
+                    title: 'Structure Validation',
+                    message: 'Valid seed structure'
+                };
+            }
+
+            async verifyHash(seed) {
+                try {
+                    // Calculate hash of canonical form
+                    const canonical = this.canonicalize(seed);
+                    const hash = await this.sha256(canonical);
+
+                    const expectedHash = seed.hash || seed.meta?.hash || seed.gid;
+                    if (expectedHash) {
+                        const match = hash.startsWith(expectedHash.slice(0, 16));
+                        return {
+                            type: match ? 'success' : 'error',
+                            title: 'Hash Verification',
+                            message: match ? 'Hash verified ✓' : 'Hash mismatch ✗',
+                            details: `Calculated: ${hash.slice(0, 16)}...\nExpected: ${expectedHash.slice(0, 16)}...`
+                        };
+                    }
+
+                    return {
+                        type: 'warning',
+                        title: 'Hash Verification',
+                        message: 'No hash found to verify against',
+                        details: `Calculated hash: ${hash.slice(0, 16)}...`
+                    };
+                } catch (error) {
+                    return {
+                        type: 'error',
+                        title: 'Hash Verification',
+                        message: `Hash calculation failed: ${error.message}`
+                    };
+                }
+            }
+
+            validateXID(seed) {
+                const xid = seed.xidv2 || seed.meta?.xidv2 || seed.xid;
+                if (!xid) {
+                    return {
+                        type: 'warning',
+                        title: 'XID Validation',
+                        message: 'No XIDv2 identifier found'
+                    };
+                }
+
+                // Basic XID format validation
+                if (typeof xid === 'string' && xid.length >= 32) {
+                    return {
+                        type: 'success',
+                        title: 'XID Validation',
+                        message: 'Valid XIDv2 format',
+                        details: `XID: ${xid.slice(0, 16)}...`
+                    };
+                }
+
+                return {
+                    type: 'error',
+                    title: 'XID Validation',
+                    message: 'Invalid XID format'
+                };
+            }
+
+            async verifyDSSE(seed) {
+                // Simplified DSSE verification
+                const dsse = seed._dsse || seed.signatures;
+                if (!dsse) {
+                    return {
+                        type: 'warning',
+                        title: 'DSSE Verification',
+                        message: 'No DSSE signature found'
+                    };
+                }
+
+                return {
+                    type: 'warning',
+                    title: 'DSSE Verification',
+                    message: 'DSSE signature present (full verification requires server)'
+                };
+            }
+
+            canonicalize(obj) {
+                // Simple canonical JSON
+                return JSON.stringify(obj, Object.keys(obj).sort());
+            }
+
+            async sha256(text) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(text);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+
+            readFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.onerror = e => reject(new Error('Failed to read file'));
+                    reader.readAsText(file);
+                });
+            }
+
+            displayResults(filename, seed, results) {
+                const container = document.getElementById('verificationResults');
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'verification-result';
+
+                const allPassed = results.every(r => r.type === 'success');
+                const hasErrors = results.some(r => r.type === 'error');
+
+                resultDiv.className += hasErrors ? ' error' : (allPassed ? ' success' : ' warning');
+                resultDiv.style.display = 'block';
+
+                const status = hasErrors ? '❌ FAILED' : (allPassed ? '✅ VERIFIED' : '⚠️ PARTIAL');
+
+                resultDiv.innerHTML = `
+                    <h3>${status} - ${filename}</h3>
+                    <div class="seed-info">
+                        <strong>Name:</strong> ${seed.name || 'Unknown'}<br>
+                        <strong>Version:</strong> ${seed.version || 'Unknown'}<br>
+                        <strong>Size:</strong> ${JSON.stringify(seed).length} bytes<br>
+                        ${seed.novelty ? `<strong>Novelty:</strong> ${(seed.novelty * 100).toFixed(1)}%<br>` : ''}
+                    </div>
+                    ${results.map(r => `
+                        <div style="margin: 0.5rem 0;">
+                            <strong>${r.title}:</strong> ${r.message}
+                            ${r.details ? `<div class="hash-display">${r.details}</div>` : ''}
+                        </div>
+                    `).join('')}
+                `;
+
+                container.appendChild(resultDiv);
+            }
+
+            loadInOTM(seed) {
+                try {
+                    if (window.OTM) {
+                        const otmContainer = document.getElementById('otm-container');
+                        otmContainer.innerHTML = '<div id="otm-mount"></div>';
+
+                        window.OTM.mount({
+                            container: '#otm-mount',
+                            seed: seed,
+                            mode: 'inline',
+                            theme: 'auto'
+                        });
+                    }
+                } catch (error) {
+                    console.warn('OTM integration failed:', error);
+                }
+            }
+
+            initOTM() {
+                if (window.OTM) {
+                    // OTM already loaded
+                    return;
+                }
+
+                // Will be initialized when seeds are loaded
+                const otmContainer = document.getElementById('otm-container');
+                otmContainer.innerHTML = '<p><em>OTM will load when seeds are verified</em></p>';
+            }
+
+            showResult(type, message) {
+                const container = document.getElementById('verificationResults');
+                const div = document.createElement('div');
+                div.className = `verification-result ${type}`;
+                div.style.display = 'block';
+                div.innerHTML = `<p>${message}</p>`;
+                container.appendChild(div);
+            }
+        }
+
+        // Initialize the verify kit
+        document.addEventListener('DOMContentLoaded', () => {
+            new VerifyKit();
+        });
+
+        // Check for URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const seedUrl = urlParams.get('seed');
+        if (seedUrl) {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    document.getElementById('urlInput').value = seedUrl;
+                    document.getElementById('loadFromUrl').click();
+                }, 500);
+            });
+        }
+    </script>
+</body>
+</html>

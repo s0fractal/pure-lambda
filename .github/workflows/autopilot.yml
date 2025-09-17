@@ -63,8 +63,8 @@ jobs:
           echo "dsse=${DSSE}" >> $GITHUB_OUTPUT
           echo "novelty=${NOV}" >> $GITHUB_OUTPUT
 
-      # АВТО-ГАЛЬМА / РОЗШИРЕННЯ
-      - name: Governor
+      # АВТО-ГАЛЬМА / РОЗШИРЕННЯ (Smart Velocity Governor)
+      - name: Smart Governor
         env:
           TRUST: ${{ steps.mx.outputs.trust }}
           DSSE:  ${{ steps.mx.outputs.dsse }}
@@ -72,14 +72,23 @@ jobs:
           TRUST_MIN: ${{ env.TRUST_MIN }}
           NOVELTY_MIN: ${{ env.NOVELTY_MIN }}
         run: |
+          echo "🎛️ Smart Velocity Governor"
           echo "trust=$TRUST dsse=$DSSE novelty=$NOV"
-          if awk "BEGIN{exit !($TRUST < $TRUST_MIN || $NOV < $NOVELTY_MIN)}"; then
-            echo ">>> squeeze: зменшуємо розгін"
-            yq -i '.daily_burst=2' policies/fed-rate.toml || true
-            node scripts/generate/sweep.mjs configs/sweep.yaml out/sweep/ --deterministic || true
-          else
-            echo ">>> stable/expand: все в нормі"
-            node scripts/generate/sweep.mjs configs/sweep.yaml out/sweep/ --bandit || true
+
+          # Run smart governor for automatic mode selection
+          node scripts/velocity/smart-governor.mjs || true
+
+          # Fallback to manual logic if smart governor fails
+          if [ ! -f dist/governor-state.json ]; then
+            echo "⚠️ Smart governor failed, using fallback logic"
+            if awk "BEGIN{exit !($TRUST < $TRUST_MIN || $NOV < $NOVELTY_MIN)}"; then
+              echo ">>> squeeze: зменшуємо розгін"
+              yq -i '.daily_burst=2' policies/fed-rate.toml || true
+              node scripts/generate/sweep.mjs configs/sweep.yaml out/sweep/ --deterministic || true
+            else
+              echo ">>> stable/expand: все в нормі"
+              node scripts/generate/sweep.mjs configs/sweep.yaml out/sweep/ --bandit || true
+            fi
           fi
 
       # Публікуємо зміни (бейджі/дашборд/політики)

@@ -48,7 +48,7 @@ async function makeSnapshot() {
       console.log(`✅ Copied ${sampleSeeds.length} sample seeds`);
     }
 
-    // Create manifest
+    // Create detailed manifest with file hashes
     const manifest = {
       kind: "pl/snapshot@v1",
       date: day,
@@ -62,11 +62,41 @@ async function makeSnapshot() {
       git: {
         rev: require('child_process').execSync("git rev-parse HEAD").toString().trim(),
         branch: require('child_process').execSync("git rev-parse --abbrev-ref HEAD").toString().trim()
-      }
+      },
+      files: []
     };
 
+    // Add file hashes to manifest
+    function addFilesToManifest(dir, baseDir = stage) {
+      const items = fs.readdirSync(dir);
+      for (const item of items) {
+        const fullPath = path.join(dir, item);
+        const relativePath = path.relative(baseDir, fullPath);
+
+        if (fs.statSync(fullPath).isDirectory()) {
+          addFilesToManifest(fullPath, baseDir);
+        } else {
+          try {
+            const content = fs.readFileSync(fullPath);
+            const hash = require('crypto').createHash('sha256').update(content).digest('hex');
+            manifest.files.push({
+              path: relativePath,
+              size: content.length,
+              sha256: hash.slice(0, 16) + '...'
+            });
+          } catch (e) {
+            console.warn(`⚠️ Could not hash file: ${relativePath}`);
+          }
+        }
+      }
+    }
+
+    // Add all files to manifest
+    addFilesToManifest(stage);
+    console.log(`📋 Manifest includes ${manifest.files.length} files`);
+
     fs.writeFileSync(`${stage}/MANIFEST.json`, JSON.stringify(manifest, null, 2));
-    console.log("✅ Created MANIFEST.json");
+    console.log("✅ Created detailed MANIFEST.json");
 
     // Create CAR file using existing IPLD tooling
     try {
