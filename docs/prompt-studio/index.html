@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pure Lambda — Prompt Studio</title>
+<style>
+  body{font:14px system-ui, sans-serif;margin:0;background:#0b0c10;color:#eaf0f1}
+  header{padding:14px 16px;border-bottom:1px solid #1f2227}
+  .wrap{padding:16px}
+  .editor{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:calc(100vh - 120px)}
+  .panel{background:#11141a;border:1px solid #23262d;border-radius:12px;padding:12px;overflow:auto}
+  textarea{width:100%;height:200px;background:#1b1f27;border:1px solid #2b313a;color:#eaf0f1;padding:8px;border-radius:8px;font-family:monospace;resize:vertical}
+  .output{background:#1b1f27;border:1px solid #2b313a;padding:8px;border-radius:8px;min-height:200px;white-space:pre-wrap;font-family:monospace}
+  button{background:#1b1f27;border:1px solid #2b313a;color:#eaf0f1;border-radius:8px;padding:6px 12px;cursor:pointer;margin-right:8px}
+  button:hover{background:#23262d}
+  .status{padding:8px;margin-top:8px;border-radius:4px;font-size:12px}
+  .ready{background:#1f2227;border-left:3px solid #5eea9a}
+  .error{background:#1f2227;border-left:3px solid #ea5e5e}
+  .warning{background:#1f2227;border-left:3px solid #eaa85e}
+  select{background:#1b1f27;border:1px solid #2b313a;color:#eaf0f1;padding:4px;border-radius:4px}
+</style>
+<header>
+  <b>Pure Lambda — Prompt Studio</b>
+  <span style="opacity:.6"> · LLM Integration (OFF by default)</span>
+</header>
+<div class="wrap">
+  <div class="status warning">
+    ⚠️ LLM features are OFF by default. Enable in <code>config/llm.toml</code> after safety review.
+  </div>
+
+  <div style="margin:16px 0">
+    <label>Pattern Template:
+      <select id="pattern-select">
+        <option value="">Custom</option>
+        <option value="select-focus">select-focus</option>
+        <option value="bounded-delay">bounded-delay</option>
+        <option value="route-audit">route-audit</option>
+        <option value="partition-rr">partition-rr</option>
+        <option value="scan-metrics">scan-metrics</option>
+        <option value="split-then-select">split-then-select</option>
+        <option value="merge-proof">merge-proof</option>
+      </select>
+    </label>
+    <button onclick="testPrompt()">Test Prompt</button>
+    <button onclick="clearAll()">Clear</button>
+  </div>
+
+  <div class="editor">
+    <div class="panel">
+      <h3>Prompt Template</h3>
+      <textarea id="prompt" placeholder="Generate a {{pattern}} seed with:
+- name: {{name}}
+- complexity: {{complexity}}
+- constraints: {{constraints}}
+
+Return valid JSON matching pl-seed-01 schema."></textarea>
+
+      <h3 style="margin-top:16px">Variables</h3>
+      <textarea id="vars" placeholder='{"pattern": "select-focus", "name": "optimized-router", "complexity": "medium", "constraints": "must handle 1000 req/s"}'>{}</textarea>
+    </div>
+
+    <div class="panel">
+      <h3>Generated Output</h3>
+      <div id="output" class="output">// Output will appear here</div>
+
+      <div id="validation" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const templates = {
+  "select-focus": "Generate a select-focus pattern seed:\n- Selects optimal path from candidates\n- Focus on {{focus_metric}}\n- Max candidates: {{max_candidates}}",
+  "bounded-delay": "Generate a bounded-delay pattern seed:\n- Delays processing by {{delay_ms}}ms\n- Bounded by {{max_delay}}ms\n- Purpose: {{purpose}}",
+  "route-audit": "Generate a route-audit pattern seed:\n- Audits routing decisions\n- Tracks metrics: {{metrics}}\n- Alert threshold: {{threshold}}"
+};
+
+document.getElementById("pattern-select").onchange = function(e) {
+  const tmpl = templates[e.target.value];
+  if (tmpl) {
+    document.getElementById("prompt").value = tmpl;
+    // Pre-fill some variables
+    const defaults = {
+      "select-focus": {focus_metric: "latency", max_candidates: 10},
+      "bounded-delay": {delay_ms: 100, max_delay: 1000, purpose: "rate limiting"},
+      "route-audit": {metrics: "errors,latency,throughput", threshold: 0.95}
+    };
+    document.getElementById("vars").value = JSON.stringify(defaults[e.target.value] || {}, null, 2);
+  }
+};
+
+function testPrompt() {
+  const prompt = document.getElementById("prompt").value;
+  const varsText = document.getElementById("vars").value;
+
+  try {
+    const vars = JSON.parse(varsText || "{}");
+
+    // Simple template substitution
+    let expanded = prompt;
+    for (const [k, v] of Object.entries(vars)) {
+      expanded = expanded.replace(new RegExp(`{{${k}}}`, 'g'), v);
+    }
+
+    // Simulate output (in real implementation, would call LLM API if enabled)
+    const mockSeed = {
+      name: vars.name || "test-seed",
+      pattern: vars.pattern || "select-focus",
+      version: "1",
+      xidv2: "xid2:" + Math.random().toString(36).substring(2, 18),
+      params: {
+        threshold: 0.8,
+        timeout_ms: 1000
+      },
+      metadata: {
+        novelty: Math.random() * 0.5 + 0.3,
+        generated_by: "prompt-studio",
+        prompt_template: prompt.substring(0, 50) + "..."
+      }
+    };
+
+    document.getElementById("output").textContent = JSON.stringify(mockSeed, null, 2);
+
+    // Validate
+    const validation = document.getElementById("validation");
+    validation.innerHTML = '<div class="status ready">✓ Valid seed structure (mock validation)</div>';
+
+  } catch (e) {
+    document.getElementById("validation").innerHTML =
+      '<div class="status error">✗ ' + e.message + '</div>';
+  }
+}
+
+function clearAll() {
+  document.getElementById("prompt").value = "";
+  document.getElementById("vars").value = "{}";
+  document.getElementById("output").textContent = "// Output will appear here";
+  document.getElementById("validation").innerHTML = "";
+}
+</script>
+</html>

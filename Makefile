@@ -331,6 +331,31 @@ clean:
 	@rm -f dist/embassy.zip
 	@echo "Clean complete"
 
+# --- UI & Showcase targets ---
+.PHONY: showcase showcase-build prompt-studio habitat contributors
+showcase-build:
+	@echo "🎨 Building seed showcase..."
+	@node scripts/ui/build-showcase.mjs
+
+showcase: showcase-build
+	@echo "📊 Showcase ready at docs/showcase/index.html"
+	@open docs/showcase/index.html 2>/dev/null || echo "  Open manually: file://$(PWD)/docs/showcase/index.html"
+
+prompt-studio:
+	@echo "🤖 Prompt Studio ready at docs/prompt-studio/index.html"
+	@open docs/prompt-studio/index.html 2>/dev/null || echo "  Open manually: file://$(PWD)/docs/prompt-studio/index.html"
+
+habitat:
+	@echo "🏠 LLM Habitat ready at docs/habitat/index.html (OFF by default)"
+	@open docs/habitat/index.html 2>/dev/null || echo "  Open manually: file://$(PWD)/docs/habitat/index.html"
+
+contributors:
+	@echo "🏆 Generating contributor rankings..."
+	@node scripts/contrib/contrib.mjs
+
+ui-all: showcase-build contributors
+	@echo "✨ All UI targets built"
+
 # Demo Targets
 .PHONY: demo demo-open demo-zip-size hello-city
 demo:

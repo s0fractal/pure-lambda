@@ -1,0 +1,221 @@
+<!doctype html><html lang="en"><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pure Lambda — LLM Habitat</title>
+<style>
+  body{font:14px system-ui, sans-serif;margin:0;background:#0b0c10;color:#eaf0f1}
+  header{padding:14px 16px;border-bottom:1px solid #1f2227}
+  .wrap{padding:16px}
+  .sandbox{background:#11141a;border:1px solid #23262d;border-radius:12px;padding:16px;margin:16px 0}
+  .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  button{background:#1b1f27;border:1px solid #2b313a;color:#eaf0f1;border-radius:8px;padding:6px 12px;cursor:pointer}
+  button:hover:not(:disabled){background:#23262d}
+  button:disabled{opacity:0.5;cursor:not-allowed}
+  .status{padding:8px;border-radius:4px;font-size:12px;margin-bottom:12px}
+  .offline{background:#1f2227;border-left:3px solid #666}
+  .ready{background:#1f2227;border-left:3px solid #5eea9a}
+  .error{background:#1f2227;border-left:3px solid #ea5e5e}
+  .warning{background:#1f2227;border-left:3px solid #eaa85e}
+  .log{background:#1b1f27;border:1px solid #2b313a;border-radius:8px;padding:8px;height:300px;overflow-y:auto;font-family:monospace;font-size:12px}
+  .log-entry{margin:2px 0}
+  .log-info{color:#5eea9a}
+  .log-warn{color:#eaa85e}
+  .log-error{color:#ea5e5e}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+  .metric{background:#1b1f27;border:1px solid #2b313a;border-radius:8px;padding:8px;text-align:center}
+  .metric-label{font-size:11px;opacity:0.7}
+  .metric-value{font-size:18px;font-weight:bold}
+  code{background:#1b1f27;padding:2px 4px;border-radius:3px}
+</style>
+<header>
+  <b>Pure Lambda — LLM Habitat</b>
+  <span style="opacity:.6"> · WebWorker Sandbox (OFF by default)</span>
+</header>
+<div class="wrap">
+  <div class="status warning">
+    ⚠️ LLM Habitat is OFF by default. Enable in <code>config/llm.toml</code> after safety review.
+  </div>
+
+  <div class="sandbox">
+    <h3>Habitat Control</h3>
+    <div class="controls">
+      <button id="init-btn" onclick="initHabitat()">Initialize Habitat</button>
+      <button id="test-btn" onclick="testSeed()" disabled>Test Seed Generation</button>
+      <button id="stop-btn" onclick="stopHabitat()" disabled>Stop Habitat</button>
+      <span id="status-text" style="margin-left:auto;opacity:0.7">Status: Offline</span>
+    </div>
+
+    <div id="worker-status" class="status offline">
+      Worker: Not initialized
+    </div>
+
+    <h3>Activity Log</h3>
+    <div id="log" class="log">
+      <div class="log-entry log-info">// Habitat console</div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Messages</div>
+        <div class="metric-value" id="msg-count">0</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Seeds Generated</div>
+        <div class="metric-value" id="seed-count">0</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Avg Time (ms)</div>
+        <div class="metric-value" id="avg-time">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Memory (MB)</div>
+        <div class="metric-value" id="memory">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sandbox">
+    <h3>Safety Configuration</h3>
+    <ul style="opacity:0.8">
+      <li>BIOLOCK policy: <code>ENABLED</code></li>
+      <li>Resource limits: <code>CPU: 50%, Memory: 100MB</code></li>
+      <li>Network access: <code>BLOCKED</code></li>
+      <li>File system: <code>BLOCKED</code></li>
+      <li>Timeout per operation: <code>5000ms</code></li>
+      <li>Max worker lifetime: <code>300s</code></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+let worker = null;
+let msgCount = 0;
+let seedCount = 0;
+let timings = [];
+
+function log(msg, type = "info") {
+  const logEl = document.getElementById("log");
+  const entry = document.createElement("div");
+  entry.className = `log-entry log-${type}`;
+  entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  logEl.appendChild(entry);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function updateStatus(text, className) {
+  document.getElementById("worker-status").textContent = text;
+  document.getElementById("worker-status").className = `status ${className}`;
+  document.getElementById("status-text").textContent = `Status: ${text.split(":")[0]}`;
+}
+
+function initHabitat() {
+  if (worker) {
+    log("Worker already initialized", "warn");
+    return;
+  }
+
+  try {
+    worker = new Worker("worker.js");
+
+    worker.onmessage = function(e) {
+      msgCount++;
+      document.getElementById("msg-count").textContent = msgCount;
+
+      const { type, data } = e.data;
+
+      switch(type) {
+        case "ready":
+          log("Worker initialized successfully", "info");
+          updateStatus("Worker: Ready", "ready");
+          document.getElementById("init-btn").disabled = true;
+          document.getElementById("test-btn").disabled = false;
+          document.getElementById("stop-btn").disabled = false;
+          break;
+
+        case "seed":
+          seedCount++;
+          document.getElementById("seed-count").textContent = seedCount;
+          log(`Generated seed: ${data.name} (${data.pattern})`, "info");
+          if (data.time) {
+            timings.push(data.time);
+            const avg = timings.reduce((a, b) => a + b, 0) / timings.length;
+            document.getElementById("avg-time").textContent = Math.round(avg);
+          }
+          break;
+
+        case "error":
+          log(`Error: ${data.message}`, "error");
+          break;
+
+        case "biolock":
+          log(`BIOLOCK triggered: ${data.reason}`, "warn");
+          break;
+
+        case "metrics":
+          if (data.memory) {
+            document.getElementById("memory").textContent =
+              Math.round(data.memory / 1024 / 1024);
+          }
+          break;
+      }
+    };
+
+    worker.onerror = function(e) {
+      log(`Worker error: ${e.message}`, "error");
+      updateStatus("Worker: Error", "error");
+    };
+
+    // Initialize worker
+    worker.postMessage({ type: "init" });
+
+  } catch (e) {
+    log(`Failed to create worker: ${e.message}`, "error");
+    updateStatus("Worker: Failed", "error");
+  }
+}
+
+function testSeed() {
+  if (!worker) {
+    log("Worker not initialized", "error");
+    return;
+  }
+
+  const patterns = ["select-focus", "bounded-delay", "route-audit", "scan-metrics"];
+  const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+
+  log(`Requesting seed generation: ${pattern}`, "info");
+  worker.postMessage({
+    type: "generate",
+    pattern: pattern,
+    params: {
+      name: `test-${Date.now()}`,
+      threshold: Math.random() * 0.5 + 0.5
+    }
+  });
+}
+
+function stopHabitat() {
+  if (!worker) {
+    log("No worker to stop", "warn");
+    return;
+  }
+
+  worker.terminate();
+  worker = null;
+
+  log("Worker terminated", "info");
+  updateStatus("Worker: Offline", "offline");
+
+  document.getElementById("init-btn").disabled = false;
+  document.getElementById("test-btn").disabled = true;
+  document.getElementById("stop-btn").disabled = true;
+}
+
+// Auto-stop after 5 minutes for safety
+setTimeout(() => {
+  if (worker) {
+    log("Auto-stopping worker (5 min timeout)", "warn");
+    stopHabitat();
+  }
+}, 5 * 60 * 1000);
+</script>
+</html>
