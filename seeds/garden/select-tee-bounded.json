@@ -1,0 +1,40 @@
+{
+  "name": "select-tee-bounded",
+  "description": "Tee with bounded buffer for select operations",
+  "version": 1,
+  "xidv2": "f678901234567890123456789012345ef0123456",
+  "nodes": [
+    { "id": 0, "op": "ENTER", "config": {} },
+    { "id": 1, "op": "SELECT", "config": { "limit": 10, "order": "timestamp" } },
+    { "id": 2, "op": "TEE", "config": { "copies": 3, "buffer": true } },
+    { "id": 3, "op": "BOUNDED", "config": { "size": 100, "overflow": "drop" } },
+    { "id": 4, "op": "AGGREGATE", "config": { "method": "sum" } },
+    { "id": 5, "op": "AGGREGATE", "config": { "method": "avg" } },
+    { "id": 6, "op": "AGGREGATE", "config": { "method": "max" } },
+    { "id": 7, "op": "COLLECT", "config": {} },
+    { "id": 8, "op": "EXIT", "config": {} }
+  ],
+  "edges": [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [3, 5],
+    [3, 6],
+    [4, 7],
+    [5, 7],
+    [6, 7],
+    [7, 8]
+  ],
+  "constraints": {
+    "maxNodes": 100,
+    "maxEdges": 200,
+    "maxLatency": 150
+  },
+  "metadata": {
+    "pattern": "select-tee",
+    "novelty": 0.45,
+    "trust": 98,
+    "conformance": 96
+  }
+}
