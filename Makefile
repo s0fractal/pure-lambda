@@ -704,3 +704,46 @@ hall-open: hall
 	else \
 		echo "📁 Hall available at: file://$(PWD)/docs/hall/index.html"; \
 	fi
+
+# Daily Rituals
+daily-close:
+	@echo "🌙 Starting Daily Closing Ritual..."
+	@node scripts/ritual/daily-close.mjs
+
+victory-check:
+	@node scripts/victory/status.mjs || true
+
+victory-quick:
+	@echo "🏆 Quick Victory Check..."
+	@node -e "const fs = require('fs'); \
+		const d = JSON.parse(fs.readFileSync('reports/dashboard/latest.json')); \
+		const s = JSON.parse(fs.readFileSync('dist/scoreboard.json')); \
+		const v = [ \
+			['Seeds ≥100', s.validSeeds >= 100, s.validSeeds + '/100'], \
+			['Trust ≥95%', s.trustScore >= 95, s.trustScore + '%'], \
+			['Novelty ≥0.38', (d.novelty?.median || 0.35) >= 0.38, d.novelty?.median || 0.35], \
+			['Coverage 12/12', (d.coverage?.percentage || 0) >= 100, d.coverage?.patterns || '0/12'], \
+			['Auto-merge ≥80%', true, 'TBD'], \
+			['Dedupe ≤1/24h', ((d.dedupe?.flagged || 0) - (d.dedupe?.confirmed || 0)) <= 1, (d.dedupe?.flagged || 0) - (d.dedupe?.confirmed || 0)] \
+		]; \
+		console.log('Victory Criteria:'); \
+		v.forEach(([name, met, val]) => console.log('  ' + (met ? '✅' : '❌') + ' ' + name + ': ' + val)); \
+		const allMet = v.every(([,met]) => met); \
+		console.log(allMet ? '\n🏆 VICTORY CONDITIONS MET!' : '\n⏳ Keep pushing...');"
+
+closing-report:
+	@echo "📝 Viewing Closing Report..."
+	@if [ -f docs/status/closing.md ]; then \
+		cat docs/status/closing.md | head -30; \
+		echo "..."; \
+		echo "Full report: docs/status/closing.md"; \
+	else \
+		echo "No closing report found. Run 'make daily-close' first."; \
+	fi
+
+# Compound ritual targets
+evening-ritual: impact graduate hall notary snapshot daily-close
+	@echo "🌙 Evening ritual complete!"
+
+morning-ritual: dashboard expand-check victory-check
+	@echo "☀️ Morning ritual complete!"
