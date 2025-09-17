@@ -1,0 +1,61 @@
+name: Snapshots Retention
+
+on:
+  schedule:
+    - cron: "30 2 * * *"   # щодня 02:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshots-retention
+  cancel-in-progress: true
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+
+      - name: Prune CAR files older than 14 days
+        run: |
+          set -euo pipefail
+          echo "🗑️ Pruning CAR snapshots older than 14 days..."
+
+          mkdir -p dist/snapshots receipts/attest/snapshots
+
+          # Find CAR files older than 14 days and remove them
+          find dist/snapshots -name "*.car" -type f -mtime +14 | while IFS= read -r file; do
+            echo "🗑️ Removing old CAR: $file"
+            rm -f "$file"
+
+            # Also remove corresponding attestation
+            basename=$(basename "$file" .car)
+            attest_file="receipts/attest/snapshots/${basename}.car.envelope.json"
+            if [ -f "$attest_file" ]; then
+              echo "🗑️ Removing old attestation: $attest_file"
+              rm -f "$attest_file"
+            fi
+          done
+
+      - name: Update index after pruning
+        run: |
+          if [ -f scripts/snapshots/update-index.mjs ]; then
+            node scripts/snapshots/update-index.mjs
+          fi
+
+      - name: Commit pruning results
+        run: |
+          git config user.name "pl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(snapshots): prune CAR files older than 14 days"
+            git push
+            echo "✅ Pruned old snapshots and updated index"
+          else
+            echo "✅ No old snapshots to prune"
+          fi
