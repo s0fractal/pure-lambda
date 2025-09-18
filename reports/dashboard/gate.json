@@ -1,8 +1,8 @@
 {
   "status": "HOLD",
-  "reason": "coverage incomplete",
-  "ts": "2025-09-17T19:59:15.736Z",
-  "nextEligibleAt": null,
-  "currentEpsilon": 0,
+  "reason": "cooldown",
+  "ts": "2025-09-17T22:30:39.934Z",
+  "nextEligibleAt": "2025-09-18T04:01:14.254Z",
+  "currentEpsilon": 0.03,
   "applied24h": 0
 }

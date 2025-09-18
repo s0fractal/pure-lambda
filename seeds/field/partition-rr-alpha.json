@@ -1,0 +1,97 @@
+{
+  "name": "partition-rr-alpha",
+  "pattern": "partition-rr",
+  "version": "1.0.0",
+  "xid": "xid-v2-partition-rr-alpha-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.463Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "partition",
+      "rr",
+      "coverage"
+    ],
+    "priority": 93,
+    "novelty": 0.5414277541123154,
+    "entropy": 0.11759564456590535
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "partition",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "rr",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.9021711711554589
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 7
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.8435166793190056
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.8483848193790868
+    }
+  ],
+  "configuration": {
+    "strategy": "partition-rr",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.9163451330522548,
+    "window": 570,
+    "epsilon": 0.10425489324764932,
+    "tau": 1.1527955375819818,
+    "gamma": 0.977760205229542,
+    "beta": 0.1007338280567005
+  },
+  "constraints": {
+    "max_latency_ms": 162,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "cGFydGl0aW9uLXJyIGFscGhhIHNlZWQgZm9yIGNvdmVyYWdl",
+    "checksum": "sha256:d68e190831168e9217147b3a9960071b44c29b01668ec26568ecdff2a4995f91"
+  }
+}

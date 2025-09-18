@@ -1,0 +1,97 @@
+{
+  "name": "bounded-delay-beta",
+  "pattern": "bounded-delay",
+  "version": "1.0.0",
+  "xid": "xid-v2-bounded-delay-beta-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.462Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "bounded",
+      "delay",
+      "coverage"
+    ],
+    "priority": 93,
+    "novelty": 0.48822117318057207,
+    "entropy": 0.23141220865146905
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "bounded",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "delay",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.8559747561363071
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 4
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.7594355589205538
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.8769671302035528
+    }
+  ],
+  "configuration": {
+    "strategy": "bounded-delay",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.9462204199641477,
+    "window": 867,
+    "epsilon": 0.11413526089079656,
+    "tau": 1.1205548386585633,
+    "gamma": 0.9791738679727094,
+    "beta": 0.14924549468585782
+  },
+  "constraints": {
+    "max_latency_ms": 147,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "Ym91bmRlZC1kZWxheSBiZXRhIHNlZWQgZm9yIGNvdmVyYWdl",
+    "checksum": "sha256:bda937d0463ecd559e528bf3913133de022eba563053b0f258b8227ce1d95608"
+  }
+}

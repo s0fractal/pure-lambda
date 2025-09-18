@@ -1,0 +1,97 @@
+{
+  "name": "select-tee-beta",
+  "pattern": "select-tee",
+  "version": "1.0.0",
+  "xid": "xid-v2-select-tee-beta-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.464Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "select",
+      "tee",
+      "coverage"
+    ],
+    "priority": 93,
+    "novelty": 0.6494225788120598,
+    "entropy": 0.28774930108910124
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "select",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "tee",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.8586546805612986
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 3
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.8850121466934345
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.8923433481321144
+    }
+  ],
+  "configuration": {
+    "strategy": "select-tee",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.9459023527511898,
+    "window": 485,
+    "epsilon": 0.10749795630541166,
+    "tau": 1.1268232936486786,
+    "gamma": 0.9339723454829416,
+    "beta": 0.14920757991890732
+  },
+  "constraints": {
+    "max_latency_ms": 199,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "c2VsZWN0LXRlZSBiZXRhIHNlZWQgZm9yIGNvdmVyYWdl",
+    "checksum": "sha256:5056979a4a961f3275d0aaeebee857091a96236ac31d1fa2e817ac454a125a00"
+  }
+}

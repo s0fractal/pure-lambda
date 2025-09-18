@@ -1,0 +1,97 @@
+{
+  "name": "select-focus-beta",
+  "pattern": "select-focus",
+  "version": "1.0.0",
+  "xid": "xid-v2-select-focus-beta-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.461Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "select",
+      "focus",
+      "coverage"
+    ],
+    "priority": 92,
+    "novelty": 0.5018403536865328,
+    "entropy": 0.19582042140918376
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "select",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "focus",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.9081489853253633
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 3
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.7169830489713223
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.9786258641352089
+    }
+  ],
+  "configuration": {
+    "strategy": "select-focus",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.8995581336215859,
+    "window": 563,
+    "epsilon": 0.14608306862732723,
+    "tau": 1.2916806708981403,
+    "gamma": 0.9835933004658347,
+    "beta": 0.24730766079184222
+  },
+  "constraints": {
+    "max_latency_ms": 261,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "c2VsZWN0LWZvY3VzIGJldGEgc2VlZCBmb3IgY292ZXJhZ2U=",
+    "checksum": "sha256:acb1e81c2ffc7f9d4d48045555e365fea7ed30f4d4fe5042d789995463e627ac"
+  }
+}

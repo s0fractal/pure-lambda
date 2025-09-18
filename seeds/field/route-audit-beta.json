@@ -1,0 +1,97 @@
+{
+  "name": "route-audit-beta",
+  "pattern": "route-audit",
+  "version": "1.0.0",
+  "xid": "xid-v2-route-audit-beta-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.463Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "route",
+      "audit",
+      "coverage"
+    ],
+    "priority": 90,
+    "novelty": 0.4718669315305151,
+    "entropy": 0.20769050058347918
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "route",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "audit",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.9047808199382789
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 7
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.8889067788840872
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.834828930123422
+    }
+  ],
+  "configuration": {
+    "strategy": "route-audit",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.8938200912186905,
+    "window": 568,
+    "epsilon": 0.10514372063640519,
+    "tau": 1.597263741938352,
+    "gamma": 0.932003402434811,
+    "beta": 0.11414074469055047
+  },
+  "constraints": {
+    "max_latency_ms": 126,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "cm91dGUtYXVkaXQgYmV0YSBzZWVkIGZvciBjb3ZlcmFnZQ==",
+    "checksum": "sha256:0146fba344f4e93c049dca57ffb8428d40a4e2703687a109642554ac669de599"
+  }
+}

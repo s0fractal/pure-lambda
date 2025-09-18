@@ -399,12 +399,50 @@ contract-lite:
 metrics-refresh:
 	@echo "🔄 One-shot metrics refresh"
 	@node scripts/ops/refresh.mjs
+	@node scripts/coverage/fix.mjs 2>/dev/null || true
 
 # Chaos drill for testing expand/rollback
 .PHONY: drill-expand
 drill-expand:
 	@echo "🎯 Running EXPAND chaos drill"
 	@node scripts/drills/expand-chaos.mjs
+
+# Safe batch merge for green PRs
+.PHONY: merge-green preflight-check
+merge-green:
+	@echo "🔄 Refreshing metrics before merge..."
+	@$(MAKE) metrics-refresh
+	@echo ""
+	@echo "🔍 Checking gate status..."
+	@if [ "$$(jq -r '.status' reports/dashboard/gate.json 2>/dev/null)" != "GREEN" ] && [ "$$(jq -r '.status' reports/dashboard/gate.json 2>/dev/null)" != "GO" ]; then \
+		echo "❌ Gate not GREEN - aborting merge"; \
+		exit 1; \
+	fi
+	@echo "✅ Gate is GREEN"
+	@echo ""
+	@echo "📋 Finding mergeable PRs..."
+	@gh pr list -B master -s open -L 100 --json number,title,mergeStateStatus,labels | \
+		jq -r '.[] | select(.mergeStateStatus=="CLEAN" or (.labels[]?.name=="auto-merge:green")) | "PR #\(.number): \(.title)"' || \
+		echo "No mergeable PRs found"
+	@echo ""
+	@echo "🚀 Merging clean PRs..."
+	@gh pr list -B master -s open -L 100 --json number,mergeStateStatus,labels | \
+		jq -r '.[] | select(.mergeStateStatus=="CLEAN" or (.labels[]?.name=="auto-merge:green")) | .number' | \
+		xargs -I{} sh -c 'gh pr merge {} --squash --delete-branch && echo "✅ Merged PR #{}" || echo "⚠️ Skipped PR #{}"' || \
+		echo "No PRs to merge"
+
+preflight-check:
+	@echo "🔍 Running preflight checks..."
+	@node scripts/quality/dedupe.mjs
+	@node scripts/coverage/update.mjs
+	@node -e 'let d=require("./reports/dashboard/latest.json"); \
+		if(!((d.trust?.current||d.trust?.score||0)>=95 && \
+		     (d.dsse?.current||d.dsse?.coverage||0)===100 && \
+		     (d.coverage?.patterns||"").includes("12"))) { \
+		  console.log("❌ Metrics not safe for merge"); \
+		  process.exit(1); \
+		} \
+		console.log("✅ All metrics safe");'
 
 # Canary expansion and post-verification
 .PHONY: expand-canary postverify

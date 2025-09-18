@@ -1,0 +1,97 @@
+{
+  "name": "branch-stress-alpha",
+  "pattern": "branch-stress",
+  "version": "1.0.0",
+  "xid": "xid-v2-branch-stress-alpha-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.465Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "branch",
+      "stress",
+      "coverage"
+    ],
+    "priority": 90,
+    "novelty": 0.411232480758991,
+    "entropy": 0.2611298680960241
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "branch",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "stress",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.9100256808403117
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 7
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.8127408727535157
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.868405059106524
+    }
+  ],
+  "configuration": {
+    "strategy": "branch-stress",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.8512022110087115,
+    "window": 336,
+    "epsilon": 0.1218844855408807,
+    "tau": 1.318907845183656,
+    "gamma": 0.9278212950879746,
+    "beta": 0.15688961356088593
+  },
+  "constraints": {
+    "max_latency_ms": 105,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "YnJhbmNoLXN0cmVzcyBhbHBoYSBzZWVkIGZvciBjb3ZlcmFnZQ==",
+    "checksum": "sha256:b0ebbb7fce24fbeee45f1f6b74c42a89b97ad3fa4add4e8d12e49ac3d22c83ed"
+  }
+}

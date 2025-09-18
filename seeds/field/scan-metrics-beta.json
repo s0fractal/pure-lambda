@@ -1,0 +1,97 @@
+{
+  "name": "scan-metrics-beta",
+  "pattern": "scan-metrics",
+  "version": "1.0.0",
+  "xid": "xid-v2-scan-metrics-beta-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.462Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "scan",
+      "metrics",
+      "coverage"
+    ],
+    "priority": 99,
+    "novelty": 0.6354209574036834,
+    "entropy": 0.12917690532598758
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "scan",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "metrics",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.8659616572402618
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 5
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.864762437391868
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.8906696524786899
+    }
+  ],
+  "configuration": {
+    "strategy": "scan-metrics",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.9405226976303974,
+    "window": 536,
+    "epsilon": 0.08177603269031371,
+    "tau": 1.506702387724345,
+    "gamma": 0.9283711356076559,
+    "beta": 0.28834770024465506
+  },
+  "constraints": {
+    "max_latency_ms": 188,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "c2Nhbi1tZXRyaWNzIGJldGEgc2VlZCBmb3IgY292ZXJhZ2U=",
+    "checksum": "sha256:f70323de93cae2334e8a53fd9b2e3bb4f1a25b9ea6fc29847398761e4067bcba"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "name": "delay-scan-smoother-beta",
+  "pattern": "delay-scan-smoother",
+  "version": "1.0.0",
+  "xid": "xid-v2-delay-scan-smoother-beta-2025-09-17",
+  "timestamp": "2025-09-17T22:25:23.464Z",
+  "metadata": {
+    "pipeline": "pl-main",
+    "environment": "field-100seeds",
+    "tags": [
+      "delay",
+      "scan",
+      "coverage"
+    ],
+    "priority": 92,
+    "novelty": 0.5695949264613532,
+    "entropy": 0.2858769897440707
+  },
+  "tiles": [
+    {
+      "id": "t1",
+      "type": "delay",
+      "weight": 0.4
+    },
+    {
+      "id": "t2",
+      "type": "scan",
+      "weight": 0.4
+    },
+    {
+      "id": "t3",
+      "type": "validate",
+      "weight": 0.2
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "tile": "t1",
+      "params": {
+        "threshold": 0.9103464228615422
+      }
+    },
+    {
+      "id": "n2",
+      "tile": "t2",
+      "params": {
+        "depth": 4
+      }
+    },
+    {
+      "id": "n3",
+      "tile": "t3",
+      "params": {
+        "strict": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "weight": 0.7504265447411741
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "weight": 0.8375808774664459
+    }
+  ],
+  "configuration": {
+    "strategy": "delay-scan-smoother",
+    "validation_depth": 5,
+    "checkpoint_interval": 1000,
+    "compression": "zstd",
+    "parallel_branches": 4
+  },
+  "parameters": {
+    "threshold": 0.9163210254790731,
+    "window": 745,
+    "epsilon": 0.05840935718129303,
+    "tau": 1.9557965245215543,
+    "gamma": 0.9321820742622791,
+    "beta": 0.12186507478826503
+  },
+  "constraints": {
+    "max_latency_ms": 233,
+    "min_accuracy": 0.95,
+    "max_memory_mb": 256,
+    "max_cpu_cores": 2,
+    "require_attestation": true
+  },
+  "payload": {
+    "data": "ZGVsYXktc2Nhbi1zbW9vdGhlciBiZXRhIHNlZWQgZm9yIGNvdmVyYWdl",
+    "checksum": "sha256:bab14f00d3208137a82bb0b7daf7c7cea3ebba7c3030b7eb152ac276ada1eb0c"
+  }
+}
