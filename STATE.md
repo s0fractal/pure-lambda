@@ -1,6 +1,6 @@
 # STATE (auto-generated)
 
-Commit: 06beb1ac | Branch: master | Date: 2025-09-21T01:33:20.164Z
+Commit: 46bde355 | Branch: master | Date: 2025-09-24T14:10:48.260Z
 
 ## Artifacts
 
@@ -59,12 +59,12 @@ cat STATE.md
 
 ```bash
 # Last 5 commits
+46bde35 Add IPLD linker features
+288e108 🔬 Attest: 2025-09-21T01:33:20Z [auto]
 06beb1a 🔬 Attest: 2025-09-18T08:26:12Z [auto]
 4cace3e feat: Complete LoA3 implementation with real 12/12 coverage
 e43c7cd feat: LoA3 Guarded Autonomy with Safety Guardrails
-2bba000 feat: add post-merge verification script
-16fefc2 feat: LoA3 guarded autonomy with comprehensive safety guardrails
 ```
 
 ---
-*Generated at 2025-09-21T01:33:20.164Z | Soulset 8ea3702c58861312*
+*Generated at 2025-09-24T14:10:48.260Z | Soulset 8ea3702c58861312*
