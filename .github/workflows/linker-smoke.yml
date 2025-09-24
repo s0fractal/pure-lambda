@@ -1,0 +1,18 @@
+name: linker-smoke
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run unit tests
+        run: node --test tests/ipld_linker.test.mjs
+      - name: Run smoke script
+        run: |
+          chmod +x scripts/smoke_linker.sh
+          ./scripts/smoke_linker.sh
