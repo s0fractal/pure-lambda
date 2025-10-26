@@ -1,10 +1,10 @@
 # STATE (auto-generated)
 
-Commit: d857cd0a | Branch: master | Date: 2025-10-19T01:45:03.893Z
+Commit: 74a0db3d | Branch: master | Date: 2025-10-26T01:41:57.331Z
 
 ## Artifacts
 
-- **Soulset**: `409063af5e92c4f6`
+- **Soulset**: `a50080ae8728cfd7`
 - **Proofs**: 1/1 PASS ✅
 - **Benchmarks**: .genome/benchmarks/summary.json
 - **Organism**: Not yet built
@@ -59,12 +59,12 @@ cat STATE.md
 
 ```bash
 # Last 5 commits
+74a0db3 🔬 Attest: 2025-10-19T01:45:04Z [auto]
 d857cd0 🔬 Attest: 2025-10-12T01:30:19Z [auto]
 a69e94b 🔬 Attest: 2025-10-05T01:40:40Z [auto]
 b8409d9 🔬 Attest: 2025-09-28T01:43:09Z [auto]
 f48ab82 🔬 Attest: 2025-09-24T14:10:48Z [auto]
-46bde35 Add IPLD linker features
 ```
 
 ---
-*Generated at 2025-10-19T01:45:03.893Z | Soulset 409063af5e92c4f6*
+*Generated at 2025-10-26T01:41:57.331Z | Soulset a50080ae8728cfd7*
