@@ -1,10 +1,10 @@
 # STATE (auto-generated)
 
-Commit: 2f0db508 | Branch: master | Date: 2026-06-07T03:59:49.707Z
+Commit: 21b2fb4f | Branch: master | Date: 2026-06-14T04:08:11.259Z
 
 ## Artifacts
 
-- **Soulset**: `d478bd5f5ebb15c5`
+- **Soulset**: `fc46a1cbb704625a`
 - **Proofs**: 1/1 PASS ✅
 - **Benchmarks**: .genome/benchmarks/summary.json
 - **Organism**: Not yet built
@@ -59,12 +59,12 @@ cat STATE.md
 
 ```bash
 # Last 5 commits
+21b2fb4 🔬 Attest: 2026-06-07T03:59:49Z [auto]
 2f0db50 🔬 Attest: 2026-05-31T03:55:39Z [auto]
 9c53a67 🔬 Attest: 2026-05-24T03:40:11Z [auto]
 275fa6c 🔬 Attest: 2026-05-17T03:31:13Z [auto]
 24c5211 🔬 Attest: 2026-05-10T02:59:56Z [auto]
-1700e22 🔬 Attest: 2026-05-03T02:57:54Z [auto]
 ```
 
 ---
-*Generated at 2026-06-07T03:59:49.707Z | Soulset d478bd5f5ebb15c5*
+*Generated at 2026-06-14T04:08:11.259Z | Soulset fc46a1cbb704625a*
